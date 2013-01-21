@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="utf-8">
+    <title>Ruby ← Huang Ding</title>
+    
+    <meta name="author" content="Huang Ding">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<script type="text/javascript" src="/assets/themes/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/waypoints.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/jquery.ui.totop.js"></script>
+	<script type="text/javascript" src="/assets/themes/common.js"></script>
+
+    <!-- Le styles -->
+    <link href="/assets/themes/wiki.css" rel="stylesheet" />
+	<link href="/assets/themes/ui.totop.css" rel="stylesheet" />
+  </head>
+
+ <body>
+<div id="container">
+ 	<div id="sidebar">
+		<div id="menu-nav">
+	<div id="logo"><a href="/wiki/">Wiki</a></div>
+	
+	<ul>
+		<li>Development &amp; Design
+			<ul>
+				<li><a href="/wiki/development-design/dotnet.html">.NET</a></li>
+				<li><a href="/wiki/development-design/actionscript.html">ActionScript</a></li>
+				<li><a href="/wiki/development-design/database.html">Database</a></li>
+				<li><a href="/wiki/development-design/php.html">PHP</a></li>
+				<li><a href="/wiki/development-design/objectivec.html">ObjectiveC</a></li>
+				<li><a href="/wiki/development-design/python.html">Python</a></li>
+				<li><a href="/wiki/development-design/ruby.html">Ruby</a></li>
+				<li><a href="/wiki/development-design/web-front-end.html">Web Front-end</a></li>
+			</ul>
+		</li>
+
+		<li>Database
+			<ul>
+				<li><a href="/wiki/database/ms_sqlserver.html">MS SqlServer</a></li>
+			</ul>
+		</li>
+
+		<li>Software
+			<ul>
+				<!--<li><a href="/wiki/software/android.html">Android</a></li>-->
+				<li><a href="/wiki/software/osx.html">OS X</a></li>
+				<li><a href="/wiki/software/linux.html">Linux</a></li>
+				<li><a href="/wiki/software/windows.html">Windows</a></li>
+				<li><a href="/wiki/software/sublime-text.html">Sublime Text</a></li>
+				<li><a href="/wiki/software/vim.html">Vim</a></li>
+			</ul>
+		</li>
+		
+		<li>Other
+			<ul>
+				<!-- <li><a href="/wiki/other/articles.html">Articles</a></li> -->
+				<li><a href="/wiki/other/open_source_projects.html">Open Source</a></li>
+				<li><a href="/wiki/other/references.html">References</a></li>
+				<li><a href="/wiki/other/server.html">Server</a></li>
+				<li><a href="/wiki/other/website.html">WebSite</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>Links
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="https://github.com/beango/beango.github.com">Source</a></li>
+				<li><a href="http://blog.iuwebs.com">Blog</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul class="misc">
+		<li>Powered by <a href="http://pages.github.com/">Github Pages</a></li>
+	</ul>
+</div>
+
+	</div>
+	<div id="content">
+		<div id="charpter">
+    <h3>Contents</h3>
+    
+    <ul>
+        <li><a href="#website">Web Site</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#webframework">Web Framework</a></li>
+        <li><a href="#gems">Gems</a></li>
+        <li><p><a href="#references">References</a></p>
+            <ul>
+                <li><a href="#references_ruby">Ruby</a></li>
+                <li><a href="#references_rails">Rails</a></li>
+                <li><a href="#references_sinatra">Sinatra</a></li>
+            </ul>
+        </li>
+        <li><p><a href="#webapps">Web Apps</a></p></li>
+        <li><a href="#webhost">Web Host</a></li>
+        <li><a href="#articles">Articles</a></li>
+    </ul>
+</div>
+
+
+<h1>Ruby</h1>
+
+<h3><div id="website"></div>Web Site</h3>
+
+<ul>
+<li><a href="http://www.ruby-lang.org">Ruby Programming Language</a> – Ruby官方网站</li>
+<li><a href="http://rubyonrails.org/">Ruby on Rails</a></li>
+<li><a href="http://thoughtrails.com/">ThoughtRails</a> – Ruby on
+Rails中文技术分享交流平台</li>
+<li><a href="http://ruby-china.org">Ruby-China</a> – Ruby中文社区</li>
+<li><a href="http://chinaonrails.com/">ChinaonRails</a> – Focus on Ruby on Rails,
+Web2.0, Business, Technic and beyond</li>
+<li><a href="https://www.ruby-toolbox.com/">The Ruby Toolbox</a> – 实用RubyGems排名</li>
+<li><a href="http://railstips.org">RailsTips</a></li>
+<li><a href="http://rubular.com/">Rubular</a> – ruby正则在线测试工具</li>
+</ul>
+
+
+<h3><div id="tools"></div>Tools</h3>
+
+<ul>
+<li><p><a href="http://beginrescueend.com/">RVM</a> – Ruby版本管理器</p>
+
+<ul>
+<li><a href="http://unfiniti.com/software/mac/jewelrybox">JewelryBox</a> –
+RVM官方GUI工具</li>
+</ul>
+</li>
+<li><p><a href="http://pow.cx/">Pow</a> – 37signals开发的网页服务器</p></li>
+<li><a href="http://rubyinstaller.org">RubyInstaller</a> – The easy way to install
+Ruby on Windows</li>
+<li><a href="http://railsinstaller.org/">RailsInstaller</a> – windows下的一键安装包</li>
+<li><a href="https://github.com/errbit/errbit">errbit</a> –
+Rails日志捕捉工具，支持Hoptoad API</li>
+<li><a href="https://github.com/skwp/dotfiles">skwp’s dotfiles</a> –
+适合ruby/rails开发者的最佳配置文件集合</li>
+</ul>
+
+
+<h3><div id="webframework"></div>Web Framework</h3>
+
+<ul>
+<li><a href="http://rubyonrails.org">Rails</a></li>
+<li><p><a href="http://www.sinatrarb.com/">Sinatra</a></p>
+
+<ul>
+<li><a href="http://www.padrinorb.com/">Padrino</a></li>
+</ul>
+</li>
+<li><p><a href="http://ramaze.net/">Ramaze</a></p></li>
+<li><a href="http://prestorb.github.com/">Presto</a></li>
+<li><a href="http://vesperapps.com/">Vesper</a></li>
+<li><a href="http://cramp.in">Cramp</a> – a fully asynchronous real-time web
+application framework in Ruby</li>
+</ul>
+
+
+<h3><div id="gems"></div>Gems</h3>
+
+<ul>
+<li><a href="http://ruby.taobao.org/">Rubygems淘宝镜像</a></li>
+<li><a href="http://gems.gzruby.org/">Rubygems gzruby.org镜像</a></li>
+<li>slim: <a href="http://slim-lang.com/">Official Website</a> /
+<a href="https://github.com/stonean/slim">Github</a> – a template language</li>
+<li>haml: <a href="http://haml-lang.com">official Website</a> /
+<a href="http://github.com/nex3/haml">Github</a> – 同上</li>
+<li>mongoid: <a href="http://mongoid.org">Official Website</a> /
+<a href="https://github.com/mongoid/mongoid">Github</a> –
+MongoDB的Object-Document-Mapper (ODM)工具</li>
+<li>mongo_mapper: <a href="http://mongomapper.com/">Official Website</a> /
+<a href="https://github.com/jnunemaker/mongomapper">Github</a> – 同上</li>
+<li>thinreports: <a href="http://www.thinreports.org/">Official Website</a> –
+报表工具，中文支持良好。</li>
+<li>devise: <a href="http://blog.plataformatec.com.br/tag/devise/">Official
+Website</a> /
+<a href="https://github.com/plataformatec/devise">Github</a> –
+快速构建注册、登录、找回密码等功能</li>
+<li>omniauth: <a href="https://github.com/intridea/omniauth">Github</a> –
+实现第三方平台登录</li>
+<li>awesome_nested_set:
+<a href="https://github.com/collectiveidea/awesome_nested_set">Github</a> –
+实现多级分类</li>
+<li>will_paginate:
+<a href="https://github.com/mislav/will_paginate/wiki">Github</a> – 实现分页</li>
+<li>kaminari: <a href="https://github.com/amatsuda/kaminari">Github</a> – 同上</li>
+<li>paperclip: <a href="https://github.com/thoughtbot/paperclip">Github</a> –
+实现上传</li>
+<li>carrierwave: <a href="https://github.com/jnicklas/carrierwave">Github</a> –
+同上，原生支持gridfs</li>
+<li>wice_grid: <a href="http://leikind.org/wicegrid">Official Website</a> /
+<a href="http://leikind.org/pages/wicegrid">Github</a> – 实现表格相关功能</li>
+<li>thinking-sphinx: <a href="http://freelancing-god.github.com/ts/en/">Github</a>
+– 实现基于Sphinx的全文搜索</li>
+<li>rails-settings-cached:
+<a href="https://github.com/huacnlee/rails-settings-cached">Github</a> –
+将配置信息写入数据库并缓存</li>
+<li>cancan: <a href="https://github.com/ryanb/cancan">Github</a> /
+<a href="http://railscasts.com/episodes/192-authorization-with-cancan">Railscasts</a>
+– 实现用户功能权限的设定，</li>
+<li>rails_admin: <a href="https://github.com/sferik/rails_admin">Github</a> –
+快速构建后台管理</li>
+<li>activeadmin: <a href="http://activeadmin.info">Official Website</a> /
+<a href="https://github.com/gregbell/active_admin">Github</a> /
+<a href="http://railscasts.com/episodes/284-active-admin">Railscasts</a> – 同上</li>
+<li>redis-objects: <a href="https://github.com/nateware/redis-objects">Github</a> –
+实现Redis数据的快速存储，如：页面访问量、Followers等</li>
+<li>nokogiri: <a href="http://nokogiri.org/">Official Website</a> /
+<a href="https://github.com/tenderlove/nokogiri">Github</a> –
+实现HTML页面的数据采集</li>
+<li>formtastic: <a href="https://github.com/justinfrench/formtastic">Github</a> –
+实现表单构建，比Rails自带的表单功能更简洁，功能更强大</li>
+<li>simple_form: <a href="http://github.com/plataformatec/simple_form">Github</a>
+– 同上</li>
+<li>whenever: <a href="https://github.com/javan/whenever">Github</a> –
+实现类似Linux的Cron定期搜行任务功能</li>
+<li>resque: <a href="http://github.com/defunkt/resque">Github</a> –
+实现后台多任务队列</li>
+<li>delayed_job:
+<a href="https://github.com/collectiveidea/delayed_job">Github</a> –
+实现后台单任务队列，支持优先级</li>
+<li>rails-dev-boost:
+<a href="https://github.com/thedarkone/rails-dev-boost">Github</a> –
+实现Rails的缓存机制，加速程序执行速度</li>
+<li>cells: <a href="https://github.com/apotonick/cells">Github</a> –
+实现局部功能到View的生成，支持缓存，比Rails自带的Partials效率好</li>
+<li>smurf: <a href="http://github.com/thumblemonks/smurf">Github</a> –
+实现js、css的压缩，不过Rails3.1已自带Asset Pipeline</li>
+<li>daemon-spawn: <a href="http://github.com/alexvollmer/daemon-spawn">Github</a> –
+实现某些任务使用daemon方式启动，比如管理Resque的启动和重启</li>
+<li>simplecov: <a href="https://github.com/colszowka/simplecov">Github</a> –
+代码覆盖率分析工具</li>
+<li>sunspot: <a href="https://github.com/sunspot/sunspot">Github</a> – 全文索引</li>
+<li>sunspot_rails:
+<a href="https://github.com/outoftime/sunspot/tree/master/sunspot_rails/">Github</a></li>
+<li>sunspot_mongoid: <a href="https://github.com/jugyo/sunspot_mongoid">Github</a>
+– A Sunspot wrapper for Mongoid.</li>
+<li>meta_search: <a href="http://erniemiller.org/projects/metasearch/">Official
+Website</a> /
+<a href="https://github.com/ernie/meta_search">Github</a> – 实现复杂组合查询</li>
+<li>awesome_print: <a href="https://github.com/michaeldv/awesome_print">Github</a>
+– 格式化输出ruby对象</li>
+<li>wirble: <a href="https://github.com/blackwinter/wirble">Github</a> –
+增强irb，加入历史，语法高亮等功能</li>
+<li>hirb: <a href="http://tagaholic.me/hirb/">Official Website</a> /
+<a href="https://github.com/cldwalker/hirb">Github</a> – 格式化数据</li>
+<li>irbtools: <a href="http://rbjl.net/40-irbtools-release-the-power-of-irb">Official
+Website</a> /
+<a href="https://github.com/janlelis/irbtools">Github</a> – Release the power
+of irb!</li>
+<li>richrc: <a href="https://github.com/miaout17/richrc">Github</a> /
+<a href="http://blog.miaout17.net/2011/02/13/richrc-rails3-customization-hirb-wirble/">Article</a>
+– 在rails3中不用修改Gamfile，实现irb格式化和高亮语法</li>
+<li>pry: <a href="https://github.com/pry/pry">Github</a> – 调试工具</li>
+<li>rake_ui: <a href="https://github.com/rbrant/rake_ui">Github</a> –
+图形化Rake任务</li>
+<li>mongo-rails-instrumentation:
+<a href="https://github.com/freerange/mongo-rails-instrumentation">Github</a> –
+显示 ORM 性能日志</li>
+<li><p>Server</p>
+
+<ul>
+<li>puma: <a href="https://github.com/evanphx/puma">Github</a> – a simple,
+fast, and highly concurrent HTTP 1.1 server for Ruby web
+applications.</li>
+<li>powder: <a href="https://github.com/rodreegez/powder">Github</a> – Makes
+Pow even easier.</li>
+</ul>
+</li>
+<li><p>Exception Notifier</p>
+
+<ul>
+<li>exception_notification_rails3:
+<a href="https://github.com/railsware/exception_notification">Github</a></li>
+<li>airbrake: <a href="http://airbrake.io">Official Website</a> /
+<a href="https://github.com/airbrake/airbrake">Github</a></li>
+<li>errbit: <a href="https://github.com/errbit/errbit">Github</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3><div id="references"></div>References</h3>
+
+<ul>
+<li><p><strong><div id="references_ruby"></div>Ruby</strong></p>
+
+<ul>
+<li><a href="http://apidock.com/ruby">Ruby使用笔记</a></li>
+<li><a href="http://ruby.learncodethehardway.org">Learn Ruby The Hard Way</a> /
+<a href="http://lrthw.github.com/">繁体版</a></li>
+<li><a href="http://www.ruby-doc.org/">Ruby-Doc.org</a></li>
+<li><a href="http://rubydoc.info/">RubyDoc</a></li>
+<li><a href="http://rubymonk.com/">Ruby Monk</a> – An Interactive Platform That
+Helps You Learn Ruby</li>
+<li><a href="http://chinaonrails.com/topic/view/5319.html">24个技巧视频</a></li>
+<li><a href="https://github.com/styleguide/ruby">Github编程风格英文版</a> /
+<a href="https://github.com/JuanitoFatas/ruby-style-guide/blob/master/README-zhTW.md">中文版</a></li>
+</ul>
+</li>
+<li><p><strong><div id="references_rails"></div>Rails</strong></p>
+
+<ul>
+<li><a href="http://huacnlee.com/blog/how-to-start-learning-ruby-on-rails">如何从零开始学会 Ruby on Rails –
+李华顺</a></li>
+<li><a href="http://readful.com/post/12322300571/0-ruby-on-rails">如何从0开始学Ruby on Rails –
+漫步</a></li>
+<li><a href="http://guides.rubyonrails.org/">Ruby on Rails Guides</a> /
+<a href="http://guides.ruby.tw/rails3/getting_started.html">繁体版</a></li>
+<li><a href="http://ihower.tw/rails3/">Ruby on Rails 實戰聖經</a></li>
+<li><a href="http://erp-book.heroku.com/">Essentail Rails Design Pattern –
+xdite</a></li>
+<li><a href="http://ruby-taiwan.org/wiki/essential-ruby-rails-knowledge">Ruby on
+Rails新手进阶知识繁体版</a></li>
+<li><a href="http://api.rubyonrails.org/">Rails Documentation</a> – 官方API文档</li>
+<li><a href="http://apidock.com/rails">Rails使用笔记</a></li>
+<li>Ruby on Rails Tutorial: Learn Rails by Example:
+<a href="http://ruby.railstutorial.org/">Video</a> /
+<a href="http://ruby.railstutorial.org/ruby-on-rails-tutorial-book">Book</a></li>
+<li><a href="http://www.amazon.com/Rails-Way-Addison-Wesley-Professional-Ruby/dp/0321601661">The Rails 3
+Way</a></li>
+<li><a href="http://rails-101.logdown.com/">Rails 101 – 火速學會 Ruby on
+Rails</a></li>
+<li><a href="http://rails-bestpractices.com/">Rails Best Practices</a></li>
+<li><a href="http://railscasts.com">RailsCasts</a> – Rails视频教程站</li>
+<li><a href="http://railscasts-china.com">RailsCasts-China</a> –
+Rails中国视频教程站</li>
+<li><a href="http://teachmetocode.com/screencasts/">Teach Me To Code
+Screencasts</a></li>
+<li><a href="http://www.lynda.com/Ruby-on-Rails-3-tutorials/essential-training/55960-2.html">Ruby on Rails 3 Essential
+Training</a></li>
+<li><a href="http://ruby-china.org/wiki">ruby-china wiki</a></li>
+<li><a href="http://www.bigfatrails.com">Big Fat Rails</a></li>
+</ul>
+</li>
+<li><p><strong><div id="references_sinatra"></div>Sinatra</strong></p>
+
+<ul>
+<li><a href="http://www.trybloc.com/">Bloc</a></li>
+<li><a href="http://rubysource.com/author/djones/">Darren Jones 的系列教程</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3><div id="webapps"></div>Web Apps</h3>
+
+<ul>
+<li><a href="http://octopress.org/">OctoPress</a> – A blogging framework for
+hackers.</li>
+<li><a href="https://github.com/github/gollum">Gollum</a> – a simple wiki system
+built on top of Git that powers GitHub Wikis.</li>
+<li><a href="https://github.com/huacnlee/ruby-china">Ruby-China</a> – Ruby China
+Group</li>
+<li><a href="https://github.com/railsbp/rails-bestpractices.com">Rails-Bestpractices</a></li>
+<li><a href="https://github.com/hooopo/rubyist/">Rubyist</a> –
+Rubyist是一个多人协作的群体Blog</li>
+<li><a href="http://techoctave.com/blogcast/">Blogcast</a> – a better way to blog</li>
+<li><a href="http://jekyllbootstrap.com/">Jekyll Bootstrap</a></li>
+<li><a href="http://ruhoh.com/">Ruhoh</a></li>
+</ul>
+
+
+<h3><div id="webhost"></div>Web Host</h3>
+
+<ul>
+<li><a href="http://www.engineyard.com">Engine Yard</a></li>
+</ul>
+
+
+<h3><div id="articles"></div>Articles</h3>
+
+<ul>
+<li><a href="http://lvguoning.com/blog/2011/11/27/mac-nginx-passenger-rails/">如何在Mac下快速部署 Nginx + Passenger +
+Rails</a></li>
+<li><a href="http://blog.xdite.net/posts/2011/10/09/10-ruby-developer-must-have-tools/">十個 Ruby Web Developer
+應該熟悉的工具</a></li>
+</ul>
+
+
+	</div>
+</div>
+<!--[if IE 6]>
+<script type="text/javascript"> 
+	/*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; } 
+	var IE6UPDATE_OPTIONS = {
+		icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+	}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+</body>
+</html>
+

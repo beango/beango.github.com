@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="utf-8">
+    <title>Web Front-end ← Huang Ding</title>
+    
+    <meta name="author" content="Huang Ding">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<script type="text/javascript" src="/assets/themes/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/waypoints.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/jquery.ui.totop.js"></script>
+	<script type="text/javascript" src="/assets/themes/common.js"></script>
+
+    <!-- Le styles -->
+    <link href="/assets/themes/wiki.css" rel="stylesheet" />
+	<link href="/assets/themes/ui.totop.css" rel="stylesheet" />
+  </head>
+
+ <body>
+<div id="container">
+ 	<div id="sidebar">
+		<div id="menu-nav">
+	<div id="logo"><a href="/wiki/">Wiki</a></div>
+	
+	<ul>
+		<li>Development &amp; Design
+			<ul>
+				<li><a href="/wiki/development-design/dotnet.html">.NET</a></li>
+				<li><a href="/wiki/development-design/actionscript.html">ActionScript</a></li>
+				<li><a href="/wiki/development-design/database.html">Database</a></li>
+				<li><a href="/wiki/development-design/php.html">PHP</a></li>
+				<li><a href="/wiki/development-design/objectivec.html">ObjectiveC</a></li>
+				<li><a href="/wiki/development-design/python.html">Python</a></li>
+				<li><a href="/wiki/development-design/ruby.html">Ruby</a></li>
+				<li><a href="/wiki/development-design/web-front-end.html">Web Front-end</a></li>
+			</ul>
+		</li>
+
+		<li>Database
+			<ul>
+				<li><a href="/wiki/database/ms_sqlserver.html">MS SqlServer</a></li>
+			</ul>
+		</li>
+
+		<li>Software
+			<ul>
+				<!--<li><a href="/wiki/software/android.html">Android</a></li>-->
+				<li><a href="/wiki/software/osx.html">OS X</a></li>
+				<li><a href="/wiki/software/linux.html">Linux</a></li>
+				<li><a href="/wiki/software/windows.html">Windows</a></li>
+				<li><a href="/wiki/software/sublime-text.html">Sublime Text</a></li>
+				<li><a href="/wiki/software/vim.html">Vim</a></li>
+			</ul>
+		</li>
+		
+		<li>Other
+			<ul>
+				<!-- <li><a href="/wiki/other/articles.html">Articles</a></li> -->
+				<li><a href="/wiki/other/open_source_projects.html">Open Source</a></li>
+				<li><a href="/wiki/other/references.html">References</a></li>
+				<li><a href="/wiki/other/server.html">Server</a></li>
+				<li><a href="/wiki/other/website.html">WebSite</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>Links
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="https://github.com/beango/beango.github.com">Source</a></li>
+				<li><a href="http://blog.iuwebs.com">Blog</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul class="misc">
+		<li>Powered by <a href="http://pages.github.com/">Github Pages</a></li>
+	</ul>
+</div>
+
+	</div>
+	<div id="content">
+		<div id="charpter">
+    <h3>Contents</h3>
+    
+    <ul>
+        <li><p><a href="#CSS">CSS</a></p>
+            <ul>
+                <li><a href="#Framework">Framework</a></li>
+                <li><a href="#Preprocessor">Preprocessor</a></li>
+                <li><a href="#Tools">Tools</a></li>
+            </ul>
+        </li>
+        <li><p><a href="#Javascript">Javascript</a></p>
+            <ul>
+                <li><a href="#JSFramework">Framework</a></li>
+                <li><a href="#Library">Library</a></li>
+                <li><a href="#JQuery">JQuery (website)</a></li>
+                <li><a href="#Nodejs">Node.js</a></li>
+                <li><a href="#Mobile-Web-Framework">Mobile Web Framework</a></li>
+                <li><a href="#Resources">Resources</a></li>
+            </ul>
+        </li>
+        <li><p><a href="#HTML">HTML</a></p>
+            <ul>
+                <li><a href="#Web-Text-Editor">Web Text Editor</a></li>
+                <li><a href="#Text-to-HTML">Text-to-HTML Conversion Tools</a></li>
+                <li><a href="#References">References</a></li>
+            </ul>
+        </li>
+        <li><p><a href="#Design">设计相关</a></p>
+            <ul>
+                <li><a href="#ICONS">图片、图标(Icons)</a></li>
+                <li><a href="#Fonts">字体</a></li>
+                <li><a href="#Table">表格</a></li>
+                <li><a href="#Resource">资源</a></li>
+            </ul>
+        </li>
+        <li><a href="#Design-Material">Design Material</a></li>
+    </ul>
+</div>
+
+
+<h1>Web Front-end</h1>
+
+<h3><label id="CSS" />CSS</h3>
+
+<ul>
+<li><p><strong><label id="Framework" />Framework</strong></p>
+
+<ul>
+<li><a href="http://twitter.github.com/bootstrap/">BootStrap</a> –
+Twitter推出的前端开发工具包</li>
+<li><a href="http://foundation.zurb.com/">Foundation</a> – 前端框架新秀</li>
+<li><a href="http://ninjaui.com">Ninja</a> – 前端用户界面工具包</li>
+<li><a href="http://aliceui.com">Alice</a> – 支付宝前端样式解决方案</li>
+</ul>
+</li>
+<li><p><strong><label id="Preprocessor" />Preprocessor</strong></p>
+
+<ul>
+<li><a href="http://code.google.com/p/dtcss/">DtCSS</a> – CSS预处理器</li>
+<li><a href="http://turbine.peterkroener.de/index.php">Turbine</a> –
+由PHP驱动的一款CSS预处理器</li>
+<li><a href="http://daneden.me/animate/">Animate.css</a> –
+整合了一些简单动画效果的css，支持自定制</li>
+<li><a href="http://sass-lang.com">Sass</a> – 基于ruby的CSS简化解释语言</li>
+<li><a href="http://compass-style.org/">Compass</a> –
+基于Sass的框架，提供了更强大的功能，如：CSS3支持、浏览器差异修复、Reset等</li>
+</ul>
+</li>
+<li><p><strong><label id="Tools" />Tools</strong></p>
+
+<ul>
+<li><a href="http://stylebot.me/">StyleBot</a> –
+Chrome下的可视化CSS编辑器，功能强大</li>
+<li><a href="http://jsfiddle.net/">jsFiddle</a> – 在线调试前段开发工具</li>
+<li><a href="http://csslint.net/">CSS Lint</a> – 检测与评估CSS代码</li>
+<li><a href="http://www.cssdrive.com/index.php/main/csscompressor/">CSS
+Compressor</a>
+– 压缩CSS代码</li>
+<li><a href="http://procssor.com/">ProCSSor</a> – 优化CSS代码，使其轻量且易读</li>
+<li><a href="http://yostudios.github.com/Spritemapper/">SpriterMapper</a> –
+基于python的一款多图片合并切片生成css工具</li>
+</ul>
+</li>
+</ul>
+
+
+<h3><label id="Javascript" />Javascript</h3>
+
+<ul>
+<li><p><strong><label id="JSFramework" />Framework</strong></p>
+
+<ul>
+<li><a href="http://nodejs.org/">Node.js</a> –
+基于Javascript的Web服务端解决方案</li>
+<li><a href="http://documentcloud.github.com/backbone/">Backbone.js</a> –
+一个前端MVC框架</li>
+<li><a href="http://seajs.com/">SeaJS</a> – SeaJS
+是一个遵循CommonJS规范的模块加载框架，可用来轻松加载任意JavaScript模块</li>
+<li><a href="http://kissyui.com/">Kissy</a> –
+由淘宝前端团队发布的一款开源JS类库</li>
+<li><a href="http://lmatteis.github.com/apejs/">APEJS</a> – A tiny JavaScript
+web framework targeted for Google App Engine</li>
+<li><a href="http://www.sproutcore.com/">SproutCore</a> – iCloud 和 MobileMe
+的JS Framework</li>
+</ul>
+</li>
+<li><p><strong><label id="Library" />Library</strong></p>
+
+<ul>
+<li><a href="https://github.com/tommoor/tinycon">tinycon</a> –
+通过chrome的favicon来动态显示数字信息，比如未读消息</li>
+<li><a href="http://ssssnakes.com/smoke/">Smoke</a> –
+小巧实用的javascript通知库</li>
+<li><a href="http://datatables.net/">DataTables</a> – 优雅的前端表格库</li>
+<li><a href="http://jscex.info/">Jscex</a> – monadic扩展</li>
+<li><a href="http://www.miniui.com/">MinUI</a> –
+一套国产UI库，包含强大的数据显示控件</li>
+</ul>
+</li>
+<li><p><strong><label id="JQuery" />JQuery (<a href="http://jquery.com">website</a>)</strong></p>
+
+<ul>
+<li><a href="http://harvesthq.github.com/chosen/">Chosen</a> – 下拉框多选插件</li>
+<li><a href="http://tablesorter.com">tablesorter</a> – 表格排序插件</li>
+<li><a href="http://imakewebthings.github.com/jquery-waypoints/">Waypoints</a>
+– 触发页面滚动事件的小插件，很实用</li>
+<li><a href="http://gettopup.com">Topup</a> – 图片显示插件</li>
+<li><a href="http://lab.mattvarone.com/projects/jquery/totop/">UItoTop</a> –
+回到页面顶部插件</li>
+<li><a href="http://loopj.com/jquery-tokeninput/">Tokeninput</a> –
+文本框即时搜索列表</li>
+<li><a href="http://bassistance.de/jquery-plugins/jquery-plugin-accordion/">Accordion</a>
+– 折叠菜单插件</li>
+<li><a href="http://bassistance.de/jquery-plugins/jquery-plugin-treeview/">Treeview</a>
+– 树形列表插件</li>
+<li><a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">Validation</a>
+– 表单验证插件</li>
+<li><a href="http://leandrovieira.com/projects/jquery/lightbox/">Lightbox</a></li>
+<li><a href="http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html">Highlight</a>
+– 高亮显示插件</li>
+<li><a href="http://www.pikachoose.com/">PikaChoose</a> – 轮播式图片展示</li>
+<li><a href="http://www.planeart.cn/demo/artDialog/">artDialog</a> – 对话框插件</li>
+<li><a href="http://www.wbotelhos.com/raty/">Raty</a> – 评分插件</li>
+<li><a href="http://www.sunsean.com/idTabs/">idTabs</a> – Tab插件</li>
+<li><a href="http://tympanus.net/jPaginate/">jPaginate</a> – 分页插件</li>
+<li><a href="http://tutorialzine.com/2010/07/colortips-jquery-tooltip-plugin/">tooltip</a>
+– tooltip插件</li>
+<li><a href="http://comparenetworks.com/developers/jqueryplugins/jbreadcrumb.html">jBreadcrumb</a>
+– 面包屑插件</li>
+<li><a href="http://addyosmani.github.com/jquery-ui-bootstrap/">UI
+Bootstrap</a></li>
+<li><a href="http://www.turnjs.com">turn.js</a> – 翻页特效</li>
+<li><a href="https://github.com/mrdoob/three.js/">three.js</a> – 粒子特效</li>
+<li><a href="https://github.com/cowboy/jquery-bbq">Jauery-BBQ</a> –
+一款可以记录前进后退按钮的插件</li>
+</ul>
+</li>
+<li><p><strong><label id="Nodejs" />Node.js</strong></p>
+
+<ul>
+<li><a href="http://nodejs.org/">官网</a></li>
+<li><a href="https://github.com/joyent/node" title="Github">源码</a></li>
+<li><a href="http://club.cnodejs.org/">CNode – 中文社区</a></li>
+<li><a href="http://cnodejs.net/">NAE</a> – NodeJS应用开发与运行平台</li>
+<li>开发工具
+
+<ul>
+<li><a href="https://github.com/tanepiper/SublimeText-Nodejs">Sublime Text –
+Nodejs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong><label id="Mobile-Web-Framework" />Mobile Web Framework</strong></p>
+
+<ul>
+<li><a href="http://www.lungojs.com/">LungoJS</a></li>
+<li><a href="http://jquerymobile.com/">Jquery Mobile</a> –
+基于HTML5的Jquery前端移动设备开发框架</li>
+</ul>
+</li>
+<li><p><strong><label id="Resources" />Resources</strong></p>
+
+<ul>
+<li><p><a href="http://sae.sina.com.cn/?m=devcenter&amp;catId=147">Sina App
+Engine公共资源库</a>
+– 采用CDN技术提供常用js/css库的引用支持</p>
+
+<ul>
+<li><a href="http://lib.sinaapp.com/?path=jquery/">jQuery版本支持列表</a></li>
+</ul>
+</li>
+<li><p><a href="http://www.cdnjs.com/">CDNJS</a> –
+同样采用CDN技术，提供几乎全部JS库的引用支持</p></li>
+</ul>
+</li>
+</ul>
+
+
+<h3><label id="HTML" />HTML</h3>
+
+<ul>
+<li><p><strong><label id="Web-Text-Editor" />Web Text Editor</strong></p>
+
+<ul>
+<li><a href="http://www.kindsoft.net/">KindEditor</a> – 国产开源在线HTML编辑器</li>
+<li><a href="http://ckeditor.com/">CKEditor</a> – 国外开源在线HTML编辑器</li>
+<li><a href="http://ueditor.baidu.com/">UEditor</a></li>
+<li><a href="https://github.com/coreyti/showdown">ShowDown</a>
+支持markdown的JS编辑器</li>
+</ul>
+</li>
+<li><p><strong><label id="Text-to-HTML" />Text-to-HTML Conversion Tools</strong></p>
+
+<ul>
+<li><p><a href="http://daringfireball.net/projects/markdown/">Markdown</a></p>
+
+<ul>
+<li><a href="http://markdown.tw/">翻体中文版文档</a></li>
+<li><a href="http://daringfireball.net/projects/markdown/dingus">在线转换工具</a></li>
+</ul>
+</li>
+<li><p><a href="http://redcloth.org/textile">Textile</a></p>
+
+<ul>
+<li><a href="http://www.textism.com/tools/textile/">在线转换工具</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong><label id="References" />References</strong></p>
+
+<ul>
+<li><a href="http://www.w3school.com.cn/html5/index.asp">HTML5手册</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3><label id="Design" />设计相关</h3>
+
+<ul>
+<li><p><label id="ICONS" />图片、图标(Icons)：</p>
+
+<ul>
+<li><a href="http://speckyboy.com/2011/12/12/top-50-web-development-design-and-application-icon-sets-from-2011/">2011年50个最佳图标设计集合</a></li>
+<li><a href="http://findicons.com">FindIcons图标搜索引擎</a></li>
+<li><a href="http://www.iconarchive.com/" title="非常多优秀的图标设计供免费下载使用">Icon
+Archive</a></li>
+<li><a href="http://www.iconspedia.com/">PNG icons &amp; Icons Picks Download</a></li>
+<li><a href="http://dryicons.com/">DryIcons - Free Icons and Vector Graphics</a></li>
+<li><a href="http://www.iconeasy.com/">Icon Easy</a></li>
+<li><a href="http://www.tutorial9.net/">Tutorial9 | Photoshop Tutorials, Photography Tuts, and
+Resources</a></li>
+<li><a href="http://thedesignmag.com/16-sketchy-hand-drawn-icon-sets.html">16 Sketchy Hand Drawn Icon
+Sets</a></li>
+<li><a href="http://people.freedesktop.org/~jimmac/icons/">Gnome Icon Theme</a></li>
+<li><a href="http://www.dutchicon.com/">dutch icon?</a></li>
+<li><a href="http://openiconlibrary.sourceforge.net/">开源图标库</a></li>
+<li>PhotoShop：<a href="http://www.blueidea.com/tech/graph/2003/672.asp">PhotoShop通道白解</a>
+| <a href="http://zhidao.baidu.com/question/293029002.html">PhotoShop CS5序列号</a></li>
+</ul>
+</li>
+<li><p><label id="Fonts" />字体：</p>
+
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/%E8%A1%AC%E7%BA%BF%E4%BD%93">什么是衬线体</a></li>
+<li><a href="http://wenq.org/">文泉驿</a> - 开源字体。开彼源兮，斯流永继。</li>
+<li><a href="http://www.cnbeta.com/articles/102609.htm">让代码更美:10大编程字体</a></li>
+<li><a href="http://www.typeisbeautiful.com/">Type is Beautiful</a> - 字体排版</li>
+<li><a href="http://code.google.com/webfonts">Google Font Directory</a></li>
+<li><a href="http://www.network-science.de/ascii/" title="字符图案生成器">ASCII Generator</a></li>
+<li>假文填充：<a href="http://zh.wikipedia.org/zh-cn/Lorem_ipsum">Lorem ipsum</a> |
+<a href="http://more.handlino.com/" title="一用就爱上的中文假文生成器">中文假文MoreText.js</a>
+<a href="http://github.com/c9s/more.vim" title="MoreText的vim插件">MoreText的Vim插件</a>
+| <a href="http://www.richyli.com/tool/loremipsum/">亂數假文產生器 Chinese Lorem Ipsum</a></li>
+</ul>
+</li>
+<li><p><label id="Table" />表格：</p>
+
+<ul>
+<li><a href="http://article.yeeyan.org/view/155461/108136">15个优秀的表格设计技巧</a></li>
+<li><a href="http://www.askthecssguy.com/2007/08/creating_a_table_with_dynamica.html">Creating a table with dynamically highlighted columns like Crazy
+Eggs pricing
+table</a></li>
+<li><a href="http://www.junchenwu.com/2007/02/redesign_a_simple_table.html">越减越妙：简单表格的再设计</a></li>
+<li><a href="http://blog.bingo929.com/15-jquery-plugins-for-better-table-manipulation.html/comment-page-1">15款提高表格操作的jQuery插件</a></li>
+</ul>
+</li>
+<li><p><label id="Resource" />资源：</p>
+
+<ul>
+<li><a href="http://dribbble.com/">Dribble：著名设计师聚合网站</a></li>
+<li><a href="http://www.zcool.com.cn/">站酷：交流设计、分享快乐</a></li>
+<li><a href="http://www.quanjing.com/">全景：创意图片库</a></li>
+<li><a href="http://designlol.net/">Designlol：全球设计精享</a></li>
+<li><a href="http://cn.designboom.com/">Designboom</a></li>
+<li>配色方案：<a href="http://www.colorschemer.com/">Color Schemer</a> |
+<a href="http://kuler.adobe.com/">kuler</a> | <a href="http://color.aurlien.net/">Piknik Color
+Picker</a></li>
+<li><a href="http://www.qianduan.net/80-more-absolutely-beautiful-dual-screen-wallpaper.html">80多个绝对漂亮的双屏壁纸</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h3><label id="Design-Material" />Design Material</h3>
+
+<ul>
+<li><a href="http://www.zcool.com.cn">站酷-ZCool</a></li>
+<li><a href="http://www.glyphish.com">GlypFish</a></li>
+<li><a href="http://www.icons4coffee.com">Icons4Coffee</a></li>
+<li><a href="http://raphaeljs.com/icons/">RaphaelJS Free Icons</a></li>
+<li><a href="http://uicons.co/">UIcons</a></li>
+<li><a href="http://www.emoji-cheat-sheet.com/">Emoji Cheat Sheet</a> –
+一套很全的表情</li>
+</ul>
+
+
+	</div>
+</div>
+<!--[if IE 6]>
+<script type="text/javascript"> 
+	/*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; } 
+	var IE6UPDATE_OPTIONS = {
+		icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+	}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+</body>
+</html>
+

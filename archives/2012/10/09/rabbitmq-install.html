@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>RabbitMQ安装及使用</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">RabbitMQ安装及使用</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+
+<h3 id="blockquote">介绍：</h3>
+
+
+<p>rabbitMQ是一个在AMQP协议标准基础上完整的，可服用的企业消息系统。他遵循Mozilla Public License开源协议。采用 Erlang 实现的工业级的消息队列(MQ)服务器。</p>
+
+<p>RabbitMQ的官方站：<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
+
+<h3 id="blockquote">RabbitMQ安装（windows）</h3>
+
+
+<ul>
+<li><p>首先需要下载erlang运行时环境(Windows binary): <a href="http://erlang.org/download.html">http://erlang.org/download.html</a>
+下面设置一下环境变量：变量名：ERLANG_HOME，变量值：安装路径</p></li>
+<li><p>接着下载RabbitMQ Server（目前最新版本为2.8.7），链接如下：<a href="http://www.rabbitmq.com/server.html">http://www.rabbitmq.com/server.html</a>
+安装并启动服务。</p></li>
+</ul>
+
+
+<h3 id="blockquote">RabbitMQ安装（CentOS）</h3>
+
+
+<ul>
+<li>安装erlang：</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>tar zxvf otp_src_R15B02.tar.gz  
+cd otp_src_R15B02  
+./configure  
+make  
+make install
+</code></pre>
+
+<ul>
+<li>安装rabbitmq-server，可以直接下载Binary(rabbitmq-server-generic-unix-2.8.7.tar.gz)，解压并运行sbin/rabbitmq-server即可</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>tar zxvf rabbitmq-server-generic-unix-2.8.7.tar.gz  
+ln -s /usr/local/rabbitmq/sbin/* /usr/local/bin/ 
+</code></pre>
+
+<ul>
+<li>安装管理插件，访问地址：<a href="http://localhost:55672/mgmt">http://localhost:55672/mgmt</a>用户名guest，密码guest</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>rabbitmq-plugins enable rabbitmq_management
+</code></pre>
+
+<ul>
+<li>修改或创建rabbitmq-env.conf</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>#!/bin/sh  
+# I am a complete /etc/rabbitmq/rabbitmq-env.conf file.  
+# Comment lines start with a hash character.  
+# This is a /bin/sh script file - use ordinary envt var syntax  
+NODENAME=beango  
+RABBIT_HOME=/usr/local/rabbitmq  
+MNESIA_BASE=/usr/local/rabbitmq/data  
+LOG_BASE=/usr/local/rabbitmq/log  
+CONFIG_FILE=/usr/local/rabbitmq/etc/rabbitmq/rabbitmq  
+</code></pre>
+
+<ul>
+<li>修改或创建/usr/local/rabbitmq/etc/rabbitmq/rabbitmq.config</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>{rabbit,  
+    [  
+        {vm_memory_limit,0.6},  
+        {disk_free_limit,100000000}  
+    ]}  
+].
+</code></pre>
+
+<ul>
+<li>启动与关闭服务</li>
+</ul>
+
+
+<p>启动：</p>
+
+<pre><code>nohup rabbitmq-server start &gt; /usr/local/rabbitmq/log/system.log \ 2&gt;/usr/local/rabbitmq/log/system.log &amp;  
+</code></pre>
+
+<p>关闭：</p>
+
+<pre><code>rabbitmqctl stop
+</code></pre>
+
+<h3 id="blockquote">RabbitMQ配置</h3>
+
+
+<ul>
+<li>首先创建vhosts，命令如下：</li>
+</ul>
+
+
+<p>添加创建虚拟主机</p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_vhost dnt_mq  #删除 rabbitmqctl delete_vhost vhostpath
+</code></pre>
+
+<p>用下面指定就可以显示出所有虚拟主机信息：</p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_vhosts  
+Listing vhosts ...  
+/   （根目录）  
+dnt_mq
+</code></pre>
+
+<p>下面添加用户和密码(用户名admin, 密码：111111)：</p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_user admin 111111  
+//修改用户密码：rabbitmqctl change_password username newpassword
+</code></pre>
+
+<p>绑定用户权限：</p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl set_permissions -p dnt_mq admin ".*" ".*" ".*"  
+Setting permissions for user "admin" in vhost "dnt_mq" ...
+</code></pre>
+
+<p>列出用户权限：</p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_user_permissions daizhj  
+//清除用户权限 rabbitmqctl clear_permissions [-p vhostpath] username
+Listing permissions for user "daizhj" ...
+dnt_mq  .*      .*      .*      client
+</code></pre>
+
+<h3 id="blockquote">RabbitMQ使用</h3>
+
+
+<ul>
+<li>Main</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>private const string exchange = "dnt_mq";  
+private const string queuename = "com.iuwebs.queue1";  
+
+public static int Main(string[] args1)  
+{  
+    ConnectionFactory cf = new ConnectionFactory();  
+    cf.Uri = "amqp://192.168.1.121:5672";  
+    int msgCount = 10;  
+    using (IConnection conn = cf.CreateConnection())  
+    {  
+        using (IModel ch = conn.CreateModel())  
+        {  
+            ensureQueue(ch);  
+
+            sendMessages(ch, queuename, 2 * msgCount);  
+            using (Subscription sub = new Subscription(ch, queuename,false))//创建订阅，不会自动ack响应  
+            {  
+                enumeratingReceiveMessages(sub, msgCount);  
+            }  
+        }  
+    }  
+    return 0;  
+}  
+</code></pre>
+
+<ul>
+<li>ensureQueue</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>private static void ensureQueue(IModel ch)  
+{  
+    ch.ExchangeDeclare("dnt_mq", "direct");  
+    //durable:是否持久化消息队列，即服务器重启后，这个queue及其中的消息是否存在  
+    //exclusive:排他性队列（Exclusive Queue)，只对首次声明它的连接（Connection）可见；会在其连接断开的时候自动删除。  
+    //autoDelete:这个queue不再使用的时候会被删除  
+    ch.QueueDeclare(queuename, true, false, false, null);  
+    ch.QueueBind(queuename, exchange, queuename, null);  
+}
+</code></pre>
+
+<ul>
+<li>sendMessages</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>private static void sendMessages(IModel ch, string queueName, long msgCount)  
+{  
+    var basicPro = ch.CreateBasicProperties();  
+    basicPro.DeliveryMode = 2;//是否持久化消息，1不是，2是  
+    while (msgCount-- &gt; 0)  
+    {  
+        ch.BasicPublish(exchange, queueName, basicPro, Encoding.UTF8.GetBytes("Welcome to Caerbannog!-持久化"));  
+    }  
+}
+</code></pre>
+
+<ul>
+<li>enumeratingReceiveMessages</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>private static void enumeratingReceiveMessages(Subscription sub, long msgCount)  
+{  
+    foreach (BasicDeliverEventArgs ev in sub)  
+    {  
+        Console.WriteLine("Message {0}: {1}", i, Encoding.UTF8.GetString(ev.Body));  
+        sub.Ack(ev); //发回响应，否则消息队列还将存在  
+    }  
+}
+</code></pre>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-10-09" datetime="2012-10-09" pubdate>
+							<span class="year">2012-10-09</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#高性能web-ref">
+    		高性能web <span>9</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="View Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17">&laquo; Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/11/15/mongodb-install.html" title="View MongoDB安装及使用">MongoDB安装及使用 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#职场-ref">职场 （2）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （9）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （4）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （6）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/19/redis-install.html" title="">CentOS6.3下Redis安装</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/23/pymongo-python-mongodb.html" title="">MongoDB的Python接口PyMongo</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/15/mongodb-install.html" title="">MongoDB安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/10/09/rabbitmq-install.html" title="">RabbitMQ安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/08/21/rabbitmq-cluster.html" title="">rabbitmq集群-1 介绍</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/25/jekyll-introduction.html" title="">利用Jekyll搭建个人博客</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/15/internet-protocol-suite-part-ii.html" title="">互联网协议入门（二）</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-01">2013-01 （1）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

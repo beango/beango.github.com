@@ -1,0 +1,163 @@
+---
+layout: post
+section: Archive
+categories: Archives
+date: 2012-12-10
+title: "SQL － 基础(不断补充)"
+description: "SQL － 基础(不断补充)"
+tags: [SQL]
+---
+
+-   游标和事务  
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+begin try
+  declare cur cursor for (select * from #table)
+  declare @id int
+
+  OPEN cur;
+  fetch next from cur into @id
+  WHILE (@@fetch_status = 0) begin
+    if @@error > 0 begin -- @@rowcount =0 没有更新任何行
+      CLOSE cur
+      DEALLOCATE cur
+      RAISERROR('error',16,1)
+    end
+    fetch next from cur into @id
+  end
+  CLOSE cur
+  DEALLOCATE cur;
+end try
+begin catch
+  if @@ERROR > 0 begin
+    -- 判断是否存在开启的事务，避免如果事务在这之前已提交或者已回滚，再次回滚会抛异常
+    if(@@TRANCOUNT <> 0) begin
+      rollback transaction; --事务回滚
+    end
+  end
+end catch
+{% endhighlight %}
+</div>
+
+说明：FETCH_STATUS检索到数据返回0，失败返回-1，可判断是否滚动未到结尾。
+
+-   说明:临时过程用 \# 和 \#\#命名，可以由任何用户创建。创建过程后，局部过程的所有者是唯一可以使用该过程的用户。  
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+CREATE TABLE #DMPARHED  
+  (FMCD int,  
+  FMNAM varchar(50),  
+  MGYO1 smallint,  
+  constraint DMPARHED_P primary key (FMCD))
+{% endhighlight %}
+</div>
+
+-   创建临时表的另类方法：  
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+select * into #temp from Employees 
+{% endhighlight %}
+</div>
+
+-   存储过程的调用及返回值
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+CREATE PROCEDURE dbo.getUserName  
+  @UserID int,  
+  @UserName varchar(40) output  
+as  
+  set nocount on  
+  begin  
+    if @UserID is null 
+      return  
+    select @UserName=username from dbo.[userinfo] where userid=@UserID  
+  end
+{% endhighlight %}
+</div>
+
+-   索引
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+/*在OrderID上面创建聚集索引，索引列为OrderID*/  
+create unique clustered index IX_OrderID on Orders(OrderID)  
+
+/*在Orders表上创建非聚集索引IX_OrderDate*/  
+create index IX_OrderDate on Orders(OrderDate)
+{% endhighlight %}
+</div>
+
+-   时间格式化
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+Select CONVERT(varchar(100), GETDATE(), 0): 05 16 2006 10:57AM  
+Select CONVERT(varchar(100), GETDATE(), 1): 05/16/06  
+Select CONVERT(varchar(100), GETDATE(), 2): 06.05.16  
+Select CONVERT(varchar(100), GETDATE(), 3): 16/05/06  
+Select CONVERT(varchar(100), GETDATE(), 4): 16.05.06  
+Select CONVERT(varchar(100), GETDATE(), 5): 16-05-06  
+Select CONVERT(varchar(100), GETDATE(), 6): 16 05 06  
+Select CONVERT(varchar(100), GETDATE(), 7): 05 16,06  
+Select CONVERT(varchar(100), GETDATE(), 8): 10:57:46  
+Select CONVERT(varchar(100), GETDATE(), 9): 05 16 2006 10:57:46:827AM  
+Select CONVERT(varchar(100), GETDATE(), 10): 05-16-06  
+Select CONVERT(varchar(100), GETDATE(), 11): 06/05/16  
+Select CONVERT(varchar(100), GETDATE(), 12): 060516  
+Select CONVERT(varchar(100), GETDATE(), 13): 16 05 2006 10:57:46:937  
+Select CONVERT(varchar(100), GETDATE(), 14): 10:57:46:967  
+Select CONVERT(varchar(100), GETDATE(), 20): 2006-05-16 10:57:47  
+Select CONVERT(varchar(100), GETDATE(), 21): 2006-05-16 10:57:47.157  
+Select CONVERT(varchar(100), GETDATE(), 22): 05/16/06 10:57:47 AM  
+Select CONVERT(varchar(100), GETDATE(), 23): 2006-05-16  
+Select CONVERT(varchar(100), GETDATE(), 24): 10:57:47  
+Select CONVERT(varchar(100), GETDATE(), 25): 2006-05-16 10:57:47.250  
+Select CONVERT(varchar(100), GETDATE(), 100): 05 16 2006 10:57AM  
+Select CONVERT(varchar(100), GETDATE(), 101): 05/16/2006  
+Select CONVERT(varchar(100), GETDATE(), 102): 2006.05.16  
+Select CONVERT(varchar(100), GETDATE(), 103): 16/05/2006  
+Select CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
+{% endhighlight %}
+</div>
+
+-   删除，修改
+
+<label/>
+    DELETE t1 FROM productappraise t1 INNER JOIN  product t2 ON t1.productid=t2.productid WHERE t2.companyid=@companyid 
+<label/>
+    update t1 set t1.name='Liu' from t1 inner join t2 on t1.id = t2.tid
+
+-   跨服务器查询
+
+<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+<div style="display:none;">
+{% highlight sql %}
+Exec sp_droplinkedsrvlogin DBVIP,Null  
+Exec sp_dropserver DBVIP  
+
+EXEC  sp_addlinkedserver  
+    @server='DBVIP',--被访问的服务器别名   
+    @srvproduct='',   
+    @provider='SQLOLEDB',  
+    @datasrc="192.168.1.110"   --要访问的服务器  
+
+EXEC sp_addlinkedsrvlogin   
+    'DBVIP', --被访问的服务器别名  
+    'false',  
+    NULL,  
+    'sa', --帐号  
+    'thankyoubobby' --密码  
+
+Select * from DBVIP.Northwind.dbo.orders   
+{% endhighlight %}
+</div>

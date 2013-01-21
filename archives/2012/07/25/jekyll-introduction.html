@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>利用Jekyll搭建个人博客</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">利用Jekyll搭建个人博客</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>Jekyll是一个静态网站生成器，用ruby编写而成，结合了markdown、Liquid等技术，简化了静态网站的构建过程，配合disqus等技术，可以方便的生成具有简单动态功能的网站。</p>
+
+<h3>准备工作</h3>
+
+<ul>
+<li>安装<a href="http://rubyinstaller.org/downloads/">RubyInstaller</a></li>
+<li>安装<a href="http://rubyinstaller.org/downloads/">DevKit</a></li>
+<li>安装Jekyll：</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ gem install jekyll
+</code></pre>
+
+<ul>
+<li>安装<a href="http://www.python.org/getit/">Python</a>（推荐Python 2.7.2）</li>
+<li>安装Python <a href="http://pypi.python.org/pypi/setuptools">setuptools</a>，找对应的exe文件下载安装。</li>
+<li>添加 C:\Python27\Scripts（假设你的Python安装在C盘根目录下）到你的path</li>
+<li>安装pygments:</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ easy_install pygments
+</code></pre>
+
+<ul>
+<li>安装rdiscount:</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ yum install rdiscount
+</code></pre>
+
+<ul>
+<li>安装windows下的Git——<a href="http://msysgit.github.com/">msysGit</a></li>
+<li>在Github上创建一个账户。Github会引导你如何进行简单的设置，如果你没用过Git，没关系，只管照做。</li>
+</ul>
+
+
+<h3>3分钟搭建Jekyll Blog</h3>
+
+<ul>
+<li>创建一个新的个版本库</li>
+</ul>
+
+
+<p>登陆你的<a href="https://github.com/">Github</a>账户，创建一个新的版本库，命名为</p>
+
+<pre><code>USERNAME.github.com
+</code></pre>
+
+<ul>
+<li>安装Jekyll引导程序（Jekyll-Bootstrap）</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ git clone https://github.com/plusjade/jekyll-bootstrap.git USERNAME.github.com  
+$ cd USERNAME.github.com  
+$ git remote set-url origin git@github.com:USERNAME/USERNAME.github.com.git  
+$ git push origin master
+</code></pre>
+
+<ul>
+<li><p>enjoy<br/>
+两分钟后你的Blog神奇的出现在<a href="http://username.github.com/">http://USERNAME.github.com</a></p></li>
+<li><p>如果你安装了Jekyll，你可以在本地预览你的Blog:</p></li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ git clone https://github.com/plusjade/jekyll-bootstrap.git  
+$ cd jekyll-bootstrap  
+$ jekyll --server
+</code></pre>
+
+<p>在浏览器预览<a href="http://localhost:4000/">http://localhost:4000</a>.</p>
+
+<ul>
+<li><a href="http://jekyllbootstrap.com/lessons/jekyll-introduction.html">更多介绍</a></li>
+</ul>
+
+
+<h3>快速开始</h3>
+
+<ul>
+<li>本地运行Jekyll</li>
+</ul>
+
+
+<p>假设你已经安装好了jekyll-bootstrap，以及其他一些基本运行环境和工具，首先启动你本地的WEBrick服务器（Ruby自带的）：</p>
+
+<pre><code>$ cd USERNAME.github.com  
+$ jekyll --server  
+</code></pre>
+
+<p>别忘了把USERNAME换成你的GitHub用户名。<br/>
+你的Blog在这预览: <a href="http://localhost:4000/">http://localhost:4000/</a>。</p>
+
+<ul>
+<li>创建第一篇博文</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ rake post title="Hello World"
+</code></pre>
+
+<p>情况下rake命令会在你的_posts目录下创建一个名为[年-月-日-posttitle.md]的文件，例如2012-05-04-Hello-World.md，名称中的空格会转换成“-”，时间为当前系统时间。当然这些都是可配置的。<br/>
+rake命令默认不会覆盖掉相同名称的文件。</p>
+
+<ul>
+<li>创建第一个页面</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code># 根目录下创建页面  
+$ rake page name="about.md"
+
+# 自定义目录下创建页面  
+$ rake page name="pages/about.md"
+
+# 创建类似./pages/about/index.html目录结构的页面  
+$ rake page name="pages/about"
+</code></pre>
+
+<p>发布</p>
+
+<ul>
+<li>完成一篇博文或者做一些修改之后可以用简单的git命令提交到远程的Github版本库。同时Github可以将md文件解析成html文件，通过USERNAME.github.com就可以访问刚才提交的博文。</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ git add .  
+$ git commit -m "Add new content"  
+$ git push origin master
+</code></pre>
+
+<p>至此你就可以写自己的blog like a hacker。</p>
+
+<p>当然你还可以运用一些预置的主题，做一些自定义的配置，以及自己定义主题增加模板配置文件、增加Blog挂件、加入Google Analytics、Disqus等等，同样可以将一个静态网站做的栩栩如生。</p>
+
+<ul>
+<li>另外网站默认是托管在Github服务器（实际上是RackSpace的云服务器）上的，你还可以考虑免费的Heroku，至于GAE、EC2（免费一年），显然有些大材小用了。</li>
+</ul>
+
+
+<h3>遇到的问题</h3>
+
+<ul>
+<li>本地post中出现中文不能正常编译<br/>
+由于windows下的git控制台MinGW默认不支持中文编码，需要将其设置为UTF-8，有两种解决方案：<br/>
+临时：控制台输入以下语句</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ export LC_ALL=en_US.UTF-8  
+$ export LANG=en_US.UTF-8  
+</code></pre>
+
+<p>永久：添加两个用户自定义的环境变量，LC_ALL=en_US.UTF-8 和 LANG=en_US.UTF-8（你想的没错，就是修改windows环境变量）</p>
+
+<p>另外Jekyll默认的Markdown引擎markup对中文的解析不是很好，建议换成rdiscount。在_config.yml文件中pygments: true上一行添加markdown: rdiscount。在此之前你必须首先安装Rdiscount。</p>
+
+<pre><code>$ gem install rdiscount
+</code></pre>
+
+<ul>
+<li>Liquid error: No such file or directory - pygmentize<br/>
+没有安装Pygments的缘故，如果你安装了python，只需要easy install。</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ easy_install Pygments
+</code></pre>
+
+<ul>
+<li>Liquid error: bad file descriptor<br/>
+我的电脑上同时装了python2.7和python3.2，我想是这个原因。需要给albino.rb文件打个补丁，假设你的Ruby安装在D:\Program\，并且你已经把<a href="https://gist.github.com/2592525">albino-windows-refactor.patch</a>补丁文件copy到了下边的目录：</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ cd D:\Program\Ruby193\lib\ruby\gems\1.9.1\gems\albino-1.3.3\lib  
+$ patch \&lt; albino-windows-refactor.patch
+</code></pre>
+
+<ul>
+<li>侧边栏二级目录的链接不起作用<br/>
+这个问题花了不少时间，最终还是未能找到问题所在，无奈，只有自己动手丰衣足食，自己写js搞定。</li>
+</ul>
+
+
+<p>首先看一下源码，在assets\app.js文件中的Toc中看可以看到：</p>
+
+<p><label/></p>
+
+<pre><code>node.children.each(function(){  
+    cache += '&lt;li class="sub"&gt;&lt;a href="#'+ this.id + '"&gt;'+ $(this).text() + '&lt;/a&gt;&lt;/li&gt;';  
+})  
+</code></pre>
+
+<p>显然他在这为链接设置了href，但是调用了h2对象（也就是侧边栏目录的二级菜单）的id属性，而用Firebug查看最终解析成的html文件，发现&lt;h2>的id是不存在的，于是自然想到这在之前先为h2设置唯一的id属性。这个用jQuery很容易就能实现：</p>
+
+<p><label/></p>
+
+<pre><code>$("h2").each(function(){$(this).attr("id","_"+$(this).text());});
+</code></pre>
+
+<ul>
+<li>类似于could't parse YAML at line 6 column 6 (Psych::SyntaxError)的问题<br/>
+YAM了貌似对空格比较敏感，需要一个空格的时候就不要敲多个空格，同时注意你的Tab缩进，_config.yml中的属性都是key: value形式的，别忘了：后边有个空格。</li>
+</ul>
+
+
+<p>另外post文件头中的属性配置也要注意：</p>
+
+<pre><code>---  
+layout: post  
+title : post_title  
+categories : category_name  
+description: |  
+    This is a decription.  
+---  
+</code></pre>
+
+<p>description第二行开头我敲了一个Tab（四个字符宽度）就出错了，一些细节，注意一下就好了。</p>
+
+<h3>域名绑定</h3>
+
+<p>Github会为你分配一个类似于USERNAME.github.com的二级域名，如果你自己有一个顶级域名，你可以将它与Github提供的一个共有IP(204.232.175.78)绑定，这个在Github Pages上有详细介绍，在你的网站根目录下增加一个CNAME文件，里边写你自己的域名，再给你的域名增加一条A记录，稍等片刻之后就可以用你的域名访问了。</p>
+
+<p>当然域名是需要花钱的，如果你舍不得花银子，免费的午餐还是会有的，你可以免费申请一个（当然也可以是多个）.tk的域名。DotTK提供yourname.tk的免费顶级域名。.tk是南太平洋岛国托克劳的国家域名，免费注册一个帐户可以任意申请.tk域名，支持域名转发（可隐藏原URL）、电邮转发、A记录解析、CNAME别名记录、MX邮件记录、设置DNS服务器等服务。当然免费的总是会有一些限制条件喽。</p>
+
+<p>如果你注册的域名在90天内访问量少于25个，你的域名将被删除！
+如果你开通的电邮转发在90天内收到的邮件少于10封，你的电邮转发服务将被停止！
+另外很多看起来不错的域名不是免费的，要交费才能注册使用！比如说cn.tk。</p>
+
+<p>注册流程很简单，有中文版的，几十秒钟你的免费顶级域名就到手了，是不是很happy！</p>
+
+<h3>其他</h3>
+
+<ul>
+<li>html代码转markdown <a href="http://johnmacfarlane.net/pandoc/installing.html">pandoc</a>:<br/>
+pandoc -f html -t markdown hello.html -o 2012-08-06-hello.md</li>
+<li><a href="http://www.cnblogs.com/rollenholt/articles/2389459.html">github中的登录认证</a></li>
+</ul>
+
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-07-25" datetime="2012-07-25" pubdate>
+							<span class="year">2012-07-25</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#jekyll-ref">
+    		jekyll <span>2</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/07/15/internet-protocol-suite-part-ii.html" title="View 互联网协议入门（二）">&laquo; 互联网协议入门（二）</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/08/21/rabbitmq-cluster.html" title="View rabbitmq集群-1 介绍">rabbitmq集群-1 介绍 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#职场-ref">职场 （2）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （9）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （4）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （6）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/19/redis-install.html" title="">CentOS6.3下Redis安装</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/23/pymongo-python-mongodb.html" title="">MongoDB的Python接口PyMongo</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/15/mongodb-install.html" title="">MongoDB安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/10/09/rabbitmq-install.html" title="">RabbitMQ安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/08/21/rabbitmq-cluster.html" title="">rabbitmq集群-1 介绍</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/25/jekyll-introduction.html" title="">利用Jekyll搭建个人博客</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/15/internet-protocol-suite-part-ii.html" title="">互联网协议入门（二）</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-01">2013-01 （1）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="utf-8">
+    <title>Database ← Huang Ding</title>
+    
+    <meta name="author" content="Huang Ding">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<script type="text/javascript" src="/assets/themes/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/waypoints.min.js"></script>
+	<script type="text/javascript" src="/assets/themes/jquery.ui.totop.js"></script>
+	<script type="text/javascript" src="/assets/themes/common.js"></script>
+
+    <!-- Le styles -->
+    <link href="/assets/themes/wiki.css" rel="stylesheet" />
+	<link href="/assets/themes/ui.totop.css" rel="stylesheet" />
+  </head>
+
+ <body>
+<div id="container">
+ 	<div id="sidebar">
+		<div id="menu-nav">
+	<div id="logo"><a href="/wiki/">Wiki</a></div>
+	
+	<ul>
+		<li>Development &amp; Design
+			<ul>
+				<li><a href="/wiki/development-design/dotnet.html">.NET</a></li>
+				<li><a href="/wiki/development-design/actionscript.html">ActionScript</a></li>
+				<li><a href="/wiki/development-design/database.html">Database</a></li>
+				<li><a href="/wiki/development-design/php.html">PHP</a></li>
+				<li><a href="/wiki/development-design/objectivec.html">ObjectiveC</a></li>
+				<li><a href="/wiki/development-design/python.html">Python</a></li>
+				<li><a href="/wiki/development-design/ruby.html">Ruby</a></li>
+				<li><a href="/wiki/development-design/web-front-end.html">Web Front-end</a></li>
+			</ul>
+		</li>
+
+		<li>Database
+			<ul>
+				<li><a href="/wiki/database/ms_sqlserver.html">MS SqlServer</a></li>
+			</ul>
+		</li>
+
+		<li>Software
+			<ul>
+				<!--<li><a href="/wiki/software/android.html">Android</a></li>-->
+				<li><a href="/wiki/software/osx.html">OS X</a></li>
+				<li><a href="/wiki/software/linux.html">Linux</a></li>
+				<li><a href="/wiki/software/windows.html">Windows</a></li>
+				<li><a href="/wiki/software/sublime-text.html">Sublime Text</a></li>
+				<li><a href="/wiki/software/vim.html">Vim</a></li>
+			</ul>
+		</li>
+		
+		<li>Other
+			<ul>
+				<!-- <li><a href="/wiki/other/articles.html">Articles</a></li> -->
+				<li><a href="/wiki/other/open_source_projects.html">Open Source</a></li>
+				<li><a href="/wiki/other/references.html">References</a></li>
+				<li><a href="/wiki/other/server.html">Server</a></li>
+				<li><a href="/wiki/other/website.html">WebSite</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>Links
+			<ul>
+				<li><a href="/">Home</a></li>
+				<li><a href="https://github.com/beango/beango.github.com">Source</a></li>
+				<li><a href="http://blog.iuwebs.com">Blog</a></li>
+			</ul>
+		</li>
+	</ul>
+	
+	<ul class="misc">
+		<li>Powered by <a href="http://pages.github.com/">Github Pages</a></li>
+	</ul>
+</div>
+
+	</div>
+	<div id="content">
+		<div id="charpter">
+    <h3>Contents</h3>
+    
+    <ul>
+        <li><a href="#Relational">Relational Database</a></li>
+        <li><p><a href="#NoSQL">NoSQL Database</a></p>
+            <ul>
+                <li><a href="#Document-Store">Document Store</a></li>
+                <li><a href="#Key-Value">Key-Value / Tuple Store</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+<h1>Database</h1>
+
+<h3><div id="Relational"></div>Relational Database</h3>
+
+<ul>
+<li><a href="http://www.mysql.com/">MySQL</a></li>
+<li><a href="http://www.postgresql.org/">PostgreSQL</a></li>
+<li><a href="http://sqlite.org/">SQLite</a></li>
+<li><a href="http://www.microsoft.com/sqlserver/">SQL Server</a></li>
+<li><a href="http://www.oracle.com">Oracle</a></li>
+<li><a href="http://www-01.ibm.com/software/data/db2/">DB2</a></li>
+</ul>
+
+
+<h3><div id="NoSQL"></div>NoSQL Database</h3>
+
+<ul>
+<li><p><strong><div id="Document-Store"></div>Document Store</strong></p>
+
+<ul>
+<li><p><a href="http://www.mongodb.org/">MongoDB</a> – a scalable,
+high-performance, open source, document-oriented database.
+Written in C++.</p>
+
+<ul>
+<li><a href="http://code.google.com/p/rock-php/">RockMongo</a> –
+基于PHP的MongoDB Web管理工具</li>
+<li><a href="http://www.mongovue.com/">MongoVUE</a> – 基于.Net的MongoDB
+windows管理工具</li>
+</ul>
+</li>
+<li><p><a href="http://couchdb.apache.org/">CouchDB</a></p></li>
+<li><a href="http://code.google.com/p/terrastore/">Terrastore</a></li>
+<li><a href="http://code.google.com/p/thrudb/">ThruDB</a></li>
+</ul>
+</li>
+<li><p><strong><div id="Key-Value"></div>Key-Value / Tuple Store</strong></p>
+
+<ul>
+<li><a href="http://code.google.com/p/leveldb/">LevelDB</a> –
+Google开发的速度飞快的数据库键值存储引擎，可按照字符串键值顺序映射。</li>
+<li><p><a href="http://redis.io/">Redis</a> – advanced key-value store.</p>
+
+<ul>
+<li><a href="http://redis.readthedocs.org/en/2.4/index.html">Redis命令参考简体中文版</a></li>
+<li><a href="https://github.com/steelThread/redmon">Redis监控管理web工具</a></li>
+</ul>
+</li>
+<li><p><a href="http://memcachedb.org/">MemcacheDB</a></p></li>
+<li><a href="http://www.couchbase.org/">Couchbase</a> 一款被Draw
+Something游戏使用的NoSQL数据库</li>
+<li><a href="http://cassandra.apache.org/">Cassandra</a></li>
+</ul>
+</li>
+</ul>
+
+
+	</div>
+</div>
+<!--[if IE 6]>
+<script type="text/javascript"> 
+	/*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; } 
+	var IE6UPDATE_OPTIONS = {
+		icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+	}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+</body>
+</html>
+

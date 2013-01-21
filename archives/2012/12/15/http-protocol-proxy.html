@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>HTTP协议之代理</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">HTTP协议之代理</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h3>阅读目录</h3>
+
+<ul>
+<li><a href="#chapter1">什么是代理服务器</a></li>
+<li><a href="#chapter2">Fiddler就是个典型的代理</a></li>
+<li><a href="#chapter3">代理作用一：翻墙</a></li>
+<li><a href="#chapter4">代理作用二：匿名访问</a></li>
+<li><a href="#chapter5">代理作用三：通过代理上网</a></li>
+<li><a href="#chapter6">代理作用四：通过代理缓存，加快上网速度</a></li>
+<li><a href="#chapter7">代理作用五：儿童过滤器</a></li>
+<li><a href="#chapter8">IE代理设置：手动设置代理</a></li>
+<li><a href="#chapter9">IE代理设置：使用自动配置脚本(PAC)</a></li>
+<li><a href="#chapter10">IE代理设置：自动探测设置(WPAD)</a></li>
+<li><a href="#chapter11">代理认证，407状态码</a></li>
+<li><a href="#chapter12">使用代理服务器的安全问题</a></li>
+<li><a href="#chapter13">如何搭建代理服务器</a></li>
+</ul>
+
+
+<h3 id="chapter1">什么是代理服务器</h3>
+
+
+<p>Web代理（proxy）服务器是网络的中间实体。
+代理位于Web客户端和Web服务器之间，扮演“中间人”的角色。</p>
+
+<p>HTTP的代理服务器即是Web服务器又是Web客户端。</p>
+
+<p><img src="/assets/files/2012-12/2012120511054068.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter2">Fiddler就是个典型的代理</h3>
+
+
+<p>Fiddler 是以代理web服务器的形式工作的,它使用代理地址:127.0.0.1,
+端口:8888. 当Fiddler退出的时候它会自动注销代理，这样就不会影响别的程序。</p>
+
+<p><img src="/assets/files/2012-12/2012020409075327.png" alt="" class="Pic" /></p>
+
+<p><img src="/assets/files/2012-12/2012020409081574.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter3">代理的作用一， 翻墙</h3>
+
+
+<p>很多人都喜欢用Facebook， 看youTube。但是我们在天朝，天朝有The Great of
+Wall(长城防火墙)，屏蔽了这些好网站。  怎么办?<br/>
+通过代理来跳墙，就可以访问了。</p>
+
+<p>自己去寻找代理服务器很麻烦， 一般都是用翻墙软件来自动发现代理服务器的。</p>
+
+<p><img src="/assets/files/2012-12/2012120519345158.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter4">代理的作用二， 匿名访问</h3>
+
+
+<p>经常听新闻，说”某某某“在网络上发布帖子，被跨省追缉了。<br/>
+假如他使用匿名的代理服务器，就不容易暴露自己的身份了。</p>
+
+<p>http代理服务器的匿名性是指：
+HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的IP地址，
+或cookie,或URI的会话ID），
+从而对远端服务器隐藏原始用户的IP地址以及其他细节。
+<span style="background-color: #ffff00;">同时HTTP代理服务器上也不会记录原始用户访问记录的log(否则也会被查到)</span>。</p>
+
+<h3 id="chapter5">代理的作用三， 通过代理上网</h3>
+
+
+<p>比如局域网不能上网， 只能通过局域网内的一台代理服务器上网。</p>
+
+<h3 id="chapter6">代理的作用四， 通过代理缓存，加快上网速度</h3>
+
+
+<p>大部分代理服务器都具有缓存的功能，就好像一个大的cache，
+它有很大的存储空间，它不断将新取得数据存储到它本地的存储器上，
+如果浏览器所请求的数据在它本机的存储器上已经存在而且是最新的，那么它就不重新从Web服务器取数据，而直接将存储器上的数据传给用户的浏览器，这样就能显著提高浏览速度。</p>
+
+<h3 id="chapter7">代理的作用五：儿童过滤器</h3>
+
+
+<p>很多教育机构， 会利用过滤器代理来阻止学生访问成人内容。</p>
+
+<p><img src="/assets/files/2012-12/2012120516393239.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter8">IE代理设置：手动设置代理</h3>
+
+
+<p>IE浏览器可以手动设置代理， 很简单，指定一个IP地址和端口就可以了。 如下图。</p>
+
+<p>工具 -＞ Internet选项 -> 连接 -> 局域网设置 （快捷键）</p>
+
+<p><img src="/assets/files/2012-12/2012120519480694.png" alt="" class="Pic" /></p>
+
+<p>假如代理服务器的IP地址改变了，或者端口号改变了。
+难道要几百个客户端的浏览器去修改浏览器设置？ Impossable  这太难维护了。  下面还有一种更高级点的方法。</p>
+
+<h3 id="chapter9">IE代理设置：使用自动配置脚本（PAC）</h3>
+
+
+<p> 手动配置代理很简单，但是不灵活。 只能指定一个代理服务器，而且不支持故障转移。</p>
+
+<p>在大公司里一般都使用PAC文件来配置。只需要指定PAC文件的URL就可以了， 如图：</p>
+
+<p><img src="/assets/files/2012-12/2012120519531553.png" alt="" class="Pic" /></p>
+
+<p>PAC（Proxy Auto Config）文件是一个小型的JavaScript程序的文本文件，后缀为.dat。</p>
+
+<p>当浏览器访问网络的时候，会根据PAC文件中的JavaScript函数来选择恰当的代理服务器。</p>
+
+<p>sample_pac.dat文件的内容</p>
+
+<div class="highlight"><pre><code class="perl"><span class="n">function</span> <span class="n">FindProxyForURL</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;http:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="sr">//</span> <span class="err">应该使用指定的代理</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY proxy:80&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;ftp:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY fproxy:80&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;gopher:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY gproxy&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;https:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY secproxy:8080&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="sr">//</span> <span class="err">直连，不经过任何代理</span>
+        <span class="k">return</span> <span class="s">&quot;DIRECT&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+<h3 id="chapter10">IE代理设置：自动探测设置（WPAD）</h3>
+
+
+<p> 浏览器只要选中“自动检测设置”， 就可以使用WPAD协议， WPAD会自动找到PAC文件的URL。  WPAD会使用一系列的资源发现技术（DHCP,DNS等）去寻找PAC文件。
+<img src="/assets/files/2012-12/2012120519553441.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter11">代理认证，和407状态码</h3>
+
+
+<p>代理服务器也可以需要权限认证， HTTP定义了一种名为代理认证（Proxy authentication）的机制。 这种机制可以阻止对内容的请求。</p>
+
+<p>当浏览器访问需要认证的代理时， 代理服务器会返回407 Authorization Required,告诉浏览器输入用户名和密码。</p>
+
+<p>代理认证跟HTTP基本认证是一样的机制， 如需了解代理认证的机制，请看<a href="">HTTP协议基本认证</a>
+<img src="/assets/files/2012-12/2012120609374853.png" alt="" class="Pic" /></p>
+
+<h3 id="chapter12">使用代理服务器的安全问题</h3>
+
+
+<p>代理服务器和抓包工具（比如Fiddler）都能看到http request中的数据。 如果我们发送的request中有敏感数据，比如用户名，密码，信用卡号码。这些信息都会被代理服务器看到。所以非常危险。 所以我们一般都是用HTTPS来加密Http request.  这样代理服务器就看不到里面的数据了。</p>
+
+<h3 id="chapter13">如何搭建代理服务器</h3>
+
+
+<p>可以使用CCproxy, 和Squid 来搭建代理服务器。</p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-12-15" datetime="2012-12-15" pubdate>
+							<span class="year">2012-12-15</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#web开发-ref">
+    		web开发 <span>6</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html" target="_blank">http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/11/23/pymongo-python-mongodb.html" title="View MongoDB的Python接口PyMongo">&laquo; MongoDB的Python接口PyMongo</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/12/19/redis-install.html" title="View CentOS6.3下Redis安装">CentOS6.3下Redis安装 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#职场-ref">职场 （2）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （9）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （4）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （6）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/19/redis-install.html" title="">CentOS6.3下Redis安装</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/23/pymongo-python-mongodb.html" title="">MongoDB的Python接口PyMongo</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/15/mongodb-install.html" title="">MongoDB安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/10/09/rabbitmq-install.html" title="">RabbitMQ安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/08/21/rabbitmq-cluster.html" title="">rabbitmq集群-1 介绍</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/25/jekyll-introduction.html" title="">利用Jekyll搭建个人博客</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/07/15/internet-protocol-suite-part-ii.html" title="">互联网协议入门（二）</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-01">2013-01 （1）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+
