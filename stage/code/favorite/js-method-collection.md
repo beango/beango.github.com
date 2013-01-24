@@ -85,21 +85,25 @@ for(var i=0,j=myArray2.length;i<j;i++){
 <a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
 <div style="display:none;">
 {% highlight javascript %}
-1、$('input[name="testradio"]:checked').val();
+$('input[name="testradio"]:checked').val();
 
-2、$('input:radio:checked').val();
+$('input[@name="testradio"][checked]');
 
-3、$('input[@name="testradio"][checked]');
+$('input[name="testradio"]').filter(':checked');
 
-4、$('input[name="testradio"]').filter(':checked');
-差不多挺全的了，如果我们要遍历name为testradio的所有radio呢，代码如下
-
+//遍历name为testradio的所有radio
 $('input[name="testradio"]').each(function(){
   alert(this.value);
 });
 
-如果要取具体某个radio的值，比如第二个radio的值，这样写
+//取第二个radio的值
 $('input[name="testradio"]:eq(1)').val()
+
+//设置radio
+$('input:radio[name=sex]:nth(0)').attr('checked',true);
+$('input:radio[name=sex][value="1"]').attr('checked',true);
+$('input:radio[name=sex]:nth(0)')[0].checked = true;
+
 {% endhighlight %}
 </div>
 

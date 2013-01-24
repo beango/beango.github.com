@@ -157,21 +157,24 @@
 
 <div style="display:none;">
 
-<div class="highlight"><pre><code class="javascript"><span class="mi">1</span><span class="err">、</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
 
-<span class="mi">2</span><span class="err">、</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[@name=&quot;testradio&quot;][checked]&#39;</span><span class="p">);</span>
 
-<span class="mi">3</span><span class="err">、</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[@name=&quot;testradio&quot;][checked]&#39;</span><span class="p">);</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]&#39;</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;:checked&#39;</span><span class="p">);</span>
 
-<span class="mi">4</span><span class="err">、</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]&#39;</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;:checked&#39;</span><span class="p">);</span>
-<span class="err">差不多挺全的了，如果我们要遍历</span><span class="nx">name</span><span class="err">为</span><span class="nx">testradio</span><span class="err">的所有</span><span class="nx">radio</span><span class="err">呢，代码如下</span>
-
+<span class="c1">//遍历name为testradio的所有radio</span>
 <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
   <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
 <span class="p">});</span>
 
-<span class="err">如果要取具体某个</span><span class="nx">radio</span><span class="err">的值，比如第二个</span><span class="nx">radio</span><span class="err">的值，这样写</span>
+<span class="c1">//取第二个radio的值</span>
 <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]:eq(1)&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+<span class="c1">//设置radio</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex]:nth(0)&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex][value=&quot;1&quot;]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex]:nth(0)&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">checked</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 </code></pre></div>
 
 </div>
