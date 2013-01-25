@@ -58,39 +58,34 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<div style="display:none;">
+<pre><code>begin try
+  declare cur cursor for (select * from #table)
+  declare @id int
 
-<div class="highlight"><pre><code class="sql"><span class="k">begin</span> <span class="n">try</span>
-  <span class="k">declare</span> <span class="n">cur</span> <span class="k">cursor</span> <span class="k">for</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="o">#</span><span class="k">table</span><span class="p">)</span>
-  <span class="k">declare</span> <span class="o">@</span><span class="n">id</span> <span class="nb">int</span>
-
-  <span class="k">OPEN</span> <span class="n">cur</span><span class="p">;</span>
-  <span class="k">fetch</span> <span class="k">next</span> <span class="k">from</span> <span class="n">cur</span> <span class="k">into</span> <span class="o">@</span><span class="n">id</span>
-  <span class="n">WHILE</span> <span class="p">(</span><span class="o">@@</span><span class="n">fetch_status</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">begin</span>
-    <span class="n">if</span> <span class="o">@@</span><span class="n">error</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">begin</span> <span class="c1">-- @@rowcount =0 没有更新任何行</span>
-      <span class="k">CLOSE</span> <span class="n">cur</span>
-      <span class="k">DEALLOCATE</span> <span class="n">cur</span>
-      <span class="n">RAISERROR</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">end</span>
-    <span class="k">fetch</span> <span class="k">next</span> <span class="k">from</span> <span class="n">cur</span> <span class="k">into</span> <span class="o">@</span><span class="n">id</span>
-  <span class="k">end</span>
-  <span class="k">CLOSE</span> <span class="n">cur</span>
-  <span class="k">DEALLOCATE</span> <span class="n">cur</span><span class="p">;</span>
-<span class="k">end</span> <span class="n">try</span>
-<span class="k">begin</span> <span class="n">catch</span>
-  <span class="n">if</span> <span class="o">@@</span><span class="n">ERROR</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">begin</span>
-    <span class="c1">-- 判断是否存在开启的事务，避免如果事务在这之前已提交或者已回滚，再次回滚会抛异常</span>
-    <span class="n">if</span><span class="p">(</span><span class="o">@@</span><span class="n">TRANCOUNT</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">begin</span>
-      <span class="k">rollback</span> <span class="n">transaction</span><span class="p">;</span> <span class="c1">--事务回滚</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
-<span class="k">end</span> <span class="n">catch</span>
-</code></pre></div>
-
-</div>
-
+  OPEN cur;
+  fetch next from cur into @id
+  WHILE (@@fetch_status = 0) begin
+    if @@error &gt; 0 begin -- @@rowcount =0 没有更新任何行
+      CLOSE cur
+      DEALLOCATE cur
+      RAISERROR('error',16,1)
+    end
+    fetch next from cur into @id
+  end
+  CLOSE cur
+  DEALLOCATE cur;
+end try
+begin catch
+  if @@ERROR &gt; 0 begin
+    -- 判断是否存在开启的事务，避免如果事务在这之前已提交或者已回滚，再次回滚会抛异常
+    if(@@TRANCOUNT &lt;&gt; 0) begin
+      rollback transaction; --事务回滚
+    end
+  end
+end catch
+</code></pre>
 
 <p>说明：FETCH_STATUS检索到数据返回0，失败返回-1，可判断是否滚动未到结尾。</p>
 
@@ -99,117 +94,92 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">#</span><span class="n">DMPARHED</span>  
-  <span class="p">(</span><span class="n">FMCD</span> <span class="nb">int</span><span class="p">,</span>  
-  <span class="n">FMNAM</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>  
-  <span class="n">MGYO1</span> <span class="nb">smallint</span><span class="p">,</span>  
-  <span class="k">constraint</span> <span class="n">DMPARHED_P</span> <span class="k">primary</span> <span class="k">key</span> <span class="p">(</span><span class="n">FMCD</span><span class="p">))</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>CREATE TABLE #DMPARHED  
+  (FMCD int,  
+  FMNAM varchar(50),  
+  MGYO1 smallint,  
+  constraint DMPARHED_P primary key (FMCD))
+</code></pre>
 
 <ul>
 <li>创建临时表的另类方法：</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="sql"><span class="k">select</span> <span class="o">*</span> <span class="k">into</span> <span class="o">#</span><span class="n">temp</span> <span class="k">from</span> <span class="n">Employees</span> 
-</code></pre></div>
-
-</div>
-
+<pre><code>select * into #temp from Employees
+</code></pre>
 
 <ul>
 <li>存储过程的调用及返回值</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="sql"><span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="n">dbo</span><span class="p">.</span><span class="n">getUserName</span>  
-  <span class="o">@</span><span class="n">UserID</span> <span class="nb">int</span><span class="p">,</span>  
-  <span class="o">@</span><span class="n">UserName</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span> <span class="k">output</span>  
-<span class="k">as</span>  
-  <span class="k">set</span> <span class="n">nocount</span> <span class="k">on</span>  
-  <span class="k">begin</span>  
-    <span class="n">if</span> <span class="o">@</span><span class="n">UserID</span> <span class="k">is</span> <span class="k">null</span> 
-      <span class="k">return</span>  
-    <span class="k">select</span> <span class="o">@</span><span class="n">UserName</span><span class="o">=</span><span class="n">username</span> <span class="k">from</span> <span class="n">dbo</span><span class="p">.[</span><span class="n">userinfo</span><span class="p">]</span> <span class="k">where</span> <span class="n">userid</span><span class="o">=@</span><span class="n">UserID</span>  
-  <span class="k">end</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>CREATE PROCEDURE dbo.getUserName  
+  @UserID int,  
+  @UserName varchar(40) output  
+as  
+  set nocount on  
+  begin  
+    if @UserID is null 
+      return  
+    select @UserName=username from dbo.[userinfo] where userid=@UserID  
+  end
+</code></pre>
 
 <ul>
 <li>索引</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
+<pre><code>/*在OrderID上面创建聚集索引，索引列为OrderID*/  
+create unique clustered index IX_OrderID on Orders(OrderID)  
 
-<div class="highlight"><pre><code class="sql"><span class="cm">/*在OrderID上面创建聚集索引，索引列为OrderID*/</span>  
-<span class="k">create</span> <span class="k">unique</span> <span class="n">clustered</span> <span class="k">index</span> <span class="n">IX_OrderID</span> <span class="k">on</span> <span class="n">Orders</span><span class="p">(</span><span class="n">OrderID</span><span class="p">)</span>  
-
-<span class="cm">/*在Orders表上创建非聚集索引IX_OrderDate*/</span>  
-<span class="k">create</span> <span class="k">index</span> <span class="n">IX_OrderDate</span> <span class="k">on</span> <span class="n">Orders</span><span class="p">(</span><span class="n">OrderDate</span><span class="p">)</span>
-</code></pre></div>
-
-</div>
-
+/*在Orders表上创建非聚集索引IX_OrderDate*/  
+create index IX_OrderDate on Orders(OrderDate)
+</code></pre>
 
 <ul>
 <li>时间格式化</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="sql"><span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">0</span><span class="p">):</span> <span class="mi">05</span> <span class="mi">16</span> <span class="mi">2006</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="n">AM</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span> <span class="mi">05</span><span class="o">/</span><span class="mi">16</span><span class="o">/</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span> <span class="mi">06</span><span class="p">.</span><span class="mi">05</span><span class="p">.</span><span class="mi">16</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">3</span><span class="p">):</span> <span class="mi">16</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">4</span><span class="p">):</span> <span class="mi">16</span><span class="p">.</span><span class="mi">05</span><span class="p">.</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">5</span><span class="p">):</span> <span class="mi">16</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">6</span><span class="p">):</span> <span class="mi">16</span> <span class="mi">05</span> <span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">7</span><span class="p">):</span> <span class="mi">05</span> <span class="mi">16</span><span class="p">,</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">8</span><span class="p">):</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">9</span><span class="p">):</span> <span class="mi">05</span> <span class="mi">16</span> <span class="mi">2006</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">827</span><span class="n">AM</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">10</span><span class="p">):</span> <span class="mi">05</span><span class="o">-</span><span class="mi">16</span><span class="o">-</span><span class="mi">06</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">11</span><span class="p">):</span> <span class="mi">06</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">16</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">12</span><span class="p">):</span> <span class="mi">060516</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">13</span><span class="p">):</span> <span class="mi">16</span> <span class="mi">05</span> <span class="mi">2006</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">937</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">14</span><span class="p">):</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">967</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">20</span><span class="p">):</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">47</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">21</span><span class="p">):</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">47</span><span class="p">.</span><span class="mi">157</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">22</span><span class="p">):</span> <span class="mi">05</span><span class="o">/</span><span class="mi">16</span><span class="o">/</span><span class="mi">06</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">47</span> <span class="n">AM</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">23</span><span class="p">):</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">24</span><span class="p">):</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">47</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">25</span><span class="p">):</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">16</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">47</span><span class="p">.</span><span class="mi">250</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">100</span><span class="p">):</span> <span class="mi">05</span> <span class="mi">16</span> <span class="mi">2006</span> <span class="mi">10</span><span class="p">:</span><span class="mi">57</span><span class="n">AM</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">101</span><span class="p">):</span> <span class="mi">05</span><span class="o">/</span><span class="mi">16</span><span class="o">/</span><span class="mi">2006</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">102</span><span class="p">):</span> <span class="mi">2006</span><span class="p">.</span><span class="mi">05</span><span class="p">.</span><span class="mi">16</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">103</span><span class="p">):</span> <span class="mi">16</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">2006</span>  
-<span class="k">Select</span> <span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">GETDATE</span><span class="p">(),</span> <span class="mi">104</span><span class="p">):</span> <span class="mi">16</span><span class="p">.</span><span class="mi">05</span><span class="p">.</span><span class="mi">2006</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>Select CONVERT(varchar(100), GETDATE(), 0): 05 16 2006 10:57AM  
+Select CONVERT(varchar(100), GETDATE(), 1): 05/16/06  
+Select CONVERT(varchar(100), GETDATE(), 2): 06.05.16  
+Select CONVERT(varchar(100), GETDATE(), 3): 16/05/06  
+Select CONVERT(varchar(100), GETDATE(), 4): 16.05.06  
+Select CONVERT(varchar(100), GETDATE(), 5): 16-05-06  
+Select CONVERT(varchar(100), GETDATE(), 6): 16 05 06  
+Select CONVERT(varchar(100), GETDATE(), 7): 05 16,06  
+Select CONVERT(varchar(100), GETDATE(), 8): 10:57:46  
+Select CONVERT(varchar(100), GETDATE(), 9): 05 16 2006 10:57:46:827AM  
+Select CONVERT(varchar(100), GETDATE(), 10): 05-16-06  
+Select CONVERT(varchar(100), GETDATE(), 11): 06/05/16  
+Select CONVERT(varchar(100), GETDATE(), 12): 060516  
+Select CONVERT(varchar(100), GETDATE(), 13): 16 05 2006 10:57:46:937  
+Select CONVERT(varchar(100), GETDATE(), 14): 10:57:46:967  
+Select CONVERT(varchar(100), GETDATE(), 20): 2006-05-16 10:57:47  
+Select CONVERT(varchar(100), GETDATE(), 21): 2006-05-16 10:57:47.157  
+Select CONVERT(varchar(100), GETDATE(), 22): 05/16/06 10:57:47 AM  
+Select CONVERT(varchar(100), GETDATE(), 23): 2006-05-16  
+Select CONVERT(varchar(100), GETDATE(), 24): 10:57:47  
+Select CONVERT(varchar(100), GETDATE(), 25): 2006-05-16 10:57:47.250  
+Select CONVERT(varchar(100), GETDATE(), 100): 05 16 2006 10:57AM  
+Select CONVERT(varchar(100), GETDATE(), 101): 05/16/2006  
+Select CONVERT(varchar(100), GETDATE(), 102): 2006.05.16  
+Select CONVERT(varchar(100), GETDATE(), 103): 16/05/2006  
+Select CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
+</code></pre>
 
 <ul>
 <li>删除，修改</li>
@@ -231,31 +201,26 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<div style="display:none;">
+<pre><code>Exec sp_droplinkedsrvlogin DBVIP,Null  
+Exec sp_dropserver DBVIP  
 
-<div class="highlight"><pre><code class="sql"><span class="k">Exec</span> <span class="n">sp_droplinkedsrvlogin</span> <span class="n">DBVIP</span><span class="p">,</span><span class="k">Null</span>  
-<span class="k">Exec</span> <span class="n">sp_dropserver</span> <span class="n">DBVIP</span>  
+EXEC  sp_addlinkedserver  
+    @server='DBVIP',--被访问的服务器别名   
+    @srvproduct='',   
+    @provider='SQLOLEDB',  
+    @datasrc="192.168.1.110"   --要访问的服务器  
 
-<span class="k">EXEC</span>  <span class="n">sp_addlinkedserver</span>  
-    <span class="o">@</span><span class="n">server</span><span class="o">=</span><span class="s1">&#39;DBVIP&#39;</span><span class="p">,</span><span class="c1">--被访问的服务器别名   </span>
-    <span class="o">@</span><span class="n">srvproduct</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>   
-    <span class="o">@</span><span class="n">provider</span><span class="o">=</span><span class="s1">&#39;SQLOLEDB&#39;</span><span class="p">,</span>  
-    <span class="o">@</span><span class="n">datasrc</span><span class="o">=</span><span class="ss">&quot;192.168.1.110&quot;</span>   <span class="c1">--要访问的服务器  </span>
+EXEC sp_addlinkedsrvlogin   
+    'DBVIP', --被访问的服务器别名  
+    'false',  
+    NULL,  
+    'sa', --帐号  
+    'thankyoubobby' --密码  
 
-<span class="k">EXEC</span> <span class="n">sp_addlinkedsrvlogin</span>   
-    <span class="s1">&#39;DBVIP&#39;</span><span class="p">,</span> <span class="c1">--被访问的服务器别名  </span>
-    <span class="s1">&#39;false&#39;</span><span class="p">,</span>  
-    <span class="k">NULL</span><span class="p">,</span>  
-    <span class="s1">&#39;sa&#39;</span><span class="p">,</span> <span class="c1">--帐号  </span>
-    <span class="s1">&#39;thankyoubobby&#39;</span> <span class="c1">--密码  </span>
-
-<span class="k">Select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">DBVIP</span><span class="p">.</span><span class="n">Northwind</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">orders</span>   
-</code></pre></div>
-
-</div>
-
+Select * from DBVIP.Northwind.dbo.orders   
+</code></pre>
 
 					<div class="meta asset-footer">
 						<p class="date-publish">
