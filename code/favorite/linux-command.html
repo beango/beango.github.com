@@ -60,183 +60,133 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">ifconfig</span> <span class="o">-</span><span class="n">a</span>   
-<span class="n">cat</span> <span class="sr">/sys/c</span><span class="n">lass</span><span class="sr">/net/</span><span class="n">eth0</span><span class="o">/</span><span class="n">address</span> <span class="c1">#查看eth0的mac地址  </span>
-<span class="n">cat</span> <span class="sr">/proc/</span><span class="n">net</span><span class="o">/</span><span class="n">arp</span> <span class="c1">#查看连接到本机的远端ip的mac地址</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>ifconfig -a   
+cat /sys/class/net/eth0/address #查看eth0的mac地址  
+cat /proc/net/arp #查看连接到本机的远端ip的mac地址
+</code></pre>
 
 <ul>
 <li>指定ip地址</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">vim</span> <span class="sr">/etc/s</span><span class="n">ysconfig</span><span class="sr">/network-scripts/i</span><span class="n">fcfg</span><span class="o">-</span><span class="n">eth0</span>  
-<span class="n">DEVICE</span><span class="o">=</span><span class="n">eth0</span>    
-<span class="n">ONBOOT</span><span class="o">=</span><span class="n">yes</span>  
-<span class="n">BOOTPROTO</span><span class="o">=</span><span class="n">static</span>  
-<span class="n">IPADDR</span><span class="o">=</span><span class="mf">192.168.1.115</span>  
-<span class="n">NETMASK</span><span class="o">=</span><span class="mf">255.255.255.0</span>  
-<span class="n">GATEWAY</span><span class="o">=</span><span class="mf">192.168.1.1</span>  
-<span class="n">TYPE</span><span class="o">=</span><span class="n">Ethernet</span>  
-<span class="n">USERCTL</span><span class="o">=</span><span class="nb">no</span>  
-<span class="n">NETWORK</span><span class="o">=</span><span class="mf">192.168.1.0</span>  
-<span class="n">BROADCAST</span><span class="o">=</span><span class="mf">192.168.1.255</span>  
-<span class="n">PEERDNS</span><span class="o">=</span><span class="nb">no</span>  
-<span class="n">HWADDR</span><span class="o">=</span><span class="mo">00</span><span class="p">:</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">9</span><span class="n">b</span> 
-</code></pre></div>
-
-</div>
-
+<pre><code>vim /etc/sysconfig/network-scripts/ifcfg-eth0  
+DEVICE=eth0    
+ONBOOT=yes  
+BOOTPROTO=static  
+IPADDR=192.168.1.115  
+NETMASK=255.255.255.0  
+GATEWAY=192.168.1.1  
+TYPE=Ethernet  
+USERCTL=no  
+NETWORK=192.168.1.0  
+BROADCAST=192.168.1.255  
+PEERDNS=no  
+HWADDR=00:50:56:44:41:9b 
+</code></pre>
 
 <ul>
 <li>使IP地址生效</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="sr">/sbin/i</span><span class="n">fdown</span> <span class="n">eth0</span>  
-<span class="sr">/sbin/i</span><span class="n">fup</span> <span class="n">eth0</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>/sbin/ifdown eth0  
+/sbin/ifup eth0
+</code></pre>
 
 <ul>
 <li>配置dns解析</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="c1">#将nameserver 211.98.1.28写入/etc/resolv.conf，重启网络服务后生效  </span>
-<span class="n">echo</span> <span class="s">&quot;nameserver 211.98.1.28&quot;</span> <span class="o">&gt;&gt;</span> <span class="sr">/etc/</span><span class="n">resolv</span><span class="o">.</span><span class="n">conf</span> 
-</code></pre></div>
-
-</div>
-
+<pre><code>#将nameserver 211.98.1.28写入/etc/resolv.conf，重启网络服务后生效  
+echo "nameserver 211.98.1.28" &gt;&gt; /etc/resolv.conf 
+</code></pre>
 
 <ul>
 <li>网络服务重启</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">service</span> <span class="n">network</span> <span class="n">start</span>  
-<span class="n">service</span> <span class="n">network</span> <span class="n">stop</span>  
-<span class="n">service</span> <span class="n">network</span> <span class="n">restart</span> 
-</code></pre></div>
-
-</div>
-
+<pre><code>service network start  
+service network stop  
+service network restart 
+</code></pre>
 
 <ul>
 <li>重启后永久性生效</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">chkconfig</span> <span class="n">iptables</span> <span class="n">on</span>  <span class="sr">//</span><span class="err">开启</span>
-<span class="n">chkconfig</span> <span class="n">iptables</span> <span class="n">off</span> <span class="sr">//</span><span class="err">关闭</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>chkconfig iptables on  //开启
+chkconfig iptables off //关闭
+</code></pre>
 
 <ul>
 <li>即时生效，重启后失效</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">service</span> <span class="n">iptables</span> <span class="n">start</span>  <span class="sr">//</span><span class="err">开启</span>
-<span class="n">service</span> <span class="n">iptables</span> <span class="n">stop</span>   <span class="sr">//</span><span class="err">关闭</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>service iptables start  //开启
+service iptables stop   //关闭
+</code></pre>
 
 <ul>
 <li>开放端口</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="sr">/sbin/i</span><span class="n">ptables</span> <span class="o">-</span><span class="n">I</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">80</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span> <span class="c1">#80为指定端口  </span>
-<span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="sr">/init.d/i</span><span class="n">ptables</span> <span class="n">save</span> <span class="c1">#将更改保存到iptables</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>/sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT #80为指定端口  
+/etc/rc.d/init.d/iptables save #将更改保存到iptables
+</code></pre>
 
 <ul>
 <li>其他</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="sr">/init.d/i</span><span class="n">ptables</span> <span class="n">stop</span> <span class="c1">#关闭防火墙,start,restart  </span>
-<span class="n">vim</span> <span class="sr">/etc/s</span><span class="n">ysconfig</span><span class="o">/</span><span class="n">iptables</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>/etc/rc.d/init.d/iptables stop #关闭防火墙,start,restart  
+vim /etc/sysconfig/iptables
+</code></pre>
 
 <ul>
 <li>防火墙配置</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="o">-</span><span class="n">P</span> <span class="n">INPUT</span> <span class="n">DROP</span> <span class="c1">#禁止掉服务器所有入口请求，后面的规则只允许部分常用的服务端口  </span>
-<span class="o">-</span><span class="n">P</span> <span class="n">OUTPUT</span> <span class="n">ACCEPT</span> <span class="c1">#允许服务器访问出口请求  </span>
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">i</span> <span class="n">lo</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span> <span class="c1">#允许本地接口访问  </span>
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">icmp</span> <span class="o">-</span><span class="n">m</span> <span class="n">icmp</span> <span class="o">--</span><span class="n">icmp</span><span class="o">-</span><span class="n">type</span> <span class="mi">8</span> <span class="o">-</span><span class="n">j</span> <span class="n">DROP</span> <span class="c1">#禁止ping，因为ping是基于icmp协议的  </span>
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">20</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span> <span class="c1">#允许部分常用端口入口请求访问  </span>
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">21</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">25</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">53</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">udp</span> <span class="o">-</span><span class="n">m</span> <span class="n">udp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">53</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">tcp</span> <span class="o">-</span><span class="n">m</span> <span class="n">tcp</span> <span class="o">--</span><span class="n">dport</span> <span class="mi">80</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>  
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">all</span> <span class="o">-</span><span class="n">m</span> <span class="n">state</span> <span class="o">--</span><span class="n">state</span> <span class="n">ESTABLISHED</span><span class="p">,</span><span class="n">RELATED</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span> <span class="c1">#允许所有已经连接端口请求  </span>
-<span class="o">-</span><span class="n">A</span> <span class="n">INPUT</span> <span class="o">-</span><span class="n">p</span> <span class="n">all</span> <span class="o">-</span><span class="n">m</span> <span class="n">state</span> <span class="o">--</span><span class="n">state</span> <span class="n">INVALID</span><span class="p">,</span><span class="n">NEW</span> <span class="o">-</span><span class="n">j</span> <span class="n">DROP</span>  
-</code></pre></div>
-
-</div>
-
+<pre><code>-P INPUT DROP #禁止掉服务器所有入口请求，后面的规则只允许部分常用的服务端口  
+-P OUTPUT ACCEPT #允许服务器访问出口请求  
+-A INPUT -i lo -j ACCEPT #允许本地接口访问  
+-A INPUT -p icmp -m icmp --icmp-type 8 -j DROP #禁止ping，因为ping是基于icmp协议的  
+-A INPUT -p tcp -m tcp --dport 20 -j ACCEPT #允许部分常用端口入口请求访问  
+-A INPUT -p tcp -m tcp --dport 21 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 25 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT  
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT  
+-A INPUT -p all -m state --state ESTABLISHED,RELATED -j ACCEPT #允许所有已经连接端口请求  
+-A INPUT -p all -m state --state INVALID,NEW -j DROP  
+</code></pre>
 
 <h3>二、常用命令</h3>
 
@@ -245,46 +195,31 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">rm</span> <span class="err">–</span><span class="n">rf</span> <span class="o">*</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>rm –rf *
+</code></pre>
 
 <ul>
 <li>查找文件</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">find</span> <span class="sr">/ -name &quot;*memcache*&quot; /</span><span class="o">/</span><span class="err">查找根目录下，文件名匹配</span><span class="n">memcache</span><span class="err">的文件</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>find / -name "*memcache*" //查找根目录下，文件名匹配memcache的文件
+</code></pre>
 
 <ul>
 <li>查找包安装位置</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">rpm</span> <span class="o">-</span><span class="n">qa</span> <span class="o">|</span> <span class="nb">grep</span> <span class="n">apache</span>
-<span class="n">rpm</span> <span class="o">-</span><span class="n">ql</span> <span class="err">包名</span>
-</code></pre></div>
-
-</div>
-
+<pre><code>rpm -qa | grep apache
+rpm -ql 包名
+</code></pre>
 
 <h3>二、系统相关</h3>
 
@@ -293,17 +228,12 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label/></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="c1">#默认的 run level 设置中,可以看到第一行书写如:id:5:initdefault:(默认的 run level 等级为 5,即图形界面)  </span>
-<span class="c1">#将第一行的 5 修改为 3 即可。  </span>
-<span class="n">vim</span> <span class="sr">/etc/i</span><span class="n">nittab</span>  
-</code></pre></div>
-
-</div>
-
+<pre><code>#默认的 run level 设置中,可以看到第一行书写如:id:5:initdefault:(默认的 run level 等级为 5,即图形界面)  
+#将第一行的 5 修改为 3 即可。  
+vim /etc/inittab  
+</code></pre>
 
 					<div class="meta asset-footer">
 						<p class="date-publish">
