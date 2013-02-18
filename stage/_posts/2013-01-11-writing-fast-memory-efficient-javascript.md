@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [web开发]
+categories: [web开发,javascript]
 date: 2013-01-11
 title: "编写高效的JavaScript程序"
 description: "编写高效的JavaScript程序"

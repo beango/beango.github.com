@@ -2,15 +2,14 @@
 http://beango.github.com/archive.html
 http://beango.github.com/atom.xml
 http://beango.github.com/category.html
-http://beango.github.com/code/demos/thickbox-use.html
-http://beango.github.com/code/favorite/css-collection.html
-http://beango.github.com/code/favorite/interesting-solution-http-status-code.html
-http://beango.github.com/code/favorite/js-method-collection.html
-http://beango.github.com/code/favorite/linux-command.html
-http://beango.github.com/code/favorite/sql-collection.html
-http://beango.github.com/code/posts/memcached-memory-analysis-tuning-clustering.html
-http://beango.github.com/code/posts/memcached-principle-and-use-detailed.html
-http://beango.github.com/code/posts/python-crawl-pages.html
+http://beango.github.com/code/css-collection.html
+http://beango.github.com/code/js-method-collection.html
+http://beango.github.com/code/linux-command.html
+http://beango.github.com/code/memcached-memory-analysis-tuning-clustering.html
+http://beango.github.com/code/memcached-principle-and-use-detailed.html
+http://beango.github.com/code/python-crawl-pages.html
+http://beango.github.com/code/sql-collection.html
+http://beango.github.com/code/thickbox-use.html
 http://beango.github.com/code.html
 http://beango.github.com/index.html
 http://beango.github.com/info.html
@@ -36,7 +35,9 @@ http://beango.github.com/wiki/software/sublime-text.html
 http://beango.github.com/wiki/software/vim.html
 http://beango.github.com/wiki/software/windows.html
 
+http://beango.github.com/archives/2013/02/18/booting.html
 http://beango.github.com/archives/2013/01/11/writing-fast-memory-efficient-javascript.html
+http://beango.github.com/archives/2013/01/09/interesting-solution-http-status-code.html
 http://beango.github.com/archives/2012/12/19/redis-install.html
 http://beango.github.com/archives/2012/12/15/http-protocol-proxy.html
 http://beango.github.com/archives/2012/11/23/pymongo-python-mongodb.html
@@ -54,4 +55,5 @@ http://beango.github.com/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html
 http://beango.github.com/archives/2011/12/03/tokyotyrant-memcached-keyvalue-system.html
 http://beango.github.com/archives/2011/10/09/markdown-doc.html
 http://beango.github.com/archives/2011/09/11/memcached-parameters-chinese-explain.html
+http://beango.github.com/archives/2011/08/11/jquery_best_practices.html
 http://beango.github.com/archives/2011/06/11/train-your-temperament.html

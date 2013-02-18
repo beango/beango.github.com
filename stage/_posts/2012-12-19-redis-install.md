@@ -1,6 +1,5 @@
 ---
 layout: post
-section: Archive
 categories: [高性能web, NoSql]
 date: 2012-12-19
 title: "CentOS6.3下Redis安装"

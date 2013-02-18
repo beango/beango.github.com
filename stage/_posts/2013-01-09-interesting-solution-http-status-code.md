@@ -1,8 +1,7 @@
 ---
 layout: post
-section: Code
-categories: Favorite
-date: 2013-01-19
+categories: web开发
+date: 2013-01-09
 title: "趣解HTTP状态码"
 description: "趣解HTTP状态码"
 summary: "趣解HTTP状态码"

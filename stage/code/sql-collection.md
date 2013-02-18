@@ -12,7 +12,10 @@ tags: [SQL]
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
     begin try
-      declare cur cursor for (select * from #table)
+      begin transaction -- 事务开启 
+      declare cur cursor 
+      local static read_only forward_only--只进只读
+      for (select * from #table)
       declare @id int
 
       OPEN cur;
@@ -27,6 +30,7 @@ tags: [SQL]
       end
       CLOSE cur
       DEALLOCATE cur;
+      commit transaction; -- 提交事务  
     end try
     begin catch
       if @@ERROR > 0 begin
@@ -54,19 +58,16 @@ tags: [SQL]
 <label/>
     select * into #temp from Employees
 
--   存储过程的调用及返回值
+-   利用with找出记录及其上（或下）级
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
-    CREATE PROCEDURE dbo.getUserName  
-      @UserID int,  
-      @UserName varchar(40) output  
-    as  
-      set nocount on  
-      begin  
-        if @UserID is null 
-          return  
-        select @UserName=username from dbo.[userinfo] where userid=@UserID  
-      end
+    WITH CategoryInfo AS(
+      SELECT id,text,parentid FROM Recursive WHERE id = 10008
+      UNION ALL
+      SELECT a.id,a.text,a.parentid FROM Recursive AS a,CategoryInfo AS b WHERE a.parentid = b.id
+    )
+
+    SELECT * FROM CategoryInfo
 
 -   索引
 
@@ -106,6 +107,24 @@ tags: [SQL]
     Select CONVERT(varchar(100), GETDATE(), 102): 2006.05.16  
     Select CONVERT(varchar(100), GETDATE(), 103): 16/05/2006  
     Select CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
+
+-   CTE批量插入
+
+<a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>  
+    WITH Seq (num,CustomerNumber, CustomerName, CustomerCity) AS
+        (SELECT 1,cast('00001'as CHAR(5)),cast('Customer 1' AS NVARCHAR(50)),cast('X-City' as NVARCHAR(20))
+        UNION ALL
+        SELECT num + 1,Cast(REPLACE(STR(num+1, 5), ' ', '0') AS CHAR(5)),
+        cast('Customer ' + cast(num+1 as CHAR(5)) AS NVARCHAR(50)),
+        cast(CHAR(65 + (num % 26)) + '-City' AS NVARCHAR(20))
+        FROM Seq
+        WHERE num < 10000
+    )
+
+    INSERT INTO Customers (CustomerNumber, CustomerName, CustomerCity)
+    SELECT CustomerNumber, CustomerName, CustomerCity
+    FROM Seq
+    OPTION (MAXRECURSION 0)
 
 -   删除，修改
 

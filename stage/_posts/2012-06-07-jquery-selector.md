@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-category : web开发
+categories : [web开发,javascript,jquery]
 date: 2012-06-07
 title: "jQuery选择器大全"
 description: "jQuery选择器大全"
