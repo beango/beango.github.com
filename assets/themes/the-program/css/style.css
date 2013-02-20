@@ -657,6 +657,9 @@ pre {
 .unit-article .entry-content:first-child h6 {
   margin-top: 0;
 }
+.unit-article .entry-content img{
+  margin:auto;
+}
 .unit-article a:link {
   border-bottom: 1px dashed #c26164;
 }

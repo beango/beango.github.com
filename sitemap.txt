@@ -51,6 +51,8 @@ http://beango.github.com/archives/2012/07/12/internet-protocol-suite-part-i.html
 http://beango.github.com/archives/2012/06/29/windows-nginx-start-restart-shutdown.html
 http://beango.github.com/archives/2012/06/25/confirmed-he-who-sits-the-most-dies-the-soonest.html
 http://beango.github.com/archives/2012/06/07/jquery-selector.html
+http://beango.github.com/archives/2012/05/31/misunderstanding-using-cache-2.html
+http://beango.github.com/archives/2012/04/15/misunderstanding-using-cache.html
 http://beango.github.com/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html
 http://beango.github.com/archives/2011/12/03/tokyotyrant-memcached-keyvalue-system.html
 http://beango.github.com/archives/2011/10/09/markdown-doc.html
