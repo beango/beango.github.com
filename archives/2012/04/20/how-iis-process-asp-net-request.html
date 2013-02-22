@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>IIS是如何处理ASP.NET请求的</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">IIS是如何处理ASP.NET请求的</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>　　英文原文：<a href="http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/">Beginner’s Guide: How IIS Process ASP.NET
+Request</a></p>
+
+<p>　　<strong>前言</strong></p>
+
+<p>　　每次服务器接受到请求，都要先经IIS处理。这不是一篇描述ASP.NE生命周期的文章，仅仅是关于IIS操作的。在我们开始之前，先了解这些会有助于对全文的理解，同时欢迎反馈和建议。</p>
+
+<p>　　<strong>什么是Web Server?</strong></p>
+
+<p>　　每当我们通过VS运行ASP.NET网站时，VS集成的ASP.NET引擎会响应各种请求，这个引擎的名字叫“WebDev.WebServer.exe”。</p>
+
+<p>　　当我们配置一个Web程序时，总会涉及到一个词“Web
+Server”，它的功能便是会响应所有请求。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135408_1.JPG" alt="" /></p>
+
+<p>　　<strong>什么是IIS？</strong></p>
+
+<p>　　IIS（<em>Internet Information Server</em>）是微软Web
+Server的一种，用来配置ASP.NET站点。IIS拥有自己的ASP.NET处理引擎来处理请求，因此，当一个请求到达时，IIS接收并处理请求，然后返回内容。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135410_2.JPG" alt="" /></p>
+
+<p>　　<strong>请求处理过程</strong></p>
+
+<p>　　现在，你应能搞清楚Web
+Server和IIS的区别。现在我们来看一下核心部分。在继续之前，你需要搞清两个概念：</p>
+
+<p>　　1、工作进程（Worker Process）</p>
+
+<p>　　2、应用程序池（Application Pool）</p>
+
+<p>　　<strong>工作进程</strong>：在IIS中，工作进程（w3wp.exe）运行着ASP.NET应用程序，管理并响应所有的请求，ASP.NET所有的功能都运行在工作进程下，当请求到来时，工作进程会生成Request和Response相关的信息。简而言之，工作进程就是ASP.NET程序的心脏。</p>
+
+<p>　　<strong>应用程序池</strong>：应用程序池是工作进程的容器，通常用来隔开不同配置的工作进程。当一个程序出错或进程资源回收时，其他池中的程序不会受到影响。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135411_3.JPG" alt="" /></p>
+
+<p>　　<strong>注</strong>：当一个应用程序池包含多个工作进程时，被叫做“Web Garden”。</p>
+
+<p>　　如果我们看一下IIS 6.0的结构，就会发现，可以把它分成两部分：</p>
+
+<p>　　1、内核模块（Kernel Mode）</p>
+
+<p>　　2、用户模块（User Mode）</p>
+
+<p>　　内核模式是从IIS
+6.0被引入的，它包含了一个叫HTTP.SYS的文件，每当请求进来时，会首先触发该文件的响应。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135411_4.JPG" alt="" /></p>
+
+<p>　　HTTP.SYS文件负责把请求传入相应的应用程序池中。但HTTP.SYS如何知道应传给哪个应用程序池呢？当然不是随机抽取，每当创建一个应用程序池，该池的ID就会生成并在HTTP.SYS文件中注册，因此该文件才能确定将请求往哪传。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135412_5.JPG" alt="" /></p>
+
+<p>　　以上便是IIS处理请求的第一步。接着，我们来看一下请求如何从HTTP.SYS传入应用程序池。</p>
+
+<p>　　在IIS的用户模块中，通过<em>Web Admin Services
+(WAS)</em>从HTTP.SYS接收请求，并传入相应的应用程序池中。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135414_6.JPG" alt="" /></p>
+
+<p>　　当应用程序池接收到请求，会接着传给工作进程（w3wp.exe），该进程检查来请求的URL后缀以确定加载哪个ISAPI扩展。ASP.NET加载时会附带自己的ISAPI扩展（aspnet_isapi.dll），以便在IIS中映射。</p>
+
+<p>　　<strong>注意</strong>：如果先安装了asp.net，然后再安装IIS，就需要通过aspnet_regiis命令来注册ASP.NET中的ISAPI扩展。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135415_7.JPG" alt="" /></p>
+
+<p>　　一旦工作进程加载了aspnet_isapi.dll,
+就会构造一个HttpRuntime类，该类是应用程序的入口，通过ProcessRequest方法处理请求。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135417_8.JPG" alt="" /></p>
+
+<p>　　一旦这个方法被调用，一个HttpContext的实例就产生了。可通过HTTPContent.Current获取到这个实例，且该实例会在整个生命周期中存活，我们通过它可以获取到一些常用对象，如Request，Response，Session
+等。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135418_9.JPG" alt="" /></p>
+
+<p>　　之后HttpRuntime会通过HttpApplicationFactory类加载一个HttpApplication对象。每一次请求都要穿过一堆HttpModule到达HttpHandler，以便被响应。而这些HttpModule就被配置在HttpApplication中。</p>
+
+<p>　　有一个概念叫“Http管道”，被叫做管道是因为它包含了一系列的HttpModule，这些HttpModule拦截请求并将其导向相应的HttpHandler。我们也可自定义HttpModule，以便在请求响应之间做点特别的处理。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135419_10.JPG" alt="" /></p>
+
+<p>　　HttpHandler是“Http管道”的终点。所有请求穿过HttpModule需抵达相应的HttpHandler，然后HttpHandler根据请求资源，产生并输出内容。也正因此，我们请求任何aspx页面才会得到响应的Html内容。</p>
+
+<p><img src="/assets/files/2012-04/20120420_135422_11.JPG" alt="" /></p>
+
+<p>　　<strong>结语</strong></p>
+
+<p>　　每当请求Web服务器上的某些信息时，该请求首先会到达Http.SYS,
+然后Http.SYS将其发送到相应的应用程序池，应用程序池传给工作进程并加载ISAPI扩展，然后HttpRuntime对象会被创建，并通过HttpModule和HttpHandler处理请求。</p>
+
+<p>　　最后，ASP.NET页面生命周期就开始了。</p>
+
+<p>　　这只是大致描述IIS处理过程的文章，如果你想进一步了解相应细节，请点击下面链接来进一步学习。</p>
+
+<p>　　<a href="http://www.west-wind.com/presentations/howaspnetworks/howaspnetworks.asp">A low-level Look at the ASP.NET
+Architecture</a></p>
+
+<p>　　<a href="http://learn.iis.net/page.aspx/101/introduction-to-iis-7-architecture/">IIS
+Architecture</a></p>
+
+<p>　　本文翻译自：<a href="http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/">Beginner’s Guide: How IIS Process ASP.NET
+Request</a><a href="http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/">\
+</a></p>
+
+<p>　　<strong>译后小注：</strong></p>
+
+<p>　　1、如果在IIS配置完站点却看不到“w3wp.exe”进程，只要用浏览器打开该站其中一个页面，“w3wp.exe”进程就会出现了。</p>
+
+<p>　　2、为节省时间，直接引用了原图，英文差的，小查一下字典应该没啥问题。</p>
+
+<p>　　相关博文：　　</p>
+
+<p>　　<a href="http://www.cnblogs.com/JimmyZhang/archive/2007/09/04/880967.html">Asp.Net构架(Http请求处理流程) </a></p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-04-20" datetime="2012-04-20" pubdate>
+							<span class="year">2012-04-20</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#web开发-ref">
+    		web开发 <span>10</span>
+    	</a></li>
+     
+    	<li style="list-style:none;"><a href="/category.html#高性能web-ref">
+    		高性能web <span>10</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://kb.cnblogs.com/page/136274/" target="_blank">http://kb.cnblogs.com/page/136274/</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/04/15/misunderstanding-using-cache.html" title="View 使用缓存的9大误区（上）">&laquo; 使用缓存的9大误区（上）</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/05/06/javascript-memory-leaks.html" title="View Javascript内存泄露">Javascript内存泄露 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （6）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （2）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （10）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （4）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#jquery-ref">jquery （1）</a></li>
+					 
+					  <li><a href="/category.html#其他-ref">其他 （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/18/booting.html" title="">计算机是如何启动的？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="">趣解HTTP状态码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/19/redis-install.html" title="">CentOS6.3下Redis安装</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/23/pymongo-python-mongodb.html" title="">MongoDB的Python接口PyMongo</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/11/15/mongodb-install.html" title="">MongoDB安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/10/09/rabbitmq-install.html" title="">RabbitMQ安装及使用</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/08/21/rabbitmq-cluster.html" title="">rabbitmq集群-1 介绍</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （1）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （2）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （2）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （2）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机启动-ref">计算机启动 <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

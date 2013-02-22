@@ -19,7 +19,9 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
     收集的JavaScript常用代码.
 -   [CSS收集](/code/css-collection.html)
 -   [linux常用命令](/code/linux-command.html)
+-   [正则大全](/code/preg.html)
 
 ###Posts
 -   [Memcached内存分析、调优、集群](/code/memcached-memory-analysis-tuning-clustering.html)
 -	[Memcached原理和使用详解](/code/memcached-principle-and-use-detailed.html)
+-	[C#读取Excel](/code/csharp-excel.html)

@@ -53,17 +53,100 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<ul>
-<li>一、图片等比缩放</li>
-</ul>
+					<h2>图片等比缩放  </h2>
+
+<div class="highlight"><pre><code class="css"><span class="nc">.Pic</span> <span class="p">{</span><span class="n">MARGIN</span><span class="o">:</span> <span class="k">auto</span><span class="p">;</span><span class="n">WIDTH</span><span class="o">:</span> <span class="m">638px</span><span class="p">;}</span>  
+<span class="nc">.Pic</span> <span class="nt">img</span><span class="p">{</span><span class="n">MAX</span><span class="o">-</span><span class="n">WIDTH</span><span class="o">:</span> <span class="m">100</span><span class="o">%!</span><span class="n">important</span><span class="p">;</span><span class="n">HEIGHT</span><span class="o">:</span> <span class="k">auto</span><span class="cp">!important</span><span class="p">;</span>  
+  <span class="k">width</span><span class="o">:</span><span class="n">expression</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="k">width</span><span class="o">&gt;</span><span class="m">638</span><span class="o">?</span><span class="s2">&quot;638px&quot;</span><span class="o">:</span><span class="n">this</span><span class="o">.</span><span class="k">width</span><span class="p">)</span><span class="cp">!important</span><span class="p">;}</span>
+</code></pre></div>
 
 
-<p><label/></p>
+<hr />
 
-<pre><code>.Pic {MARGIN: auto;WIDTH: 638px;}  
-.Pic img{MAX-WIDTH: 100%!important;HEIGHT: auto!important;  
-  width:expression(this.width&gt;638?"638px":this.width)!important;}
-</code></pre>
+<h2>浏览器样式兼容</h2>
+
+<p>针对ie6,ie7,ie8,firefox,chrome显示不同效果 做网站时经常会用到.</p>
+
+<div class="demo-four" style="width:200px;">
+<h4 style="margin:0;color:#999;">演示</h4><small>简单的hack实现方式和原理。浏览器呈红色则为firefox，浏览器呈灰色则为ie6，浏览器呈黄色则为ie9，浏览器呈蓝色则为ie7</small>
+
+<span class="demo-hacker" style="font-size:36px;display:block;margin-top:10px;">hacker</span>
+</div>
+
+
+
+
+<div class="highlight"><pre><code class="css"><span class="nf">#hacker</span><span class="p">{</span>
+    <span class="k">color</span><span class="o">:</span><span class="nb">red</span><span class="p">;</span> 
+    <span class="o">*</span><span class="k">color</span><span class="o">:</span><span class="nb">white</span><span class="p">;</span> <span class="c">/*for ie6,ie7*/</span>
+    <span class="o">*+</span><span class="k">color</span><span class="o">:</span><span class="nb">blue</span><span class="p">;</span> <span class="c">/*for ie7*/</span>
+    <span class="n">_color</span><span class="o">:</span><span class="nb">gray</span><span class="p">;</span> <span class="c">/*for ie6*/</span>
+    <span class="k">color</span><span class="o">:</span><span class="n">balck</span> <span class="cp">!important</span><span class="p">;</span> <span class="c">/*for firefox*/</span>
+    <span class="k">color</span><span class="o">:</span><span class="nb">yellow</span> <span class="err">\</span><span class="m">9</span><span class="p">;</span> <span class="c">/*for ie9*/</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<hr />
+
+<h2>透明<small style="font-size:60%;color:#999;">兼容所有浏览器</small></h2>
+
+<div class="demo-four" style="width:200px;height:150px; text-align:center; margin-top:12px;background:url(/assets/files/2013-01/30222814-7d1a23445e9e4a0e9f526ecc058d3327.JPG);">
+<div style="padding:20px;"><div class="demo-transparent" style="background:#fff;">一段兼容的css透明代码一段兼容的css透明代码一段兼容的css透明代码</div></div>
+</div>
+
+
+
+
+<div class="highlight"><pre><code class="css"><span class="nc">.transparent</span><span class="p">{</span>
+    <span class="n">filter</span><span class="o">:</span><span class="n">alpha</span><span class="p">(</span><span class="k">opacity</span><span class="o">=</span><span class="m">50</span><span class="p">);</span> 
+    <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span><span class="m">0</span><span class="o">.</span><span class="m">5</span><span class="p">;</span><span class="c">/**Firefox 3.5即将原生支持opacity属性，所以本条属性只在Firefox3以下版本有效 ***/</span> 
+    <span class="o">-</span><span class="n">khtml</span><span class="o">-</span><span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">5</span><span class="p">;</span> 
+    <span class="k">opacity</span><span class="o">:</span> <span class="m">0</span><span class="o">.</span><span class="m">5</span><span class="p">;</span> 
+<span class="p">}</span> 
+</code></pre></div>
+
+
+<hr />
+
+<h2>高亮<small style="font-size:60%;color:#999;">兼容所有浏览器</small></h2>
+
+<div class="demo-four">一段兼容的css<span class="demo-highlighted">高亮</span>代码一段兼容的css高亮代码一段兼容的css高亮代码一段兼容的css高亮代码
+</div>
+
+
+
+
+<div class="highlight"><pre><code class="css"><span class="nc">.highlighted</span> <span class="p">{</span>
+    <span class="k">background</span><span class="o">:</span> <span class="k">none</span> <span class="k">repeat</span> <span class="k">scroll</span> <span class="m">0</span> <span class="m">0</span> <span class="m">#00ADEE</span><span class="p">;</span>
+    <span class="k">color</span><span class="o">:</span> <span class="m">#FFFFFF</span><span class="p">;</span>
+    <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">5px</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<hr />
+
+<h2>阴影+圆角</h2>
+
+<div class="demo-four">
+<div class="demo-shadowradius">阴影+圆角</div>
+</div>
+
+
+
+
+<div class="highlight"><pre><code class="css"><span class="c">/**阴影**/</span>
+<span class="nt">-webkit-box-shadow</span><span class="nd">:0</span> <span class="nt">0</span> <span class="nt">3px</span> <span class="nt">black</span><span class="o">;</span>
+<span class="nt">-moz-box-shadow</span><span class="nd">:0</span> <span class="nt">0</span> <span class="nt">3px</span> <span class="nt">black</span><span class="o">;</span>
+<span class="c">/**圆角**/</span>
+<span class="nt">-moz-border-radius</span><span class="nd">:3px</span><span class="o">;</span>
+<span class="nt">-webkit-border-radius</span><span class="nd">:3px</span><span class="o">;</span>
+<span class="nt">border-radius</span><span class="nd">:3px</span><span class="o">;</span>
+</code></pre></div>
+
+
+
 
 					<div class="meta asset-footer">
 						<p class="date-publish">
@@ -79,6 +162,10 @@
 
 
   
+     
+    	<li style="list-style:none;"><a href="/category.html#Favorite-ref">
+    		Favorite <span></span>
+    	</a></li>
     
   
 
@@ -91,6 +178,8 @@
 
 
   
+     
+    	<li><a href="/tags.html#css-ref">css <span></span></a></li>
     
   
 
@@ -98,7 +187,7 @@
 
 						</ul>
 						<ul class="list-tag list-linear">
-							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://download.keqie.com/codex.html" target="_blank">http://download.keqie.com/codex.html</a></li>
 							
 						</ul>
 					</div><!-- meta -->
@@ -175,19 +264,23 @@
 					<h3>分类</h3>
 					<ul class="tag_box inline">
 					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （6）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
 					  <li><a href="/category.html#职场-ref">职场 （2）</a></li>
 					 
-					  <li><a href="/category.html#web开发-ref">web开发 （8）</a></li>
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
 					 
-					  <li><a href="/category.html#javascript-ref">javascript （3）</a></li>
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
 					 
-					  <li><a href="/category.html#高性能web-ref">高性能web （9）</a></li>
+					  <li><a href="/category.html#高性能web-ref">高性能web （10）</a></li>
 					 
 					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
 					 
 					  <li><a href="/category.html#NoSql-ref">NoSql （4）</a></li>
 					 
-					  <li><a href="/category.html#缓存-ref">缓存 （2）</a></li>
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
 					 
 					  <li><a href="/category.html#jquery-ref">jquery （1）</a></li>
 					 
@@ -262,7 +355,7 @@
 				<div class="misc vcard layout-page-footer">
 					<h3>归档</h3>
 					<ul class="tag_box inline">
-					  <li><a href="/archive.html#arch-2013-02">2013-02 （1）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （2）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （1）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （1）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li>
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （1）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （2）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （2）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （2）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （2）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （2）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （1）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （1）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
 					</ul>
 				</div><!-- misc -->
 				<div class="misc vcard layout-page-footer">
@@ -273,6 +366,10 @@
 
 
   
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
      
     	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
      
@@ -292,9 +389,27 @@
      
     	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
      
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
     	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
      
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
     	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
      
     	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
      

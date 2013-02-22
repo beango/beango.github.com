@@ -4,7 +4,7 @@
  <title>Huang Ding</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-02-19T15:36:34+08:00</updated>
+ <updated>2013-02-22T15:16:51+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>Huang Ding</name>
@@ -31,7 +31,8 @@
 &lt;p&gt;回答是boot。可是，boot原来的意思是靴子，&quot;启动&quot;与靴子有什么关系呢？
 原来，这里的boot是bootstrap（鞋带）的缩写，它来自一句谚语：&lt;/p&gt;
 
-&lt;blockquote&gt;&lt;p&gt;　　&quot;pull oneself up by one's bootstraps&quot;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;&quot;pull oneself up by one's bootstraps&quot;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;字面意思是&quot;拽着鞋带把自己拉起来&quot;，这当然是不可能的事情。最早的时候，工程师们用它来比喻，计算机启动是一个很矛盾的过程：必须先运行程序，然后计算机才能启动，但是计算机不启动就无法运行程序！&lt;/p&gt;
 
@@ -84,11 +85,10 @@ boot record，缩写为MBR）。&lt;/p&gt;
 
 &lt;p&gt;主引导记录由三个部分组成：&lt;/p&gt;
 
-&lt;blockquote&gt;&lt;p&gt;　　（1） 第1-446字节：调用操作系统的机器码。&lt;/p&gt;
-
-&lt;p&gt;　　（2） 第447-510字节：分区表（Partition table）。&lt;/p&gt;
-
-&lt;p&gt;　　（3） 第511-512字节：主引导记录签名（0x55和0xAA）。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;（1） 第1-446字节：调用操作系统的机器码。
+（2） 第447-510字节：分区表（Partition table）。
+（3） 第511-512字节：主引导记录签名（0x55和0xAA）。
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;其中，第二部分&quot;分区表&quot;的作用，是将硬盘分成若干个区。&lt;/p&gt;
 
@@ -100,20 +100,13 @@ boot record，缩写为MBR）。&lt;/p&gt;
 
 &lt;p&gt;每个主分区的16个字节，由6个部分组成：&lt;/p&gt;
 
-&lt;blockquote&gt;&lt;p&gt;　　（1）
-第1个字节：如果为0x80，就表示该主分区是激活分区，控制权要转交给这个分区。四个主分区里面只能有一个是激活的。&lt;/p&gt;
-
-&lt;p&gt;　　（2）
-第2-4个字节：主分区第一个扇区的物理位置（柱面、磁头、扇区号等等）。&lt;/p&gt;
-
-&lt;p&gt;　　（3）
-第5个字节：&lt;a href=&quot;http://en.wikipedia.org/wiki/Partition_type&quot;&gt;主分区类型&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;　　（4） 第6-8个字节：主分区最后一个扇区的物理位置。&lt;/p&gt;
-
-&lt;p&gt;　　（5） 第9-12字节：该主分区第一个扇区的逻辑地址。&lt;/p&gt;
-
-&lt;p&gt;　　（6） 第13-16字节：主分区的扇区总数。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;（1）第1个字节：如果为0x80，就表示该主分区是激活分区，控制权要转交给这个分区。四个主分区里面只能有一个是激活的。
+（2）第2-4个字节：主分区第一个扇区的物理位置（柱面、磁头、扇区号等等）。
+（3）第5个字节：[主分区类型](http://en.wikipedia.org/wiki/Partition_type)。
+（4） 第6-8个字节：主分区最后一个扇区的物理位置。
+（5） 第9-12字节：该主分区第一个扇区的逻辑地址。
+（6） 第13-16字节：主分区的扇区总数。
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;最后的四个字节（&quot;主分区的扇区总数&quot;），决定了这个主分区的长度。也就是说，一个主分区的扇区总数最多不超过2的32次方。&lt;/p&gt;
 
@@ -4677,6 +4670,208 @@ $(':checked').each(function() {
  </entry>
  
  <entry>
+   <title>Javascript内存泄露</title>
+   <link href="http://beango.github.com/archives/2012/05/06/javascript-memory-leaks.html"/>
+   <updated>2012-05-06T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/05/06/javascript-memory-leaks</id>
+   <content type="html">&lt;p&gt;　　英文原文：&lt;a href=&quot;http://nesj.net/blog/2012/04/javascript-memory-leaks/&quot;&gt;JavaScript Memory
+Leaks&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;1. 什么是内存泄露？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　内存泄露是指分配给应用的内存不能被重新分配，即使在内存已经不被使用的时候。正常情况下，垃圾回收器在
+DOM 元素和 event 处理器不被引用或访问的时候回收它们。但是，IE
+的早些版本（IE7和之前）中内存泄露是很容易出现的，因为内存管理器不能正确理解
+Javascript 生命周期而且在周期被打破(可以通过赋值为 null
+实现)前不会回收内存。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;2. 为什么你需要注意它？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　在大型 Web
+应用程序中内存泄露是一种常见的无意的编程错误。内存泄露会降低 Web
+应用程序的性能，直到浪费的内存超过了系统所能分配的，应用程序将不能使用。作为一位
+Web 开发者，开发一个满足功能要求的应用程序只是第一步，性能要求和 Web
+应用程序的成功是同样重要的，更何况它可能会导致应用程序错误或浏览器崩溃。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;3. Javascript 中出现内存泄露的主要原因是什么？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　1) 循环引用&lt;/p&gt;
+
+&lt;p&gt;　　一个很简单的例子：一个 DOM 对象被一个 Javascript
+对象引用，与此同时又引用同一个或其它的 Javascript 对象，这个 DOM
+对象可能会引发内存泄露。这个 DOM
+对象的引用将不会在脚本停止的时候被垃圾回收器回收。要想破坏循环引用，引用
+DOM 元素的对象或 DOM 对象的引用需要被赋值为 null。&lt;/p&gt;
+
+&lt;p&gt;　　2) Javascript 闭包&lt;/p&gt;
+
+&lt;p&gt;　　因为 Javascript 范围的限制，许多实现依赖 Javascript
+闭包。如果你想了解更多闭包方面的问题，请查看我的前面的文章 &lt;a href=&quot;http://nesj.net/blog/2012/03/javascript-scope-and-closure/&quot;&gt;JavaScript
+Scope and
+Closure&lt;/a&gt; 。&lt;/p&gt;
+
+&lt;p&gt;　　闭包可以导致内存泄露是因为内部方法保持一个对外部方法变量的引用，所以尽管方法返回了，内部方法还可以继续访问在外部方法中定义的私有变量。对
+Javascript 程序员来说最好的做法是在页面重载前断开所有的事件处理器。&lt;/p&gt;
+
+&lt;p&gt;　　3) DOM 插入顺序&lt;/p&gt;
+
+&lt;p&gt;　　当 2 个不同范围的
+DOM 对象附加到一起的时候，一个临时的对象会被创建。这个 DOM 对象改变范围到
+document 时，那个临时对象就没用了。也就是说，
+DOM 对象应该按照从当前页面存在的最上面的 DOM 元素开始往下直到剩下的
+DOM 元素的顺序添加，这样它们就总是有同样的范围，不会产生临时对象。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;4) 如何检测？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　内存泄露对开发者来说一般很难检测，因为它们是由大量代码中的一些意外的错误引起的，但它在系统内存不足前并不影响程序的功能。这就是为什么会有人在很长时间的测试期中收集应用程序性能指标来测试性能。&lt;/p&gt;
+
+&lt;p&gt;　　最简单的检测内存泄露的方式是用任务管理器检查内存使用情况。在 Chrome
+浏览器的新选项卡中打开应用并查看内存使用量是不是越来越多。还有其他的调试工具提供内存监视器，比如
+Chrome
+开发者工具。这是谷歌开者这网站中的&lt;a href=&quot;https://developers.google.com/chrome-developer-tools/docs/heap-profiling&quot;&gt;堆分析&lt;/a&gt;的特性的教程。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-05/20120504_161658_1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;参考：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　1.
+&lt;a href=&quot;http://javascript.crockford.com/memory/leak.html&quot;&gt;http://javascript.crockford.com/memory/leak.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　2.
+&lt;a href=&quot;http://msdn.microsoft.com/en-us/library/Bb250448&quot;&gt;http://msdn.microsoft.com/en-us/library/Bb250448&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　3.
+&lt;a href=&quot;http://www.ibm.com/developerworks/web/library/wa-memleak/&quot;&gt;http://www.ibm.com/developerworks/web/library/wa-memleak/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　（OsChina.NET 编译）&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>IIS是如何处理ASP.NET请求的</title>
+   <link href="http://beango.github.com/archives/2012/04/20/how-iis-process-asp-net-request.html"/>
+   <updated>2012-04-20T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/04/20/how-iis-process-asp-net-request</id>
+   <content type="html">&lt;p&gt;　　英文原文：&lt;a href=&quot;http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/&quot;&gt;Beginner’s Guide: How IIS Process ASP.NET
+Request&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;前言&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　每次服务器接受到请求，都要先经IIS处理。这不是一篇描述ASP.NE生命周期的文章，仅仅是关于IIS操作的。在我们开始之前，先了解这些会有助于对全文的理解，同时欢迎反馈和建议。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;什么是Web Server?&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　每当我们通过VS运行ASP.NET网站时，VS集成的ASP.NET引擎会响应各种请求，这个引擎的名字叫“WebDev.WebServer.exe”。&lt;/p&gt;
+
+&lt;p&gt;　　当我们配置一个Web程序时，总会涉及到一个词“Web
+Server”，它的功能便是会响应所有请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135408_1.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;什么是IIS？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　IIS（&lt;em&gt;Internet Information Server&lt;/em&gt;）是微软Web
+Server的一种，用来配置ASP.NET站点。IIS拥有自己的ASP.NET处理引擎来处理请求，因此，当一个请求到达时，IIS接收并处理请求，然后返回内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135410_2.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;请求处理过程&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　现在，你应能搞清楚Web
+Server和IIS的区别。现在我们来看一下核心部分。在继续之前，你需要搞清两个概念：&lt;/p&gt;
+
+&lt;p&gt;　　1、工作进程（Worker Process）&lt;/p&gt;
+
+&lt;p&gt;　　2、应用程序池（Application Pool）&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;工作进程&lt;/strong&gt;：在IIS中，工作进程（w3wp.exe）运行着ASP.NET应用程序，管理并响应所有的请求，ASP.NET所有的功能都运行在工作进程下，当请求到来时，工作进程会生成Request和Response相关的信息。简而言之，工作进程就是ASP.NET程序的心脏。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;应用程序池&lt;/strong&gt;：应用程序池是工作进程的容器，通常用来隔开不同配置的工作进程。当一个程序出错或进程资源回收时，其他池中的程序不会受到影响。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135411_3.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;注&lt;/strong&gt;：当一个应用程序池包含多个工作进程时，被叫做“Web Garden”。&lt;/p&gt;
+
+&lt;p&gt;　　如果我们看一下IIS 6.0的结构，就会发现，可以把它分成两部分：&lt;/p&gt;
+
+&lt;p&gt;　　1、内核模块（Kernel Mode）&lt;/p&gt;
+
+&lt;p&gt;　　2、用户模块（User Mode）&lt;/p&gt;
+
+&lt;p&gt;　　内核模式是从IIS
+6.0被引入的，它包含了一个叫HTTP.SYS的文件，每当请求进来时，会首先触发该文件的响应。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135411_4.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　HTTP.SYS文件负责把请求传入相应的应用程序池中。但HTTP.SYS如何知道应传给哪个应用程序池呢？当然不是随机抽取，每当创建一个应用程序池，该池的ID就会生成并在HTTP.SYS文件中注册，因此该文件才能确定将请求往哪传。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135412_5.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　以上便是IIS处理请求的第一步。接着，我们来看一下请求如何从HTTP.SYS传入应用程序池。&lt;/p&gt;
+
+&lt;p&gt;　　在IIS的用户模块中，通过&lt;em&gt;Web Admin Services
+(WAS)&lt;/em&gt;从HTTP.SYS接收请求，并传入相应的应用程序池中。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135414_6.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　当应用程序池接收到请求，会接着传给工作进程（w3wp.exe），该进程检查来请求的URL后缀以确定加载哪个ISAPI扩展。ASP.NET加载时会附带自己的ISAPI扩展（aspnet_isapi.dll），以便在IIS中映射。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;注意&lt;/strong&gt;：如果先安装了asp.net，然后再安装IIS，就需要通过aspnet_regiis命令来注册ASP.NET中的ISAPI扩展。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135415_7.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　一旦工作进程加载了aspnet_isapi.dll,
+就会构造一个HttpRuntime类，该类是应用程序的入口，通过ProcessRequest方法处理请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135417_8.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　一旦这个方法被调用，一个HttpContext的实例就产生了。可通过HTTPContent.Current获取到这个实例，且该实例会在整个生命周期中存活，我们通过它可以获取到一些常用对象，如Request，Response，Session
+等。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135418_9.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　之后HttpRuntime会通过HttpApplicationFactory类加载一个HttpApplication对象。每一次请求都要穿过一堆HttpModule到达HttpHandler，以便被响应。而这些HttpModule就被配置在HttpApplication中。&lt;/p&gt;
+
+&lt;p&gt;　　有一个概念叫“Http管道”，被叫做管道是因为它包含了一系列的HttpModule，这些HttpModule拦截请求并将其导向相应的HttpHandler。我们也可自定义HttpModule，以便在请求响应之间做点特别的处理。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135419_10.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　HttpHandler是“Http管道”的终点。所有请求穿过HttpModule需抵达相应的HttpHandler，然后HttpHandler根据请求资源，产生并输出内容。也正因此，我们请求任何aspx页面才会得到响应的Html内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-04/20120420_135422_11.JPG&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;结语&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　每当请求Web服务器上的某些信息时，该请求首先会到达Http.SYS,
+然后Http.SYS将其发送到相应的应用程序池，应用程序池传给工作进程并加载ISAPI扩展，然后HttpRuntime对象会被创建，并通过HttpModule和HttpHandler处理请求。&lt;/p&gt;
+
+&lt;p&gt;　　最后，ASP.NET页面生命周期就开始了。&lt;/p&gt;
+
+&lt;p&gt;　　这只是大致描述IIS处理过程的文章，如果你想进一步了解相应细节，请点击下面链接来进一步学习。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://www.west-wind.com/presentations/howaspnetworks/howaspnetworks.asp&quot;&gt;A low-level Look at the ASP.NET
+Architecture&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://learn.iis.net/page.aspx/101/introduction-to-iis-7-architecture/&quot;&gt;IIS
+Architecture&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　本文翻译自：&lt;a href=&quot;http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/&quot;&gt;Beginner’s Guide: How IIS Process ASP.NET
+Request&lt;/a&gt;&lt;a href=&quot;http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/&quot;&gt;\
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;译后小注：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　1、如果在IIS配置完站点却看不到“w3wp.exe”进程，只要用浏览器打开该站其中一个页面，“w3wp.exe”进程就会出现了。&lt;/p&gt;
+
+&lt;p&gt;　　2、为节省时间，直接引用了原图，英文差的，小查一下字典应该没啥问题。&lt;/p&gt;
+
+&lt;p&gt;　　相关博文：　　&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://www.cnblogs.com/JimmyZhang/archive/2007/09/04/880967.html&quot;&gt;Asp.Net构架(Http请求处理流程) &lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>使用缓存的9大误区（上）</title>
    <link href="http://beango.github.com/archives/2012/04/15/misunderstanding-using-cache.html"/>
    <updated>2012-04-15T00:00:00+08:00</updated>
@@ -4842,6 +5037,98 @@ byte[87040]（85 * 1024 = 87040）。&lt;/p&gt;
  </entry>
  
  <entry>
+   <title>一张破图胜过长篇大论（译文：关于Windows 8的新编程体系）</title>
+   <link href="http://beango.github.com/archives/2012/03/23/a-bad-picture-is-worth-a-thousand-long-discussions.html"/>
+   <updated>2012-03-23T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/03/23/a-bad-picture-is-worth-a-thousand-long-discussions</id>
+   <content type="html">&lt;p&gt;　　译者：linger(sysu大三 )&lt;/p&gt;
+
+&lt;p&gt;　　注：本文是DOUG SEVEN写的关于Windows 8新的编程体系的一篇文章《&lt;a href=&quot;http://dougseven.com/2011/09/15/a-bad-picture-is-worth-a-thousand-long-discussions/&quot;&gt;A bad
+picture is worth a thousand
+long discussions&lt;/a&gt;》的译文。&lt;/p&gt;
+
+&lt;p&gt;　　在Build会议中，我跟顾客，还有其他的参与者，Microsoft的mvp，Microsoft的地方主管，Microsoft的工程团队成员谈了很多。其中谈的最多的是，Windows
+8的平台和工具的技术盒子图。如下所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-03/2012032322562391.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　现在我告诉你，我曾画过很多这种软件架构图，当然并不是很容易画出来的。这种图从技术的角度来说永不可能是精确的。显然没有一种简单的方式对这种复杂的系统来画一张技术上精确无误的框架图。结果是，你的框架图是会漏掉很多盒子的（漏掉很多在整个体系中实际存在的技术）。不幸的是，那正是这里所发生的事（Windows
+8的技术盒子漏掉了一些实际存在的技术）。&lt;/p&gt;
+
+&lt;p&gt;　　谈话中其中之一的话题是围绕着技术盒子中绿色部分（即是Metro风格的应用程序）为何没有出现.NET和CLR。是不是在Metro风格的应用程序中，VB，C#在编译和运行过程都不兼容WinRT？这意味着.NET框架的终结么？&lt;/p&gt;
+
+&lt;p&gt;　　还有一些研究过二进制码的质疑是否有两个CLR。Windows 8究竟在搞什么呢？&lt;/p&gt;
+
+&lt;p&gt;　　昨晚我跟.NET
+CLR的团队的成员们交流过（这里不说出他们的名，不过请相信我，他们肯定明确知道这个体系是如何运行的），下面是一些内部消息。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;基本事实：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　只有一个CLR。每个应用程序或者应用程序池围绕着一个进程旋转，而CLR就是在该进程内部工作的。这意味着，同时运行的一个Metro风格的应用程序和一个桌面模式的应用程序用的是相同的CLR二进制码，只不过是CLR的两个不同的实例。&lt;/p&gt;
+
+&lt;p&gt;　　.NET4.5在桌面模式的应用程序和Metro风格的应用程序都可以用到。不过有点不同。Metro风格的应用程序使用的是最适合称之为另一个.NET的Profile
+（比如说桌面模式的应用程序使用的是.NET Client的Profile
+，而Metro风格的应用程序使用的是.NET
+Metro的Profile）。事实上并不是不相同，但在Metro风格的应用程序中.NET的实现像是另一个Profile一样。&lt;/p&gt;
+
+&lt;p&gt;　　不管一个桌面模式的应用程序或者Metro风格的应用程序是不是.NET的app,
+但都是编译成相同的MSIL（微软中间语言代码）。并不存在一个特殊的Windows
+8的Metro的中间语言代码（就像CLR那样，只有一个MSIL）。&lt;/p&gt;
+
+&lt;p&gt;　　下面是一张更准确的图（当然还是技术上不是精确的框架图）&lt;/p&gt;
+
+&lt;p&gt; &lt;img src=&quot;/assets/files/2012-03/2012032323015116.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　在这张图中，你可以看到CLR和.NET4.5都用到了用C#和VB写的桌面模式的app(蓝色部分)和Metro风格的app（绿色部分）。Silverlight仍然只能在桌面模式作为IE的插件运用到（当然，离开浏览器，它在桌面模式下还是支持的）。这幅图中另一个新添加的是DirectX，原来第一张图是完全没有存在的。DirectX在高级app中是一种很重要的技术，比如游戏。DirectX使得C++可以访问控制GPU。&lt;/p&gt;
+
+&lt;p&gt;　　最大的疑惑，正如我所提到的，是跨越了了蓝色部分和绿色部分的.NET的使用。为什么会存在.NET
+Metro
+Profile（我起的名）呢？因为Metro风格的app运行在一个特殊app的容器中，该容器限制了应用程序的访问权限，从而保护了终端用户，防止受到恶意程序的攻击。就本身而论，Metro
+Profile其实是.NET Client
+Profile的一个子集，只不过是去掉了一些app容器中对于Metro风格程序不允许的权限。开发者如果习惯了.NET的话，会发现很容易使用WinRT，就像是这样子的，有一些引用的集合，然后去使用那些集合中的成员。&lt;/p&gt;
+
+&lt;p&gt;　　Additionally, some of the changes in the Metro Profile are to ensure
+Metro style apps are constructed in the preferred way for touch-first
+design and portable form factors.
+（该句不知该怎么翻译）比如File.Create()。以前如果你使用.NET来创建一个新文件的话，你会使用File.Create(string
+fileLocation) 在磁盘上创建一个新文件，然后使用一个stream
+reader来创建以字符串形式存在的文本的内容。这是一个同步操作（你调用了该函数，进程就阻塞在那里，直到函数返回）。而如今的Metro风格的app的理念是，应该利用异步的编程来减少比如IO延迟之类的东西，比如上面提到的文件系统的操作。这意味着，.NET
+Metro
+Profile提供给你的不是同步操作FileCreate()。不过，你仍然可以调用File.Create()（或者是File.CreateNew()我也想不起来函数名），不过是异步操作。一旦回调函数被使用，你仍然可以打开一个stream
+reader然后对文件的内容视作一个字符串来处理，就像你所做的那样。&lt;/p&gt;
+
+&lt;p&gt;　　最后，所有这些意味着，你会有一些选择，但你不会因此牺牲多少。你仍然可以建立.NET和Silverlight的app，正如你所习惯的那样，当然他们还可以在Windows上跑很多年。如果你想建立一个Metro风格的app，你有四种选择：&lt;/p&gt;
+
+&lt;p&gt;　　1.
+Xaml和.NET(C#或者VB)。你不会放弃很多.NET的东西（记住，你只是抛弃那些在app容器中所禁止的那些），你还可以使用WinRT来访问传感输入和其他的系统资源。&lt;/p&gt;
+
+&lt;p&gt;　　2.
+Xaml和C++。你可以使用你在Xaml和C++的技能来使用WinRT。当然你就感觉不到了.NET的好处，不过，有些人喜欢管理自己程序的垃圾回收。&lt;/p&gt;
+
+&lt;p&gt;　　3.
+Html和Javascript。你可以利用你在UI方面的能力，在Javascript中调用WinRT来访问系统资源和传感输入。&lt;/p&gt;
+
+&lt;p&gt;　　4.
+DirectX和C++。如果你在开发一个刺激好玩的游戏，你可以利用DirectX和通过C++跟WinRT来访问设备传感器和系统资源。&lt;/p&gt;
+
+&lt;p&gt;　　以上是译文，若那些译的不好，敬请指正。下面在提供一些关于Windows
+8的编程链接：&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://blogs.microsoft.co.il/blogs/sasha/archive/2011/09/15/winrt-and-%20%20net-in-windows-8.aspx&quot;&gt;WinRT and .NET in Windows
+8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://ardalis.com/Analyzing-Windows-8-and-WinRT&quot;&gt;Analyzing Windows 8 and
+WinRT&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://dougseven.com/2011/09/15/a-bad-picture-is-worth-a-thousand-long-discussions/&quot;&gt;A bad picture is worth a thousand long
+discussions&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://stackoverflow.com/questions/7457371/why-is-winrt-unmanaged&quot;&gt;Why is WinRT
+unmanaged?&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>TokyoTyrant的管理工具tcrmgr使用</title>
    <link href="http://beango.github.com/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html"/>
    <updated>2012-03-12T00:00:00+08:00</updated>
@@ -4928,6 +5215,1268 @@ tcrmgr restore -port 20000 192.168.0.100 /data/ttserver/ulog/00000010.ulog
 
 &lt;p&gt;注意：只有以复制方式启动的ttserver，修改master后才能从新的数据库复制数据&lt;br/&gt;
 注意：每个ttserver只能有一个master，修改后，不能再从以前的master复制数据&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>前端必读：浏览器内部工作原理</title>
+   <link href="http://beango.github.com/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html"/>
+   <updated>2012-02-09T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers</id>
+   <content type="html">&lt;p&gt;　　目录&lt;/p&gt;
+
+&lt;p&gt;　　一、&lt;a href=&quot;#chapter1&quot;&gt;介绍&lt;/a&gt;&lt;br/&gt;
+　　二、&lt;a href=&quot;#chapter2&quot;&gt;渲染引擎&lt;/a&gt;&lt;br/&gt;
+　　三、&lt;a href=&quot;#chapter3&quot;&gt;解析与DOM树构建&lt;/a&gt;&lt;br/&gt;
+　　四、&lt;a href=&quot;#chapter4&quot;&gt;渲染树构建&lt;/a&gt;&lt;br/&gt;
+　　五、&lt;a href=&quot;#chapter5&quot;&gt;布局&lt;/a&gt;&lt;br/&gt;
+　　六、&lt;a href=&quot;#chapter6&quot;&gt;绘制&lt;/a&gt;&lt;br/&gt;
+　　七、&lt;a href=&quot;#chapter7&quot;&gt;动态变化&lt;/a&gt;&lt;br/&gt;
+　　八、&lt;a href=&quot;#chapter8&quot;&gt;渲染引擎的线程&lt;/a&gt;&lt;br/&gt;
+　　九、&lt;a href=&quot;#chapter9&quot;&gt;CSS2可视模型&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　英文原文：&lt;a href=&quot;http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/&quot;&gt;How Browsers Work: Behind the Scenes of Modern Web
+Browsers&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter1&quot; /&gt;一、介绍&lt;/h2&gt;
+
+&lt;p&gt;　　浏览器可以被认为是使用最广泛的软件，本文将介绍浏览器的工作原理，我们将看到，从你在地址栏输入google.com到你看到google主页过程中都发生了什么。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;将讨论的浏览器&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　今天，有五种主流浏览器——IE、Firefox、Safari、Chrome及Opera。&lt;/p&gt;
+
+&lt;p&gt;　　本文将基于一些开源浏览器的例子——Firefox、Chrome及Safari，Safari是部分开源的。&lt;/p&gt;
+
+&lt;p&gt;　　根据W3C（World Wide Web
+Consortium万维网联盟）的浏览器统计数据，当前（2011年5月），Firefox、Safari及Chrome的市场占有率综合已接近60％。（原文为2009年10月，数据没有太大变化）因此，可以说开源浏览器已经占据了浏览器市场的半壁江山。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;浏览器的主要功能&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　浏览器的主要功能是将用户选择的web资源呈现出来，它需要从服务器请求资源，并将其显示在浏览器窗口中，资源的格式通常是HTML，也包括PDF、image及其他格式。用户用URI（Uniform
+Resource
+Identifier统一资源标识符）来指定所请求资源的位置，在网络一章有更多讨论。&lt;/p&gt;
+
+&lt;p&gt;　　HTML和CSS规范中规定了浏览器解释html文档的方式，由W3C组织对这些规范进行维护，W3C是负责制定web标准的组织。&lt;/p&gt;
+
+&lt;p&gt;　　HTML规范的最新版本是HTML4(http://www.w3.org/TR/html401/)，HTML5还在制定中（译注：两年前），最新的CSS规范版本是2（http://www.w3.org/TR/CSS2），CSS3也还正在制定中（译注：同样两年前）。&lt;/p&gt;
+
+&lt;p&gt;　　这些年来，浏览器厂商纷纷开发自己的扩展，对规范的遵循并不完善，这为web开发者带来了严重的兼容性问题。&lt;/p&gt;
+
+&lt;p&gt;　　但是，浏览器的用户界面则差不多，常见的用户界面元素包括：&lt;/p&gt;
+
+&lt;p&gt;　　1. 用来输入URI的地址栏&lt;/p&gt;
+
+&lt;p&gt;　　2. 前进、后退按钮&lt;/p&gt;
+
+&lt;p&gt;　　3. 书签选项&lt;/p&gt;
+
+&lt;p&gt;　　4. 用于刷新及暂停当前加载文档的刷新、暂停按钮&lt;/p&gt;
+
+&lt;p&gt;　　5. 用于到达主页的主页按钮&lt;/p&gt;
+
+&lt;p&gt;　　奇怪的是，并没有哪个正式公布的规范对用户界面做出规定，这些是多年来各浏览器厂商之间相互模仿和不断改进的结果。&lt;/p&gt;
+
+&lt;p&gt;　　HTML5并没有规定浏览器必须具有的UI元素，但列出了一些常用元素，包括地址栏、状态栏及工具栏。还有一些浏览器有自己专有的功能，比如Firefox的下载管理。更多相关内容将在后面讨论用户界面时介绍。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;浏览器的主要构成（High Level Structure）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　浏览器的主要组件包括：&lt;/p&gt;
+
+&lt;p&gt;　　1. 用户界面 －
+包括地址栏、后退/前进按钮、书签目录等，也就是你所看到的除了用来显示你所请求页面的主窗口之外的其他部分。&lt;/p&gt;
+
+&lt;p&gt;　　2. 浏览器引擎 － 用来查询及操作渲染引擎的接口。&lt;/p&gt;
+
+&lt;p&gt;　　3. 渲染引擎 －
+用来显示请求的内容，例如，如果请求内容为html，它负责解析html及css，并将解析后的结果显示出来。&lt;/p&gt;
+
+&lt;p&gt;　　4. 网络 －
+用来完成网络调用，例如http请求，它具有平台无关的接口，可以在不同平台上工作。&lt;/p&gt;
+
+&lt;p&gt;　　5. UI后端 －
+用来绘制类似组合选择框及对话框等基本组件，具有不特定于某个平台的通用接口，底层使用操作系统的用户接口。&lt;/p&gt;
+
+&lt;p&gt;　　6. JS解释器 － 用来解释执行JS代码。&lt;/p&gt;
+
+&lt;p&gt;　　7. 数据存储 －
+属于持久层，浏览器需要在硬盘中保存类似cookie的各种数据，HTML5定义了web
+database技术，这是一种轻量级完整的客户端存储技术&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316262567.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图1：浏览器主要组件&lt;/center&gt;
+
+
+&lt;p&gt;　　需要注意的是，不同于大部分浏览器，Chrome为每个Tab分配了各自的渲染引擎实例，每个Tab就是一个独立的进程。&lt;/p&gt;
+
+&lt;p&gt;　　对于构成浏览器的这些组件，后面会逐一详细讨论。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter2&quot; /&gt;二、渲染引擎（The rendering engine）&lt;/h2&gt;
+
+&lt;p&gt;　　渲染引擎的职责就是渲染，即在浏览器窗口中显示所请求的内容。&lt;/p&gt;
+
+&lt;p&gt;　　默认情况下，渲染引擎可以显示html、xml文档及图片，它也可以借助插件（一种浏览器扩展）显示其他类型数据，例如使用PDF阅读器插件，可以显示PDF格式，将由专门一章讲解插件及扩展，这里只讨论渲染引擎最主要的用途——显示应用了CSS之后的html及图片。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;渲染引擎简介&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　本文所讨论的浏览器——Firefox、Chrome和Safari是基于两种渲染引擎构建的，Firefox使用Geoko——Mozilla自主研发的渲染引擎，Safari和Chrome都使用webkit。&lt;/p&gt;
+
+&lt;p&gt;　　Webkit是一款开源渲染引擎，它本来是为Linux平台研发的，后来由Apple移植到Mac及Windows上，相关内容请参考&lt;a href=&quot;http://webkit.org/&quot;&gt;http://webkit.org&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;渲染主流程（The main flow）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　渲染引擎首先通过网络获得所请求文档的内容，通常以8K分块的方式完成。&lt;/p&gt;
+
+&lt;p&gt;　　下面是渲染引擎在取得内容之后的基本流程：&lt;/p&gt;
+
+&lt;p&gt;　　解析html以构建dom树 -&gt; 构建render树 -&gt; 布局render树 -&gt;
+绘制render树&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316263715.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图2：渲染引擎基本流程&lt;/center&gt;
+
+
+&lt;p&gt;　　渲染引擎开始解析html，并将标签转化为内容树中的dom节点。接着，它解析外部CSS文件及style标签中的样式信息。这些样式信息以及html中的可见性指令将被用来构建另一棵树——render树。&lt;/p&gt;
+
+&lt;p&gt;　　Render树由一些包含有颜色和大小等属性的矩形组成，它们将被按照正确的顺序显示到屏幕上。&lt;/p&gt;
+
+&lt;p&gt;　　Render树构建好了之后，将会执行布局过程，它将确定每个节点在屏幕上的确切坐标。再下一步就是绘制，即遍历render树，并使用UI后端层绘制每个节点。&lt;/p&gt;
+
+&lt;p&gt;　　值得注意的是，这个过程是逐步完成的，为了更好的用户体验，渲染引擎将会尽可能早的将内容呈现到屏幕上，并不会等到所有的html都解析完成之后再去构建和布局render树。它是解析完一部分内容就显示一部分内容，同时，可能还在通过网络下载其余内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316264892.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图3：webkit主流程&lt;/center&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316270146.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图4：Mozilla的Geoko渲染引擎主流程&lt;/center&gt;
+
+
+&lt;p&gt;　　从图3和4中可以看出，尽管webkit和Gecko使用的术语稍有不同，他们的主要流程基本相同。Gecko称可见的格式化元素组成的树为frame树，每个元素都是一个frame，webkit则使用render树这个名词来命名由渲染对象组成的树。Webkit中元素的定位称为布局，而Gecko中称为回流。Webkit称利用dom节点及样式信息去构建render树的过程为attachment，Gecko在html和dom树之间附加了一层，这层称为内容接收器，相当制造dom元素的工厂。下面将讨论流程中的各个阶段。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter3&quot; /&gt;三、解析与DOM树构建（Parsing and DOM tree construction）&lt;/h2&gt;
+
+&lt;p&gt;　　&lt;strong&gt;解析（Parsing－general）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　既然解析是渲染引擎中一个非常重要的过程，我们将稍微深入的研究它。首先简要介绍一下解析。&lt;/p&gt;
+
+&lt;p&gt;　　解析一个文档即将其转换为具有一定意义的结构——编码可以理解和使用的东西。解析的结果通常是表达文档结构的节点树，称为解析树或语法树。&lt;/p&gt;
+
+&lt;p&gt;　　例如，解析&quot;2＋3－1&quot;这个表达式，可能返回这样一棵树。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316271310.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图5：数学表达式树节点&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;文法（Grammars）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　解析基于文档依据的语法规则——文档的语言或格式。每种可被解析的格式必须具有由词汇及语法规则组成的特定的文法，称为上下文无关文法。人类语言不具有这一特性，因此不能被一般的解析技术所解析。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;解析器－词法分析器（Parser－Lexer combination）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　解析可以分为两个子过程——语法分析及词法分析&lt;/p&gt;
+
+&lt;p&gt;　　词法分析就是将输入分解为符号，符号是语言的词汇表——基本有效单元的集合。对于人类语言来说，它相当于我们字典中出现的所有单词。&lt;/p&gt;
+
+&lt;p&gt;　　语法分析指对语言应用语法规则。&lt;/p&gt;
+
+&lt;p&gt;　　解析器一般将工作分配给两个组件——词法分析器（有时也叫分词器）负责将输入分解为合法的符号，解析器则根据语言的语法规则分析文档结构，从而构建解析树，词法分析器知道怎么跳过空白和换行之类的无关字符。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316272491.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图6：从源文档到解析树&lt;/center&gt;
+
+
+&lt;p&gt;　　解析过程是迭代的，解析器从词法分析器处取到一个新的符号，并试着用这个符号匹配一条语法规则，如果匹配了一条规则，这个符号对应的节点将被添加到解析树上，然后解析器请求另一个符号。如果没有匹配到规则，解析器将在内部保存该符号，并从词法分析器取下一个符号，直到所有内部保存的符号能够匹配一项语法规则。如果最终没有找到匹配的规则，解析器将抛出一个异常，这意味着文档无效或是包含语法错误。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;转换（Translation）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　很多时候，解析树并不是最终结果。解析一般在转换中使用——将输入文档转换为另一种格式。编译就是个例子，编译器在将一段源码编译为机器码的时候，先将源码解析为解析树，然后将该树转换为一个机器码文档。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316274796.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图7：编译流程&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;解析实例Parsing example&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　图5中，我们从一个数学表达式构建了一个解析树，这里定义一个简单的数学语言来看下解析过程。&lt;/p&gt;
+
+&lt;p&gt;　　词汇表：我们的语言包括整数、加号及减号。&lt;/p&gt;
+
+&lt;p&gt;　　语法：&lt;/p&gt;
+
+&lt;p&gt;　　1. 该语言的语法基本单元包括表达式、term及操作符&lt;/p&gt;
+
+&lt;p&gt;　　2. 该语言可以包括多个表达式&lt;/p&gt;
+
+&lt;p&gt;　　3. 一个表达式定义为两个term通过一个操作符连接&lt;/p&gt;
+
+&lt;p&gt;　　4. 操作符可以是加号或减号&lt;/p&gt;
+
+&lt;p&gt;　　5. term可以是一个整数或一个表达式&lt;/p&gt;
+
+&lt;p&gt;　　现在来分析一下&quot;2＋3－1&quot;这个输入&lt;/p&gt;
+
+&lt;p&gt;　　第一个匹配规则的子字符串是&quot;2&quot;，根据规则5，它是一个term，第二个匹配的是&quot;2+3&quot;，它符合第2条规则——一个操作符连接两个term，下一次匹配发生在输入的结束处。&quot;2+3-1&quot;是一个表达式，因为我们已经知道&quot;2+3&quot;是一个term，所以我们有了一个term紧跟着一个操作符及另一个term。&quot;2++&quot;将不会匹配任何规则，因此是一个无效输入。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;词汇表及语法的定义&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　词汇表通常利用正则表达式来定义。&lt;/p&gt;
+
+&lt;p&gt;　　例如上面的语言可以定义为：&lt;/p&gt;
+
+&lt;p&gt;　　INTEGER：0｜［1－9］［0－9］＊&lt;/p&gt;
+
+&lt;p&gt;　　PLUS：+&lt;/p&gt;
+
+&lt;p&gt;　　MINUS：－&lt;/p&gt;
+
+&lt;p&gt;　　正如看到的，这里用正则表达式定义整数。&lt;/p&gt;
+
+&lt;p&gt;　　语法通常用BNF格式定义，我们的语言可以定义为：&lt;/p&gt;
+
+&lt;p&gt;　　expression :＝ term operation term&lt;/p&gt;
+
+&lt;p&gt;　　operation := PLUS | MINUS&lt;/p&gt;
+
+&lt;p&gt;　　term := INTEGER | expression&lt;/p&gt;
+
+&lt;p&gt;　　如果一个语言的文法是上下文无关的，则它可以用正则解析器来解析。对上下文无关文法的一个直观的定义是，该文法可以用BNF来完整的表达。可查看&lt;a href=&quot;http://en.wikipedia.org/wiki/Context-free_grammar&quot;&gt;http://en.wikipedia.org/wiki/Context-free_grammar&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;解析器类型（Types of parsers）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　有两种基本的解析器——自顶向下解析及自底向上解析。比较直观的解释是，自顶向下解析，查看语法的最高层结构并试着匹配其中一个；自底向上解析则从输入开始，逐步将其转换为语法规则，从底层规则开始直到匹配高层规则。&lt;/p&gt;
+
+&lt;p&gt;　　来看一下这两种解析器如何解析上面的例子：&lt;/p&gt;
+
+&lt;p&gt;　　自顶向下解析器从最高层规则开始——它先识别出&quot;2+3&quot;，将其视为一个表达式，然后识别出&quot;2+3-1&quot;为一个表达式（识别表达式的过程中匹配了其他规则，但出发点是最高层规则）。&lt;/p&gt;
+
+&lt;p&gt;　　自底向上解析会扫描输入直到匹配了一条规则，然后用该规则取代匹配的输入，直到解析完所有输入。部分匹配的表达式被放置在解析堆栈中。&lt;/p&gt;
+
+&lt;table border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; align=&quot;center&quot;&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p style=&quot;text-align: center;&quot; align=&quot;center&quot;&gt;&lt;strong&gt;Stack&lt;/strong&gt;&lt;/p&gt;
+&lt;/td&gt;
+&lt;td style=&quot;text-align: center;&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;strong&gt;Input&lt;/strong&gt;&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+&lt;td&gt;
+&lt;p&gt;2 + 3 – 1&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p&gt;term&lt;/p&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;p&gt;+ 3 - 1&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p&gt;term operation&lt;/p&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;p&gt;3 – 1&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p&gt;expression&lt;/p&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;p&gt;- 1&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p&gt;expression operation&lt;/p&gt;
+&lt;/td&gt;
+&lt;td&gt;
+&lt;p&gt;1&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;p&gt;expression&lt;/p&gt;
+&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;p&gt;　　自底向上解析器称为shift
+reduce解析器，因为输入向右移动（想象一个指针首先指向输入开始处，并向右移动），并逐渐简化为语法规则。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;自动化解析（Generating parsers automatically）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　解析器生成器这个工具可以自动生成解析器，只需要指定语言的文法——词汇表及语法规则，它就可以生成一个解析器。创建一个解析器需要对解析有深入的理解，而且手动的创建一个由较好性能的解析器并不容易，所以解析生成器很有用。Webkit使用两个知名的解析生成器——用于创建语法分析器的Flex及创建解析器的Bison（你可能接触过Lex和Yacc）。Flex的输入是一个包含了符号定义的正则表达式，Bison的输入是用BNF格式表示的语法规则。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;HTML解析器（HTML Parser）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　HTML解析器的工作是将html标识解析为解析树。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;HTML文法定义（The HTML grammar definition）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　W3C组织制定规范定义了HTML的词汇表和语法。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;非上下文无关文法（Not a context free grammar）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　正如在解析简介中提到的，上下文无关文法的语法可以用类似BNF的格式来定义。&lt;/p&gt;
+
+&lt;p&gt;　　不幸的是，所有的传统解析方式都不适用于html（当然我提出它们并不只是因为好玩，它们将用来解析css和js），html不能简单的用解析所需的上下文无关文法来定义。&lt;/p&gt;
+
+&lt;p&gt;　　Html有一个正式的格式定义——DTD（Document Type
+Definition文档类型定义）——但它并不是上下文无关文法，html更接近于xml，现在有很多可用的xml解析器，html有个xml的变体——xhtml，它们间的不同在于，html更宽容，它允许忽略一些特定标签，有时可以省略开始或结束标签。总的来说，它是一种soft语法，不像xml呆板、固执。&lt;/p&gt;
+
+&lt;p&gt;　　显然，这个看起来很小的差异却带来了很大的不同。一方面，这是html流行的原因——它的宽容使web开发人员的工作更加轻松，但另一方面，这也使很难去写一个格式化的文法。所以，html的解析并不简单，它既不能用传统的解析器解析，也不能用xml解析器解析。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;HTML DTD&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Html适用DTD格式进行定义，这一格式是用于定义SGML家族的语言，包括了对所有允许元素及它们的属性和层次关系的定义。正如前面提到的，html
+DTD并没有生成一种上下文无关文法。&lt;/p&gt;
+
+&lt;p&gt;　　DTD有一些变种，标准模式只遵守规范，而其他模式则包含了对浏览器过去所使用标签的支持，这么做是为了兼容以前内容。最新的标准DTD在&lt;a href=&quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;http://www.w3.org/TR/html4/strict.dtd&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;DOM&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　输出的树，也就是解析树，是由DOM元素及属性节点组成的。DOM是文档对象模型的缩写，它是html文档的对象表示，作为html元素的外部接口供js等调用。&lt;/p&gt;
+
+&lt;p&gt;　　树的根是&quot;document&quot;对象。&lt;/p&gt;
+
+&lt;p&gt;　　DOM和标签基本是一一对应的关系，例如，如下的标签：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+  &amp;lt;body&amp;gt;
+    &amp;lt;p&amp;gt;Hello DOM&amp;lt;/p&amp;gt;
+    &amp;lt;div&amp;gt;&amp;lt;img src=&quot;example.png&quot; /&amp;gt;&amp;lt;/div&amp;gt;
+  &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　将会被转换为下面的DOM树：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316280265.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图8：示例标签对应的DOM树&lt;/center&gt;
+
+
+&lt;p&gt;　　和html一样，DOM的规范也是由W3C组织制定的。访问&lt;a href=&quot;http://www.w3.org/DOM/DOMTR&quot;&gt;http://www.w3.org/DOM/DOMTR&lt;/a&gt;，这是使用文档的一般规范。一个模型描述一种特定的html元素，可以在&lt;a href=&quot;http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/idl-definitions.htm&quot;&gt;http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/idl-definitions.htm&lt;/a&gt;查看html定义。&lt;/p&gt;
+
+&lt;p&gt;　　这里所谓的树包含了DOM节点是说树是由实现了DOM接口的元素构建而成的，浏览器使用已被浏览器内部使用的其他属性的具体实现。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;解析算法（The parsing algorithm）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　正如前面章节中讨论的，hmtl不能被一般的自顶向下或自底向上的解析器所解析。&lt;/p&gt;
+
+&lt;p&gt;　　原因是：&lt;/p&gt;
+
+&lt;p&gt;　　1. 这门语言本身的宽容特性&lt;/p&gt;
+
+&lt;p&gt;　　2. 浏览器对一些常见的非法html有容错机制&lt;/p&gt;
+
+&lt;p&gt;　　3.
+解析过程是往复的，通常源码不会在解析过程中发生改变，但在html中，脚本标签包含的&quot;document.write&quot;可能添加标签，这说明在解析过程中实际上修改了输入。&lt;/p&gt;
+
+&lt;p&gt;　　不能使用正则解析技术，浏览器为html定制了专属的解析器。&lt;/p&gt;
+
+&lt;p&gt;　　Html5规范中描述了这个解析算法，算法包括两个阶段——符号化及构建树。&lt;/p&gt;
+
+&lt;p&gt;　　符号化是词法分析的过程，将输入解析为符号，html的符号包括开始标签、结束标签、属性名及属性值。&lt;/p&gt;
+
+&lt;p&gt;　　符号识别器识别出符号后，将其传递给树构建器，并读取下一个字符，以识别下一个符号，这样直到处理完所有输入。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316282058.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图9：HTML解析流程&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;符号识别算法（The tokenization algorithm）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　算法输出html符号，该算法用状态机表示。每次读取输入流中的一个或多个字符，并根据这些字符转移到下一个状态，当前的符号状态及构建树状态共同影响结果，这意味着，读取同样的字符，可能因为当前状态的不同，得到不同的结果以进入下一个正确的状态。&lt;/p&gt;
+
+&lt;p&gt;　　这个算法很复杂，这里用一个简单的例子来解释这个原理。&lt;/p&gt;
+
+&lt;p&gt;　　基本示例——符号化下面的html：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+  &amp;lt;body&amp;gt;Hello world&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　初始状态为&quot;Data State&quot;，当遇到&quot;&amp;lt;&quot;字符，状态变为&quot;Tag open
+state&quot;，读取一个a－z的字符将产生一个开始标签符号，状态相应变为&quot;Tag name
+state&quot;，一直保持这个状态直到读取到&quot;&gt;&quot;，每个字符都附加到这个符号名上，例子中创建的是一个html符号。&lt;/p&gt;
+
+&lt;p&gt;　　当读取到&quot;&gt;&quot;，当前的符号就完成了，此时，状态回到&quot;Data
+state&quot;，&quot;&amp;lt;body&gt;&quot;重复这一处理过程。到这里，html和body标签都识别出来了。现在，回到&quot;Data
+state&quot;，读取&quot;Hello
+world&quot;中的字符&quot;H&quot;将创建并识别出一个字符符号，这里会为&quot;Hello
+world&quot;中的每个字符生成一个字符符号。&lt;/p&gt;
+
+&lt;p&gt;　　这样直到遇到&quot;&amp;lt;/body&gt;&quot;中的&quot;&amp;lt;&quot;。现在，又回到了&quot;Tag open
+state&quot;，读取下一个字符&quot;/&quot;将创建一个闭合标签符号，并且状态转移到&quot;Tag name
+state&quot;，还是保持这一状态，直到遇到&quot;&gt;&quot;。然后，产生一个新的标签符号并回到&quot;Data
+state&quot;。后面的&quot;&amp;lt;/html&gt;&quot;将和&quot;&amp;lt;/body&gt;&quot;一样处理。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316283115.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图10：符号化示例输入&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;树的构建算法（Tree construction algorithm）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　在树的构建阶段，将修改以Document为根的DOM树，将元素附加到树上。每个由符号识别器识别生成的节点将会被树构造器进行处理，规范中定义了每个符号相对应的Dom元素，对应的Dom元素将会被创建。这些元素除了会被添加到Dom树上，还将被添加到开放元素堆栈中。这个堆栈用来纠正嵌套的未匹配和未闭合标签，这个算法也是用状态机来描述，所有的状态采用插入模式。&lt;/p&gt;
+
+&lt;p&gt;　　来看一下示例中树的创建过程：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+  &amp;lt;body&amp;gt;Hello world&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　构建树这一阶段的输入是符号识别阶段生成的符号序列。&lt;/p&gt;
+
+&lt;p&gt;　　首先是&quot;initial mode&quot;，接收到html符号后将转换为&quot;before
+html&quot;模式，在这个模式中对这个符号进行再处理。此时，创建了一个HTMLHtmlElement元素，并将其附加到根Document对象上。&lt;/p&gt;
+
+&lt;p&gt;　　状态此时变为&quot;before
+head&quot;，接收到body符号时，即使这里没有head符号，也将自动创建一个HTMLHeadElement元素并附加到树上。&lt;/p&gt;
+
+&lt;p&gt;　　现在，转到&quot;in head&quot;模式，然后是&quot;after
+head&quot;。到这里，body符号会被再次处理，将创建一个HTMLBodyElement并插入到树中，同时，转移到&quot;in
+body&quot;模式。&lt;/p&gt;
+
+&lt;p&gt;　　然后，接收到字符串&quot;Hello
+world&quot;的字符符号，第一个字符将导致创建并插入一个text节点，其他字符将附加到该节点。&lt;/p&gt;
+
+&lt;p&gt;　　接收到body结束符号时，转移到&quot;after
+body&quot;模式，接着接收到html结束符号，这个符号意味着转移到了&quot;after after
+body&quot;模式，当接收到文件结束符时，整个解析过程结束。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316284511.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图11：示例html树的构建过程&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;解析结束时的处理（Action when the parsing is finished）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　在这个阶段，浏览器将文档标记为可交互的，并开始解析处于延时模式中的脚本——这些脚本在文档解析后执行。&lt;/p&gt;
+
+&lt;p&gt;　　文档状态将被设置为完成，同时触发一个load事件。&lt;/p&gt;
+
+&lt;p&gt;　　Html5规范中有符号化及构建树的完整算法(http://www.w3.org/TR/html5/syntax.html#html-parser)。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;浏览器容错（Browsers error tolerance）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　你从来不会在一个html页面上看到&quot;无效语法&quot;这样的错误，浏览器修复了无效内容并继续工作。&lt;/p&gt;
+
+&lt;p&gt;　　以下面这段html为例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+  &amp;lt;mytag&amp;gt;&amp;lt;/mytag&amp;gt;
+  &amp;lt;div&amp;gt;&amp;lt;p&amp;gt;&amp;lt;/div&amp;gt;Really lousy HTML&amp;lt;/p&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　这段html违反了很多规则（mytag不是合法的标签，p及div错误的嵌套等等），但是浏览器仍然可以没有任何怨言的继续显示，它在解析的过程中修复了html作者的错误。&lt;/p&gt;
+
+&lt;p&gt;　　浏览器都具有错误处理的能力，但是，另人惊讶的是，这并不是html最新规范的内容，就像书签及前进后退按钮一样，它只是浏览器长期发展的结果。一些比较知名的非法html结构，在许多站点中出现过，浏览器都试着以一种和其他浏览器一致的方式去修复。&lt;/p&gt;
+
+&lt;p&gt;　　Html5规范定义了这方面的需求，webkit在html解析类开始部分的注释中做了很好的总结。&lt;/p&gt;
+
+&lt;p&gt;　　解析器将符号化的输入解析为文档并创建文档，但不幸的是，我们必须处理很多没有很好格式化的html文档，至少要小心下面几种错误情况。&lt;/p&gt;
+
+&lt;p&gt;　　1.在未闭合的标签中添加明确禁止的元素。这种情况下，应该先将前一标签闭合&lt;/p&gt;
+
+&lt;p&gt;　　2.不能直接添加元素。有些人在写文档的时候会忘了中间一些标签（或者中间标签是可选的），比如HTML
+HEAD BODY TR TD LI等&lt;/p&gt;
+
+&lt;p&gt;　　3.想在一个行内元素中添加块状元素。关闭所有的行内元素，直到下一个更高的块状元素&lt;/p&gt;
+
+&lt;p&gt;　　4. 如果这些都不行，就闭合当前标签直到可以添加该元素。&lt;/p&gt;
+
+&lt;p&gt;　　下面来看一些webkit容错的例子：&lt;/p&gt;
+
+&lt;p&gt;　　&amp;lt;/br&gt;替代&amp;lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;　　一些网站使用&amp;lt;/br&gt;替代&amp;lt;br&gt;，为了兼容IE和Firefox，webkit将其看作&amp;lt;br&gt;。&lt;/p&gt;
+
+&lt;p&gt;　　代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (t-&amp;gt;isCloseTag(brTag) &amp;amp;&amp;amp; m_document-&amp;gt;inCompatMode()) {
+  reportError(MalformedBRError);
+  t-&amp;gt;beginTag = true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　Note －这里的错误处理在内部进行，用户看不到。&lt;/p&gt;
+
+&lt;p&gt;　　迷路的表格&lt;/p&gt;
+
+&lt;p&gt;　　这指一个表格嵌套在另一个表格中，但不在它的某个单元格内。&lt;/p&gt;
+
+&lt;p&gt;　　比如下面这个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;table&amp;gt;
+  &amp;lt;table&amp;gt;
+    &amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;inner table&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+  &amp;lt;/table&amp;gt;
+  &amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;outer table&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　webkit将会将嵌套的表格变为两个兄弟表格：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;table&amp;gt;
+  &amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;outer table&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+&amp;lt;table&amp;gt;
+  &amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;inner table&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (m_inStrayTableContent &amp;amp;&amp;amp; localName == tableTag)
+  popBlock(tableTag);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　webkit使用堆栈存放当前的元素内容，它将从外部表格的堆栈中弹出内部的表格，则它们变为了兄弟表格。&lt;/p&gt;
+
+&lt;p&gt;　　嵌套的表单元素&lt;/p&gt;
+
+&lt;p&gt;　　用户将一个表单嵌套到另一个表单中，则第二个表单将被忽略。&lt;/p&gt;
+
+&lt;p&gt;　　代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (!m_currentFormElement) {
+  m_currentFormElement = new HTMLFormElement(formTag,m_document);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　太深的标签继承&lt;/p&gt;
+
+&lt;p&gt;　　&lt;a href=&quot;http://www.liceo.edu.mx/&quot;&gt;www.liceo.edu.mx&lt;/a&gt;是一个由嵌套层次的站点的例子，最多只允许20个相同类型的标签嵌套，多出来的将被忽略。&lt;/p&gt;
+
+&lt;p&gt;　　代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bool HTMLParser::allowNestedRedundantTag(const AtomicString&amp;amp; tagName)
+{
+  unsigned i = 0;
+  for (HTMLStackElem* curr = m_blockStack;
+  i &amp;lt; cMaxRedundantTagDepth &amp;amp;&amp;amp; curr &amp;amp;&amp;amp; curr-&amp;gt;tagName == tagName;
+  curr = curr-&amp;gt;next, i++) { }
+  return i != cMaxRedundantTagDepth;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　放错了地方的html、body闭合标签&lt;/p&gt;
+
+&lt;p&gt;　　又一次不言自明。&lt;/p&gt;
+
+&lt;p&gt;　　支持不完整的html。我们从来不闭合body，因为一些愚蠢的网页总是在还未真正结束时就闭合它。我们依赖调用end方法去执行关闭的处理。&lt;/p&gt;
+
+&lt;p&gt;　　代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (t-&amp;gt;tagName == htmlTag || t-&amp;gt;tagName == bodyTag )
+  return;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　所以，web开发者要小心了，除非你想成为webkit容错代码的范例，否则还是写格式良好的html吧。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;CSS解析（CSS parsing）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　还记得简介中提到的解析的概念吗，不同于html，css属于上下文无关文法，可以用前面所描述的解析器来解析。Css规范定义了css的词法及语法文法。&lt;/p&gt;
+
+&lt;p&gt;　　看一些例子：&lt;/p&gt;
+
+&lt;p&gt;　　每个符号都由正则表达式定义了词法文法（词汇表）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;comment///*[^*]*/*+([^/*][^*]*/*+)*//
+num[0-9]+|[0-9]*&quot;.&quot;[0-9]+
+nonascii[/200-/377]
+nmstart[_a-z]|{nonascii}|{escape}
+nmchar[_a-z0-9-]|{nonascii}|{escape}
+name{nmchar}+
+ident{nmstart}{nmchar}*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　&quot;ident&quot;是识别器的缩写，相当于一个class名，&quot;name&quot;是一个元素id（用&quot;＃&quot;引用）。&lt;/p&gt;
+
+&lt;p&gt;　　语法用BNF进行描述：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ruleset
+: selector [ ',' S* selector ]*
+'{' S* declaration [ ';' S* declaration ]* '}' S*
+;
+selector
+: simple_selector [ combinator selector | S+ [ combinator selector ] ]
+;
+simple_selector
+: element_name [ HASH | class | attrib | pseudo ]*
+| [ HASH | class | attrib | pseudo ]+
+;
+class
+: '.' IDENT
+;
+element_name
+: IDENT | '*'
+;
+attrib
+: '[' S* IDENT S* [ [ '=' | INCLUDES | DASHMATCH ] S*
+[ IDENT | STRING ] S* ] ']'
+;
+pseudo
+: ':' [ IDENT | FUNCTION S* [IDENT S*] ')' ]
+;
+说明：一个规则集合有这样的结构
+div.error , a.error {
+color:red;
+font-weight:bold;
+}
+div.error和a.error时选择器，大括号中的内容包含了这条规则集合中的规则，这个结构在下面的定义中正式的定义了：
+ruleset
+: selector [ ',' S* selector ]*
+'{' S* declaration [ ';' S* declaration ]* '}' S*
+;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　这说明，一个规则集合具有一个或是可选个数的多个选择器，这些选择器以逗号和空格（S表示空格）进行分隔。每个规则集合包含大括号及大括号中的一条或多条以分号隔开的声明。声明和选择器在后面进行定义。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Webkit CSS解析器（Webkit CSS parser）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Webkit使用Flex和Bison解析生成器从CSS语法文件中自动生成解析器。回忆一下解析器的介绍，Bison创建一个自底向上的解析器，Firefox使用自顶向下解析器。它们都是将每个css文件解析为样式表对象，每个对象包含css规则，css规则对象包含选择器和声明对象，以及其他一些符合css语法的对象。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316290151.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图12：解析css&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;处理脚本及样式表的顺序（The order of processing scripts and style sheets）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;脚本&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　web的模式是同步的，开发者希望解析到一个script标签时立即解析执行脚本，并阻塞文档的解析直到脚本执行完。如果脚本是外引的，则网络必须先请求到这个资源——这个过程也是同步的，会阻塞文档的解析直到资源被请求到。这个模式保持了很多年，并且在html4及html5中都特别指定了。开发者可以将脚本标识为defer，以使其不阻塞文档解析，并在文档解析结束后执行。Html5增加了标记脚本为异步的选项，以使脚本的解析执行使用另一个线程。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;预解析（Speculative parsing）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Webkit和Firefox都做了这个优化，当执行脚本时，另一个线程解析剩下的文档，并加载后面需要通过网络加载的资源。这种方式可以使资源并行加载从而使整体速度更快。需要注意的是，预解析并不改变Dom树，它将这个工作留给主解析过程，自己只解析外部资源的引用，比如外部脚本、样式表及图片。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;样式表（Style sheets）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　样式表采用另一种不同的模式。理论上，既然样式表不改变Dom树，也就没有必要停下文档的解析等待它们，然而，存在一个问题，脚本可能在文档的解析过程中请求样式信息，如果样式还没有加载和解析，脚本将得到错误的值，显然这将会导致很多问题，这看起来是个边缘情况，但确实很常见。Firefox在存在样式表还在加载和解析时阻塞所有的脚本，而Chrome只在当脚本试图访问某些可能被未加载的样式表所影响的特定的样式属性时才阻塞这些脚本。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter4&quot; /&gt;四、渲染树构建（Render tree construction）&lt;/h2&gt;
+
+&lt;p&gt;　　当Dom树构建完成时，浏览器开始构建另一棵树——渲染树。渲染树由元素显示序列中的可见元素组成，它是文档的可视化表示，构建这棵树是为了以正确的顺序绘制文档内容。&lt;/p&gt;
+
+&lt;p&gt;　　Firefox将渲染树中的元素称为frames，WebKit则用renderer或渲染对象来描述这些元素。&lt;/p&gt;
+
+&lt;p&gt;　　一个渲染对象知道怎么布局及绘制自己及它的children。&lt;/p&gt;
+
+&lt;p&gt;　　RenderObject是Webkit的渲染对象基类，它的定义如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class RenderObject{
+  virtual void layout();
+  virtual void paint(PaintInfo);
+  virtual void rect repaintRect();
+  Node* node;//the DOM node
+  RenderStyle* style;// the computed style
+  RenderLayer* containgLayer; //the containing z-index layer
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　每个渲染对象用一个和该节点的css盒模型相对应的矩形区域来表示，正如css2所描述的那样，它包含诸如宽、高和位置之类的几何信息。盒模型的类型受该节点相关的display样式属性的影响（参考样式计算章节）。下面的webkit代码说明了如何根据display属性决定某个节点创建何种类型的渲染对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RenderObject* RenderObject::createObject(Node* node, RenderStyle* style)
+{
+    Document* doc = node-&amp;gt;document();
+    RenderArena* arena = doc-&amp;gt;renderArena();
+    ...
+    RenderObject* o = 0;
+    switch (style-&amp;gt;display()) {
+        case NONE:
+            break;
+        case INLINE:
+            o = new (arena) RenderInline(node);
+            break;
+        case BLOCK:
+            o = new (arena) RenderBlock(node);
+            break;
+        case INLINE_BLOCK:
+            o = new (arena) RenderBlock(node);
+            break;
+        case LIST_ITEM:
+            o = new (arena) RenderListItem(node);
+            break;
+        ...
+    }
+    return o;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　元素的类型也需要考虑，例如，表单控件和表格带有特殊的框架。&lt;/p&gt;
+
+&lt;p&gt;　　在Webkit中，如果一个元素想创建一个特殊的渲染对象，它需要重写&quot;createRenderer&quot;方法，使渲染对象指向不包含几何信息的样式对象。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;渲染树和Dom树的关系（The render tree relation to the DOM tree）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　渲染对象和Dom元素相对应，但这种对应关系不是一对一的，不可见的Dom元素不会被插入渲染树，例如head元素。另外，display属性为none的元素也不会在渲染树中出现（visibility属性为hidden的元素将出现在渲染树中）。&lt;/p&gt;
+
+&lt;p&gt;　　还有一些Dom元素对应几个可见对象，它们一般是一些具有复杂结构的元素，无法用一个矩形来描述。例如，select元素有三个渲染对象——一个显示区域、一个下拉列表及一个按钮。同样，当文本因为宽度不够而折行时，新行将作为额外的渲染元素被添加。另一个多个渲染对象的例子是不规范的html，根据css规范，一个行内元素只能仅包含行内元素或仅包含块状元素，在存在混合内容时，将会创建匿名的块状渲染对象包裹住行内元素。&lt;/p&gt;
+
+&lt;p&gt;　　一些渲染对象和所对应的Dom节点不在树上相同的位置，例如，浮动和绝对定位的元素在文本流之外，在两棵树上的位置不同，渲染树上标识出真实的结构，并用一个占位结构标识出它们原来的位置。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316305784.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图13：渲染树及对应的Dom树&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;创建树的流程（The flow of constructing the tree）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Firefox中，表述为一个监听Dom更新的监听器，将frame的创建委派给Frame
+Constructor，这个构建器计算样式（参看样式计算）并创建一个frame。&lt;/p&gt;
+
+&lt;p&gt;　　Webkit中，计算样式并生成渲染对象的过程称为attachment，每个Dom节点有一个attach方法，attachment的过程是同步的，调用新节点的attach方法将节点插入到Dom树中。&lt;/p&gt;
+
+&lt;p&gt;　　处理html和body标签将构建渲染树的根，这个根渲染对象对应被css规范称为containing
+block的元素——包含了其他所有块元素的顶级块元素。它的大小就是viewport——浏览器窗口的显示区域，Firefox称它为viewPortFrame，webkit称为RenderView，这个就是文档所指向的渲染对象，树中其他的部分都将作为一个插入的Dom节点被创建。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;样式计算（Style Computation）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　创建渲染树需要计算出每个渲染对象的可视属性，这可以通过计算每个元素的样式属性得到。&lt;/p&gt;
+
+&lt;p&gt;　　样式包括各种来源的样式表，行内样式元素及html中的可视化属性（例如bgcolor），可视化属性转化为css样式属性。&lt;/p&gt;
+
+&lt;p&gt;　　样式表来源于浏览器默认样式表，及页面作者和用户提供的样式表——有些样式是浏览器用户提供的（浏览器允许用户定义喜欢的样式，例如，在Firefox中，可以通过在Firefox
+Profile目录下放置样式表实现）。&lt;/p&gt;
+
+&lt;p&gt;　　计算样式的一些困难：&lt;/p&gt;
+
+&lt;p&gt;　　1. 样式数据是非常大的结构，保存大量的样式属性会带来内存问题。&lt;/p&gt;
+
+&lt;p&gt;　　2.如果不进行优化，找到每个元素匹配的规则会导致性能问题，为每个元素查找匹配的规则都需要遍历整个规则表，这个过程有很大的工作量。选择符可能有复杂的结构，匹配过程如果沿着一条开始看似正确，后来却被证明是无用的路径，则必须去尝试另一条路径。&lt;/p&gt;
+
+&lt;p&gt;　　例如，下面这个复杂选择符&lt;/p&gt;
+
+&lt;p&gt;　　div div div div｛…｝&lt;/p&gt;
+
+&lt;p&gt;　　这意味着规则应用到三个div的后代div元素，选择树上一条特定的路径去检查，这可能需要遍历节点树，最后却发现它只是两个div的后代，并不使用该规则，然后则需要沿着另一条路径去尝试&lt;/p&gt;
+
+&lt;p&gt;　　3. 应用规则涉及非常复杂的级联，它们定义了规则的层次&lt;/p&gt;
+
+&lt;p&gt;　　我们来看一下浏览器如何处理这些问题：&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;共享样式数据（Sharing style data）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　WebkKit节点引用样式对象（渲染样式），某些情况下，这些对象可以被节点间共享，这些节点需要是兄弟或是表兄弟节点，并且：&lt;/p&gt;
+
+&lt;p&gt;　　1.这些元素必须处于相同的鼠标状态（比如不能一个处于hover，而另一个不是）&lt;/p&gt;
+
+&lt;p&gt;　　2. 不能有元素具有id&lt;/p&gt;
+
+&lt;p&gt;　　3. 标签名必须匹配&lt;/p&gt;
+
+&lt;p&gt;　　4. class属性必须匹配&lt;/p&gt;
+
+&lt;p&gt;　　5. 对应的属性必须相同&lt;/p&gt;
+
+&lt;p&gt;　　6. 链接状态必须匹配&lt;/p&gt;
+
+&lt;p&gt;　　7. 焦点状态必须匹配&lt;/p&gt;
+
+&lt;p&gt;　　8. 不能有元素被属性选择器影响&lt;/p&gt;
+
+&lt;p&gt;　　9. 元素不能有行内样式属性&lt;/p&gt;
+
+&lt;p&gt;　　10.不能有生效的兄弟选择器，webcore在任何兄弟选择器相遇时只是简单的抛出一个全局转换，并且在它们显示时使整个文档的样式共享失效，这些包括＋选择器和类似:first-child和:last-child这样的选择器。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Firefox规则树（Firefox rule tree）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Firefox用两个树用来简化样式计算－规则树和样式上下文树，WebKit也有样式对象，但它们并没有存储在类似样式上下文树这样的树中，只是由Dom节点指向其相关的样式。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316563380.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图14：Firefox样式上下文树&lt;/center&gt;
+
+
+&lt;p&gt;　　样式上下文包含最终值，这些值是通过以正确顺序应用所有匹配的规则，并将它们由逻辑值转换为具体的值，例如，如果逻辑值为屏幕的百分比，则通过计算将其转化为绝对单位。样式树的使用确实很巧妙，它使得在节点中共享的这些值不需要被多次计算，同时也节省了存储空间。&lt;/p&gt;
+
+&lt;p&gt;　　所有匹配的规则都存储在规则树中，一条路径中的底层节点拥有最高的优先级，这棵树包含了所找到的所有规则匹配的路径（译注：可以取巧理解为每条路径对应一个节点，路径上包含了该节点所匹配的所有规则）。规则树并不是一开始就为所有节点进行计算，而是在某个节点需要计算样式时，才进行相应的计算并将计算后的路径添加到树中。&lt;/p&gt;
+
+&lt;p&gt;　　我们将树上的路径看成辞典中的单词，假如已经计算出了如下的规则树：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316565168.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　假如需要为内容树中的另一个节点匹配规则，现在知道匹配的规则（以正确的顺序）为B-E-I，因为我们已经计算出了路径A-B-E-I-L，所以树上已经存在了这条路径，剩下的工作就很少了。&lt;/p&gt;
+
+&lt;p&gt;　　现在来看一下树如何保存。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;结构化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　样式上下文按结构划分，这些结构包括类似border或color这样的特定分类的样式信息。一个结构中的所有特性不是继承的就是非继承的，对继承的特性，除非元素自身有定义，否则就从它的parent继承。非继承的特性（称为reset特性）如果没有定义，则使用默认的值。&lt;/p&gt;
+
+&lt;p&gt;　　样式上下文树缓存完整的结构（包括计算后的值），这样，如果底层节点没有为一个结构提供定义，则使用上层节点缓存的结构。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;使用规则树计算样式上下文&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　当为一个特定的元素计算样式时，首先计算出规则树中的一条路径，或是使用已经存在的一条，然后使用路径中的规则去填充新的样式上下文，从样式的底层节点开始，它具有最高优先级（通常是最特定的选择器），遍历规则树，直到填满结构。如果在那个规则节点没有定义所需的结构规则，则沿着路径向上，直到找到该结构规则。&lt;/p&gt;
+
+&lt;p&gt;　　如果最终没有找到该结构的任何规则定义，那么如果这个结构是继承型的，则找到其在内容树中的parent的结构，这种情况下，我们也成功的共享了结构；如果这个结构是reset型的，则使用默认的值。&lt;/p&gt;
+
+&lt;p&gt;　　如果特定的节点添加了值，那么需要做一些额外的计算以将其转换为实际值，然后在树上的节点缓存该值，使它的children可以使用。&lt;/p&gt;
+
+&lt;p&gt;　　当一个元素和它的一个兄弟元素指向同一个树节点时，完整的样式上下文可以被它们共享。&lt;/p&gt;
+
+&lt;p&gt;　　来看一个例子：假设有下面这段html&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+    &amp;lt;body&amp;gt;
+        &amp;lt;div class=&quot;err&quot; id=&quot;div1&quot;&amp;gt;
+            &amp;lt;p&amp;gt;this is a
+            &amp;lt;span class=&quot;big&quot;&amp;gt; big error &amp;lt;/span&amp;gt;
+            this is also a
+            &amp;lt;span class=&quot;big&quot;&amp;gt; verybigerror&amp;lt;/span&amp;gt;
+            error
+            &amp;lt;/p&amp;gt;
+        &amp;lt;/div&amp;gt;
+        &amp;lt;div class=&quot;err&quot; id=&quot;div2&quot;&amp;gt;another error&amp;lt;/div&amp;gt;
+    &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　以及下面这些规则&lt;/p&gt;
+
+&lt;p&gt;　　1.div {margin:5px;color:black}&lt;br/&gt;
+　　2..err {color:red}&lt;br/&gt;
+　　3..big {margin-top:3px}&lt;br/&gt;
+　　4.div span {margin-bottom:4px}&lt;br/&gt;
+　　5.#div1 {color:blue}&lt;br/&gt;
+　　6.#div2 {color:green}&lt;/p&gt;
+
+&lt;p&gt;　　简化下问题，我们只填充两个结构——color和margin，color结构只包含一个成员－颜色，margin结构包含四边。&lt;/p&gt;
+
+&lt;p&gt;　　生成的规则树如下（节点名：指向的规则）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316570450.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　上下文树如下（节点名：指向的规则节点）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316572022.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　假设我们解析html，遇到第二个div标签，我们需要为这个节点创建样式上下文，并填充它的样式结构。&lt;/p&gt;
+
+&lt;p&gt;　　我们进行规则匹配，找到这个div匹配的规则为1、2、6，我们发现规则树上已经存在了一条我们可以使用的路径1、2，我们只需为规则6新增一个节点添加到下面（就是规则树中的F）。&lt;/p&gt;
+
+&lt;p&gt;　　然后创建一个样式上下文并将其放到上下文树中，新的样式上下文将指向规则树中的节点F。&lt;/p&gt;
+
+&lt;p&gt;　　现在我们需要填充这个样式上下文，先从填充margin结构开始，既然最后一个规则节点没有添加margin结构，沿着路径向上，直到找到缓存的前面插入节点计算出的结构，我们发现B是最近的指定margin值的节点。因为已经有了color结构的定义，所以不能使用缓存的结构，既然color只有一个属性，也就不需要沿着路径向上填充其他属性。计算出最终值（将字符串转换为RGB等），并缓存计算后的结构。&lt;/p&gt;
+
+&lt;p&gt;　　第二个span元素更简单，进行规则匹配后发现它指向规则G，和前一个span一样，既然有兄弟节点指向同一个节点，就可以共享完整的样式上下文，只需指向前一个span的上下文。&lt;/p&gt;
+
+&lt;p&gt;　　因为结构中包含继承自parent的规则，上下文树做了缓存（color特性是继承来的，但Firefox将其视为reset并在规则树中缓存）。&lt;/p&gt;
+
+&lt;p&gt;　　例如，如果我们为一个paragraph的文字添加规则：&lt;/p&gt;
+
+&lt;p&gt;　　p {font-family:Verdana;font size:10px;font-weight:bold}&lt;/p&gt;
+
+&lt;p&gt;　　那么这个p在内容树中的子节点div，会共享和它parent一样的font结构，这种情况发生在没有为这个div指定font规则时。&lt;/p&gt;
+
+&lt;p&gt;　　Webkit中，并没有规则树，匹配的声明会被遍历四次，先是应用非important的高优先级属性（之所以先应用这些属性，是因为其他的依赖于它们－比如display），其次是高优先级important的，接着是一般优先级非important的，最后是一般优先级important的规则。这样，出现多次的属性将被按照正确的级联顺序进行处理，最后一个生效。&lt;/p&gt;
+
+&lt;p&gt;　　总结一下，共享样式对象（结构中完整或部分内容）解决了问题1和3，Firefox的规则树帮助以正确的顺序应用规则。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;对规则进行处理以简化匹配过程&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　样式规则有几个来源：&lt;/p&gt;
+
+&lt;p&gt;　　-   外部样式表或style标签内的css规则&lt;br/&gt;
+　　-   行内样式属性&lt;br/&gt;
+　　-   html可视化属性（映射为相应的样式规则）&lt;/p&gt;
+
+&lt;p&gt;　　后面两个很容易匹配到元素，因为它们所拥有的样式属性和html属性可以将元素作为key进行映射。&lt;/p&gt;
+
+&lt;p&gt;　　就像前面问题2所提到的，css的规则匹配可能很狡猾，为了解决这个问题，可以先对规则进行处理，以使其更容易被访问。&lt;/p&gt;
+
+&lt;p&gt;　　解析完样式表之后，规则会根据选择符添加一些hash映射，映射可以是根据id、class、标签名或是任何不属于这些分类的综合映射。如果选择符为id，规则将被添加到id映射，如果是class，则被添加到class映射，等等。&lt;/p&gt;
+
+&lt;p&gt;　　这个处理是匹配规则更容易，不需要查看每个声明，我们能从映射中找到一个元素的相关规则，这个优化使在进行规则匹配时减少了95+%的工作量。&lt;/p&gt;
+
+&lt;p&gt;　　来看下面的样式规则：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;p.error {color:red}
+#messageDiv {height:50px}
+div {margin:5px}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　第一条规则将被插入class映射，第二条插入id映射，第三条是标签映射。&lt;/p&gt;
+
+&lt;p&gt;　　下面这个html片段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;p class=&quot;error&quot;&amp;gt;an error occurred &amp;lt;/p&amp;gt;
+&amp;lt;div id=&quot; messageDiv&quot;&amp;gt;this is a message&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　我们首先找到p元素对应的规则，class映射将包含一个&quot;error&quot;的key，找到p.error的规则，div在id映射和标签映射中都有相关的规则，剩下的工作就是找出这些由key对应的规则中哪些确实是正确匹配的。&lt;/p&gt;
+
+&lt;p&gt;　　例如，如果div的规则是&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;table div {margin:5px}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　这也是标签映射产生的，因为key是最右边的选择符，但它并不匹配这里的div元素，因为这里的div没有table祖先。&lt;/p&gt;
+
+&lt;p&gt;　　Webkit和Firefox都会做这个处理。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;以正确的级联顺序应用规则&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　样式对象拥有对应所有可见属性的属性，如果特性没有被任何匹配的规则所定义，那么一些特性可以从parent的样式对象中继承，另外一些使用默认值。&lt;/p&gt;
+
+&lt;p&gt;　　这个问题的产生是因为存在不止一处的定义，这里用级联顺序解决这个问题。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;样式表的级联顺序&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　一个样式属性的声明可能在几个样式表中出现，或是在一个样式表中出现多次，因此，应用规则的顺序至关重要，这个顺序就是级联顺序。根据css2的规范，级联顺序为（从低到高）：&lt;/p&gt;
+
+&lt;p&gt;　　1. 浏览器声明&lt;/p&gt;
+
+&lt;p&gt;　　2. 用户声明&lt;/p&gt;
+
+&lt;p&gt;　　3. 作者的一般声明&lt;/p&gt;
+
+&lt;p&gt;　　4. 作者的important声明&lt;/p&gt;
+
+&lt;p&gt;　　5. 用户important声明&lt;/p&gt;
+
+&lt;p&gt;　　浏览器声明是最不重要的，用户只有在声明被标记为important时才会覆盖作者的声明。具有同等级别的声明将根据specifity以及它们被定义时的顺序进行排序。Html可视化属性将被转换为匹配的css声明，它们被视为最低优先级的作者规则。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Specifity&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Css2规范中定义的选择符specifity如下：&lt;/p&gt;
+
+&lt;p&gt;　　-   如果声明来自style属性，而不是一个选择器的规则，则计1，否则计0（＝a）&lt;br/&gt;
+　　-   计算选择器中id属性的数量（＝b）&lt;br/&gt;
+　　-   计算选择器中class及伪类的数量（＝c）&lt;br/&gt;
+　　-   计算选择器中元素名及伪元素的数量（＝d）&lt;/p&gt;
+
+&lt;p&gt;　　连接a－b－c－d四个数量（用一个大基数的计算系统）将得到specifity。这里使用的基数由分类中最高的基数定义。例如，如果a为14，可以使用16进制。不同情况下，a为17时，则需要使用阿拉伯数字17作为基数，这种情况可能在这个选择符时发生html
+body div div …（选择符中有17个标签，一般不太可能）。&lt;/p&gt;
+
+&lt;p&gt;　　一些例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;*{}/* a=0 b=0 c=0 d=0 -&amp;gt; specificity = 0,0,0,0 */
+
+li{}/* a=0 b=0 c=0 d=1 -&amp;gt; specificity = 0,0,0,1 */
+
+li:first-line {}/* a=0 b=0 c=0 d=2 -&amp;gt; specificity = 0,0,0,2 */
+
+ul li{}/* a=0 b=0 c=0 d=2 -&amp;gt; specificity = 0,0,0,2 */
+
+ul ol+li{}/* a=0 b=0 c=0 d=3 -&amp;gt; specificity = 0,0,0,3 */
+
+h1 + *[rel=up]{}/* a=0 b=0 c=1 d=1 -&amp;gt; specificity = 0,0,1,1 */
+
+ul ol li.red{}/* a=0 b=0 c=1 d=3 -&amp;gt; specificity = 0,0,1,3 */
+
+li.red.level{}/* a=0 b=0 c=2 d=1 -&amp;gt; specificity = 0,0,2,1 */
+
+#x34y{}/* a=0 b=1 c=0 d=0 -&amp;gt; specificity = 0,1,0,0 */
+
+/* a=1 b=0 c=0 d=0 -&amp;gt; specificity = 1,0,0,0 */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　&lt;strong&gt;规则排序&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　规则匹配后，需要根据级联顺序对规则进行排序，WebKit先将小列表用冒泡排序，再将它们合并为一个大列表，WebKit通过为规则复写&quot;&gt;&quot;操作来执行排序：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static bool operator &amp;gt;(CSSRuleData&amp;amp; r1, CSSRuleData&amp;amp; r2)
+{
+    int spec1 = r1.selector()-&amp;gt;specificity();
+    int spec2 = r2.selector()-&amp;gt;specificity();
+    return (spec1 == spec2) : r1.position() &amp;gt; r2.position() : spec1 &amp;gt; spec2;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　&lt;strong&gt;逐步处理Gradual process&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　webkit使用一个标志位标识所有顶层样式表都已加载，如果在attch时样式没有完全加载，则放置占位符，并在文档中标记，一旦样式表完成加载就重新进行计算。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter5&quot; /&gt;五、布局（Layout）&lt;/h2&gt;
+
+&lt;p&gt;　　当渲染对象被创建并添加到树中，它们并没有位置和大小，计算这些值的过程称为layout或reflow。&lt;/p&gt;
+
+&lt;p&gt;　　Html使用基于流的布局模型，意味着大部分时间，可以以单一的途径进行几何计算。流中靠后的元素并不会影响前面元素的几何特性，所以布局可以在文档中从右向左、自上而下的进行。也存在一些例外，比如html
+tables。&lt;/p&gt;
+
+&lt;p&gt;　　坐标系统相对于根frame，使用top和left坐标。&lt;/p&gt;
+
+&lt;p&gt;　　布局是一个递归的过程，由根渲染对象开始，它对应html文档元素，布局继续递归的通过一些或所有的frame层级，为每个需要几何信息的渲染对象进行计算。&lt;/p&gt;
+
+&lt;p&gt;　　根渲染对象的位置是0,0，它的大小是viewport－浏览器窗口的可见部分。&lt;/p&gt;
+
+&lt;p&gt;　　所有的渲染对象都有一个layout或reflow方法，每个渲染对象调用需要布局的children的layout方法。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Dirty bit系统&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　为了不因为每个小变化都全部重新布局，浏览器使用一个dirty
+bit系统，一个渲染对象发生了变化或是被添加了，就标记它及它的children为dirty——需要layout。存在两个标识——dirty及children
+are dirty，children are
+dirty说明即使这个渲染对象可能没问题，但它至少有一个child需要layout。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;全局和增量layout&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　当layout在整棵渲染树触发时，称为全局layout，这可能在下面这些情况下发生：&lt;/p&gt;
+
+&lt;p&gt;　　1. 一个全局的样式改变影响所有的渲染对象，比如字号的改变。&lt;/p&gt;
+
+&lt;p&gt;　　2. 窗口resize。&lt;/p&gt;
+
+&lt;p&gt;　　layout也可以是增量的，这样只有标志为dirty的渲染对象会重新布局（也将导致一些额外的布局）。增量layout会在渲染对象dirty时异步触发，例如，当网络接收到新的内容并添加到Dom树后，新的渲染对象会添加到渲染树中。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316575534.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图20：增量layout&lt;/center&gt;
+
+
+&lt;p&gt;　　&lt;strong&gt;异步和同步layout&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　增量layout的过程是异步的，Firefox为增量layout生成了reflow队列，以及一个调度执行这些批处理命令。WebKit也有一个计时器用来执行增量layout－遍历树，为dirty状态的渲染对象重新布局。&lt;/p&gt;
+
+&lt;p&gt;　　另外，当脚本请求样式信息时，例如&quot;offsetHeight&quot;，会同步的触发增量布局。&lt;/p&gt;
+
+&lt;p&gt;　　全局的layout一般都是同步触发。&lt;/p&gt;
+
+&lt;p&gt;　　有些时候，layout会被作为一个初始layout之后的回调，比如滑动条的滑动。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;优化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　当一个layout因为resize或是渲染位置改变（并不是大小改变）而触发时，渲染对象的大小将会从缓存中读取，而不会重新计算。&lt;/p&gt;
+
+&lt;p&gt;　　一般情况下，如果只有子树发生改变，则layout并不从根开始。这种情况发生在，变化发生在元素自身并且不影响它周围元素，例如，将文本插入文本域（否则，每次击键都将触发从根开始的重排）。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;layout过程&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　layout一般有下面这几个部分：&lt;/p&gt;
+
+&lt;p&gt;　　1. parent渲染对象决定它的宽度&lt;/p&gt;
+
+&lt;p&gt;　　2. parent渲染对象读取chilidren，并：&lt;/p&gt;
+
+&lt;p&gt;　　　　a. 放置child渲染对象（设置它的x和y）&lt;/p&gt;
+
+&lt;p&gt;　　　　b. 在需要时（它们当前为dirty或是处于全局layout或者其他原因）调用child渲染对象的layout，这将计算child的高度&lt;/p&gt;
+
+&lt;p&gt;　　　　c. parent渲染对象使用child渲染对象的累积高度，以及margin和padding的高度来设置自己的高度－这将被parent渲染对象的parent使用&lt;/p&gt;
+
+&lt;p&gt;　　　　d. 将dirty标识设置为false&lt;/p&gt;
+
+&lt;p&gt;　　Firefox使用一个&quot;state&quot;对象（nsHTMLReflowState）做为参数去布局（firefox称为reflow），state包含parent的宽度及其他内容。&lt;/p&gt;
+
+&lt;p&gt;　　Firefox布局的输出是一个&quot;metrics&quot;对象（nsHTMLReflowMetrics）。它包括渲染对象计算出的高度。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;宽度计算&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　渲染对象的宽度使用容器的宽度、渲染对象样式中的宽度及margin、border进行计算。例如，下面这个div的宽度：&lt;/p&gt;
+
+&lt;p&gt;　　&amp;lt;div /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　webkit中宽度的计算过程是（RenderBox类的calcWidth方法）：&lt;/p&gt;
+
+&lt;p&gt;　　-   容器的宽度是容器的可用宽度和0中的最大值，这里的可用宽度为：contentWidth=clientWidth()-paddingLeft()-paddingRight()，clientWidth和clientHeight代表一个对象内部的不包括border和滑动条的大小
+　　-   元素的宽度指样式属性width的值，它可以通过计算容器的百分比得到一个绝对值
+　　-   加上水平方向上的border和padding&lt;/p&gt;
+
+&lt;p&gt;　　到这里是最佳宽度的计算过程，现在计算宽度的最大值和最小值，如果最佳宽度大于最大宽度则使用最大宽度，如果小于最小宽度则使用最小宽度。最后缓存这个值，当需要layout但宽度未改变时使用。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Line breaking&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　当一个渲染对象在布局过程中需要折行时，则暂停并告诉它的parent它需要折行，parent将创建额外的渲染对象并调用它们的layout。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter6&quot; /&gt;六、绘制（Painting）&lt;/h2&gt;
+
+&lt;p&gt;　　绘制阶段，遍历渲染树并调用渲染对象的paint方法将它们的内容显示在屏幕上，绘制使用UI基础组件，这在UI的章节有更多的介绍。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;全局和增量&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　和布局一样，绘制也可以是全局的——绘制完整的树——或增量的。在增量的绘制过程中，一些渲染对象以不影响整棵树的方式改变，改变的渲染对象使其在屏幕上的矩形区域失效，这将导致操作系统将其看作dirty区域，并产生一个paint事件，操作系统很巧妙的处理这个过程，并将多个区域合并为一个。Chrome中，这个过程更复杂些，因为渲染对象在不同的进程中，而不是在主进程中。Chrome在一定程度上模拟操作系统的行为，表现为监听事件并派发消息给渲染根，在树中查找到相关的渲染对象，重绘这个对象（往往还包括它的children）。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;绘制顺序&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　css2定义了绘制过程的顺序——&lt;a href=&quot;http://www.w3.org/TR/CSS21/zindex.html&quot;&gt;http://www.w3.org/TR/CSS21/zindex.html&lt;/a&gt;。这个就是元素压入堆栈的顺序，这个顺序影响着绘制，堆栈从后向前进行绘制。&lt;/p&gt;
+
+&lt;p&gt;　　一个块渲染对象的堆栈顺序是：&lt;/p&gt;
+
+&lt;p&gt;　　1. 背景色&lt;/p&gt;
+
+&lt;p&gt;　　2. 背景图&lt;/p&gt;
+
+&lt;p&gt;　　3. border&lt;/p&gt;
+
+&lt;p&gt;　　4. children&lt;/p&gt;
+
+&lt;p&gt;　　5. outline&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Firefox显示列表&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Firefox读取渲染树并为绘制的矩形创建一个显示列表，该列表以正确的绘制顺序包含这个矩形相关的渲染对象。&lt;/p&gt;
+
+&lt;p&gt;　　用这样的方法，可以使重绘时只需查找一次树，而不需要多次查找——绘制所有的背景、所有的图片、所有的border等等。&lt;/p&gt;
+
+&lt;p&gt;　　Firefox优化了这个过程，它不添加会被隐藏的元素，比如元素完全在其他不透明元素下面。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;WebKit矩形存储&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　重绘前，WebKit将旧的矩形保存为位图，然后只绘制新旧矩形的差集。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter7&quot; /&gt;七、动态变化&lt;/h2&gt;
+
+&lt;p&gt;　　浏览器总是试着以最小的动作响应一个变化，所以一个元素颜色的变化将只导致该元素的重绘，元素位置的变化将大致元素的布局和重绘，添加一个Dom节点，也会大致这个元素的布局和重绘。一些主要的变化，比如增加html元素的字号，将会导致缓存失效，从而引起整数的布局和重绘。&lt;/p&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter8&quot; /&gt;八、渲染引擎的线程&lt;/h2&gt;
+
+&lt;p&gt;　　渲染引擎是单线程的，除了网络操作以外，几乎所有的事情都在单一的线程中处理，在Firefox和Safari中，这是浏览器的主线程，Chrome中这是tab的主线程。&lt;/p&gt;
+
+&lt;p&gt;　　网络操作由几个并行线程执行，并行连接的个数是受限的（通常是2－6个）。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;事件循环&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　浏览器主线程是一个事件循环，它被设计为无限循环以保持执行过程的可用，等待事件（例如layout和paint事件）并执行它们。下面是Firefox的主要事件循环代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;while (!mExiting)
+  NS_ProcessNextEvent(thread);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;&lt;label id=&quot;chapter9&quot; /&gt;九、CSS2可视模型（CSS2 visual module）&lt;/h2&gt;
+
+&lt;p&gt;　　&lt;strong&gt;画布The Canvas&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　根据CSS2规范，术语canvas用来描述格式化的结构所渲染的空间——浏览器绘制内容的地方。画布对每个维度空间都是无限大的，但浏览器基于viewport的大小选择了一个初始宽度。&lt;/p&gt;
+
+&lt;p&gt;　　根据&lt;a href=&quot;http://www.w3.org/TR/CSS2/zindex.html&quot;&gt;http://www.w3.org/TR/CSS2/zindex.html&lt;/a&gt;的定义，画布如果是包含在其他画布内则是透明的，否则浏览器会指定一个颜色。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;CSS盒模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　CSS盒模型描述了矩形盒，这些矩形盒是为文档树中的元素生成的，并根据可视的格式化模型进行布局。每个box包括内容区域（如图片、文本等）及可选的四周padding、border和margin区域。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316582721.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　每个节点生成0－n个这样的box。&lt;/p&gt;
+
+&lt;p&gt;　　所有的元素都有一个display属性，用来决定它们生成box的类型，例如：&lt;/p&gt;
+
+&lt;p&gt;　　block －生成块状box&lt;/p&gt;
+
+&lt;p&gt;　　inline －生成一个或多个行内box&lt;/p&gt;
+
+&lt;p&gt;　　none －不生成box&lt;/p&gt;
+
+&lt;p&gt;　　默认的是inline，但浏览器样式表设置了其他默认值，例如，div元素默认为block。可以访问&lt;a href=&quot;http://www.w3.org/TR/CSS2/sample.html&quot;&gt;http://www.w3.org/TR/CSS2/sample.html&lt;/a&gt;查看更多的默认样式表示例。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;定位策略Position scheme&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　这里有三种策略：&lt;/p&gt;
+
+&lt;p&gt;　　1. normal
+－对象根据它在文档的中位置定位，这意味着它在渲染树和在Dom树中位置一致，并根据它的盒模型和大小进行布局。&lt;/p&gt;
+
+&lt;p&gt;　　2. float －对象先像普通流一样布局，然后尽可能的向左或是向右移动。&lt;/p&gt;
+
+&lt;p&gt;　　3. absolute －对象在渲染树中的位置和Dom树中位置无关。&lt;/p&gt;
+
+&lt;p&gt;　　static和relative是normal，absolute和fixed属于absolute。&lt;/p&gt;
+
+&lt;p&gt;　　在static定位中，不定义位置而使用默认的位置。其他策略中，作者指定位置——top、bottom、left、right。&lt;/p&gt;
+
+&lt;p&gt;　　Box布局的方式由这几项决定：box的类型、box的大小、定位策略及扩展信息（比如图片大小和屏幕尺寸）。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;Box类型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Block box：构成一个块，即在浏览器窗口上有自己的矩形&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316585169.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Inline box：并没有自己的块状区域，但包含在一个块状区域内&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316590681.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　block一个挨着一个垂直格式化，inline则在水平方向上格式化。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316591786.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　Inline盒模型放置在行内或是line
+box中，每行至少和最高的box一样高，当box以baseline对齐时——即一个元素的底部和另一个box上除底部以外的某点对齐，行高可以比最高的box高。当容器宽度不够时，行内元素将被放到多行中，这在一个p元素中经常发生。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316593174.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;定位Position&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;&lt;strong&gt;Relative&lt;/strong&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　相对定位——先按照一般的定位，然后按所要求的差值移动。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316594780.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;&lt;strong&gt;Floats&lt;/strong&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　一个浮动的box移动到一行的最左边或是最右边，其余的box围绕在它周围。下面这段html：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;p&amp;gt;
+  &amp;lt;img src=&quot;images/image.gif&quot; width=&quot;100&quot; height=&quot;100&quot;&amp;gt;Lorem ipsum dolor sit amet, consectetuer...
+&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　将显示为：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110316595942.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;&lt;strong&gt;Absolute和Fixed&lt;/strong&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　这种情况下的布局完全不顾普通的文档流，元素不属于文档流的一部分，大小取决于容器。Fixed时，容器为viewport（可视区域）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110317001254.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;center&gt;图17：fixed&lt;/center&gt;
+
+
+&lt;p&gt;　　注意－fixed即使在文档流滚动时也不会移动。&lt;/p&gt;
+
+&lt;p&gt;　　&lt;strong&gt;&lt;strong&gt;Layered representation&lt;/strong&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　　这个由CSS属性中的z-index指定，表示盒模型的第三个大小，即在z轴上的位置。Box分发到堆栈中（称为堆栈上下文），每个堆栈中靠后的元素将被较早绘制，栈顶靠前的元素离用户最近，当发生交叠时，将隐藏靠后的元素。堆栈根据z-index属性排序，拥有z-index属性的box形成了一个局部堆栈，viewport有外部堆栈，例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;STYLE type=&quot;text/css&quot;&amp;gt;
+    div {
+        position: absolute;
+        left: 2in;
+        top: 2in;
+    }
+&amp;lt;/STYLE&amp;gt;
+&amp;lt;P&amp;gt;
+&amp;lt;DIV&amp;gt;
+&amp;lt;/DIV&amp;gt;
+&amp;lt;DIV&amp;gt;
+&amp;lt;/DIV&amp;gt;
+&amp;lt;/p&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　　结果是：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110317002510.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　　虽然绿色div排在红色div后面，可能在正常流中也已经被绘制在后面，但z-index有更高优先级，所以在根box的堆栈中更靠前。&lt;/p&gt;
 </content>
  </entry>
  
@@ -6341,6 +7890,477 @@ function doSomethingElse(){
 （6）因为勇于承担责任所造成的损失，公司应该承担。&lt;/p&gt;
 
 &lt;p&gt;PS:好文出处不明。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>基于.NET的大型Web站点StackOverflow架构分析</title>
+   <link href="http://beango.github.com/archives/2011/03/04/stack-overflow-architecture-update-now-at-95-million-page-vi.html"/>
+   <updated>2011-03-04T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2011/03/04/stack-overflow-architecture-update-now-at-95-million-page-vi</id>
+   <content type="html">&lt;p&gt;原文链接：&lt;a href=&quot;http://highscalability.com/blog/2011/3/3/stack-overflow-architecture-update-now-at-95-million-page-vi.html&quot;&gt;Stack Overflow Architecture Update - Now At 95 Million Page
+Views A
+Month&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;编译/博客园&lt;/p&gt;
+
+&lt;p&gt;Stack
+Overflow网址：&lt;a href=&quot;http://stackoverflow.com/&quot;&gt;http://stackoverflow.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;当前访问量：&lt;/strong&gt;每月9500PV（每天300多万PV）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;当前Alexa排名：&lt;/strong&gt;149&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;所用.NET技术：&lt;/strong&gt;C#、Visual Studio 2010 Team Suite、ASP.NET 4、ASP.NET
+MVC 3、Razor、LINQ to SQL+raw SQL&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;下面是英文原文：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;A lot has happened since my first article on the &lt;a href=&quot;http://highscalability.com/blog/2009/8/5/stack-overflow-architecture.html&quot;&gt;Stack Overflow
+Architecture&lt;/a&gt;(2009-8-5).
+Contrary to the theme of that last article, which lavished attention on
+Stack Overflow's dedication to a scale-up strategy, Stack Overflow has
+both grown up and out in the last few years.&lt;/p&gt;
+
+&lt;p&gt;自从2009年8月发布了第一篇关于“Stack Overflow 架构”方面的文章，Stack
+Overflow已经发生了很大的变化。那篇文章更多关注的是Stack
+Overflow如何解决网站的扩展性(scale-up)问题，而经过几年的发展，Stack
+Overflow已经长大成人，成长为了大型网站。&lt;/p&gt;
+
+&lt;p&gt;Stack Overflow has grown up by more then doubling in size to over 16
+million users and multiplying its number of page views nearly 6 times to
+95 million page views a month.  &lt;/p&gt;
+
+&lt;p&gt;现在与2009年相比，Stack
+Overflow每月独立访问用户翻了一倍，超过1600万；每月PV翻了近6倍，达到9500万。&lt;/p&gt;
+
+&lt;p&gt;Stack Overflow has grown out by expanding into the &lt;a href=&quot;http://stackexchange.com/&quot;&gt;Stack Exchange
+Network&lt;/a&gt;, which includes Stack Overflow,
+Server Fault, and Super User for a grand total of 43 different sites.
+That's a lot of fruitful multiplying going on.&lt;/p&gt;
+
+&lt;p&gt;Stack Overflow新增了很多站点，比如Server Fault, Super
+User等，共有43个不同站点组成了Stack Exchange
+Network，可谓硕果累累，迅猛增长。&lt;/p&gt;
+
+&lt;p&gt;What hasn't changed is Stack Overflow's openness about what they are
+doing. And that's what prompted this update. A recent series of posts
+talks a lot about how they've been handling their growth: &lt;a href=&quot;http://blog.serverfault.com/post/stack-exchanges-architecture-in-bullet-points/&quot;&gt;Stack
+Exchange’s Architecture in Bullet
+Points&lt;/a&gt;, &lt;a href=&quot;http://blog.serverfault.com/post/1432571770/&quot;&gt;Stack
+Overflow’s New York Data
+Center&lt;/a&gt;, &lt;a href=&quot;http://blog.serverfault.com/post/1097492931/&quot;&gt;Designing For
+Scalability of Management and Fault
+Tolerance&lt;/a&gt;, &lt;a href=&quot;http://blog.stackoverflow.com/2011/01/stack-overflow-search-now-81-less-crappy/&quot;&gt;Stack
+Overflow Search — Now 81%
+Less&lt;/a&gt;, &lt;a href=&quot;http://blog.stackoverflow.com/2010/01/stack-overflow-network-configuration/&quot;&gt;Stack
+Overflow Network
+Configuration&lt;/a&gt;, &lt;a href=&quot;http://meta.stackoverflow.com/questions/69164/does-stackoverflow-use-caching-and-if-so-how&quot;&gt;Does
+StackOverflow use caching and if so,
+how?&lt;/a&gt;, &lt;a href=&quot;http://meta.stackoverflow.com/questions/10369/which-tools-and-technologies-build-the-stack-exchange-network&quot;&gt;Which
+tools and technologies build the Stack Exchange
+Network?&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Stack
+Overflow的变化翻天覆地，而不变的是他们开放的心态，所以才有了这篇架构分享的文章。最近，他们写了一系列文章分享他们如何应对这样的快速增长。&lt;/p&gt;
+
+&lt;p&gt;Some of the more obvious differences across time are:&lt;br/&gt;
+穿越时空，我们来看看有哪些明显的变化？&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Just More&lt;/strong&gt;. More users, more page views, more datacenters, more
+sites, more developers, more operating systems, more databases, more
+machines. Just a lot &lt;a href=&quot;http://blog.stackoverflow.com/2011/01/state-of-the-stack-2010-a-message-from-your-ceo/&quot;&gt;more of
+more&lt;/a&gt;.&lt;br/&gt;
+&lt;strong&gt;更多：&lt;/strong&gt;更多的用户，更多的PV，更多的数据中心，更多的站点，更多的开发者，更多的操作系统，更多的数据库，更多的服务器...&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Linux&lt;/strong&gt;. Stack Overflow was known for their Windows stack, now
+they are using a lot more Linux machines for HAProxy,
+Redis, Bacula, Nagios, logs, and routers. All support functions seem
+to be handled by Linux, which has required the development of
+&lt;a href=&quot;http://blog.serverfault.com/post/1097492931/&quot;&gt;parallel release
+processes&lt;/a&gt;. &lt;br/&gt;
+&lt;strong&gt;Linux：&lt;/strong&gt;Stack
+Overflow因使用Windows系统而著称，现在他们使用越来越多的Linux服务器，比如HAProxy(负载均衡),
+Redis(NoSQL数据库), Bacula(数据备份系统), Nagios(远程监控软件),
+日志,
+路由器都运行于Linux系统，几乎所有需要并行处理的功能都是由Linux处理(这句话的翻译可能不准确)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fault Tolerance&lt;/strong&gt;. Stack Overflow is now &lt;a href=&quot;http://blog.stackoverflow.com/2010/01/stack-overflow-network-configuration/&quot;&gt;being served by two
+different&lt;/a&gt;
+switches on two different internet connections, they've added
+redundant machines, and some functions have moved to a second
+datacenter.&lt;br/&gt;
+&lt;strong&gt;容错：&lt;/strong&gt;Stack
+Overflow使用了两条不同的互联网线路，增加了更多的冗余服务器，将一些网站服务运行于第二个数据中心。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;NoSQL&lt;/strong&gt;. Redis is now used as a &lt;a href=&quot;http://meta.stackoverflow.com/questions/69164/does-stackoverflow-use-caching-and-if-so-how&quot;&gt;caching
+layer&lt;/a&gt;
+for the entire network. There wasn't a separate caching tier before
+so this a big change, as is using a NoSQL database on Linux.&lt;br/&gt;
+&lt;strong&gt;NoSQL：&lt;/strong&gt;Redis作为整个网站的缓存层。这是一个巨大的改变，以前并没有将缓存作为一个独立的层分离出来。Redis运行于Linux。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Unfortunately, I couldn't find any coverage on some of the open
+questions I had last time, like how they were going to deal with
+multi-tenancy across so many diffrent properties, but there's still
+plenty to learn from. Here's a roll up a few different sources:&lt;/p&gt;
+
+&lt;p&gt;遗憾的是，一些我关注的问题并没有从中找到答案，比如面对这么多不同的系统，如何解决多租户的问题（Multi-tenancy
+是一种软件体系结构，在这种体系结构中软件运行在 software as a service
+服务商的服务器上，服务于多个客户组织即
+tenant）。但是，从中我们依然可以学到很多。下面是收集的一些数据列表：&lt;/p&gt;
+
+&lt;h3&gt;The Stats&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;95 Million Page Views a Month&lt;/li&gt;
+&lt;li&gt;800 HTTP requests a second&lt;/li&gt;
+&lt;li&gt;180 DNS requests a second&lt;/li&gt;
+&lt;li&gt;55 Megabits per second&lt;/li&gt;
+&lt;li&gt;16 Million Users  - Traffic to Stack Overflow grew 131% in 2010, to
+16.6 million global monthly uniques. &lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Data Centers&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1 Rack with Peak Internet in OR (Hosts our chat and Data Explorer)&lt;/li&gt;
+&lt;li&gt;2 Racks with Peer 1 in NY (Hosts the rest of the Stack Exchange
+Network)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Hardware&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;10 Dell R610 IIS web servers (3 dedicated to Stack Overflow):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1x Intel Xeon Processor E5640 @ 2.66 GHz Quad Core with 8
+threads&lt;/li&gt;
+&lt;li&gt;16 GB RAM&lt;/li&gt;
+&lt;li&gt;Windows Server 2008 R2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;2 Dell R710 database servers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2x Intel Xeon Processor X5680 @ 3.33 GHz&lt;/li&gt;
+&lt;li&gt;64 GB RAM&lt;/li&gt;
+&lt;li&gt;8 spindles&lt;/li&gt;
+&lt;li&gt;SQL Server 2008 R2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;2 Dell R610 HAProxy servers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1x Intel Xeon Processor E5640 @ 2.66 GHz&lt;/li&gt;
+&lt;li&gt;4 GB RAM&lt;/li&gt;
+&lt;li&gt;Ubuntu Server&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;2 Dell R610 Redis servers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2x Intel Xeon Processor E5640 @ 2.66 GHz&lt;/li&gt;
+&lt;li&gt;16 GB RAM&lt;/li&gt;
+&lt;li&gt;CentOS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;1 Dell R610 Linux backup server running Bacula:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1x Intel Xeon Processor E5640 @ 2.66 GHz&lt;/li&gt;
+&lt;li&gt;32 GB RAM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;1 Dell R610 Linux management server for Nagios and logs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1x Intel Xeon Processor E5640 @ 2.66 GHz&lt;/li&gt;
+&lt;li&gt;32 GB RAM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;2 Dell R610 VMWare ESXi domain controllers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1x Intel Xeon Processor E5640 @ 2.66 GHz&lt;/li&gt;
+&lt;li&gt;16 GB RAM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;2 Linux routers&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;5 Dell Power Connect switches&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Dev Tools&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;C#&lt;/strong&gt;: Language&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Visual Studio 2010 Team Suite&lt;/strong&gt;: IDE&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Microsoft ASP.NET (version 4.0)&lt;/strong&gt;: Framework&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ASP.NET MVC 3&lt;/strong&gt;: Web Framework&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Razor&lt;/strong&gt;: View Engine&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;jQuery 1.4.2&lt;/strong&gt;: Browser Framework:&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LINQ to SQL, some raw SQL&lt;/strong&gt;: Data Access Layer&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://mercurial.selenic.com/&quot;&gt;Mercurial&lt;/a&gt; and
+&lt;a href=&quot;http://www.fogcreek.com/kiln/&quot;&gt;Kiln&lt;/a&gt;&lt;/strong&gt;: Source
+Control（分布式版本控制系统）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.scootersoftware.com/&quot;&gt;&lt;strong&gt;Beyond Compare 3&lt;/strong&gt;&lt;/a&gt;: Compare
+Tool（文件比较工具）&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Software and Technologies Used&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Stack Overflow uses a
+&lt;a href=&quot;http://stackoverflow.com/questions/177901/what-does-wisc-stack-mean&quot;&gt;WISC&lt;/a&gt;
+stack via
+&lt;a href=&quot;http://blog.stackoverflow.com/2009/03/stack-overflow-and-bizspark/&quot;&gt;BizSpark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Windows Server 2008 R2 x64&lt;/strong&gt;: Operating System&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SQL Server 2008 R2&lt;/strong&gt; running&lt;strong&gt;Microsoft Windows Server 2008
+Enterprise Edition x64&lt;/strong&gt;: Database&lt;/li&gt;
+&lt;li&gt;Ubuntu Server&lt;/li&gt;
+&lt;li&gt;CentOS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IIS 7.0&lt;/strong&gt;: Web Server&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://haproxy.1wt.eu/&quot;&gt;&lt;strong&gt;HAProxy&lt;/strong&gt;&lt;/a&gt;: for load
+balancing（高性能的负载TCP/HTTP均衡器）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Redis&lt;/strong&gt;: used as the distributed caching
+layer.（作为分布式缓存层的NoSQL数据库）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CruiseControl.NET&lt;/strong&gt;: for builds and automated
+deployment（.NET平台的持续集成工具）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lucene.NET&lt;/strong&gt;:  for search&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.bacula.org/en/&quot;&gt;&lt;strong&gt;Bacula&lt;/strong&gt;&lt;/a&gt;: for
+backups（开源的数据备份系统）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.nagios.org/&quot;&gt;&lt;strong&gt;Nagios&lt;/strong&gt;&lt;/a&gt;: (with
+&lt;a href=&quot;http://n2rrd.diglinks.com/cgi-bin/trac.fcgi&quot;&gt;n2rrd&lt;/a&gt; and drraw
+plugins) for monitoring（监视系统运行状态和网络信息的远程监控软件）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://www.splunk.com/&quot;&gt;Splunk&lt;/a&gt;:&lt;/strong&gt; for logs（日志分析工具）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://www.red-gate.com/products/dba/sql-monitor/&quot;&gt;SQL
+Monitor&lt;/a&gt;:&lt;/strong&gt; from
+Red Gate - for SQL Server monitoring&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Bind&lt;/strong&gt;: for DNS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&quot;http://www.wowwee.com/en/products/tech/telepresence/rovio/rovio&quot;&gt;Rovio&lt;/a&gt;&lt;/strong&gt;:  a
+little robot (a real robot) allowing remote developers to visit the
+office “virtually.”&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.pingdom.com/&quot;&gt;&lt;strong&gt;Pingdom&lt;/strong&gt;&lt;/a&gt;:  an external monitor and
+alert service.（网站监控服务及网站速度测试工具）&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;External Bits&lt;/h3&gt;
+
+&lt;p&gt;Code that is not included as part of the development tools:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.google.com/recaptcha&quot;&gt;reCAPTCHA&lt;/a&gt;（用于验证码验证，已被Google收购）&lt;/li&gt;
+&lt;li&gt;DotNetOpenId（.NET 平台上的 OpenID 实现方案）&lt;/li&gt;
+&lt;li&gt;WMD - Now developed as open source. See &lt;a href=&quot;https://github.com/cky/wmd&quot;&gt;github network
+graph&lt;/a&gt; （轻量级所见即所得编辑器）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://code.google.com/p/google-code-prettify/&quot;&gt;Prettify&lt;/a&gt;（代码高亮显示）&lt;/li&gt;
+&lt;li&gt;Google Analytics&lt;/li&gt;
+&lt;li&gt;Cruise Control .NET&lt;/li&gt;
+&lt;li&gt;HAProxy（负载均衡）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cacti.net/&quot;&gt;Cacti&lt;/a&gt;（网络流量监测图形分析工具）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://code.google.com/p/markdownsharp/&quot;&gt;MarkdownSharp&lt;/a&gt;（Markdown文本处理器的C#实现）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://code.google.com/p/flot/&quot;&gt;Flot&lt;/a&gt;（基于JQuery的纯JavaScript实现的绘图库）&lt;/li&gt;
+&lt;li&gt;Nginx（反向代理服务器）&lt;/li&gt;
+&lt;li&gt;Kiln（分布式版本控制系统）&lt;/li&gt;
+&lt;li&gt;CDN: none, all static content is served off the
+&lt;a href=&quot;http://sstatic.net/&quot;&gt;sstatic.net&lt;/a&gt;, which is a fast, cookieless
+domain intended for static content delivered to the Stack Exchange
+family of websites.
+（没有使用CDN，用一个专门的域名sstatic.net传递所有的静态内容）&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Developers and System Administrators&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;14 Developers&lt;/li&gt;
+&lt;li&gt;2 System Administrators&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Content&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;License:&lt;/strong&gt; Creative Commons Attribution-Share Alike 2.5 Generic&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Standards:&lt;/strong&gt; OpenSearch, Atom&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Host:&lt;/strong&gt; PEAK Internet&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;More Architecture and Lessons Learned&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;HAProxy is used instead of Windows NLB because HAProxy is cheap,
+easy, free, works great as a 512MB VM “device” on a network via
+Hyper-V. It also works in front of the boxes so it’s completely
+transparent to them, and easier to troubleshoot as a different
+networking layer instead of being intermixed with all your windows
+configuration.&lt;br/&gt;
+用HAProxy取代了Windows
+NLB，HAProxy成本更低，更易于使用，通过Hyper-V可以很好地运行于512M内存的虚拟机。它工作于服务器群的最前端，对所有的服务器都透明。相比于原来混杂在一起的Windows配置，它运行于一个独立的网络层，更易于维护与故障处理。&lt;/li&gt;
+&lt;li&gt;A CDN is not used because even “cheap” CDNs like Amazon one are very
+expensive relative to the bandwidth they get bundled into their
+existing host’s plan. The least they could pay is $1k/month based
+on Amazon’s CDN rates and their bandwidth usage.&lt;br/&gt;
+没有使用CDN，即使使用像Amazon那样与主机空间捆绑在一起的看起来“便宜”的CDN，实际的费用也是很高的，至少需要1000美元/月。&lt;/li&gt;
+&lt;li&gt;Backup is to disk for fast retrieval and to tape for historical
+archiving.&lt;br/&gt;
+备份方案有两种，一种用于快速恢复的磁盘备份，一种用于历史数据存档的磁带备份。&lt;/li&gt;
+&lt;li&gt;Full Text Search in SQL Server is very badly integrated, buggy,
+deeply incompetent, so they went to Lucene.&lt;br/&gt;
+SQL Server的全文索引是非常差劲的，所以他们用Lucene.NET。&lt;/li&gt;
+&lt;li&gt;Mostly interested in peak HTTP request figures as this is what they
+need to make sure they can handle.&lt;br/&gt;
+让人很感兴趣的是他们如何处理访问高峰时的HTTP请求。&lt;/li&gt;
+&lt;li&gt;All properties now run on the same Stack Exchange platform. That
+means Stack Overflow, Super User, Server Fault, Meta, WebApps, and
+Meta Web Apps are all running on the same software.&lt;br/&gt;
+所有这些都运行于Stack Exchange平台，那意味着Stack Overflow, Super
+User, Server Fault, Meta, WebApps, 和Meta Web
+Apps都运行于同一个软件。&lt;/li&gt;
+&lt;li&gt;There are separate StackExchange sites because people have different
+sets of expertise that shouldn't cross over to different topic
+sites. &lt;a href=&quot;http://meta.stackoverflow.com/questions/69422/why-separate-stack-exchange-accounts&quot;&gt;You can be the greatest chef in the world, but that doesn't
+qualify you for fixing a
+server.&lt;/a&gt;&lt;br/&gt;
+也有一些独立运行的StackExchange站点，服务于那些具有多个专业技能，又不想为了不同的话题在多个站点之间奔波的人。如果你能成为最伟大的主厨，不能因为给你安排了服务员的工作，你就安于现状。&lt;/li&gt;
+&lt;li&gt;They aggressively cache everything.&lt;br/&gt;
+他们疯狂地使用缓存。&lt;/li&gt;
+&lt;li&gt;All pages accessed by (and subsequently served to) annonymous users
+are cached via &lt;a href=&quot;http://learn.iis.net/page.aspx/154/walkthrough-iis-70-output-caching/&quot;&gt;Output
+Caching&lt;/a&gt;.&lt;br/&gt;
+未登录用户访问的所有页面都通过Output Caching进行缓存。&lt;/li&gt;
+&lt;li&gt;Each site has 3 distinct caches: local, site, global. &lt;br/&gt;
+每个站点使用三种类型的缓存：本地、站点、全局。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;local cache&lt;/strong&gt;: can only be accessed from 1 server/site pair   
+本地缓存：只能被当前站点的当前服务器访问。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To limit network latency they use a local &quot;L1&quot; cache, basically
+HttpRuntime.Cache, of recently set/read values on a server. This
+would reduce the cache lookup overhead to 0 bytes on the
+network.&lt;br/&gt;
+为了减少网络延时，通常使用HttpRuntime.Cache作为一级缓存，这样可以避免通过网络在缓存服务器上查找的开销。&lt;/li&gt;
+&lt;li&gt;Contains things like user sessions, and pending view count
+updates.&lt;br/&gt;
+缓存内容包含用户会话，视图数的更新。&lt;/li&gt;
+&lt;li&gt;This resides purely in memory, no network or DB access.&lt;br/&gt;
+直接缓存在内存中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;site cache&lt;/strong&gt;:  can be accessed by any instance (on any server) of
+a single site&lt;br/&gt;
+&lt;strong&gt;站点级缓存：&lt;/strong&gt;能被同一个站点的所有服务器访问。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Most cached values go here, things like hot question id lists
+and user acceptance rates are good examples&lt;br/&gt;
+大部分的缓存都在这一级，比如热点问题ID列表，用户支持率。&lt;/li&gt;
+&lt;li&gt;This resides in Redis (in a distinct DB, purely for easier
+debugging)&lt;br/&gt;
+缓存数据存储在Redis数据库中。&lt;/li&gt;
+&lt;li&gt;Redis is so fast that the slowest part of a cache lookup is the
+time spent reading and writing bytes to the network.&lt;br/&gt;
+Redis速度很快，缓存查找的开销主要在网络传输上。&lt;/li&gt;
+&lt;li&gt;Values are compressed before sending them to Redis. They have
+plenty of CPU and most of their data are strings so they get a
+great compression ratio.&lt;br/&gt;
+缓存数据发送至Redis之前会被压缩。为什么要压缩呢？因为CPU资源绰绰有余，而且大部分缓存数据是字符串，压缩率会很高，何乐而不为呢。&lt;/li&gt;
+&lt;li&gt;The CPU usage on their Redis machines is 0%.&lt;br/&gt;
+Redis服务器上的CPU使用率是0%。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;global cache&lt;/strong&gt;: which is shared amongst all sites and servers
+&lt;strong&gt;全局缓存：&lt;/strong&gt;被所有站点和服务器共享。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Inboxes, API usage quotas, and a few other truly global things
+live here&lt;br/&gt;
+缓存内容包含收件箱，API使用限额，一些全局设置等。&lt;/li&gt;
+&lt;li&gt;This resides in Redis (in DB 0, likewise for easier debugging)&lt;br/&gt;
+缓存于Redis数据库中。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Most items in the cache expire after a timeout period (a few minutes
+usually) and are never explicitly removed. When a specific cache
+invalidation is required they use &lt;a href=&quot;http://code.google.com/p/redis/wiki/PublishSubscribe&quot;&gt;Redis
+messaging&lt;/a&gt; to
+publish removal notices to the &quot;L1&quot; caches.&lt;br/&gt;
+大部分缓存项目在超过缓存时间之后会自动过期（通常几分钟），不需要进行删除操作。当需要让一个特定的缓存失效，会通过Redis消息系统给一级缓存发送删除通知。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Joel Spolsky is not a Microsoft Loyalist, he doesn't make the
+technical decisions for Stack Overflow, and considers Microsoft
+licensing a rounding error. Consider yourself corrected &lt;a href=&quot;http://news.ycombinator.com/item?id=2284900&quot;&gt;Hacker News
+commentor&lt;/a&gt;.&lt;br/&gt;
+Joel Spolsky（Stack
+Overflow的创始人）并不是微软的忠诚分子，他不负责技术决策，使用微软软件考虑的也只是性价比。Hacker
+News上一些评论者的说法需要纠正。&lt;/li&gt;
+&lt;li&gt;For their IO system &lt;a href=&quot;http://blog.serverfault.com/post/our-storage-decision/&quot;&gt;they
+selected&lt;/a&gt; a
+RAID 10 array of &lt;a href=&quot;http://www.intel.com/design/flash/nand/extreme/index.htm&quot;&gt;Intel X25 solid state
+drives&lt;/a&gt; .
+The RAID array eased any concerns about reliability and the SSD
+drives performed really well in comparision to FusionIO at a much
+cheaper price.&lt;br/&gt;
+对于IO系统，他们选择的是Intel X25 solid state drives(SSD硬盘)的RAID
+10磁盘阵列，这样的磁盘阵列，保证了可靠性。这个SSD硬盘用起来感觉不错，而且价格比FusionIO的便宜。&lt;/li&gt;
+&lt;li&gt;The &lt;a href=&quot;http://news.ycombinator.com/item?id=2285931&quot;&gt;full boat cost&lt;/a&gt;
+for their Microsoft licenses would be approximately $242K. Since
+Stack Overflow is using Bizspark they are not paying near the full
+sticker price, but that's the max they could pay.&lt;br/&gt;
+使用的这些微软软件，如果全部购买的话，总费用大概在24.2万美元。由于Stack
+Overflow参加了微软的Bizspark计划，所以不需要付这么多钱，但是要付的话，最多也就是这么多。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Related Articles&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.serverfault.com/post/stack-exchanges-architecture-in-bullet-points/&quot;&gt;Stack Exchange’s Architecture in Bullet
+Points&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.serverfault.com/post/1432571770/&quot;&gt;Stack Overflow’s New York Data
+Center&lt;/a&gt; - hardware of
+the various machines?&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.serverfault.com/post/1097492931/&quot;&gt;Designing For Scalability of Management and Fault
+Tolerance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://news.ycombinator.com/item?id=2207789&quot;&gt;HackerNews Thread&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.stackoverflow.com/&quot;&gt;Stack Overflow Blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.stackoverflow.com/2011/01/stack-overflow-search-now-81-less-crappy/&quot;&gt;Stack Overflow Search — Now 81% Less
+Crappy&lt;/a&gt; -
+Lucene is now running on an underused cluster.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.stackoverflow.com/2011/01/state-of-the-stack-2010-a-message-from-your-ceo/&quot;&gt;State of the Stack 2010 (a message from your
+CEO)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.stackoverflow.com/2010/01/stack-overflow-network-configuration/&quot;&gt;Stack Overflow Network
+Configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/69164/does-stackoverflow-use-caching-and-if-so-how&quot;&gt;Does StackOverflow use caching and if so,
+how?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/&quot;&gt;Meta StackOverflow&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/6435/how-does-stackoverflow-handle-cache-invalidation&quot;&gt;How does StackOverflow handle cache
+invalidation?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/10369/which-tools-and-technologies-build-the-stack-exchange-network&quot;&gt;Which tools and technologies build the Stack Exchange
+Network?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/2765/how-does-stack-overflow-handle-spam&quot;&gt;How does Stack Overflow handle
+spam?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.serverfault.com/post/our-storage-decision/&quot;&gt;Our Storage
+Decision&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/4766/how-are-hot-questions-selected&quot;&gt;How are “Hot” Questions
+Selected?&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://meta.stackoverflow.com/questions/20473/how-are-related-questions-selected&quot;&gt;How are “related” questions
+selected?&lt;/a&gt; -
+the title, the question body, and the tags. &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.stackoverflow.com/2010/04/stack-overflow-and-dvcs/&quot;&gt;Stack Overflow and
+DVCS&lt;/a&gt; -
+Stack Overflow selects Mercurial for source code control.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://chat.stackexchange.com/rooms/127/the-comms-room&quot;&gt;Server Fault Chat
+Room&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/ServiceStack/ServiceStack.Redis&quot;&gt;C# Redis
+Client&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 </content>
  </entry>
  

@@ -659,6 +659,11 @@ pre {
 }
 .unit-article .entry-content img{
   margin:auto;
+  MAX-WIDTH: 100%!important;HEIGHT: auto!important;  
+  width:expression(this.width>590?"590px":this.width)!important;
+}
+.unit-article .entry-content h2{
+  margin:0;font-size: 22px;
 }
 .unit-article a:link {
   border-bottom: 1px dashed #c26164;
@@ -1249,7 +1254,6 @@ pre .nb {
 /* Name.Builtin */
 pre .nc {
   color: #447fcf;
-  text-decoration: underline;
 }
 /* Name.Class */
 pre .no {
@@ -1550,4 +1554,42 @@ text-shadow: 1px 1px 0px #eeeeee;
 
 .asset-footer a{
   word-break:break-all;
+}
+
+.demo-hacker{
+	color:red; 
+	*color:white; /*for ie6,ie7*/
+	*+color:blue; /*for ie7*/
+	_color:gray; /*for ie6*/
+	color:balck !important; /*for firefox*/
+	color:yellow \9; /*for ie9*/
+}
+.demo-four {
+	width: 300px;
+	display: inline;
+	float: left;
+	margin-right:10px;
+}
+.demo-eight {
+	display: inline;
+	margin-left: 20px;
+}
+.demo-transparent{
+	filter:alpha(opacity=80); -moz-opacity:0.5;/**Firefox 3.5即将原生支持opacity属性，所以本条属性只在Firefox3以下版本有效 ***/ 
+	-khtml-opacity: 0.5; opacity: 0.5; 
+} 
+.demo-highlighted {
+	background: none repeat scroll 0 0 #00ADEE;
+	color: #FFFFFF;
+	padding: 0 5px;
+}
+.demo-shadowradius {
+	width:200px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	border:1px solid ddd;
+	-webkit-box-shadow:0 0 3px black;
+	-moz-box-shadow:0 0 3px black;
+	padding:10px;
 }
