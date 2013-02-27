@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>MongoDB索引实战技巧</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">MongoDB索引实战技巧</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>本文内容源自<a href="http://www.manning.com/banker/">Kyle Banker</a> 的<a href="http://blog.nosqlfan.com/tags/mongodb" title="查看 MongoDB 的全部文章">MongoDB</a>
+In Action一书。主要描述了MongoDB<a href="http://blog.nosqlfan.com/tags/%e7%b4%a2%e5%bc%95" title="查看 索引 的全部文章">索引</a>相关的一些基础知识和使用技巧。</p>
+
+<h2>索引类型</h2>
+
+<p>虽然MongoDB的索引在存储结构上都是一样的，但是根据不同的应用层需求，还是分成了唯一索引（unique）、稀疏索引（sparse）、多值索引（multikey）等几种类型。</p>
+
+<p><strong>唯一索引</strong></p>
+
+<p>唯一索引在创建时加上unique:true 的选项即可，创建命令如下：</p>
+
+<pre><code>db.users.ensureIndex({username: 1}, {unique: true})
+</code></pre>
+
+<p>上面的唯一索引创建后，如果insert一条username已经存在的数据，则会报如下的错误：</p>
+
+<pre><code>E11000 duplicate key error index: gardening.users.$username_1 dup key: { : "kbanker" }
+</code></pre>
+
+<p>如果你在一个已有数据的collection上创建唯一索引，若唯一索引对应的字段原来就有重复的数据项，那么创建会失败，我们需要加上一个dropDups的选项来强制将重复的项删除掉，命令如下例：</p>
+
+<pre><code>db.users.ensureIndex({username: 1}, {unique: true, dropDups: true})
+</code></pre>
+
+<p><strong>松散索引</strong></p>
+
+<p>如果你的数据中一些行中没有某个字段或字段值为null，那么如果在这个字段上建立普通索引，那么无此字段或值null的行也会参与到索引结构中，占用相应的空间。如果我们不希望这些值为空的行参与到我们的索引中，这时候可以采用松散索引，松散索引只会让指定字段不为空的行参与到索引创建中来。创建一个松散索引可以用下面的命令：</p>
+
+<pre><code>db.reviews.ensureIndex({user_id: 1}, {sparse: true})
+</code></pre>
+
+<p><strong>多值索引</strong></p>
+
+<p>MongoDB可以对一个array类型创建索引，比如像下面的结构，MongoDB可以在tags字段上创建索引：</p>
+
+<pre><code>{ name: "Wheelbarrow",
+tags: ["tools", "gardening", "soil"]
+}
+</code></pre>
+
+<p>在生成索引时，会为tags中的三个值分别生成三个索引元素，索引中tools，gardening，soil三个值都会指向这同一行数据。相当于分裂成了三个独立的索引项。</p>
+
+<h2>索引管理</h2>
+
+<p><strong>索引的创建和删除</strong></p>
+
+<p>创建和删除索引的方法有很多种，下面两个是比较原始的方法，通过对system.indexes这个collection进行相应的写操作来完成索引的创建：</p>
+
+<pre><code>spec = {ns: "green.users", key: {‘addresses.zip’: 1}, name: ‘zip’}
+db.system.indexes.insert(spec, true)
+</code></pre>
+
+<p>上面命令往system.indexes中写入一条记录来创建索引，这条记录包含了要在上面创建索引的collection的名字空间，索引的信息，以及索引的名称。</p>
+
+<p>创建完成后，我们可以通过下面命令找到我们创建的索引：</p>
+
+<pre><code>db.system.indexes.find()
+{ "_id" : ObjectId("4d2205c4051f853d46447e95"), "ns" : "green.users",
+"key" : { "addresses.zip" : 1 }, "name" : "zip", "v" : 0 }
+</code></pre>
+
+<p>要删除一个已创建的索引，我们可以使用下面的命令来实现：</p>
+
+<pre><code>use green
+db.runCommand({deleteIndexes: "users", index: "zip"})
+</code></pre>
+
+<p><strong>创建索引命令</strong></p>
+
+<p>实际上创建索引还有更方便的命令，那就是ensure<a href="http://blog.nosqlfan.com/tags/index" title="查看 Index 的全部文章">Index</a>，比如我们创建一个open和close两个字段的联合索引，就可以用下面的命令：</p>
+
+<pre><code>db.values.ensureIndex({open: 1, close: 1})
+</code></pre>
+
+<p>这个命令会触发索引创建的两个过程，一个是将相应的字段排序，因为索引是按B+树来组织的，要构建树，将数据进行排序后能够提高插入B+树的效率（第二个过程的效率），在日志中，你能看到和下面类似的输出：</p>
+
+<pre><code>Tue Jan 4 09:58:17 [conn1] building new index on { open: 1.0, close: 1.0 } for stocks.values
+1000000/4308303 23%
+2000000/4308303 46%
+3000000/4308303 69%
+4000000/4308303 92%
+Tue Jan 4 09:59:13 [conn1] external sort used : 5 files in 55 secs
+</code></pre>
+
+<p>第二个过程是将排序好的数据插入到索引结构中，构成可用的索引：</p>
+
+<pre><code>1200300/4308303 27%
+2227900/4308303 51%
+2837100/4308303 65%
+3278100/4308303 76%
+3783300/4308303 87%
+4075500/4308303 94%
+Tue Jan 4 10:00:16 [conn1] done building bottom layer, going to commit
+Tue Jan 4 10:00:16 [conn1] done for 4308303 records 118.942secs
+Tue Jan 4 10:00:16 [conn1] insert stocks.system.indexes 118942ms
+</code></pre>
+
+<p>除了日志中的输出外，你还可以通过在终端执行currentOp命令来获取当前操作线程的相关信息，如下例：</p>
+
+<pre><code>&gt; db.currentOp()
+{
+    "inprog" : [
+        {
+            "opid" : 58,
+            "active" : true,
+            "lockType" : "write",
+            "waitingForLock" : false,
+            "secs_running" : 55,
+            "op" : "insert",
+            "ns" : "stocks.system.indexes",
+            "query" : {
+            },
+            "client" : "127.0.0.1:53421",
+            "desc" : "conn",
+            "msg" : "index: (1/3) external sort 3999999/4308303 92%"
+        }
+    ]
+}
+</code></pre>
+
+<p>最后一部分就是一个索引构建过程，目前正在执行排序过程，执行到92%。</p>
+
+<p><strong>在后台创建索引</strong></p>
+
+<p>创建索引会对数据库添加写锁，如果数据集比如大，会将线上读写数据库的操作挂起，以等待索引创建结束。这影响了数据库的正常服务，我们可以通过在创建索引时加background:true
+的选项，让创建工作在后台执行，这时候创建索引还是需要加写锁，但是这个写锁不会直接独占到索引创建完成，而是会暂停为其它读写操作让路，不至于造成严重的性能影响。具体方法：</p>
+
+<pre><code>db.values.ensureIndex({open: 1, close: 1}, {background: true})
+</code></pre>
+
+<p><strong>离线创建索引</strong></p>
+
+<p>无论如何，索引的创建都会给数据库造成一定的压力，从而影响线上服务。如果希望创建索引的过程完全不影响线上服务，我们可以通过将replica
+sets中的节点先从集群中剥离，在这个节点上添加相应的索引，等索引添加完毕后再将其添加到replica
+sets中。这只需要保证一个条件，就是创建索引的时间不能长于oplog能够保存日志的时间，否则创建完后节点再上线发现再也无法追上primary了，这时会进行resync操作。</p>
+
+<p><strong>索引备份</strong></p>
+
+<p>我们知道，无论是使用mongodump还是mongoexport命令，都只是对数据进行备份，无法备份索引。我们在恢复的时候，还是需要等待漫长的索引创建过程。所以，如果你希望备份的时候带上索引，那么最好采用备份数据文件的方式。</p>
+
+<p><strong>索引压缩</strong></p>
+
+<p>索引在使用一段时间后，经历增删改等操作，会变得比较松散，从而战用不必要的空间，我们可以通过reindex命令，重新组织索引，让索引的空间占用变得更小。</p>
+
+<p>来源：<a href="http://www.cloudcomputingdevelopment.net/mongodb-indexing-in-practice/">www.cloudcomputingdevelopment.net</a></p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-05-19" datetime="2012-05-19" pubdate>
+							<span class="year">2012-05-19</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#NoSql-ref">
+    		NoSql <span>11</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#MongoDB索引-ref">MongoDB索引 <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/3656.html" target="_blank">http://blog.nosqlfan.com/html/3656.html</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/05/06/javascript-memory-leaks.html" title="View Javascript内存泄露">&laquo; Javascript内存泄露</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/05/31/misunderstanding-using-cache-2.html" title="View 使用缓存的9大误区（下）">使用缓存的9大误区（下） &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （7）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （3）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （11）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （11）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#其他-ref">其他 （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/21/the-reality-of-developers-life.html" title="">程序猿的真实生活(GIF)</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/18/booting.html" title="">计算机是如何启动的？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/12/bson-and-data-interchange.html" title="">BSON特性探讨及基于其特性的MongoDB优化</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="">趣解HTTP状态码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html" title="">Mongodb安全性初探</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/19/redis-install.html" title="">CentOS6.3下Redis安装</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/04/cache-algorithm.html" title="">缓存、缓存算法和缓存框架简介</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/03/mongodb-cluster.html" title="">MongoDB 集群</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （2）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （4）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （4）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （3）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （3）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB构架图-ref">MongoDB构架图 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB运行状态、性能监控，分析-ref">MongoDB运行状态、性能监控，分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB最佳实践-ref">MongoDB最佳实践 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB索引-ref">MongoDB索引 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB 集群-ref">MongoDB 集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存、缓存算法和缓存框架简介-ref">缓存、缓存算法和缓存框架简介 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb安全性初探-ref">Mongodb安全性初探 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#BSON特性探讨及基于其特性的MongoDB优化-ref">BSON特性探讨及基于其特性的MongoDB优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机启动-ref">计算机启动 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序猿的真实生活(GIF)-ref">程序猿的真实生活(GIF) <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

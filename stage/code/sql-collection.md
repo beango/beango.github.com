@@ -37,6 +37,7 @@ tags: [SQL]
         -- 判断是否存在开启的事务，避免如果事务在这之前已提交或者已回滚，再次回滚会抛异常
         if(@@TRANCOUNT <> 0) begin
           rollback transaction; --事务回滚
+          print error_message()
         end
       end
     end catch
