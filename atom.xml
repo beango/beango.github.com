@@ -4,7 +4,7 @@
  <title>Huang Ding</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-02-28T14:14:27+08:00</updated>
+ <updated>2013-02-28T16:45:23+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>Huang Ding</name>
@@ -4010,11 +4010,14 @@ mask）。&lt;/p&gt;
 
 &lt;p&gt;首先我们来看一下数据库在进行写操作时到底做了哪些事，主要有下面五个过程。&lt;/p&gt;
 
-&lt;p&gt;　1.  客户端向服务端发送写操作（数据在客户端的内存中）&lt;br/&gt;
-　2.  数据库服务端接收到写请求的数据（数据在服务端的内存中）&lt;br/&gt;
-　3.  服务端调用write(2)这个系统调用，将数据往磁盘上写（数据在系统内存的缓冲区中）&lt;br/&gt;
-　4.  操作系统将缓冲区中的数据转移到磁盘控制器上（数据在磁盘缓存中）&lt;br/&gt;
-　5.  磁盘控制器将数据写到磁盘的物理介质中（数据真正落到磁盘上）&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端向服务端发送写操作（数据在客户端的内存中）&lt;/li&gt;
+&lt;li&gt;数据库服务端接收到写请求的数据（数据在服务端的内存中）&lt;/li&gt;
+&lt;li&gt;服务端调用write(2)这个系统调用，将数据往磁盘上写（数据在系统内存的缓冲区中）&lt;/li&gt;
+&lt;li&gt;操作系统将缓冲区中的数据转移到磁盘控制器上（数据在磁盘缓存中）&lt;/li&gt;
+&lt;li&gt;磁盘控制器将数据写到磁盘的物理介质中（数据真正落到磁盘上）&lt;/li&gt;
+&lt;/ol&gt;
+
 
 &lt;h2&gt;故障分析&lt;/h2&gt;
 
