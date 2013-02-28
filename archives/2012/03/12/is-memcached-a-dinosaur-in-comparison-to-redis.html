@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Memcached真的过时了吗？</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Memcached真的过时了吗？</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>这两年<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>火得可以，Redis也常常被当作<a href="http://blog.nosqlfan.com/tags/memcached" title="查看 Memcached 的全部文章">Memcached</a>的挑战者被提到桌面上来。关于Redis与Memcached的比较更是比比皆是。然而，Redis真的在功能、性能以及内存使用效率上都超越了Memcached吗？</p>
+
+<p>下面内容来自Redis作者在stackoverflow上的一个回答，对应的问题是《<a href="http://stackoverflow.com/questions/2873249/is-memcached-a-dinosaur-in-comparison-to-redis">Is
+memcached a dinosaur in comparison to
+Redis?</a>》（相比Redis，Memcached真的过时了吗？）</p>
+
+<ul>
+<li>You should not care too much about performances. Redis is faster per
+core with small values, but memcached is able to use multiple cores
+with a single executable and TCP port without help from the client.
+Also memcached is faster with big values in the order of 100k. Redis
+recently improved a lot about big values (unstable branch) but still
+memcached is faster in this use case. The point here is: nor one or
+the other will likely going to be your bottleneck for the
+query-per-second they can deliver.</li>
+<li>没有必要过多的关心性能，因为二者的性能都已经足够高了。由于Redis只使用单核，而Memcached可以使用多核，所以在比较上，平均每一个核上Redis在存储小数据时比Memcached性能更高。而在100k以上的数据中，Memcached性能要高于Redis，虽然Redis最近也在存储大数据的性能上进行优化，但是比起Memcached，还是稍有逊色。说了这么多，结论是，无论你使用哪一个，每秒处理请求的次数都不会成为瓶颈。（比如瓶颈可能会在网卡）</li>
+<li>You should care about memory usage. For simple key-value pairs
+memcached is more memory efficient. If you use Redis hashes, Redis
+is more memory efficient. Depends on the use case.</li>
+<li>如果要说内存使用效率，使用简单的key-value存储的话，Memcached的内存利用率更高，而如果Redis采用hash结构来做key-value存储，由于其组合式的压缩，其内存利用率会高于Memcached。当然，这和你的应用场景和数据特性有关。</li>
+<li>You should care about persistence and replication, two features only
+available in Redis. Even if your goal is to build a cache it helps
+that after an upgrade or a reboot your data are still there.</li>
+<li>如果你对数据持久化和数据同步有所要求，那么推荐你选择Redis，因为这两个特性Memcached都不具备。即使你只是希望在升级或者重启系统后缓存数据不会丢失，选择Redis也是明智的。</li>
+<li>You should care about the kind of operations you need. In Redis
+there are a lot of complex operations, even just considering the
+caching use case, you often can do a lot more in a single operation,
+without requiring data to be processed client side (a lot of I/O is
+sometimes needed). This operations are often as fast as plain GET
+and SET. So if you don’t need just GEt/SET but more complex things
+Redis can help a lot (think at timeline caching).</li>
+<li>当然，最后还得说到你的具体应用需求。Redis相比Memcached来说，拥有更多的数据结构和并支持更丰富的数据操作，通常在Memcached里，你需要将数据拿到客户端来进行类似的修改再set回去。这大大增加了网络IO的次数和数据体积。在Redis中，这些复杂的操作通常和一般的GET/SET一样高效。所以，如果你需要缓存能够支持更复杂的结构和操作，那么Redis会是不错的选择。</li>
+</ul>
+
+
+<p>来源：<a href="http://stackoverflow.com/questions/2873249/is-memcached-a-dinosaur-in-comparison-to-redis">Is memcached a dinosaur in comparison to
+Redis?</a>（其他人的回答同样值得一看）</p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-03-12" datetime="2012-03-12" pubdate>
+							<span class="year">2012-03-12</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#NoSql-ref">
+    		NoSql <span>15</span>
+    	</a></li>
+     
+    	<li style="list-style:none;"><a href="/category.html#高性能web-ref">
+    		高性能web <span>12</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>4</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/3729.html" target="_blank">http://blog.nosqlfan.com/html/3729.html</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html" title="View 前端必读：浏览器内部工作原理">&laquo; 前端必读：浏览器内部工作原理</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html" title="View TokyoTyrant的管理工具tcrmgr使用">TokyoTyrant的管理工具tcrmgr使用 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （7）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （3）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （12）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （15）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#其他-ref">其他 （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/21/the-reality-of-developers-life.html" title="">程序猿的真实生活(GIF)</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/18/booting.html" title="">计算机是如何启动的？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html" title="">Redis监控技巧</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/12/bson-and-data-interchange.html" title="">BSON特性探讨及基于其特性的MongoDB优化</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="">趣解HTTP状态码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html" title="">Mongodb安全性初探</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/04/cache-algorithm.html" title="">缓存、缓存算法和缓存框架简介</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/03/mongodb-cluster.html" title="">MongoDB 集群</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （2）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （5）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （3）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （4）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （4）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （2）</a></li><li><a href="/archive.html#arch-2011-11">2011-11 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB构架图-ref">MongoDB构架图 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB运行状态、性能监控，分析-ref">MongoDB运行状态、性能监控，分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB最佳实践-ref">MongoDB最佳实践 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB索引-ref">MongoDB索引 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis持久化-ref">Redis持久化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB 集群-ref">MongoDB 集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存、缓存算法和缓存框架简介-ref">缓存、缓存算法和缓存框架简介 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb安全性初探-ref">Mongodb安全性初探 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#BSON特性探讨及基于其特性的MongoDB优化-ref">BSON特性探讨及基于其特性的MongoDB优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis监控-ref">Redis监控 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机启动-ref">计算机启动 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序猿的真实生活(GIF)-ref">程序猿的真实生活(GIF) <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

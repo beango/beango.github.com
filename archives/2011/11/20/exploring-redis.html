@@ -1,0 +1,986 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Redis系统性介绍</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Redis系统性介绍</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>虽然<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。</p>
+
+<h3>1.介绍</h3>
+
+<h4>1.1 Redis是什么</h4>
+
+<p><strong>RE</strong>mote <strong>DI</strong>ctionary <strong>S</strong>erver(Redis) 是一个由Salvatore
+Sanfilippo写的key-value存储系统。Redis提供了一些丰富的数据结构，包括 lists,
+sets, ordered sets 以及 hashes
+，当然还有和Memcached一样的 strings结构.Redis当然还包括了对这些数据结构的丰富操作。</p>
+
+<h4>1.2 Redis的优点</h4>
+
+<ul>
+<li>性能极高 – Redis能支持超过 100K+ 每秒的读写频率。</li>
+<li>丰富的数据类型 – Redis支持二进制案例的 Strings, Lists, Hashes, Sets
+及 Ordered Sets 数据类型操作。</li>
+<li>原子 –
+Redis的所有操作都是原子性的，同时Redis还支持对几个操作全并后的原子性执行。</li>
+<li>丰富的特性 – Redis还支持 publish/subscribe, 通知, key 过期等等特性。</li>
+</ul>
+
+
+<h3>2.数据类型</h3>
+
+<h4>2.1 String类型</h4>
+
+<p>Redis能存储二进制安全的字符串，最大长度为1GB</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; GET name
+"John Doe"
+</code></pre>
+
+<p>String类型还支持批量的读写操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; MSET age 30 sex "male"
+OK
+redis 127.0.0.1:6379&gt; MGET age sex
+1) "30"
+2) "male"
+</code></pre>
+
+<p>String类型其实也可以用来存储数字，并支持对数字的加减操作。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; INCR age
+(integer) 31
+redis 127.0.0.1:6379&gt; INCRBY age 4
+(integer) 35
+redis 127.0.0.1:6379&gt; GET age
+"35"
+redis 127.0.0.1:6379&gt; DECR age
+(integer) 34
+redis 127.0.0.1:6379&gt; DECRBY age 4
+(integer) 30
+redis 127.0.0.1:6379&gt; GET age
+"30"
+</code></pre>
+
+<p>String类型还支持对其部分的修改和获取操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; APPEND name " Mr."
+(integer) 12
+redis 127.0.0.1:6379&gt; GET name
+"John Doe Mr."
+redis 127.0.0.1:6379&gt; STRLEN name
+(integer) 12
+redis 127.0.0.1:6379&gt; SUBSTR name 0 3
+"John"
+</code></pre>
+
+<h4>2.2 List类型</h4>
+
+<p>Redis能够将数据存储成一个链表，并能对这个链表进行丰富的操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; LPUSH students "John Doe"
+(integer) 1
+redis 127.0.0.1:6379&gt; LPUSH students "Captain Kirk"
+(integer) 2
+redis 127.0.0.1:6379&gt; LPUSH students "Sheldon Cooper"
+(integer) 3
+redis 127.0.0.1:6379&gt; LLEN students
+(integer) 3
+redis 127.0.0.1:6379&gt; LRANGE students 0 2
+1) "Sheldon Cooper"
+2) "Captain Kirk"
+3) "John Doe"
+redis 127.0.0.1:6379&gt; LPOP students
+"Sheldon Cooper"
+redis 127.0.0.1:6379&gt; LLEN students
+(integer) 2
+redis 127.0.0.1:6379&gt; LRANGE students 0 1
+1) "Captain Kirk"
+2) "John Doe"
+redis 127.0.0.1:6379&gt; LREM students 1 "John Doe"
+(integer) 1
+redis 127.0.0.1:6379&gt; LLEN students
+(integer) 1
+redis 127.0.0.1:6379&gt; LRANGE students 0 0
+1) "Captain Kirk"
+</code></pre>
+
+<p>Redis也支持很多修改操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; LINSERT students BEFORE "Captain Kirk" "Dexter Morgan"
+(integer) 3
+redis 127.0.0.1:6379&gt; LRANGE students 0 2
+1) "Dexter Morgan"
+2) "Captain Kirk"
+3) "John Doe"
+redis 127.0.0.1:6379&gt; LPUSH students "Peter Parker"
+(integer) 4
+redis 127.0.0.1:6379&gt; LRANGE students 0 3
+1) "Peter Parker"
+2) "Dexter Morgan"
+3) "Captain Kirk"
+4) "John Doe"
+redis 127.0.0.1:6379&gt; LTRIM students 1 3
+OK
+redis 127.0.0.1:6379&gt; LLEN students
+(integer) 3
+redis 127.0.0.1:6379&gt; LRANGE students 0 2
+1) "Dexter Morgan"
+2) "Captain Kirk"
+3) "John Doe"
+redis 127.0.0.1:6379&gt; LREM students 1 "John Doe"
+(integer) 1
+redis 127.0.0.1:6379&gt; LLEN students
+(integer) 1
+redis 127.0.0.1:6379&gt; LRANGE students 0 1
+1) "Captain Kirk"
+</code></pre>
+
+<h4>2.3 集合（Sets）类型</h4>
+
+<p>Redis能够将一系列不重复的值存储成一个集合</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SADD birds crow
+(integer) 1
+redis 127.0.0.1:6379&gt; SADD birds pigeon
+(integer) 1
+redis 127.0.0.1:6379&gt; SADD birds bat
+(integer) 1
+redis 127.0.0.1:6379&gt; SADD mammals dog
+(integer) 1
+redis 127.0.0.1:6379&gt; SADD mammals cat
+(integer) 1
+redis 127.0.0.1:6379&gt; SADD mammals bat
+(integer) 1
+redis 127.0.0.1:6379&gt; SMEMBERS birds
+1) "bat"
+2) "crow"
+3) "pigeon"
+redis 127.0.0.1:6379&gt; SMEMBERS mammals
+1) "bat"
+2) "cat"
+3) "dog"
+</code></pre>
+
+<p>Sets结构也支持相应的修改操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SREM mammals cat
+(integer) 1
+redis 127.0.0.1:6379&gt; SMEMBERS mammals
+1) "bat"
+2) "dog"
+redis 127.0.0.1:6379&gt; SADD mammals human
+(integer) 1
+redis 127.0.0.1:6379&gt; SMEMBERS mammals
+1) "bat"
+2) "human"
+3) "dog"
+</code></pre>
+
+<p>Redis还支持对集合的子交并补等操作</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SINTER birds mammals
+1) "bat"
+redis 127.0.0.1:6379&gt; SUNION birds mammals
+1) "crow"
+2) "bat"
+3) "human"
+4) "pigeon"
+5) "dog"
+redis 127.0.0.1:6379&gt; SDIFF birds mammals
+1) "crow"
+2) "pigeon"
+</code></pre>
+
+<h4>2.4 有序集合（Sorted Sets）类型</h4>
+
+<p>Sorted Sets和Sets结构相似，不同的是存在Sorted
+Sets中的数据会有一个score属性，并会在写入时就按这个score排好序。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; ZADD days 0 mon
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 1 tue
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 2 wed
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 3 thu
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 4 fri
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 5 sat
+(integer) 1
+redis 127.0.0.1:6379&gt; ZADD days 6 sun
+(integer) 1
+redis 127.0.0.1:6379&gt; ZCARD days
+(integer) 7
+redis 127.0.0.1:6379&gt; ZRANGE days 0 6
+1) "mon"
+2) "tue"
+3) "wed"
+4) "thu"
+5) "fri"
+6) "sat"
+7) "sun"
+redis 127.0.0.1:6379&gt; ZSCORE days sat
+"5"
+redis 127.0.0.1:6379&gt; ZCOUNT days 3 6
+(integer) 4
+redis 127.0.0.1:6379&gt; ZRANGEBYSCORE days 3 6
+1) "thu"
+2) "fri"
+3) "sat"
+4) "sun"
+</code></pre>
+
+<h4>2.5 Hash类型</h4>
+
+<p>Redis能够存储key对多个属性的数据（比如user1.uname user1.passwd）</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; HKEYS student
+1) "name"
+2) "age"
+3) "sex"
+redis 127.0.0.1:6379&gt; HVALS student
+1) "Ganesh"
+2) "30"
+3) "Male"
+redis 127.0.0.1:6379&gt; HGETALL student
+1) "name"
+2) "Ganesh"
+3) "age"
+4) "30"
+5) "sex"
+6) "Male"
+redis 127.0.0.1:6379&gt; HDEL student sex
+(integer) 1
+redis 127.0.0.1:6379&gt; HGETALL student
+1) "name"
+2) "Ganesh"
+3) "age"
+4) "30"
+</code></pre>
+
+<p>Hash数据结构能够批量修改和获取</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; HMSET kid name Akshi age 2 sex Female
+OK
+redis 127.0.0.1:6379&gt; HMGET kid name age sex
+1) "Akshi"
+2) "2"
+3) "Female"
+</code></pre>
+
+<h3>3.Publish/Subscribe</h3>
+
+<p>Redis支持这样一种特性，你可以将数据推到某个信息管道中，然后其它人可以通过订阅这些管道来获取推送过来的信息。</p>
+
+<h4>3.1 订阅信息管道</h4>
+
+<p>用一个客户端订阅管道</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "channelone"
+3) (integer) 1
+</code></pre>
+
+<p>另一个客户端往这个管道推送信息</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
+(integer) 1
+redis 127.0.0.1:6379&gt; PUBLISH channelone world
+(integer) 1
+</code></pre>
+
+<p>然后第一个客户端就能获取到推送的信息</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "channelone"
+3) (integer) 1
+1) "message"
+2) "channelone"
+3) "hello"
+1) "message"
+2) "channelone"
+3) "world"
+</code></pre>
+
+<h4>3.2 按一定模式批量订阅</h4>
+
+<p>用下面的命令订阅所有channel开头的信息通道</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
+Reading messages... (press Ctrl-C to quit)
+1) "psubscribe"
+2) "channel*"
+3) (integer) 1
+</code></pre>
+
+<p>在另一个客户端对两个推送信息</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
+(integer) 1
+redis 127.0.0.1:6379&gt; PUBLISH channeltwo world
+(integer) 1
+</code></pre>
+
+<p>然后在第一个客户端就能收到推送的信息</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
+Reading messages... (press Ctrl-C to quit)
+1) "psubscribe"
+2) "channel*"
+3) (integer) 1
+1) "pmessage"
+2) "channel*"
+3) "channelone"
+4) "hello"
+1) "pmessage"
+2) "channel*"
+3) "channeltwo"
+4) "world"
+</code></pre>
+
+<h3>4.数据过期设置</h3>
+
+<p>Redis支持按key设置过期时间，过期后值将被删除（在客户端看来是补删除了的）</p>
+
+<p>用TTL命令可以获取某个key值的过期时间（-1表示永不过期）</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; TTL name
+(integer) -1
+</code></pre>
+
+<p>下面命令先用EXISTS命令查看key值是否存在，然后设置了5秒的过期时间</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; EXISTS name
+(integer) 1
+redis 127.0.0.1:6379&gt; EXPIRE name 5
+(integer) 1
+</code></pre>
+
+<p>5秒后再查看</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; EXISTS name
+(integer) 0
+redis 127.0.0.1:6379&gt; GET name
+(nil)
+</code></pre>
+
+<p>这个值已经没有了。</p>
+
+<p>上在是直接设置多少秒后过期，你也可以设置在某个时间点过期，下面例子是设置2011-09-24
+00:40:00过期。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; EXPIREAT name 1316805000
+(integer) 1
+redis 127.0.0.1:6379&gt; EXISTS name
+(integer) 0
+</code></pre>
+
+<h3>5.事务性</h3>
+
+<p>Redis本身支持一些简单的组合型的命令，比如以NX结尾命令都是判断在这个值没有时才进行某个命令。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; SETNX name "Dexter Morgan"
+(integer) 0
+redis 127.0.0.1:6379&gt; GET name
+"John Doe"
+
+redis 127.0.0.1:6379&gt; GETSET name "Dexter Morgan"
+"John Doe"
+redis 127.0.0.1:6379&gt; GET name
+"Dexter Morgan"
+</code></pre>
+
+<p>当然，Redis还支持自定义的命令组合，通过MULTI和EXEC，将几个命令组合起来执行</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET counter 0
+OK
+redis 127.0.0.1:6379&gt; MULTI
+OK
+redis 127.0.0.1:6379&gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&gt; EXEC
+1) (integer) 1
+2) (integer) 2
+3) (integer) 3
+redis 127.0.0.1:6379&gt; GET counter
+"3"
+</code></pre>
+
+<p>你还可以用DICARD命令来中断执行中的命令序列</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET newcounter 0
+OK
+redis 127.0.0.1:6379&gt; MULTI
+OK
+redis 127.0.0.1:6379&gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&gt; DISCARD
+OK
+redis 127.0.0.1:6379&gt; GET newcounter
+"0"
+</code></pre>
+
+<h3>6.持久化</h3>
+
+<p>Redis的所有数据都存储在内存中，但是他也提供对这些数据的持久化。</p>
+
+<h4>6.1 数据快照</h4>
+
+<p>数据快照的原理是将整个Redis中存的所有数据遍历一遍存到一个扩展名为rdb的数据文件中。通过SAVE命令可以调用这个过程。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; SAVE
+OK
+redis 127.0.0.1:6379&gt; SET name "Sheldon Cooper"
+OK
+redis 127.0.0.1:6379&gt; BGSAVE
+Background saving started
+</code></pre>
+
+<p>如果你是使用的brew在Mac OSX上安全的Redis，那么rdb文件会存在如下路径</p>
+
+<pre><code>/usr/local/var/db/redis/dump.rdb
+</code></pre>
+
+<h4>6.2 Append-Only File（追加式的操作日志记录）</h4>
+
+<p>Redis还支持一种追加式的操作日志记录，叫append only
+file，其日志文件以aof结局，我们一般各为aof文件。要开启aof日志的记录，你需要在配置文件中进行如下设置：</p>
+
+<pre><code>appendonly yes
+</code></pre>
+
+<p>这时候你所有的操作都会记录在aof日志文件中</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; GET name
+(nil)
+redis 127.0.0.1:6379&gt; SET name "Ganesh Gunasegaran"
+OK
+redis 127.0.0.1:6379&gt; EXIT
+
+→ cat /usr/local/var/db/redis/appendonly.aof
+*2
+$6
+SELECT
+$1
+0
+*3
+$3
+SET
+$4
+name
+$18
+Ganesh Gunasegaran
+</code></pre>
+
+<h3>7.管理命令</h3>
+
+<p>Redis支持多个DB，默认是16个，你可以设置将数据存在哪一个DB中，不同DB间的数据具有隔离性。也可以在多个DB间移动数据。</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SELECT 0
+OK
+redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&gt; GET name
+(nil)
+redis 127.0.0.1:6379[1]&gt; SELECT 0
+OK
+redis 127.0.0.1:6379&gt; MOVE name 1
+(integer) 1
+redis 127.0.0.1:6379&gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&gt; GET name
+"John Doe"
+</code></pre>
+
+<p>Redis还能进行一些如下操作，获取一些运行信息</p>
+
+<pre><code>redis 127.0.0.1:6379[1]&gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&gt; INFO
+redis_version:2.2.13
+redis_git_sha1:00000000
+redis_git_dirty:0
+arch_bits:64
+multiplexing_api:kqueue
+......
+</code></pre>
+
+<p>Redis还支持对某个DB数据进行清除（当然清空所有数据的操作也是支持的）</p>
+
+<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+OK
+redis 127.0.0.1:6379&gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379&gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&gt; SET name "Sheldon Cooper"
+OK
+redis 127.0.0.1:6379[1]&gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&gt; SELECT 0
+OK
+redis 127.0.0.1:6379&gt; FLUSHDB
+OK
+redis 127.0.0.1:6379&gt; DBSIZE
+(integer) 0
+redis 127.0.0.1:6379&gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&gt; FLUSHALL
+OK
+redis 127.0.0.1:6379[1]&gt; DBSIZE
+(integer) 0
+</code></pre>
+
+<h3>8.客户端</h3>
+
+<p>Redis的客户端很丰富，几乎所有流行的语言都有其客户端，这里就不再赘述，有兴趣的同学可以上Redis的<a href="http://redis.io/clients">Clients页面</a>去查找。</p>
+
+<h3>9.资料引用</h3>
+
+<ul>
+<li><a href="http://redis.io/documentation">Redis documentation</a></li>
+<li><a href="http://simonwillison.net/static/2010/redis-tutorial/">Simon Willison – Redis
+tutorial</a></li>
+<li><a href="http://blog.mjrusso.com/2010/10/17/redis-from-the-ground-up.html">Michael J. Russo – Redis from ground
+up</a></li>
+</ul>
+
+
+<h3>10.总结</h3>
+
+<p><img src="/assets/files/2011-11/12pXcY.png" title="Redis overview" alt="" /></p>
+
+<p>来源：<a href="http://itsgg.com/2011/09/24/exploring-redis/">itsgg.com</a></p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2011-11-20" datetime="2011-11-20" pubdate>
+							<span class="year">2011-11-20</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#NoSql-ref">
+    		NoSql <span>15</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>4</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/3139.html" target="_blank">http://blog.nosqlfan.com/html/3139.html</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html" title="View MongoDB运行状态、性能监控，分析">&laquo; MongoDB运行状态、性能监控，分析</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2011/12/03/tokyotyrant-memcached-keyvalue-system.html" title="View 利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统">利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统 &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （7）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （3）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （12）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （15）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#其他-ref">其他 （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/21/the-reality-of-developers-life.html" title="">程序猿的真实生活(GIF)</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/18/booting.html" title="">计算机是如何启动的？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html" title="">Redis监控技巧</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/12/bson-and-data-interchange.html" title="">BSON特性探讨及基于其特性的MongoDB优化</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="">趣解HTTP状态码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html" title="">Mongodb安全性初探</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/04/cache-algorithm.html" title="">缓存、缓存算法和缓存框架简介</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/03/mongodb-cluster.html" title="">MongoDB 集群</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （2）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （5）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （3）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （4）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （4）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （2）</a></li><li><a href="/archive.html#arch-2011-11">2011-11 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB构架图-ref">MongoDB构架图 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB运行状态、性能监控，分析-ref">MongoDB运行状态、性能监控，分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB最佳实践-ref">MongoDB最佳实践 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB索引-ref">MongoDB索引 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis持久化-ref">Redis持久化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB 集群-ref">MongoDB 集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存、缓存算法和缓存框架简介-ref">缓存、缓存算法和缓存框架简介 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb安全性初探-ref">Mongodb安全性初探 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#BSON特性探讨及基于其特性的MongoDB优化-ref">BSON特性探讨及基于其特性的MongoDB优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis监控-ref">Redis监控 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机启动-ref">计算机启动 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序猿的真实生活(GIF)-ref">程序猿的真实生活(GIF) <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+

@@ -4,7 +4,7 @@
  <title>Huang Ding</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-02-27T09:45:41+08:00</updated>
+ <updated>2013-02-27T13:16:02+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>Huang Ding</name>
@@ -246,6 +246,116 @@ loader），由用户选择启动哪一个操作系统。&lt;/p&gt;
 &lt;p&gt;至此，全部启动过程完成。&lt;/p&gt;
 
 &lt;p&gt;（完）&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Redis监控技巧</title>
+   <link href="http://beango.github.com/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html"/>
+   <updated>2013-01-22T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis</id>
+   <content type="html">&lt;p&gt;本文来自 &lt;a href=&quot;https://bugsnag.com/&quot;&gt;Bugsnag&lt;/a&gt; 的联合创始人 &lt;a href=&quot;https://twitter.com/snmaynard/&quot;&gt;Simon Maynard&lt;/a&gt; 的系列文章，作者根据几年来对
+&lt;a href=&quot;http://blog.nosqlfan.com/tags/redis&quot; title=&quot;查看 Redis 的全部文章&quot;&gt;Redis&lt;/a&gt;的使用经历，对 Redis&lt;a href=&quot;http://blog.nosqlfan.com/tags/%e7%9b%91%e6%8e%a7&quot; title=&quot;查看 监控 的全部文章&quot;&gt;监控&lt;/a&gt;方法进行了系统性的总结，干货很多，值得一看。&lt;/p&gt;
+
+&lt;p&gt;原文链接：&lt;a href=&quot;http://snmaynard.com/2013/01/22/redis-masterclass-part-two-monitoring-redis/&quot;&gt;Redis Masterclass – Part 2, Monitoring&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Redis 监控最直接的方法当然就是使用系统提供的 info
+命令来做了，你只需要执行下面一条命令，就能获得 Redis 系统的状态报告。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis-cli info
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;内存使用&lt;/h2&gt;
+
+&lt;p&gt;如果 Redis 使用的内存超出了可用的物理内存大小，那么 Redis 很可能系统会被
+&lt;a href=&quot;http://linux-mm.org/OOM_Killer&quot;&gt;OOM Killer&lt;/a&gt; 杀掉。针对这一点，你可以通过
+info 命令对 &lt;em&gt;used_memory&lt;/em&gt; 和 &lt;em&gt;used_memory_peak&lt;/em&gt;
+进行监控，为使用内存量设定阈值，并设定相应的报警机制。当然，报警只是手段，重要的是你得预先计划好，当内存使用量过大后，你应该做些什么，是清除一些没用的冷数据，还是把
+Redis 迁移到更强大的机器上去。&lt;/p&gt;
+
+&lt;h2&gt;持久化&lt;/h2&gt;
+
+&lt;p&gt;如果因为你的机器或 Redis 本身的问题导致 Redis
+崩溃了，那么你唯一的救命稻草可能就是 dump 出来的 rdb文件了，所以，对 Redis
+dump 文件进行监控也是很重要的。你可以通过对 &lt;em&gt;rdb_last_save_time&lt;/em&gt;
+进行监控，了解你最近一次 dump 数据操作的时间，还可以通过对
+&lt;em&gt;rdb_changes_since_last_save&lt;/em&gt;
+进行监控来知道如果这时候出现故障，你会丢失多少数据。&lt;/p&gt;
+
+&lt;h2&gt;主从复制&lt;/h2&gt;
+
+&lt;p&gt;如果你设置了主从复制模式，那么你最好对复制的情况是否正常做一些监控，主要是对
+info 输出中的 &lt;em&gt;master_link_status&lt;/em&gt; 进行监控，如果这个值是
+up，那么说明同步正常，如果是
+down，那么你就要注意一下输出的其它一些诊断信息了。比如下面这些：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;role:slave
+master_host:192.168.1.128
+master_port:6379
+master_link_status:down
+master_last_io_seconds_ago:-1
+master_sync_in_progress:0
+master_link_down_since_seconds:1356900595
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Fork 性能&lt;/h2&gt;
+
+&lt;p&gt;当 Redis 持久化数据到磁盘上时，它会进行一次 fork 操作，通过 fork 对内存的
+copy on write 机制最廉价的实现内存镜像。但是虽然内存是 copy on write
+的，但是虚拟内存表是在 fork 的瞬间就需要分配，所以 fork
+会造成主线程短时间的卡顿（停止所有读写操作），这个卡顿时间和当前 Redis
+的内存使用量有关。通常 GB 量级的 Redis 进行 fork
+操作的时间在毫秒级。你可以通过对 info 输出的 &lt;em&gt;latest_fork_usec&lt;/em&gt;
+进行监控来了解最近一次 fork 操作导致了多少时间的卡顿。&lt;/p&gt;
+
+&lt;h2&gt;配置一致&lt;/h2&gt;
+
+&lt;p&gt;Redis 支持使用 &lt;a href=&quot;http://redis.io/commands/config-set&quot;&gt;CONFIG SET&lt;/a&gt;操作来实现运行实的配置修改，这很方便，但同时也会导致一个问题。就是通过这个命令动态修改的配置，是不会同步到你的配置文件中去的。所以当你因为某些原因重启Redis 时，你使用 CONFIG SET做的配置修改就会丢失掉，所以我们最好保证在每次使用 CONFIG SET修改配置时，也把配置文件一起相应地改掉。为了防止人为的失误，所以我们最好对配置进行监控，使用&lt;a href=&quot;http://redis.io/commands/config-get&quot;&gt;CONFIG GET&lt;/a&gt;命令来获取当前运行时的配置，并与 redis.conf中的配置值进行对比，如果发现两边对不上，就启动报警。&lt;/p&gt;
+
+&lt;h2&gt;慢日志&lt;/h2&gt;
+
+&lt;p&gt;Redis 提供了 &lt;a href=&quot;http://redis.io/commands/slowlog&quot;&gt;SLOWLOG&lt;/a&gt;指令来获取最近的慢日志，Redis的慢日志是直接存在内存中的，所以它的慢日志开销并不大，在实际应用中，我们通过crontab 任务执行 SLOWLOG 命令来获取慢日志，然后将慢日志存到文件中，并用&lt;a href=&quot;http://kibana.org/&quot;&gt;Kibana&lt;/a&gt; 生成实时的性能图表来实现性能监控。&lt;/p&gt;
+
+&lt;p&gt;值得一提的是，Redis 的慢日志记录的时间，仅仅包括 Redis自身对一条命令的执行时间，不包括 IO 的时间，比如接收客户端数据和发送客户端数据这些时间。另外，Redis的慢日志和其它数据库的慢日志有一点不同，其它数据库偶尔出现 100ms的慢日志可能都比较正常，因为一般数据库都是多线程并发执行，某个线程执行某个命令的性能可能并不能代表整体性能，但是对Redis来说，它是单线程的，一旦出现慢日志，可能就需要马上得到重视，最好去查一下具体是什么原因了。&lt;/p&gt;
+
+&lt;h2&gt;监控服务&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;-Sentinel&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://redis.io/topics/sentinel&quot;&gt;Sentinel&lt;/a&gt; 是 Redis 自带的工具，它可以对Redis主从复制进行监控，并实现主挂掉之后的自动故障转移。在转移的过程中，它还可以被配置去执行一个用户自定义的脚本，在脚本中我们就能够实现报警通知等功能。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;-Redis Live&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.nkrode.com/article/real-time-dashboard-for-redis&quot;&gt;Redis Live&lt;/a&gt;
+是一个更通用的 Redis 监控方案，它的原理是定时在 Redis 上执行&lt;a href=&quot;http://redis.io/commands/monitor&quot;&gt;MONITOR&lt;/a&gt; 命令，来获取当前 Redis 当前正在执行的命令，并通过统计分析，生成web页面的可视化分析报表。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;-Redis Faina&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://instagram-engineering.tumblr.com/post/23132009381/redis-faina-a-query-analysis-tool-for-redis&quot;&gt;Redis Faina&lt;/a&gt;
+是由著名的图片分享应用 instagram 开发的 Redis 监控服务，其原理和 Redis Live 类似，都是对通过&lt;a href=&quot;http://blog.nosqlfan.com/tags/monitor&quot; title=&quot;查看 MONITOR 的全部文章&quot;&gt;MONITOR&lt;/a&gt;来做的。&lt;/p&gt;
+
+&lt;h2&gt;数据分布&lt;/h2&gt;
+
+&lt;p&gt;弄清 Redis 中数据存储分布是一件很难的是，比如你想知道哪类型的 key
+值占用内存最多。下面是一些工具，可以帮助你对 Redis 的数据集进行分析。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;-Redis-sampler&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/antirez/redis-sampler&quot;&gt;Redis-sampler&lt;/a&gt; 是 Redis作者开发的工具，它通过采样的方法，能够让你了解到当前 Redis 中的数据的大致类型，数据及分布状况。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;-Redis-audit&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/snmaynard/redis-audit&quot;&gt;Redis-audit&lt;/a&gt;
+是一个脚本，通过它，我们可以知道每一类 key
+对内存的使用量。它可以提供的数据有：某一类 key
+值的访问频率如何，有多少值设置了过期时间，某一类 key
+值使用内存的大小，这很方便让我们能排查哪些 key 不常用或者压根不用。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;-Redis-rdb-tools&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/sripathikrishnan/redis-rdb-tools&quot;&gt;Redis-rdb-tools&lt;/a&gt;
+跟 Redis-audit 功能类似，不同的是它是通过对 rdb
+文件进行分析来取得统计数据的。&lt;/p&gt;
 </content>
  </entry>
  
@@ -1233,237 +1343,6 @@ code})——可以在server端执行我们的js代码。&lt;/p&gt;
 &lt;p&gt;当然在&lt;a href=&quot;https://github.com/mongodb/mongo/blob/r1.9.2/scripting/utils.cpp#L67&quot;&gt;server端也有js的上下文扩展&lt;/a&gt;。显然mongod考虑到了安全问题（也可能是其他原因），因此在这里并没有提供client中这么强大的功能。当然mongodb还在不断更新，长期关注这个list，说不定以后就有类似load_file/exec之类的实现。&lt;/p&gt;
 
 &lt;p&gt;一劳永逸解决服务端js执行带来的问题可以使用&lt;a href=&quot;http://www.mongodb.org/display/DOCS/Command+Line+Parameters&quot;&gt;noscripting&lt;/a&gt;参数。直接禁止server-side的js代码执行功能。&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>CentOS6.3下Redis安装</title>
-   <link href="http://beango.github.com/archives/2012/12/19/redis-install.html"/>
-   <updated>2012-12-19T00:00:00+08:00</updated>
-   <id>http://beango.github.com/archives/2012/12/19/redis-install</id>
-   <content type="html">&lt;ul&gt;
-&lt;li&gt;下载最新的稳定版redis&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;wget http://redis.googlecode.com/files/redis-2.6.7.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;安装&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;tar xzf  redis-2.6.7.tar.gz
-cd redis-2.6.7
-make PREFIX=/usr/local install
-cp src/redis-server /usr/bin/ 
-cp src/redis-cli /usr/bin/
-cp src/redis-check-aof /usr/bin/
-cp src/redis-check-dump /usr/bin/
-cp src/redis-benchmark /usr/bin/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;make命令执行完成后，会在src目录下生成5个可执行文件，分别是redis-server、redis-cli、redis-benchmark、redis-check-aof、redis-check-dump，它们的作用如下：
-redis-server：Redis服务器的daemon启动程序
-redis-cli：Redis命令行操作工具。当然，你也可以用telnet根据其纯文本协议来操作
-redis-benchmark：Redis性能测试工具，测试Redis在你的系统及你的配置下的读写性能
-redis-check-aof：更新日志检查
-redis-check-dump：用于本地数据库检查&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;编写redis配置文件&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir -p /etc/redis/
-cp redis.conf /etc/redis/redis.conf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;启动&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;redis-server /etc/redis/redis.conf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;测试&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;redis-cli
-redis 127.0.0.1:6379&amp;gt;set myKey  myValue
-OK
-redis 127.0.0.1:6379&amp;gt; get myKey
-&quot;myValue&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;redis.conf 配置参数：&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;#&quot; onclick=&quot;javascript:toggle(this);&quot; class=&quot;linkcodetoggle&quot;&gt;+ 点击展开&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#是否作为守护进程运行
-daemonize yes
-
-#如以后台进程运行，则需指定一个pid，默认为/var/run/redis.pid
-pidfile redis.pid
-
-#绑定主机IP，默认值为127.0.0.1
-#bind 127.0.0.1
-
-#Redis默认监听端口
-port 6379
-
-#客户端闲置多少秒后，断开连接，默认为300（秒）
-timeout 300
-
-#日志记录等级，有4个可选值，debug，verbose（默认值），notice，warning
-loglevel verbose
-
-#指定日志输出的文件名，默认值为stdout，也可设为/dev/null屏蔽日志
-logfile stdout
-
-#可用数据库数，默认值为16，默认数据库为0
-databases 16
-
-#保存数据到disk的策略
-#当有一条Keys数据被改变是，900秒刷新到disk一次
-save 900 1
-
-#当有10条Keys数据被改变时，300秒刷新到disk一次
-save 300 10
-
-#当有1w条keys数据被改变时，60秒刷新到disk一次
-save 60 10000
-
-#当dump .rdb数据库的时候是否压缩数据对象
-rdbcompression yes
-
-#本地数据库文件名，默认值为dump.rdb
-dbfilename dump.rdb
-
-#本地数据库存放路径，默认值为 ./
-dir /var/lib/redis/
-
-########### Replication #####################
-
-#Redis的复制配置
-# slaveof &amp;lt;masterip&amp;gt; &amp;lt;masterport&amp;gt; 当本机为从服务时，设置主服务的IP及端口
-# masterauth &amp;lt;master-password&amp;gt; 当本机为从服务时，设置主服务的连接密码
-
-#连接密码
-# requirepass foobared
-
-#最大客户端连接数，默认不限制
-# maxclients 128
-
-#最大内存使用设置，达到最大内存设置后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理后，任到达最大内存设置，将无法再进行写入操作。
-# maxmemory &amp;lt;bytes&amp;gt;
-
-#是否在每次更新操作后进行日志记录，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认值为no
-appendonly no
-
-#更新日志文件名，默认值为appendonly.aof
-#appendfilename
-
-#更新日志条件，共有3个可选值。no表示等操作系统进行数据缓存同步到磁盘，always表示每次更新操作后手动调用fsync()将数据写到磁盘，everysec表示每秒同步一次（默认值）。
-# appendfsync always
-
-appendfsync everysec
-
-# appendfsync no
-
-################ VIRTUAL MEMORY ###########
-
-#是否开启VM功能，默认值为no
-vm-enabled no
-# vm-enabled yes
-
-#虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享
-vm-swap-file /tmp/redis.swap
-
-#将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的 (Redis的索引数据就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0。
-vm-max-memory 0
-vm-page-size 32
-vm-pages 134217728
-vm-max-threads 4
-
-############# ADVANCED CONFIG ###############
-
-glueoutputbuf yes
-hash-max-zipmap-entries 64
-hash-max-zipmap-value 512
-
-#是否重置Hash表
-activerehashing yes
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;注意：Redis官方文档对VM的使用提出了一些建议:&lt;/p&gt;
-
-&lt;p&gt;当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.
-当你的key不小时,可以考虑使用一些非常方法将很大的key变成很大的value,比如你可以考虑将key,value组合成一个新的value.
-最好使用linux ext3 等对稀疏文件支持比较好的文件系统保存你的swap文件.
-vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数.如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;常见错误-zmalloc.h:51:31: error: jemalloc/jemalloc.h: No such file or directory&lt;br/&gt;
-检查是否安装gcc，如果已经安装，先执行make distclean再make&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;python操作redis&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;a href=&quot;#&quot; onclick=&quot;javascript:toggle(this);&quot;&gt;+ 点击展开&lt;/a&gt;&lt;/p&gt;
-
-&lt;div style=&quot;display:none;&quot;&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;wget&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pypi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/packages/so&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;urce&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/r/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.7.2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#tar xvzf redis-py-2.7.2.tar.gz&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;python&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;#打开Python解释器：&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Redis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6379&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#或者写成 r[&amp;#39;foo&amp;#39;] = &amp;#39;bar&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-&lt;span class=&quot;s&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#库里有多少key，多少条数据&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;OK!&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#强行把数据库保存到硬盘。保存时阻塞&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;--------------------------------&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flushdb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#删除当前数据库的所有数据&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;chang&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# 因为是Noen对象，什么也不显示！&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;__class__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__delattr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__doc__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__format__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__getattribute__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__hash__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__init__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__new__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__reduce__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__reduce_ex__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__repr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__setattr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__sizeof__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__str__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__subclasshook__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;chang&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;#看是否存在这个键值&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;False&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 列出所有键值。（这时候已经存了4个了）&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;aaa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;bbb&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;key1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;/div&gt;
-
 </content>
  </entry>
  
@@ -4111,6 +3990,175 @@ mask）。&lt;/p&gt;
  </entry>
  
  <entry>
+   <title>解密Redis持久化</title>
+   <link href="http://beango.github.com/archives/2012/06/17/redis-persistence-demystified.html"/>
+   <updated>2012-06-17T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/06/17/redis-persistence-demystified</id>
+   <content type="html">&lt;p&gt;本文内容来源于&lt;a href=&quot;http://blog.nosqlfan.com/tags/redis&quot; title=&quot;查看 Redis 的全部文章&quot;&gt;Redis&lt;/a&gt;作者博文，Redis作者说，他看到的所有针对Redis的讨论中，对Redis&lt;a href=&quot;http://blog.nosqlfan.com/tags/%e6%8c%81%e4%b9%85%e5%8c%96&quot; title=&quot;查看 持久化 的全部文章&quot;&gt;持久化&lt;/a&gt;的误解是最大的，于是他写了&lt;a href=&quot;http://antirez.com/post/redis-persistence-demystified.html&quot;&gt;一篇长文&lt;/a&gt;来对Redis的持久化进行了系统性的论述。文章非常长，也很值得一看，NoSQLFan将主要内容简述成本文。&lt;/p&gt;
+
+&lt;p&gt;什么是持久化，简单来讲就是将数据放到断电后数据不会丢失的设备中。也就是我们通常理解的硬盘上。&lt;/p&gt;
+
+&lt;h2&gt;写操作的流程&lt;/h2&gt;
+
+&lt;p&gt;首先我们来看一下数据库在进行写操作时到底做了哪些事，主要有下面五个过程。&lt;/p&gt;
+
+&lt;p&gt;　1.  客户端向服务端发送写操作（数据在客户端的内存中）&lt;br/&gt;
+　2.  数据库服务端接收到写请求的数据（数据在服务端的内存中）&lt;br/&gt;
+　3.  服务端调用write(2)这个系统调用，将数据往磁盘上写（数据在系统内存的缓冲区中）&lt;br/&gt;
+　4.  操作系统将缓冲区中的数据转移到磁盘控制器上（数据在磁盘缓存中）&lt;br/&gt;
+　5.  磁盘控制器将数据写到磁盘的物理介质中（数据真正落到磁盘上）&lt;/p&gt;
+
+&lt;h2&gt;故障分析&lt;/h2&gt;
+
+&lt;p&gt;写操作大致有上面5个流程，下面我们结合上面的5个流程看一下各种级别的故障。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;当数据库系统故障时，这时候系统内核还是OK的，那么此时只要我们执行完了第3步，那么数据就是安全的，因为后续操作系统会来完成后面几步，保证数据最终会落到磁盘上。&lt;/li&gt;
+&lt;li&gt;当系统断电，这时候上面5项中提到的所有缓存都会失效，并且数据库和操作系统都会停止工作。所以只有当数据在完成第5步后，机器断电才能保证数据不丢失，在上述四步中的数据都会丢失。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;通过上面5步的了解，可能我们会希望搞清下面一些问题：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;数据库多长时间调用一次write(2)，将数据写到内核缓冲区&lt;/li&gt;
+&lt;li&gt;内核多长时间会将系统缓冲区中的数据写到磁盘控制器&lt;/li&gt;
+&lt;li&gt;磁盘控制器又在什么时候把缓存中的数据写到物理介质上&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;对于第一个问题，通常数据库层面会进行全面控制。而对第二个问题，操作系统有其默认的策略，但是我们也可以通过POSIX
+API提供的fsync系列命令强制操作系统将数据从内核区写到磁盘控制器上。对于第三个问题，好像数据库已经无法触及，但实际上，大多数情况下磁盘缓存是被设置关闭的。或者是只开启为读缓存，也就是写操作不会进行缓存，直接写到磁盘。建议的做法是仅仅当你的磁盘设备有备用电池时才开启写缓存。&lt;/p&gt;
+
+&lt;h2&gt;数据损坏&lt;/h2&gt;
+
+&lt;p&gt;所谓数据损坏，就是数据无法恢复，上面我们讲的都是如何保证数据是确实写到磁盘上去，但是写到磁盘上可能并不意味着数据不会损坏。比如我们可能一次写请求会进行两次不同的写操作，当意外发生时，可能会导致一次写操作安全完成，但是另一次还没有进行。如果数据库的数据文件结构组织不合理，可能就会导致数据完全不能恢复的状况出现。&lt;/p&gt;
+
+&lt;p&gt;这里通常也有三种策略来组织数据，以防止数据文件损坏到无法恢复的情况：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第一种是最粗糙的处理，就是不通过数据的组织形式保证数据的可恢复性。而是通过配置数据同步备份的方式，在数据文件损坏后通过数据备份来进行恢复。实际上MongoDB在不开启journaling日志，通过配置Replica
+Sets时就是这种情况。&lt;/li&gt;
+&lt;li&gt;另一种是在上面基础上添加一个操作日志，每次操作时记一下操作的行为，这样我们可以通过操作日志来进行数据恢复。因为操作日志是顺序追加的方式写的，所以不会出现操作日志也无法恢复的情况。这也类似于MongoDB开启了journaling日志的情况。&lt;/li&gt;
+&lt;li&gt;更保险的做法是数据库不进行老数据的修改，只是以追加方式去完成写操作，这样数据本身就是一份日志，这样就永远不会出现数据无法恢复的情况了。实际上CouchDB就是此做法的优秀范例。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;RDB快照&lt;/h2&gt;
+
+&lt;p&gt;下面我们说一下Redis的第一个持久化策略，RDB快照。Redis支持将当前数据的快照存成一个数据文件的持久化机制。而一个持续写入的数据库如何生成快照呢。Redis借助了fork命令的copy
+on
+write机制。在生成快照时，将当前进程fork出一个子进程，然后在子进程中循环所有的数据，将数据写成为RDB文件。&lt;/p&gt;
+
+&lt;p&gt;我们可以通过Redis的save指令来配置RDB快照生成的时机，比如你可以配置当10分钟以内有100次写入就生成快照，也可以配置当1小时内有1000次写入就生成快照，也可以多个规则一起实施。这些规则的定义就在Redis的配置文件中，你也可以通过Redis的CONFIG
+SET命令在Redis运行时设置规则，不需要重启Redis。&lt;/p&gt;
+
+&lt;p&gt;Redis的RDB文件不会坏掉，因为其写操作是在一个新进程中进行的，当生成一个新的RDB文件时，Redis生成的子进程会先将数据写到一个临时文件中，然后通过原子性rename系统调用将临时文件重命名为RDB文件，这样在任何时候出现故障，Redis的RDB文件都总是可用的。&lt;/p&gt;
+
+&lt;p&gt;同时，Redis的RDB文件也是Redis主从同步内部实现中的一环。&lt;/p&gt;
+
+&lt;p&gt;但是，我们可以很明显的看到，RDB有他的不足，就是一旦数据库出现问题，那么我们的RDB文件中保存的数据并不是全新的，从上次RDB文件生成到Redis停机这段时间的数据全部丢掉了。在某些业务下，这是可以忍受的，我们也推荐这些业务使用RDB的方式进行持久化，因为开启RDB的代价并不高。但是对于另外一些对数据安全性要求极高的应用，无法容忍数据丢失的应用，RDB就无能为力了，所以Redis引入了另一个重要的持久化机制：&lt;a href=&quot;http://blog.nosqlfan.com/tags/aof&quot; title=&quot;查看 AOF 的全部文章&quot;&gt;AOF&lt;/a&gt;日志。&lt;/p&gt;
+
+&lt;h2&gt;AOF日志&lt;/h2&gt;
+
+&lt;p&gt;aof日志的全称是append only
+file，从名字上我们就能看出来，它是一个追加写入的日志文件。与一般数据库的binlog不同的是，AOF文件是可识别的纯文本，它的内容就是一个个的Redis标准命令。比如我们进行如下实验，使用Redis2.6版本，在启动命令参数中设置开启aof功能：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./redis-server --appendonly yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们执行如下的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; set key1 Hello
+OK
+redis 127.0.0.1:6379&amp;gt; append key1 &quot; World!&quot;
+(integer) 12
+redis 127.0.0.1:6379&amp;gt; del key1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; del non_existing_key
+(integer) 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时我们查看AOF日志文件，就会得到如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat appendonly.aof
+*2
+$6
+SELECT
+$1
+0
+*3
+$3
+set
+$4
+key1
+$5
+Hello
+*3
+$6
+append
+$4
+key1
+$7
+ World!
+*2
+$3
+del
+$4
+key1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看到，写操作都生成了一条相应的命令作为日志。其中值得注意的是最后一个del命令，它并没有被记录在AOF日志中，这是因为Redis判断出这个命令不会对当前数据集做出修改。所以不需要记录这个无用的写命令。另外AOF日志也不是完全按客户端的请求来生成日志的，比如命令INCRBYFLOAT在记AOF日志时就被记成一条SET记录，因为浮点数操作可能在不同的系统上会不同，所以为了避免同一份日志在不同的系统上生成不同的数据集，所以这里只将操作后的结果通过SET来记录。&lt;/p&gt;
+
+&lt;h2&gt;AOF重写&lt;/h2&gt;
+
+&lt;p&gt;你可以会想，每一条写命令都生成一条日志，那么AOF文件是不是会很大？答案是肯定的，AOF文件会越来越大，所以Redis又提供了一个功能，叫做AOF
+rewrite。其功能就是重新生成一份AOF文件，新的AOF文件中一条记录的操作只会有一次，而不像一份老文件那样，可能记录了对同一个值的多次操作。其生成过程和RDB类似，也是fork一个进程，直接遍历数据，写入新的AOF临时文件。在写入新文件的过程中，所有的写操作日志还是会写到原来老的AOF文件中，同时还会记录在内存缓冲区中。当重完操作完成后，会将所有缓冲区中的日志一次性写入到临时文件中。然后调用原子性的rename命令用新的AOF文件取代老的AOF文件。&lt;/p&gt;
+
+&lt;p&gt;从上面的流程我们能够看到，RDB和AOF操作都是顺序IO操作，性能都很高。而同时在通过RDB文件或者AOF日志进行数据库恢复的时候，也是顺序的读取数据加载到内存中。所以也不会造成磁盘的随机读。&lt;/p&gt;
+
+&lt;h2&gt;AOF可靠性设置&lt;/h2&gt;
+
+&lt;p&gt;AOF是一个写文件操作，其目的是将操作日志写到磁盘上，所以它也同样会遇到我们上面说的写操作的5个流程。那么写AOF的操作安全性又有多高呢。实际上这是可以设置的，在Redis中对AOF调用write(2)写入后，何时再调用fsync将其写到磁盘上，通过&lt;a href=&quot;http://blog.nosqlfan.com/tags/appendfsync&quot; title=&quot;查看 appendfsync 的全部文章&quot;&gt;appendfsync&lt;/a&gt;选项来控制，下面appendfsync的三个设置项，安全强度逐渐变强。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;appendfsync no&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当设置appendfsync为no的时候，Redis不会主动调用fsync去将AOF日志内容同步到磁盘，所以这一切就完全依赖于操作系统的调试了。对大多数Linux操作系统，是每30秒进行一次fsync，将缓冲区中的数据写到磁盘上。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;appendfsync everysec&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当设置appendfsync为everysec的时候，Redis会默认每隔一秒进行一次fsync调用，将缓冲区中的数据写到磁盘。但是当这一次的fsync调用时长超过1秒时。Redis会采取延迟fsync的策略，再等一秒钟。也就是在两秒后再进行fsync，这一次的fsync就不管会执行多长时间都会进行。这时候由于在fsync时文件描述符会被阻塞，所以当前的写操作就会阻塞。&lt;/p&gt;
+
+&lt;p&gt;所以，结论就是，在绝大多数情况下，Redis会每隔一秒进行一次fsync。在最坏的情况下，两秒钟会进行一次fsync操作。&lt;/p&gt;
+
+&lt;p&gt;这一操作在大多数数据库系统中被称为group
+commit，就是组合多次写操作的数据，一次性将日志写到磁盘。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;appednfsync always&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当设置appendfsync为always时，每一次写操作都会调用一次fsync，这时数据是最安全的，当然，由于每次都会执行fsync，所以其性能也会受到影响。&lt;/p&gt;
+
+&lt;h2&gt;对于pipelining有什么不同&lt;/h2&gt;
+
+&lt;p&gt;对于pipelining的操作，其具体过程是客户端一次性发送N个命令，然后等待这N个命令的返回结果被一起返回。通过采用pipilining就意味着放弃了对每一个命令的返回值确认。由于在这种情况下，N个命令是在同一个执行过程中执行的。所以当设置appendfsync为everysec时，可能会有一些偏差，因为这N个命令可能执行时间超过1秒甚至2秒。但是可以保证的是，最长时间不会超过这N个命令的执行时间和。&lt;/p&gt;
+
+&lt;h2&gt;与postgreSQL和MySQL的比较&lt;/h2&gt;
+
+&lt;p&gt;这一块就不多说了，由于上面操作系统层面的数据安全已经讲了很多，所以其实不同的数据库在实现上都大同小异。总之最后的结论就是，在Redis开启AOF的情况下，其单机数据安全性并不比这些成熟的SQL数据库弱。&lt;/p&gt;
+
+&lt;h2&gt;数据导入&lt;/h2&gt;
+
+&lt;p&gt;这些持久化的数据有什么用，当然是用于重启后的数据恢复。Redis是一个内存数据库，无论是RDB还是AOF，都只是其保证数据恢复的措施。所以Redis在利用RDB和AOF进行恢复的时候，都会读取RDB或AOF文件，重新加载到内存中。相对于MySQL等数据库的启动时间来说，会长很多，因为MySQL本来是不需要将数据加载到内存中的。&lt;/p&gt;
+
+&lt;p&gt;但是相对来说，MySQL启动后提供服务时，其被访问的热数据也会慢慢加载到内存中，通常我们称之为预热，而在预热完成前，其性能都不会太高。而Redis的好处是一次性将数据加载到内存中，一次性预热。这样只要Redis启动完成，那么其提供服务的速度都是非常快的。&lt;/p&gt;
+
+&lt;p&gt;而在利用RDB和利用AOF启动上，其启动时间有一些差别。RDB的启动时间会更短，原因有两个，一是RDB文件中每一条数据只有一条记录，不会像AOF日志那样可能有一条数据的多次操作记录。所以每条数据只需要写一次就行了。另一个原因是RDB文件的存储格式和Redis数据在内存中的编码格式是一致的，不需要再进行数据编码工作。在CPU消耗上要远小于AOF日志的加载。&lt;/p&gt;
+
+&lt;p&gt;好了，大概内容就说到这里。更详细完整的版本请看Redis作者的博文：&lt;a href=&quot;http://antirez.com/post/redis-persistence-demystified.html&quot;&gt;Redis persistence demystified&lt;/a&gt;。本文如有描述不周之处，就大家指正。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>jQuery选择器大全</title>
    <link href="http://beango.github.com/archives/2012/06/07/jquery-selector.html"/>
    <updated>2012-06-07T00:00:00+08:00</updated>
@@ -5841,6 +5889,51 @@ tcrmgr restore -port 20000 192.168.0.100 /data/ttserver/ulog/00000010.ulog
  </entry>
  
  <entry>
+   <title>Memcached真的过时了吗？</title>
+   <link href="http://beango.github.com/archives/2012/03/12/is-memcached-a-dinosaur-in-comparison-to-redis.html"/>
+   <updated>2012-03-12T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/03/12/is-memcached-a-dinosaur-in-comparison-to-redis</id>
+   <content type="html">&lt;p&gt;这两年&lt;a href=&quot;http://blog.nosqlfan.com/tags/redis&quot; title=&quot;查看 Redis 的全部文章&quot;&gt;Redis&lt;/a&gt;火得可以，Redis也常常被当作&lt;a href=&quot;http://blog.nosqlfan.com/tags/memcached&quot; title=&quot;查看 Memcached 的全部文章&quot;&gt;Memcached&lt;/a&gt;的挑战者被提到桌面上来。关于Redis与Memcached的比较更是比比皆是。然而，Redis真的在功能、性能以及内存使用效率上都超越了Memcached吗？&lt;/p&gt;
+
+&lt;p&gt;下面内容来自Redis作者在stackoverflow上的一个回答，对应的问题是《&lt;a href=&quot;http://stackoverflow.com/questions/2873249/is-memcached-a-dinosaur-in-comparison-to-redis&quot;&gt;Is
+memcached a dinosaur in comparison to
+Redis?&lt;/a&gt;》（相比Redis，Memcached真的过时了吗？）&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You should not care too much about performances. Redis is faster per
+core with small values, but memcached is able to use multiple cores
+with a single executable and TCP port without help from the client.
+Also memcached is faster with big values in the order of 100k. Redis
+recently improved a lot about big values (unstable branch) but still
+memcached is faster in this use case. The point here is: nor one or
+the other will likely going to be your bottleneck for the
+query-per-second they can deliver.&lt;/li&gt;
+&lt;li&gt;没有必要过多的关心性能，因为二者的性能都已经足够高了。由于Redis只使用单核，而Memcached可以使用多核，所以在比较上，平均每一个核上Redis在存储小数据时比Memcached性能更高。而在100k以上的数据中，Memcached性能要高于Redis，虽然Redis最近也在存储大数据的性能上进行优化，但是比起Memcached，还是稍有逊色。说了这么多，结论是，无论你使用哪一个，每秒处理请求的次数都不会成为瓶颈。（比如瓶颈可能会在网卡）&lt;/li&gt;
+&lt;li&gt;You should care about memory usage. For simple key-value pairs
+memcached is more memory efficient. If you use Redis hashes, Redis
+is more memory efficient. Depends on the use case.&lt;/li&gt;
+&lt;li&gt;如果要说内存使用效率，使用简单的key-value存储的话，Memcached的内存利用率更高，而如果Redis采用hash结构来做key-value存储，由于其组合式的压缩，其内存利用率会高于Memcached。当然，这和你的应用场景和数据特性有关。&lt;/li&gt;
+&lt;li&gt;You should care about persistence and replication, two features only
+available in Redis. Even if your goal is to build a cache it helps
+that after an upgrade or a reboot your data are still there.&lt;/li&gt;
+&lt;li&gt;如果你对数据持久化和数据同步有所要求，那么推荐你选择Redis，因为这两个特性Memcached都不具备。即使你只是希望在升级或者重启系统后缓存数据不会丢失，选择Redis也是明智的。&lt;/li&gt;
+&lt;li&gt;You should care about the kind of operations you need. In Redis
+there are a lot of complex operations, even just considering the
+caching use case, you often can do a lot more in a single operation,
+without requiring data to be processed client side (a lot of I/O is
+sometimes needed). This operations are often as fast as plain GET
+and SET. So if you don’t need just GEt/SET but more complex things
+Redis can help a lot (think at timeline caching).&lt;/li&gt;
+&lt;li&gt;当然，最后还得说到你的具体应用需求。Redis相比Memcached来说，拥有更多的数据结构和并支持更丰富的数据操作，通常在Memcached里，你需要将数据拿到客户端来进行类似的修改再set回去。这大大增加了网络IO的次数和数据体积。在Redis中，这些复杂的操作通常和一般的GET/SET一样高效。所以，如果你需要缓存能够支持更复杂的结构和操作，那么Redis会是不错的选择。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;来源：&lt;a href=&quot;http://stackoverflow.com/questions/2873249/is-memcached-a-dinosaur-in-comparison-to-redis&quot;&gt;Is memcached a dinosaur in comparison to
+Redis?&lt;/a&gt;（其他人的回答同样值得一看）&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>前端必读：浏览器内部工作原理</title>
    <link href="http://beango.github.com/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html"/>
    <updated>2012-02-09T00:00:00+08:00</updated>
@@ -7103,6 +7196,237 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
  </entry>
  
  <entry>
+   <title>CentOS6.3下Redis安装</title>
+   <link href="http://beango.github.com/archives/2011/12/19/redis-install.html"/>
+   <updated>2011-12-19T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2011/12/19/redis-install</id>
+   <content type="html">&lt;ul&gt;
+&lt;li&gt;下载最新的稳定版redis&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget http://redis.googlecode.com/files/redis-2.6.7.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;安装&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar xzf  redis-2.6.7.tar.gz
+cd redis-2.6.7
+make PREFIX=/usr/local install
+cp src/redis-server /usr/bin/ 
+cp src/redis-cli /usr/bin/
+cp src/redis-check-aof /usr/bin/
+cp src/redis-check-dump /usr/bin/
+cp src/redis-benchmark /usr/bin/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;make命令执行完成后，会在src目录下生成5个可执行文件，分别是redis-server、redis-cli、redis-benchmark、redis-check-aof、redis-check-dump，它们的作用如下：
+redis-server：Redis服务器的daemon启动程序
+redis-cli：Redis命令行操作工具。当然，你也可以用telnet根据其纯文本协议来操作
+redis-benchmark：Redis性能测试工具，测试Redis在你的系统及你的配置下的读写性能
+redis-check-aof：更新日志检查
+redis-check-dump：用于本地数据库检查&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;编写redis配置文件&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir -p /etc/redis/
+cp redis.conf /etc/redis/redis.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;启动&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis-server /etc/redis/redis.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;测试&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis-cli
+redis 127.0.0.1:6379&amp;gt;set myKey  myValue
+OK
+redis 127.0.0.1:6379&amp;gt; get myKey
+&quot;myValue&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;redis.conf 配置参数：&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;#&quot; onclick=&quot;javascript:toggle(this);&quot; class=&quot;linkcodetoggle&quot;&gt;+ 点击展开&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#是否作为守护进程运行
+daemonize yes
+
+#如以后台进程运行，则需指定一个pid，默认为/var/run/redis.pid
+pidfile redis.pid
+
+#绑定主机IP，默认值为127.0.0.1
+#bind 127.0.0.1
+
+#Redis默认监听端口
+port 6379
+
+#客户端闲置多少秒后，断开连接，默认为300（秒）
+timeout 300
+
+#日志记录等级，有4个可选值，debug，verbose（默认值），notice，warning
+loglevel verbose
+
+#指定日志输出的文件名，默认值为stdout，也可设为/dev/null屏蔽日志
+logfile stdout
+
+#可用数据库数，默认值为16，默认数据库为0
+databases 16
+
+#保存数据到disk的策略
+#当有一条Keys数据被改变是，900秒刷新到disk一次
+save 900 1
+
+#当有10条Keys数据被改变时，300秒刷新到disk一次
+save 300 10
+
+#当有1w条keys数据被改变时，60秒刷新到disk一次
+save 60 10000
+
+#当dump .rdb数据库的时候是否压缩数据对象
+rdbcompression yes
+
+#本地数据库文件名，默认值为dump.rdb
+dbfilename dump.rdb
+
+#本地数据库存放路径，默认值为 ./
+dir /var/lib/redis/
+
+########### Replication #####################
+
+#Redis的复制配置
+# slaveof &amp;lt;masterip&amp;gt; &amp;lt;masterport&amp;gt; 当本机为从服务时，设置主服务的IP及端口
+# masterauth &amp;lt;master-password&amp;gt; 当本机为从服务时，设置主服务的连接密码
+
+#连接密码
+# requirepass foobared
+
+#最大客户端连接数，默认不限制
+# maxclients 128
+
+#最大内存使用设置，达到最大内存设置后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理后，任到达最大内存设置，将无法再进行写入操作。
+# maxmemory &amp;lt;bytes&amp;gt;
+
+#是否在每次更新操作后进行日志记录，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认值为no
+appendonly no
+
+#更新日志文件名，默认值为appendonly.aof
+#appendfilename
+
+#更新日志条件，共有3个可选值。no表示等操作系统进行数据缓存同步到磁盘，always表示每次更新操作后手动调用fsync()将数据写到磁盘，everysec表示每秒同步一次（默认值）。
+# appendfsync always
+
+appendfsync everysec
+
+# appendfsync no
+
+################ VIRTUAL MEMORY ###########
+
+#是否开启VM功能，默认值为no
+vm-enabled no
+# vm-enabled yes
+
+#虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享
+vm-swap-file /tmp/redis.swap
+
+#将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的 (Redis的索引数据就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0。
+vm-max-memory 0
+vm-page-size 32
+vm-pages 134217728
+vm-max-threads 4
+
+############# ADVANCED CONFIG ###############
+
+glueoutputbuf yes
+hash-max-zipmap-entries 64
+hash-max-zipmap-value 512
+
+#是否重置Hash表
+activerehashing yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意：Redis官方文档对VM的使用提出了一些建议:&lt;/p&gt;
+
+&lt;p&gt;当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.
+当你的key不小时,可以考虑使用一些非常方法将很大的key变成很大的value,比如你可以考虑将key,value组合成一个新的value.
+最好使用linux ext3 等对稀疏文件支持比较好的文件系统保存你的swap文件.
+vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数.如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;常见错误-zmalloc.h:51:31: error: jemalloc/jemalloc.h: No such file or directory&lt;br/&gt;
+检查是否安装gcc，如果已经安装，先执行make distclean再make&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;python操作redis&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;#&quot; onclick=&quot;javascript:toggle(this);&quot;&gt;+ 点击展开&lt;/a&gt;&lt;/p&gt;
+
+&lt;div style=&quot;display:none;&quot;&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;wget&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pypi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/packages/so&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;urce&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/r/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.7.2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#tar xvzf redis-py-2.7.2.tar.gz&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;python&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;#打开Python解释器：&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Redis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;6379&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#或者写成 r[&amp;#39;foo&amp;#39;] = &amp;#39;bar&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
+&lt;span class=&quot;s&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#库里有多少key，多少条数据&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;OK!&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#强行把数据库保存到硬盘。保存时阻塞&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;--------------------------------&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flushdb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;#删除当前数据库的所有数据&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;chang&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# 因为是Noen对象，什么也不显示！&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;__class__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__delattr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__doc__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__format__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__getattribute__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__hash__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__init__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__new__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__reduce__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__reduce_ex__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__repr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__setattr__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__sizeof__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__str__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;__subclasshook__&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;chang&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;#看是否存在这个键值&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 列出所有键值。（这时候已经存了4个了）&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;aaa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;bbb&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;key1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
    <title>利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统</title>
    <link href="http://beango.github.com/archives/2011/12/03/tokyotyrant-memcached-keyvalue-system.html"/>
    <updated>2011-12-03T00:00:00+08:00</updated>
@@ -7224,6 +7548,591 @@ ttserver -host 192.168.1.92 -port 11211 -thnum 8 -dmn -pid /ttserver/ttserver.pi
 
 &lt;pre&gt;&lt;code&gt;curl -X DELETE http://127.0.0.1:11211/key
 &lt;/code&gt;&lt;/pre&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Redis系统性介绍</title>
+   <link href="http://beango.github.com/archives/2011/11/20/exploring-redis.html"/>
+   <updated>2011-11-20T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2011/11/20/exploring-redis</id>
+   <content type="html">&lt;p&gt;虽然&lt;a href=&quot;http://blog.nosqlfan.com/tags/redis&quot; title=&quot;查看 Redis 的全部文章&quot;&gt;Redis&lt;/a&gt;已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。&lt;/p&gt;
+
+&lt;h3&gt;1.介绍&lt;/h3&gt;
+
+&lt;h4&gt;1.1 Redis是什么&lt;/h4&gt;
+
+&lt;p&gt;&lt;strong&gt;RE&lt;/strong&gt;mote &lt;strong&gt;DI&lt;/strong&gt;ctionary &lt;strong&gt;S&lt;/strong&gt;erver(Redis) 是一个由Salvatore
+Sanfilippo写的key-value存储系统。Redis提供了一些丰富的数据结构，包括 lists,
+sets, ordered sets 以及 hashes
+，当然还有和Memcached一样的 strings结构.Redis当然还包括了对这些数据结构的丰富操作。&lt;/p&gt;
+
+&lt;h4&gt;1.2 Redis的优点&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;性能极高 – Redis能支持超过 100K+ 每秒的读写频率。&lt;/li&gt;
+&lt;li&gt;丰富的数据类型 – Redis支持二进制案例的 Strings, Lists, Hashes, Sets
+及 Ordered Sets 数据类型操作。&lt;/li&gt;
+&lt;li&gt;原子 –
+Redis的所有操作都是原子性的，同时Redis还支持对几个操作全并后的原子性执行。&lt;/li&gt;
+&lt;li&gt;丰富的特性 – Redis还支持 publish/subscribe, 通知, key 过期等等特性。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;2.数据类型&lt;/h3&gt;
+
+&lt;h4&gt;2.1 String类型&lt;/h4&gt;
+
+&lt;p&gt;Redis能存储二进制安全的字符串，最大长度为1GB&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; GET name
+&quot;John Doe&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;String类型还支持批量的读写操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; MSET age 30 sex &quot;male&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; MGET age sex
+1) &quot;30&quot;
+2) &quot;male&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;String类型其实也可以用来存储数字，并支持对数字的加减操作。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; INCR age
+(integer) 31
+redis 127.0.0.1:6379&amp;gt; INCRBY age 4
+(integer) 35
+redis 127.0.0.1:6379&amp;gt; GET age
+&quot;35&quot;
+redis 127.0.0.1:6379&amp;gt; DECR age
+(integer) 34
+redis 127.0.0.1:6379&amp;gt; DECRBY age 4
+(integer) 30
+redis 127.0.0.1:6379&amp;gt; GET age
+&quot;30&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;String类型还支持对其部分的修改和获取操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; APPEND name &quot; Mr.&quot;
+(integer) 12
+redis 127.0.0.1:6379&amp;gt; GET name
+&quot;John Doe Mr.&quot;
+redis 127.0.0.1:6379&amp;gt; STRLEN name
+(integer) 12
+redis 127.0.0.1:6379&amp;gt; SUBSTR name 0 3
+&quot;John&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2.2 List类型&lt;/h4&gt;
+
+&lt;p&gt;Redis能够将数据存储成一个链表，并能对这个链表进行丰富的操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; LPUSH students &quot;John Doe&quot;
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; LPUSH students &quot;Captain Kirk&quot;
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; LPUSH students &quot;Sheldon Cooper&quot;
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; LLEN students
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 2
+1) &quot;Sheldon Cooper&quot;
+2) &quot;Captain Kirk&quot;
+3) &quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; LPOP students
+&quot;Sheldon Cooper&quot;
+redis 127.0.0.1:6379&amp;gt; LLEN students
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 1
+1) &quot;Captain Kirk&quot;
+2) &quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; LREM students 1 &quot;John Doe&quot;
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; LLEN students
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 0
+1) &quot;Captain Kirk&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Redis也支持很多修改操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; LINSERT students BEFORE &quot;Captain Kirk&quot; &quot;Dexter Morgan&quot;
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 2
+1) &quot;Dexter Morgan&quot;
+2) &quot;Captain Kirk&quot;
+3) &quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; LPUSH students &quot;Peter Parker&quot;
+(integer) 4
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 3
+1) &quot;Peter Parker&quot;
+2) &quot;Dexter Morgan&quot;
+3) &quot;Captain Kirk&quot;
+4) &quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; LTRIM students 1 3
+OK
+redis 127.0.0.1:6379&amp;gt; LLEN students
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 2
+1) &quot;Dexter Morgan&quot;
+2) &quot;Captain Kirk&quot;
+3) &quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; LREM students 1 &quot;John Doe&quot;
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; LLEN students
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; LRANGE students 0 1
+1) &quot;Captain Kirk&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2.3 集合（Sets）类型&lt;/h4&gt;
+
+&lt;p&gt;Redis能够将一系列不重复的值存储成一个集合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SADD birds crow
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SADD birds pigeon
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SADD birds bat
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SADD mammals dog
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SADD mammals cat
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SADD mammals bat
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SMEMBERS birds
+1) &quot;bat&quot;
+2) &quot;crow&quot;
+3) &quot;pigeon&quot;
+redis 127.0.0.1:6379&amp;gt; SMEMBERS mammals
+1) &quot;bat&quot;
+2) &quot;cat&quot;
+3) &quot;dog&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sets结构也支持相应的修改操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SREM mammals cat
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SMEMBERS mammals
+1) &quot;bat&quot;
+2) &quot;dog&quot;
+redis 127.0.0.1:6379&amp;gt; SADD mammals human
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SMEMBERS mammals
+1) &quot;bat&quot;
+2) &quot;human&quot;
+3) &quot;dog&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Redis还支持对集合的子交并补等操作&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SINTER birds mammals
+1) &quot;bat&quot;
+redis 127.0.0.1:6379&amp;gt; SUNION birds mammals
+1) &quot;crow&quot;
+2) &quot;bat&quot;
+3) &quot;human&quot;
+4) &quot;pigeon&quot;
+5) &quot;dog&quot;
+redis 127.0.0.1:6379&amp;gt; SDIFF birds mammals
+1) &quot;crow&quot;
+2) &quot;pigeon&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2.4 有序集合（Sorted Sets）类型&lt;/h4&gt;
+
+&lt;p&gt;Sorted Sets和Sets结构相似，不同的是存在Sorted
+Sets中的数据会有一个score属性，并会在写入时就按这个score排好序。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; ZADD days 0 mon
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 1 tue
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 2 wed
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 3 thu
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 4 fri
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 5 sat
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZADD days 6 sun
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; ZCARD days
+(integer) 7
+redis 127.0.0.1:6379&amp;gt; ZRANGE days 0 6
+1) &quot;mon&quot;
+2) &quot;tue&quot;
+3) &quot;wed&quot;
+4) &quot;thu&quot;
+5) &quot;fri&quot;
+6) &quot;sat&quot;
+7) &quot;sun&quot;
+redis 127.0.0.1:6379&amp;gt; ZSCORE days sat
+&quot;5&quot;
+redis 127.0.0.1:6379&amp;gt; ZCOUNT days 3 6
+(integer) 4
+redis 127.0.0.1:6379&amp;gt; ZRANGEBYSCORE days 3 6
+1) &quot;thu&quot;
+2) &quot;fri&quot;
+3) &quot;sat&quot;
+4) &quot;sun&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;2.5 Hash类型&lt;/h4&gt;
+
+&lt;p&gt;Redis能够存储key对多个属性的数据（比如user1.uname user1.passwd）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; HKEYS student
+1) &quot;name&quot;
+2) &quot;age&quot;
+3) &quot;sex&quot;
+redis 127.0.0.1:6379&amp;gt; HVALS student
+1) &quot;Ganesh&quot;
+2) &quot;30&quot;
+3) &quot;Male&quot;
+redis 127.0.0.1:6379&amp;gt; HGETALL student
+1) &quot;name&quot;
+2) &quot;Ganesh&quot;
+3) &quot;age&quot;
+4) &quot;30&quot;
+5) &quot;sex&quot;
+6) &quot;Male&quot;
+redis 127.0.0.1:6379&amp;gt; HDEL student sex
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; HGETALL student
+1) &quot;name&quot;
+2) &quot;Ganesh&quot;
+3) &quot;age&quot;
+4) &quot;30&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hash数据结构能够批量修改和获取&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; HMSET kid name Akshi age 2 sex Female
+OK
+redis 127.0.0.1:6379&amp;gt; HMGET kid name age sex
+1) &quot;Akshi&quot;
+2) &quot;2&quot;
+3) &quot;Female&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;3.Publish/Subscribe&lt;/h3&gt;
+
+&lt;p&gt;Redis支持这样一种特性，你可以将数据推到某个信息管道中，然后其它人可以通过订阅这些管道来获取推送过来的信息。&lt;/p&gt;
+
+&lt;h4&gt;3.1 订阅信息管道&lt;/h4&gt;
+
+&lt;p&gt;用一个客户端订阅管道&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SUBSCRIBE channelone
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;channelone&quot;
+3) (integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;另一个客户端往这个管道推送信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PUBLISH channelone hello
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; PUBLISH channelone world
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后第一个客户端就能获取到推送的信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SUBSCRIBE channelone
+Reading messages... (press Ctrl-C to quit)
+1) &quot;subscribe&quot;
+2) &quot;channelone&quot;
+3) (integer) 1
+1) &quot;message&quot;
+2) &quot;channelone&quot;
+3) &quot;hello&quot;
+1) &quot;message&quot;
+2) &quot;channelone&quot;
+3) &quot;world&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;3.2 按一定模式批量订阅&lt;/h4&gt;
+
+&lt;p&gt;用下面的命令订阅所有channel开头的信息通道&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PSUBSCRIBE channel*
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;channel*&quot;
+3) (integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在另一个客户端对两个推送信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PUBLISH channelone hello
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; PUBLISH channeltwo world
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后在第一个客户端就能收到推送的信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PSUBSCRIBE channel*
+Reading messages... (press Ctrl-C to quit)
+1) &quot;psubscribe&quot;
+2) &quot;channel*&quot;
+3) (integer) 1
+1) &quot;pmessage&quot;
+2) &quot;channel*&quot;
+3) &quot;channelone&quot;
+4) &quot;hello&quot;
+1) &quot;pmessage&quot;
+2) &quot;channel*&quot;
+3) &quot;channeltwo&quot;
+4) &quot;world&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;4.数据过期设置&lt;/h3&gt;
+
+&lt;p&gt;Redis支持按key设置过期时间，过期后值将被删除（在客户端看来是补删除了的）&lt;/p&gt;
+
+&lt;p&gt;用TTL命令可以获取某个key值的过期时间（-1表示永不过期）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; TTL name
+(integer) -1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面命令先用EXISTS命令查看key值是否存在，然后设置了5秒的过期时间&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; EXISTS name
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; EXPIRE name 5
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5秒后再查看&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; EXISTS name
+(integer) 0
+redis 127.0.0.1:6379&amp;gt; GET name
+(nil)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个值已经没有了。&lt;/p&gt;
+
+&lt;p&gt;上在是直接设置多少秒后过期，你也可以设置在某个时间点过期，下面例子是设置2011-09-24
+00:40:00过期。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; EXPIREAT name 1316805000
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; EXISTS name
+(integer) 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;5.事务性&lt;/h3&gt;
+
+&lt;p&gt;Redis本身支持一些简单的组合型的命令，比如以NX结尾命令都是判断在这个值没有时才进行某个命令。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; SETNX name &quot;Dexter Morgan&quot;
+(integer) 0
+redis 127.0.0.1:6379&amp;gt; GET name
+&quot;John Doe&quot;
+
+redis 127.0.0.1:6379&amp;gt; GETSET name &quot;Dexter Morgan&quot;
+&quot;John Doe&quot;
+redis 127.0.0.1:6379&amp;gt; GET name
+&quot;Dexter Morgan&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然，Redis还支持自定义的命令组合，通过MULTI和EXEC，将几个命令组合起来执行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET counter 0
+OK
+redis 127.0.0.1:6379&amp;gt; MULTI
+OK
+redis 127.0.0.1:6379&amp;gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; INCR counter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; EXEC
+1) (integer) 1
+2) (integer) 2
+3) (integer) 3
+redis 127.0.0.1:6379&amp;gt; GET counter
+&quot;3&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;你还可以用DICARD命令来中断执行中的命令序列&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET newcounter 0
+OK
+redis 127.0.0.1:6379&amp;gt; MULTI
+OK
+redis 127.0.0.1:6379&amp;gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; INCR newcounter
+QUEUED
+redis 127.0.0.1:6379&amp;gt; DISCARD
+OK
+redis 127.0.0.1:6379&amp;gt; GET newcounter
+&quot;0&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;6.持久化&lt;/h3&gt;
+
+&lt;p&gt;Redis的所有数据都存储在内存中，但是他也提供对这些数据的持久化。&lt;/p&gt;
+
+&lt;h4&gt;6.1 数据快照&lt;/h4&gt;
+
+&lt;p&gt;数据快照的原理是将整个Redis中存的所有数据遍历一遍存到一个扩展名为rdb的数据文件中。通过SAVE命令可以调用这个过程。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; SAVE
+OK
+redis 127.0.0.1:6379&amp;gt; SET name &quot;Sheldon Cooper&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; BGSAVE
+Background saving started
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果你是使用的brew在Mac OSX上安全的Redis，那么rdb文件会存在如下路径&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/var/db/redis/dump.rdb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;6.2 Append-Only File（追加式的操作日志记录）&lt;/h4&gt;
+
+&lt;p&gt;Redis还支持一种追加式的操作日志记录，叫append only
+file，其日志文件以aof结局，我们一般各为aof文件。要开启aof日志的记录，你需要在配置文件中进行如下设置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;appendonly yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时候你所有的操作都会记录在aof日志文件中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; GET name
+(nil)
+redis 127.0.0.1:6379&amp;gt; SET name &quot;Ganesh Gunasegaran&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; EXIT
+
+→ cat /usr/local/var/db/redis/appendonly.aof
+*2
+$6
+SELECT
+$1
+0
+*3
+$3
+SET
+$4
+name
+$18
+Ganesh Gunasegaran
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;7.管理命令&lt;/h3&gt;
+
+&lt;p&gt;Redis支持多个DB，默认是16个，你可以设置将数据存在哪一个DB中，不同DB间的数据具有隔离性。也可以在多个DB间移动数据。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SELECT 0
+OK
+redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&amp;gt; GET name
+(nil)
+redis 127.0.0.1:6379[1]&amp;gt; SELECT 0
+OK
+redis 127.0.0.1:6379&amp;gt; MOVE name 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&amp;gt; GET name
+&quot;John Doe&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Redis还能进行一些如下操作，获取一些运行信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379[1]&amp;gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&amp;gt; INFO
+redis_version:2.2.13
+redis_git_sha1:00000000
+redis_git_dirty:0
+arch_bits:64
+multiplexing_api:kqueue
+......
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Redis还支持对某个DB数据进行清除（当然清空所有数据的操作也是支持的）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SET name &quot;John Doe&quot;
+OK
+redis 127.0.0.1:6379&amp;gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&amp;gt; SET name &quot;Sheldon Cooper&quot;
+OK
+redis 127.0.0.1:6379[1]&amp;gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&amp;gt; SELECT 0
+OK
+redis 127.0.0.1:6379&amp;gt; FLUSHDB
+OK
+redis 127.0.0.1:6379&amp;gt; DBSIZE
+(integer) 0
+redis 127.0.0.1:6379&amp;gt; SELECT 1
+OK
+redis 127.0.0.1:6379[1]&amp;gt; DBSIZE
+(integer) 1
+redis 127.0.0.1:6379[1]&amp;gt; FLUSHALL
+OK
+redis 127.0.0.1:6379[1]&amp;gt; DBSIZE
+(integer) 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;8.客户端&lt;/h3&gt;
+
+&lt;p&gt;Redis的客户端很丰富，几乎所有流行的语言都有其客户端，这里就不再赘述，有兴趣的同学可以上Redis的&lt;a href=&quot;http://redis.io/clients&quot;&gt;Clients页面&lt;/a&gt;去查找。&lt;/p&gt;
+
+&lt;h3&gt;9.资料引用&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://redis.io/documentation&quot;&gt;Redis documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://simonwillison.net/static/2010/redis-tutorial/&quot;&gt;Simon Willison – Redis
+tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://blog.mjrusso.com/2010/10/17/redis-from-the-ground-up.html&quot;&gt;Michael J. Russo – Redis from ground
+up&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;10.总结&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2011-11/12pXcY.png&quot; title=&quot;Redis overview&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;来源：&lt;a href=&quot;http://itsgg.com/2011/09/24/exploring-redis/&quot;&gt;itsgg.com&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  

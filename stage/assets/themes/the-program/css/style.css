@@ -687,11 +687,11 @@ pre {
 .unit-article dl {
   padding-left: 0;
 }
-.unit-article ul {
-  list-style: square;
-}
 .unit-article ol {
   list-style: decimal;
+}
+.unit-article ul li {
+  margin-left: 1.2em;
 }
 .unit-article li h1,
 .unit-article dt h1,
@@ -894,7 +894,6 @@ pre {
   border: 0;
 }
 .the-footer ul {
-  list-style: square;
   padding-left: 1em;
 }
 .the-footer address {
@@ -1196,7 +1195,6 @@ pre .gs {
 /* Generic.Strong */
 pre .gu {
   color: #ffffff;
-  text-decoration: underline;
 }
 /* Generic.Subheading */
 pre .gt {
@@ -1282,7 +1280,6 @@ pre .nl {
 /* Name.Label */
 pre .nn {
   color: #447fcf;
-  text-decoration: underline;
 }
 /* Name.Namespace */
 pre .nx {

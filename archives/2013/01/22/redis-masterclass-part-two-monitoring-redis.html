@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Redis监控技巧</title>
+	<meta name="author" content="Huang Ding">
+	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script src='/assets/default.js'></script>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">Huang Ding</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Redis监控技巧</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>本文来自 <a href="https://bugsnag.com/">Bugsnag</a> 的联合创始人 <a href="https://twitter.com/snmaynard/">Simon Maynard</a> 的系列文章，作者根据几年来对
+<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>的使用经历，对 Redis<a href="http://blog.nosqlfan.com/tags/%e7%9b%91%e6%8e%a7" title="查看 监控 的全部文章">监控</a>方法进行了系统性的总结，干货很多，值得一看。</p>
+
+<p>原文链接：<a href="http://snmaynard.com/2013/01/22/redis-masterclass-part-two-monitoring-redis/">Redis Masterclass – Part 2, Monitoring</a></p>
+
+<p>Redis 监控最直接的方法当然就是使用系统提供的 info
+命令来做了，你只需要执行下面一条命令，就能获得 Redis 系统的状态报告。</p>
+
+<pre><code>redis-cli info
+</code></pre>
+
+<h2>内存使用</h2>
+
+<p>如果 Redis 使用的内存超出了可用的物理内存大小，那么 Redis 很可能系统会被
+<a href="http://linux-mm.org/OOM_Killer">OOM Killer</a> 杀掉。针对这一点，你可以通过
+info 命令对 <em>used_memory</em> 和 <em>used_memory_peak</em>
+进行监控，为使用内存量设定阈值，并设定相应的报警机制。当然，报警只是手段，重要的是你得预先计划好，当内存使用量过大后，你应该做些什么，是清除一些没用的冷数据，还是把
+Redis 迁移到更强大的机器上去。</p>
+
+<h2>持久化</h2>
+
+<p>如果因为你的机器或 Redis 本身的问题导致 Redis
+崩溃了，那么你唯一的救命稻草可能就是 dump 出来的 rdb文件了，所以，对 Redis
+dump 文件进行监控也是很重要的。你可以通过对 <em>rdb_last_save_time</em>
+进行监控，了解你最近一次 dump 数据操作的时间，还可以通过对
+<em>rdb_changes_since_last_save</em>
+进行监控来知道如果这时候出现故障，你会丢失多少数据。</p>
+
+<h2>主从复制</h2>
+
+<p>如果你设置了主从复制模式，那么你最好对复制的情况是否正常做一些监控，主要是对
+info 输出中的 <em>master_link_status</em> 进行监控，如果这个值是
+up，那么说明同步正常，如果是
+down，那么你就要注意一下输出的其它一些诊断信息了。比如下面这些：</p>
+
+<pre><code>role:slave
+master_host:192.168.1.128
+master_port:6379
+master_link_status:down
+master_last_io_seconds_ago:-1
+master_sync_in_progress:0
+master_link_down_since_seconds:1356900595
+</code></pre>
+
+<h2>Fork 性能</h2>
+
+<p>当 Redis 持久化数据到磁盘上时，它会进行一次 fork 操作，通过 fork 对内存的
+copy on write 机制最廉价的实现内存镜像。但是虽然内存是 copy on write
+的，但是虚拟内存表是在 fork 的瞬间就需要分配，所以 fork
+会造成主线程短时间的卡顿（停止所有读写操作），这个卡顿时间和当前 Redis
+的内存使用量有关。通常 GB 量级的 Redis 进行 fork
+操作的时间在毫秒级。你可以通过对 info 输出的 <em>latest_fork_usec</em>
+进行监控来了解最近一次 fork 操作导致了多少时间的卡顿。</p>
+
+<h2>配置一致</h2>
+
+<p>Redis 支持使用 <a href="http://redis.io/commands/config-set">CONFIG SET</a>操作来实现运行实的配置修改，这很方便，但同时也会导致一个问题。就是通过这个命令动态修改的配置，是不会同步到你的配置文件中去的。所以当你因为某些原因重启Redis 时，你使用 CONFIG SET做的配置修改就会丢失掉，所以我们最好保证在每次使用 CONFIG SET修改配置时，也把配置文件一起相应地改掉。为了防止人为的失误，所以我们最好对配置进行监控，使用<a href="http://redis.io/commands/config-get">CONFIG GET</a>命令来获取当前运行时的配置，并与 redis.conf中的配置值进行对比，如果发现两边对不上，就启动报警。</p>
+
+<h2>慢日志</h2>
+
+<p>Redis 提供了 <a href="http://redis.io/commands/slowlog">SLOWLOG</a>指令来获取最近的慢日志，Redis的慢日志是直接存在内存中的，所以它的慢日志开销并不大，在实际应用中，我们通过crontab 任务执行 SLOWLOG 命令来获取慢日志，然后将慢日志存到文件中，并用<a href="http://kibana.org/">Kibana</a> 生成实时的性能图表来实现性能监控。</p>
+
+<p>值得一提的是，Redis 的慢日志记录的时间，仅仅包括 Redis自身对一条命令的执行时间，不包括 IO 的时间，比如接收客户端数据和发送客户端数据这些时间。另外，Redis的慢日志和其它数据库的慢日志有一点不同，其它数据库偶尔出现 100ms的慢日志可能都比较正常，因为一般数据库都是多线程并发执行，某个线程执行某个命令的性能可能并不能代表整体性能，但是对Redis来说，它是单线程的，一旦出现慢日志，可能就需要马上得到重视，最好去查一下具体是什么原因了。</p>
+
+<h2>监控服务</h2>
+
+<p><strong>-Sentinel</strong></p>
+
+<p><a href="http://redis.io/topics/sentinel">Sentinel</a> 是 Redis 自带的工具，它可以对Redis主从复制进行监控，并实现主挂掉之后的自动故障转移。在转移的过程中，它还可以被配置去执行一个用户自定义的脚本，在脚本中我们就能够实现报警通知等功能。</p>
+
+<p><strong>-Redis Live</strong></p>
+
+<p><a href="http://www.nkrode.com/article/real-time-dashboard-for-redis">Redis Live</a>
+是一个更通用的 Redis 监控方案，它的原理是定时在 Redis 上执行<a href="http://redis.io/commands/monitor">MONITOR</a> 命令，来获取当前 Redis 当前正在执行的命令，并通过统计分析，生成web页面的可视化分析报表。</p>
+
+<p><strong>-Redis Faina</strong></p>
+
+<p><a href="http://instagram-engineering.tumblr.com/post/23132009381/redis-faina-a-query-analysis-tool-for-redis">Redis Faina</a>
+是由著名的图片分享应用 instagram 开发的 Redis 监控服务，其原理和 Redis Live 类似，都是对通过<a href="http://blog.nosqlfan.com/tags/monitor" title="查看 MONITOR 的全部文章">MONITOR</a>来做的。</p>
+
+<h2>数据分布</h2>
+
+<p>弄清 Redis 中数据存储分布是一件很难的是，比如你想知道哪类型的 key
+值占用内存最多。下面是一些工具，可以帮助你对 Redis 的数据集进行分析。</p>
+
+<p><strong>-Redis-sampler</strong></p>
+
+<p><a href="https://github.com/antirez/redis-sampler">Redis-sampler</a> 是 Redis作者开发的工具，它通过采样的方法，能够让你了解到当前 Redis 中的数据的大致类型，数据及分布状况。</p>
+
+<p><strong>-Redis-audit</strong></p>
+
+<p><a href="https://github.com/snmaynard/redis-audit">Redis-audit</a>
+是一个脚本，通过它，我们可以知道每一类 key
+对内存的使用量。它可以提供的数据有：某一类 key
+值的访问频率如何，有多少值设置了过期时间，某一类 key
+值使用内存的大小，这很方便让我们能排查哪些 key 不常用或者压根不用。</p>
+
+<p><strong>-Redis-rdb-tools</strong></p>
+
+<p><a href="https://github.com/sripathikrishnan/redis-rdb-tools">Redis-rdb-tools</a>
+跟 Redis-audit 功能类似，不同的是它是通过对 rdb
+文件进行分析来取得统计数据的。</p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2013-01-22" datetime="2013-01-22" pubdate>
+							<span class="year">2013-01-22</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#NoSql-ref">
+    		NoSql <span>15</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Redis监控-ref">Redis监控 <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/4166.html" target="_blank">http://blog.nosqlfan.com/html/4166.html</a></li>
+							
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="beango" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/beango" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/archives/2013/01/12/bson-and-data-interchange.html" title="View BSON特性探讨及基于其特性的MongoDB优化">&laquo; BSON特性探讨及基于其特性的MongoDB优化</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/archives/2013/02/18/booting.html" title="View 计算机是如何启动的？">计算机是如何启动的？ &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Huang Ding</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#企业架构-ref">企业架构 （7）</a></li>
+					 
+					  <li><a href="/category.html#asp.net-ref">asp.net （1）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （3）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （12）</a></li>
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （10）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （4）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （15）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#其他-ref">其他 （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/21/the-reality-of-developers-life.html" title="">程序猿的真实生活(GIF)</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/18/booting.html" title="">计算机是如何启动的？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html" title="">Redis监控技巧</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/12/bson-and-data-interchange.html" title="">BSON特性探讨及基于其特性的MongoDB优化</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html" title="">编写高效的JavaScript程序</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="">趣解HTTP状态码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html" title="">Mongodb安全性初探</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/15/http-protocol-proxy.html" title="">HTTP协议之代理</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/04/cache-algorithm.html" title="">缓存、缓存算法和缓存框架简介</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2012/12/03/mongodb-cluster.html" title="">MongoDB 集群</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-02">2013-02 （2）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （5）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （3）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （1）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （1）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （4）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （4）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （1）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （2）</a></li><li><a href="/archive.html#arch-2011-11">2011-11 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#培养气质-ref">培养气质 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached参数-ref">memcached参数 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown语法说明-ref">Markdown语法说明 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB构架图-ref">MongoDB构架图 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB运行状态、性能监控，分析-ref">MongoDB运行状态、性能监控，分析 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#浏览器内部工作原理-ref">浏览器内部工作原理 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr使用-ref">tcrmgr使用 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB最佳实践-ref">MongoDB最佳实践 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis请求-ref">iis请求 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB索引-ref">MongoDB索引 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery选择器-ref">jQuery选择器 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis持久化-ref">Redis持久化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建个人博客-ref">Jekyll搭建个人博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll搭建博客-ref">Jekyll搭建博客 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq集群-ref">rabbitmq集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB 集群-ref">MongoDB 集群 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存、缓存算法和缓存框架简介-ref">缓存、缓存算法和缓存框架简介 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb安全性初探-ref">Mongodb安全性初探 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高效-ref">高效 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#BSON特性探讨及基于其特性的MongoDB优化-ref">BSON特性探讨及基于其特性的MongoDB优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis监控-ref">Redis监控 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机启动-ref">计算机启动 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序猿的真实生活(GIF)-ref">程序猿的真实生活(GIF) <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+  
+</body>
+</html>
+
