@@ -15,7 +15,8 @@ redirecturl: http://tech.lezi.com/archives/290
 mongostat详解
 -------------
 
-[![mongostat]({{ site.JB.FILE_PATH }}/2011-10/mongod_stat-300x46.png "mongod_stat")]({{ site.JB.FILE_PATH }}/2011-10/mongod_stat.png)mongostat是mongdb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。
+<img src="{{ site.JB.FILE_PATH }}/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;">
+mongostat是mongdb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。
 
 它的输出有以下几列：
 
@@ -39,11 +40,10 @@ mongostat详解
 使用profiler
 -------------
 
-[![Mongo
-profile]({{ site.JB.FILE_PATH }}/2011-10/mongo_profile-300x131.png "mongo_profile")]({{ site.JB.FILE_PATH }}/2011-10/mongo_profile.png)类似于MySQL的slow
-log, MongoDB可以监控所有慢的以及不慢的查询。
+类似于MySQL的slow log, MongoDB可以监控所有慢的以及不慢的查询。
 
 Profiler默认是关闭的，你可以选择全部开启，或者有慢查询的时候开启。
+
 
     > use test
     switched to db test

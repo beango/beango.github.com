@@ -68,29 +68,20 @@ reader然后对文件的内容视作一个字符串来处理，就像你所做�
 
 　　最后，所有这些意味着，你会有一些选择，但你不会因此牺牲多少。你仍然可以建立.NET和Silverlight的app，正如你所习惯的那样，当然他们还可以在Windows上跑很多年。如果你想建立一个Metro风格的app，你有四种选择：
 
-　　1.
-Xaml和.NET(C\#或者VB)。你不会放弃很多.NET的东西（记住，你只是抛弃那些在app容器中所禁止的那些），你还可以使用WinRT来访问传感输入和其他的系统资源。
+1.Xaml和.NET(C\#或者VB)。你不会放弃很多.NET的东西（记住，你只是抛弃那些在app容器中所禁止的那些），你还可以使用WinRT来访问传感输入和其他的系统资源。
 
-　　2.
-Xaml和C++。你可以使用你在Xaml和C++的技能来使用WinRT。当然你就感觉不到了.NET的好处，不过，有些人喜欢管理自己程序的垃圾回收。
+2.Xaml和C++。你可以使用你在Xaml和C++的技能来使用WinRT。当然你就感觉不到了.NET的好处，不过，有些人喜欢管理自己程序的垃圾回收。
 
-　　3.
-Html和Javascript。你可以利用你在UI方面的能力，在Javascript中调用WinRT来访问系统资源和传感输入。
+3.Html和Javascript。你可以利用你在UI方面的能力，在Javascript中调用WinRT来访问系统资源和传感输入。
 
-　　4.
-DirectX和C++。如果你在开发一个刺激好玩的游戏，你可以利用DirectX和通过C++跟WinRT来访问设备传感器和系统资源。
+4.DirectX和C++。如果你在开发一个刺激好玩的游戏，你可以利用DirectX和通过C++跟WinRT来访问设备传感器和系统资源。
 
-　　以上是译文，若那些译的不好，敬请指正。下面在提供一些关于Windows
-8的编程链接：
+以上是译文，若那些译的不好，敬请指正。下面在提供一些关于Windows 8的编程链接：
 
-　　[WinRT and .NET in Windows
-8](http://blogs.microsoft.co.il/blogs/sasha/archive/2011/09/15/winrt-and-%20%20net-in-windows-8.aspx)
+[WinRT and .NET in Windows 8](http://blogs.microsoft.co.il/blogs/sasha/archive/2011/09/15/winrt-and-%20%20net-in-windows-8.aspx)
 
-　　[Analyzing Windows 8 and
-WinRT](http://ardalis.com/Analyzing-Windows-8-and-WinRT)
+[Analyzing Windows 8 and WinRT](http://ardalis.com/Analyzing-Windows-8-and-WinRT)
 
-　　[A bad picture is worth a thousand long
-discussions](http://dougseven.com/2011/09/15/a-bad-picture-is-worth-a-thousand-long-discussions/)
+[A bad picture is worth a thousand long discussions](http://dougseven.com/2011/09/15/a-bad-picture-is-worth-a-thousand-long-discussions/)
 
-　　[Why is WinRT
-unmanaged?](http://stackoverflow.com/questions/7457371/why-is-winrt-unmanaged)
+[Why is WinRT unmanaged?](http://stackoverflow.com/questions/7457371/why-is-winrt-unmanaged)
