@@ -162,6 +162,6 @@ Google在这个领域也推出了小巧但是迅速的LevelDB。在很多特殊�
 但是随着众多的数据库尝试实现所有的特性，明确的边界消失了
 确定使用哪种数据库比以前更为复杂了。
 
-你必须要知道50个用例、50个数据库并要回答至少50个问题。关于后者，笔者在过去两年多的NoSQL咨询中进行了收集，可以在以下地址找到：[选择正确的数据库](http://nosql-database.org/select-the-right-database.html)，[在NoSQL和NewSQL间进行选择](http://www.infoq.com/presentations/Choosing-NoSQL-NewSQL;jsessionid=05F9C1BE83D9DD1D1326298BC22A297C)。
+    你必须要知道50个用例、50个数据库并要回答至少50个问题。关于后者，笔者在过去两年多的NoSQL咨询中进行了收集，可以在以下地址找到：[选择正确的数据库](http://nosql-database.org/select-the-right-database.html)，[在NoSQL和NewSQL间进行选择](http://www.infoq.com/presentations/Choosing-NoSQL-NewSQL;jsessionid=05F9C1BE83D9DD1D1326298BC22A297C)。
 
 3.  一个通用的真理就是，每一项技术的变化——从客户端-服务端技术开始甚至更早——需要十倍的成本才能进行转移。例如，从大型机到客户端-服务端、客户端-服务端到SOA、SOA到WEB、RDBMS到混合型持久化之间的转换都是如此。所以可以推断出，在将NoSQL加入到他们的产品决策上，很多的公司在迟疑和纠结。但是，大家也都知道，最先采用的公司会从这个两个领域获益并且能够快速集成NoSQL，所以在将来会占据更有利的位置。就这一点而言，NoSQL解决方案会一直存在并且评估起来会是有利可图的领域。
