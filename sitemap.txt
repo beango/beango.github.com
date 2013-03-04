@@ -37,6 +37,7 @@ http://beango.github.com/wiki/software/sublime-text.html
 http://beango.github.com/wiki/software/vim.html
 http://beango.github.com/wiki/software/windows.html
 
+http://beango.github.com/archives/2013/02/27/state-of-nosql.html
 http://beango.github.com/archives/2013/02/21/the-reality-of-developers-life.html
 http://beango.github.com/archives/2013/02/18/booting.html
 http://beango.github.com/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html

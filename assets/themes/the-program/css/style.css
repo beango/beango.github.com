@@ -1592,3 +1592,20 @@ text-shadow: 1px 1px 0px #eeeeee;
 	-moz-box-shadow:0 0 3px black;
 	padding:10px;
 }
+#top-link  { 
+	display:none; 
+	position:fixed; 
+	right:25px; 
+	bottom:310px; 
+	color:#fff;  
+	text-decoration:none; 
+	font-family:'Dancing Script',Helvetica,Arial;
+	font-size: 1.3em;
+	background:#4c4b49; 
+	-webkit-border-radius: 13px;
+	-moz-border-radius: 13px;
+	border-radius: 13px;
+	padding:10px; 
+	opacity:0.6;
+	
+}

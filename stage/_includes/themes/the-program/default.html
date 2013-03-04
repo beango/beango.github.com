@@ -8,7 +8,8 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>{{ page.title }}</title>
 	<meta name="author" content="{{ site.author.name }}">
-	<script src='/assets/jquery-1.7.1.min.js'></script>
+	<script type="text/javascript" src='/assets/jquery-1.7.1.min.js'></script>
+	<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
 	<script src='/assets/default.js'></script>
 	<link href='{{ ASSET_PATH }}/css/style.css' rel="stylesheet" media="all" />
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
@@ -16,6 +17,7 @@
 <body>
 
 <div id="page" class="hentry">
+	<a href="#top" id="top-link" style="display: inline;">Back to top</a>
 	<header class="the-header">
 		<div class="unit-head">
 			<div class="unit-inner unit-head-inner">
