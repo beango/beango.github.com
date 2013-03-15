@@ -37,6 +37,8 @@ http://beango.github.com/wiki/software/sublime-text.html
 http://beango.github.com/wiki/software/vim.html
 http://beango.github.com/wiki/software/windows.html
 
+http://beango.github.com/archives/2013/03/01/what-every-programmer-should-know-about-memory-part1.html
+http://beango.github.com/archives/2013/02/28/howto-strong-developer.html
 http://beango.github.com/archives/2013/02/27/state-of-nosql.html
 http://beango.github.com/archives/2013/02/21/the-reality-of-developers-life.html
 http://beango.github.com/archives/2013/02/18/booting.html
@@ -80,3 +82,4 @@ http://beango.github.com/archives/2011/08/11/jquery_best_practices.html
 http://beango.github.com/archives/2011/06/15/mongodb-install.html
 http://beango.github.com/archives/2011/06/11/train-your-temperament.html
 http://beango.github.com/archives/2011/03/04/stack-overflow-architecture-update-now-at-95-million-page-vi.html
+http://beango.github.com/archives/2011/02/25/what-really-happens-when-you-navigate-to-a-url.html
