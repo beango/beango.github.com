@@ -40,13 +40,18 @@ jQuery.fn.topLink = function(settings) {
 //usage w/ smoothscroll
 $(document).ready(function() {
   //set the link
-  $('#top-link').topLink({
-	min: 400,
-	fadeSpeed: 500
+  $('#top-link,#btm-link').topLink({
+	min: 0,
+	fadeSpeed: 0
   });
   //smoothscroll
   $('#top-link').click(function(e) {
 	e.preventDefault();
 	$.scrollTo(0,300);
   });
+  $('#btm-link').click(function(e) {
+	e.preventDefault();
+	$.scrollTo('max',300);
+  });
 });    
+ 
