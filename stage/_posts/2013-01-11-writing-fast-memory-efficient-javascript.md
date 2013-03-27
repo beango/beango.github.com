@@ -5,7 +5,7 @@ categories: [web开发,javascript]
 date: 2013-01-11
 title: "编写高效的JavaScript程序"
 description: "编写高效的JavaScript程序"
-tags: [高效,JavaScript]
+tags: [JavaScript]
 redirecturl: http://www.csdn.net/article/2012-11-20/2811887-writing-fast-memory-efficient-javascript
 ---
 {% include JB/setup %}

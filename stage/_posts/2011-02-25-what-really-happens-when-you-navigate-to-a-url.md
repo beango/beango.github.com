@@ -5,7 +5,7 @@ categories: [web开发]
 date: 2011-02-25
 title: "当你输入一个网址的时候，实际会发生什么?"
 description: "当你输入一个网址的时候，实际会发生什么?"
-tags: [DNS, IP, 浏览器, 网址]
+tags: [浏览器]
 redirecturl: http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html
 ---
 {% include JB/setup %}

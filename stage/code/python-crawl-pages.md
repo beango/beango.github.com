@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 section: Archive
 categories: [Python]
 date: 2012-12-24

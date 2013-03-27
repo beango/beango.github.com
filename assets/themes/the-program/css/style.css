@@ -639,6 +639,7 @@ a:hover {
 .unit-article .entry-content:first-child h5,
 .unit-article .entry-content:first-child h6 {
   margin-top: 0;
+  margin-bottom: 0;
 }
 .unit-article .entry-content img{
   margin:auto;

@@ -6,7 +6,7 @@ date: 2013-03-26
 title: "浅谈JavaScript的语言特性"
 description: "浅谈JavaScript的语言特性"
 tags: [JavaScript]
-redirecturl: http://blog.jobbole.com/36657/
+redirecturl: http://freestyle21.cn/writings/javascript-core.html
 ---
 {% include JB/setup %}
 
@@ -354,10 +354,10 @@ foo(); // 10 – 使用静态和动态作用域的时候
 })(foo);
 </pre>
 
-**理论**：因为作用域链，使得所有的函数都是闭包（与函数类型无关：
-匿名函数，FE，NFE，FD都是闭包）。**从实践角度**：以下函数才算是闭包：
-\* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）
+**理论**：因为作用域链，使得所有的函数都是闭包（与函数类型无关：匿名函数，FE，NFE，FD都是闭包）。  
+**从实践角度**：以下函数才算是闭包：
 
+\* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）  
 \* 在代码中引用了自由变量
 
 最后：

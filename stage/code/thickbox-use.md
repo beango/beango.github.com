@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 title: thickbox使用
 section: Code
 Code: Demos

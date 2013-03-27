@@ -4,7 +4,7 @@
  <title>Huang Ding</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-03-27T09:39:00+08:00</updated>
+ <updated>2013-03-27T11:21:53+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>Huang Ding</name>
@@ -388,11 +388,11 @@ foo(); // 10 – 使用静态和动态作用域的时候
 &lt;/pre&gt;
 
 
-&lt;p&gt;&lt;strong&gt;理论&lt;/strong&gt;：因为作用域链，使得所有的函数都是闭包（与函数类型无关：
-匿名函数，FE，NFE，FD都是闭包）。&lt;strong&gt;从实践角度&lt;/strong&gt;：以下函数才算是闭包：
-* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理论&lt;/strong&gt;：因为作用域链，使得所有的函数都是闭包（与函数类型无关：匿名函数，FE，NFE，FD都是闭包）。&lt;br/&gt;
+&lt;strong&gt;从实践角度&lt;/strong&gt;：以下函数才算是闭包：&lt;/p&gt;
 
-&lt;p&gt;* 在代码中引用了自由变量&lt;/p&gt;
+&lt;p&gt;* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）&lt;br/&gt;
+* 在代码中引用了自由变量&lt;/p&gt;
 
 &lt;h2&gt;最后：&lt;/h2&gt;
 
@@ -2323,6 +2323,198 @@ Invalid，变更的、独占的、共享的、无效的)。协议的名称来自
 &lt;p&gt;　　图上的数字表明，当工作集大到对FSB造成压力的程度时，高速FSB确实会带来巨大的优势。在我们的测试中，性能的提升达到了18.5%，接近理论上的极限。而当工作集比较小，可以完全纳入缓存时，FSB的作用并不大。当然，这里我们只测试了一个程序的情况，在实际环境中，系统往往运行多个进程，工作集是很容易超过缓存容量的。&lt;/p&gt;
 
 &lt;p&gt;　　如今，一些英特尔的处理器，支持前端总线(FSB)的速度高达1,333MHz，这意味着速度有另外60％的提升。将来还会出现更高的速度。速度是很重要的，工作集会更大，快速的RAM和高FSB速度的内存肯定是值得投资的。我们必须小心使用它，因为即使处理器可以支持更高的前端总线速度，但是主板的北桥芯片可能不会。使用时，检查它的规范是至关重要的。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>翻译-高效的CSS</title>
+   <link href="http://beango.github.com/archives/2013/03/08/efficient-css.html"/>
+   <updated>2013-03-08T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/03/08/efficient-css</id>
+   <content type="html">&lt;h2&gt;译言：&lt;/h2&gt;
+
+&lt;p&gt;逛微博的时候看到 &lt;a href=&quot;http://weibo.com/u/2093492691&quot;&gt;@程序员的那些事&lt;/a&gt;推荐的一篇CSS的文章。细细看了下，写的很不错，就翻译过来，与诸前端们共享~&lt;/p&gt;
+
+&lt;p&gt;原文地址在&lt;a href=&quot;http://csswizardry.com/2011/09/writing-efficient-css-selectors/&quot;&gt;这里&lt;/a&gt;，由于第一次翻译文章，有不准确的地方欢迎留言讨论~~&lt;/p&gt;
+
+&lt;h2&gt;译文：&lt;/h2&gt;
+
+&lt;p&gt;高效的CSS已经不是一个新的话题了，也不是我一个非得重拾的话题，但它却是我在Sky公司工作之时，所感兴趣的，关注已久的话题。&lt;/p&gt;
+
+&lt;p&gt;有很多人都忘记了，或在简单的说没有意识到，CSS在我们手中，既能很高效，也可以变得很低能。这很容易被忘记，尤其是当你意识到你会的太少，CSS代码效率很低的时候。&lt;/p&gt;
+
+&lt;p&gt;下面的规则只真正被应用到那些速度要求很高，有成百上千的DOM元素被绘制在页面上的大型网站。但是，实践出真理，这和你是在创建下一个Facebook，还是写一个本地的展示页面都没有关系，多知道一点总是好的。&lt;/p&gt;
+
+&lt;h3&gt;CSS选择器：&lt;/h3&gt;
+
+&lt;p&gt;对我们大多数人来说，CSS选择器并不陌生。最基本的选择器是元素选择器(比如div),ID选择器(比如#header)还有类选择器(比如.tweet)。&lt;/p&gt;
+
+&lt;p&gt;一些的不常见的选择器包括伪类选择器(:hover)，很多复杂的CSS3和正则选择器，比如：first-child，class ^= “grid-”.&lt;/p&gt;
+
+&lt;p&gt;CSS选择器具有高效的继承性，引用Steve Souders的话，
+CSS选择器效率从高到低的排序如下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ID选择器 比如#header&lt;/li&gt;
+&lt;li&gt;类选择器 比如.promo&lt;/li&gt;
+&lt;li&gt;元素选择器 比如 div&lt;/li&gt;
+&lt;li&gt;兄弟选择器 比如 h2 + p&lt;/li&gt;
+&lt;li&gt;子选择器 比如 li &gt; ul&lt;/li&gt;
+&lt;li&gt;后代选择器 比如 ul a 7. 通用选择器 比如 *&lt;/li&gt;
+&lt;li&gt;属性选择器 比如 type = “text”&lt;/li&gt;
+&lt;li&gt;伪类/伪元素选择器 比如 a:hover&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;以上引用自&lt;a href=&quot;http://stevesouders.com/&quot;&gt;Steve Souders&lt;/a&gt;的Even Faster网站、&lt;/p&gt;
+
+&lt;p&gt;我们不得不提的是，纵使ID选择器很快、高效，但是它也仅仅如此。从Steve Souders的CSS Test我们可以看出&lt;a href=&quot;http://stevesouders.com/efws/CSS-selectors/CSScreate.php?n=1000&amp;amp;sel=%23id&amp;amp;body=background%3A+%23CFD&amp;amp;ne=1000&quot;&gt;ID选择器&lt;/a&gt;和&lt;a href=&quot;http://stevesouders.com/efws/CSS-selectors/CSScreate.php?n=1000&amp;amp;sel=.class&amp;amp;body=background%3A+%23CFD&amp;amp;ne=1000&quot;&gt;类选择器&lt;/a&gt;在速度上的差异很小很小。&lt;/p&gt;
+
+&lt;p&gt;在Windows系统上的Firefox 6上，我测得了一个简单类选择器的（reflow figure）重绘速度为10.9ms，而ID选择器为12.5ms，所以事实上ID比类选择器重绘要慢一点点。&lt;/p&gt;
+
+&lt;p&gt;ID选择器和类选择器在速度上的差异基本上没有关系。&lt;/p&gt;
+
+&lt;p&gt;在一个标签选择器(a)的测试上显示，它比类或ID选择器的速度慢了&lt;a href=&quot;http://stevesouders.com/efws/CSS-selectors/CSScreate.php?n=1000&amp;amp;sel=a&amp;amp;body=background%3A+%23CFD&amp;amp;ne=1000&quot;&gt;很多&lt;/a&gt;。在一个嵌套很深的后代选择器的测试上，显示数据为&lt;a href=&quot;http://stevesouders.com/efws/CSS-selectors/CSScreate.php?n=1000&amp;amp;sel=div+div+div+div+div+div+a&amp;amp;body=background%3A+%23CFD&amp;amp;ne=1000&quot;&gt;440左右&lt;/a&gt;！从这里我们可以看出ID/类选择器和 元素/后代选择器中间的差异较大，但是相互之间的差异较小。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt;
+这些数据可能在不同计算机和浏览器中间的差异较大。强烈地建议大家在自己的机子上测试一下。&lt;/p&gt;
+
+&lt;h3&gt;组合选择器&lt;/h3&gt;
+
+&lt;p&gt;你可以有一个标准的选择器比如#nav，来选择任何带有ID为”nav”的元素，或在你可以有一个组合选择器比如#nav a,来选择任何在ID为’nav’的元素里面的链接元素&lt;/p&gt;
+
+&lt;p&gt;此刻，我们读这些是从左到右的方式。我们是先找到#nav，然后从它的里面找其他元素。但是浏览器解析这些不是这样的：浏览器解析选择器是从右到左的方式。&lt;/p&gt;
+
+&lt;p&gt;在我们看来，#nav里面带了一个a，浏览器却是看到的a在#nav里面。这些细微的差异对选择器的效率有很大的影响，同时学这些差异也是很有价值的。&lt;/p&gt;
+
+&lt;p&gt;如果想要知道更多浏览器这样解析的原因，请看&lt;a href=&quot;http://stackoverflow.com/questions/5797014/why-do-browsers-match-CSS-selectors-from-right-to-left&quot;&gt;Stack Overflow&lt;/a&gt;上的讨论&lt;/p&gt;
+
+&lt;p&gt;浏览器从最右边的元素开始（它想要渲染的元素），然后用它的方式回溯DOM树比从DOM树的最高层开始选择向下寻找，甚至可能达不到最右边的选择器—关键的选择器要高效。&lt;/p&gt;
+
+&lt;p&gt;这些对CSS选择器的效率有很大的影响。&lt;/p&gt;
+
+&lt;h3&gt;关键选择器&lt;/h3&gt;
+
+&lt;p&gt;关键选择器，正如前面讨论的一样，是一个复杂的CSS选择器中最右边部分。它是浏览器最先寻找的。&lt;/p&gt;
+
+&lt;p&gt;现在我们回到讨论开始的地方，哪类选择器是最高效的？哪个是会影响选择器效率的关键选择器；写CSS代码的时候，关键选择器是能否高效的决定因素。
+一个关键CSS选择器像这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#content .intro {..}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是不是高效选择器比如类选择器天生就高效？浏览器会寻找.intro的实例（可能会很多），然后沿着DOM树向上查找，确定刚才找到的实例是否在一个带有ID为”content”的容器里面。&lt;/p&gt;
+
+&lt;p&gt;但是，下面的选择器就表现的不是那么好了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#content * {..}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个选择器所做的是选择所有在页面上的单个元素（是每个单个的元素），然后去看看它们是否有一个#content的父元素。这是一个非常不高效选择器因为它的关键选择器执行开销太大了。&lt;/p&gt;
+
+&lt;p&gt;运用这些知识我们就可以在分类和选择元素的时候做出更好的选择。&lt;/p&gt;
+
+&lt;p&gt;假设你有一个复杂的页面，它相当巨大并且在你的一个很大很大的站点上。在那个页面上有成百上千甚至上万的a标签。它还有一个小的社交链接区域放在一个ID为#social的Ul里面。我们假设它们是Twitter，Facebook，Dribbble还有Google+的链接吧。在这个页面上我们有四个社交链接和成百上千的其他链接。
+下面的这个选择器就自然的不是那么高效和合理了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#social a {…}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里发生的情况是浏览器会在定位到#social区域下的四个链接之前得到页面上所有成千上万的链接。我们的关键选择器匹配了太多我们不感兴趣的其他元素。&lt;/p&gt;
+
+&lt;p&gt;为了补救我们可以给每个在社交链接区域的 a 增加一个更特殊、明确的选择器
+.social-link ,
+但是这好像有点违背我们的认知：当我们能用组合选择器的时候就不要放不必要的类标示在元素上。&lt;/p&gt;
+
+&lt;p&gt;这就是为什么我对选择器的性能如此感兴趣的原因了：必须在web
+标准最佳实践和速度之间的保持平衡。&lt;/p&gt;
+
+&lt;p&gt;通常我们有：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;ul id=&quot;social&quot;&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;twitter&quot;&amp;gt;Twitter&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;facebook&quot;&amp;gt;Facebook&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;dribble&quot;&amp;gt;Dribbble&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;gplus&quot;&amp;gt;Google+&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CSS:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#social a {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们现在最好有：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;ul id=&quot;social&quot;&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;social-link twitter&quot;&amp;gt;Twitter&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;social-link facebook&quot;&amp;gt;Facebook&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;social-link dribble&quot;&amp;gt;Dribbble&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &amp;lt;li&amp;gt;&amp;lt;a href=&quot;#&quot; class=&quot;social-link gplus&quot;&amp;gt;Google+&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+&amp;lt;/ul&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;加上CSS：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#social .social-link {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个新的关键选择器将会匹配更少的元素，这意味着浏览器能够很快的找到它们并渲染特定的样式，然后专注于下一件事。&lt;/p&gt;
+
+&lt;p&gt;另外，事实上我们可以用.social-link{}更清晰的选择，而不是过分限制它。阅读下一部分你会原因…&lt;/p&gt;
+
+&lt;p&gt;简单的重述一次，你的关键选择器会决定浏览器的工作量，因此，我们应该重视一下关键选择器&lt;/p&gt;
+
+&lt;h3&gt;过度限制选择器&lt;/h3&gt;
+
+&lt;p&gt;现在我们知道了什么是关键选择器，还有它是大部分工作的来源，但是我们可以更乐观一点。拥有一个明确的关键选择器最大的好处就是你可以避免使用过度限制选择器。一个过度限制选择器可能像：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;html body .wrapper #content a {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里的写的太多了，至少3个选择器是完全不需要的。它可以最多像这个样子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#content a {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这会发生什么呢？ 首先第一个意味着浏览器不得不寻找所有的 a
+元素，然后检查他们是否在一个ID为”content”的元素中，然后如此循环直到HTML标签。这样造成了太多的我们不太想要的花费。了解了这个，我们得到一些更现实的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#nav li a{}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;变成这个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#nav a {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们知道如果a在li里面，它也必定在#nav里面，所有我们可以马上把li从选择器组中拿掉。然后，既然我们知道在页面中只有一个ID为nav的元素，那么它依附的元素就是完全没有关系得了，我们也可以拿掉ul&lt;/p&gt;
+
+&lt;p&gt;过度限制选择器使浏览器工作比它实际需要的更繁重，花费的时间更多。我们可以删掉不必需的限制，来使我们的选择器更简单和高效。&lt;/p&gt;
+
+&lt;h3&gt;这些真的需要吗？&lt;/h3&gt;
+
+&lt;p&gt;最短的答案是:或许不是。&lt;/p&gt;
+
+&lt;p&gt;最长的答案是：它取决于你正在搭建的站点。如果你正在为你的晋升而努力，那么就好好写出简单、高效的CSS代码吧，因为你可能不会感觉到它给你带来的改变。
+如果你正在搭建下一个每个页面都以毫秒计算的Amazon网站，这样有时速度会很快，但有时可能不是。&lt;/p&gt;
+
+&lt;p&gt;浏览器将会在解析CSS的速度上变得更好，甚至在手机端。在一个网站上，你不太可能会觉察到一个低效的CSS选择器，但是….&lt;/p&gt;
+
+&lt;h3&gt;但是&lt;/h3&gt;
+
+&lt;p&gt;它确实发生了，浏览器还是不得不去做我们讨论的所有工作，无论它们变得多快。即使你不需要或者甚至不想实践任何一个，但是它都是我们值得学习的知识。请记住选择器可能会让你付出很大代价，你应该避免盯着一个看。这意味着如果你发现你自己在写像这样的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;div:nth-of-type(3) ul:last-child li:nth-of-type(odd) *{ font-weight:bold }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这时，你可能就做错了。&lt;/p&gt;
+
+&lt;p&gt;现在，在高效选择器的世界我还是一个新人。所以如果我忘记了什么，或者你有需要补充的，请在评论里面留言。&lt;/p&gt;
+
+&lt;h3&gt;更多高效选择器&lt;/h3&gt;
+
+&lt;p&gt;我还不能完全介绍Steve Souders的网站和书籍，它们是如此之好，以至于值得你花更多时间来阅读和推荐。这个家伙只有他自己才了解自己！&lt;/p&gt;
 </content>
  </entry>
  

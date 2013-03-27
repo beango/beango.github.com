@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 section: Code
 categories: Favorite
 date: 2012-11-05

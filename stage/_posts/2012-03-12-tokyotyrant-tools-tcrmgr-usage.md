@@ -5,7 +5,7 @@ categories: [高性能web, NoSql]
 date: 2012-03-12
 title: "TokyoTyrant的管理工具tcrmgr使用"
 description: "TokyoTyrant的管理工具tcrmgr使用"
-tags: [memcached, Tokyo Tyrant, tcrmgr使用]
+tags: [memcached, Tokyo Tyrant, tcrmgr]
 ---
 
 <li>查看服务器统计信息</li>

@@ -1,6 +1,5 @@
 ---
-layout: post
-section: Code
+layout: page
 categories: [Favorite]
 date: 2012-06-11
 title: "CSS收集"

@@ -42,6 +42,7 @@ http://beango.github.com/archives/2013/03/25/speeding-up-your-python-code.html
 http://beango.github.com/archives/2013/03/22/scalable-web-architecture-and-distributed-systems.html
 http://beango.github.com/archives/2013/03/21/what-every-programmer-should-know-about-virtual-memory-part3.html
 http://beango.github.com/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html
+http://beango.github.com/archives/2013/03/08/efficient-css.html
 http://beango.github.com/archives/2013/03/01/what-every-programmer-should-know-about-memory-part1.html
 http://beango.github.com/archives/2013/02/28/howto-strong-developer.html
 http://beango.github.com/archives/2013/02/27/state-of-nosql.html
