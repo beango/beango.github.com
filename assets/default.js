@@ -10,10 +10,6 @@ function toggle(obj){
 	event.preventDefault();
 }
 
-$(function(){
-	$(".linkcodetoggle").parent().next().hide();
-});
-
 //plugin
 jQuery.fn.topLink = function(settings) {
   settings = jQuery.extend({
