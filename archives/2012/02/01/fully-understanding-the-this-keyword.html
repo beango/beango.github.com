@@ -7,9 +7,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Mongodb安全性初探</title>
+	<title>完全理解关键字this</title>
 	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Mongodb安全性初探'/>
+	<meta property='og:title' content='完全理解关键字this'/>
 	<meta property='og:url' content='http://www.yif1.com'/>
 	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
 	<meta property='og:type' content='article'/>
@@ -48,104 +48,298 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Mongodb安全性初探</h1>
+						<h1 class="h2 entry-title">完全理解关键字this</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>Mongodb，这么火的玩意其实早就想好好研究一下了。之前一直没空仔细学学新的东西，总是感觉精力不足。这次趁着买了一本书，就零零散散地在VPS上搭建、测试、看实现代码。感觉也蛮有意思的一个数据库。虽然感觉它非常简单，尤其是看代码的时候更是感觉如此。但这不也是另一个KISS的典范么，还是简单但是实用的东西最能流行。</p>
+					<p>今天的教程来自天才的<a href="http://codylindley.com/">Cody Lindley</a>的新书：《JavaScript启蒙教程<a href="http://javascriptenlightenment.com/">JavaScript Enlightenment</a>》。他讨论了令人迷惑的关键字this，以及确定和设置this的值的方法。</p>
 
-<p>既然都看了其实现，也不能不产出点什么。正好多年没更新博文，就简单分析一下mongodb的安全性，凑个数先。</p>
+<p><strong>概念性的概述this</strong></p>
 
-<h2>默认配置的安全情况</h2>
+<p>当一个函数创建后，一个关键字this就随之(在后台)创建，它链接到一个对象，而函数正是在这个对象中进行操作。换句话说，关键字this可在函数中使用，是对一个对象的引用，而函数正是该对象的属性或方法。</p>
 
-<p>在默认情况下，mongod是监听在0.0.0.0之上的。而任何客户端都可以直接连接27017，且没有认证。好处是，开发人员或dba可以即时上手，不用担心被一堆配置弄的心烦意乱。坏处是，显而易见，如果你直接在公网服务器上如此搭建mongodb，那么所有人都可以直接访问并修改你的数据库数据了。</p>
+<p>让我们来看这个对象：</p>
 
-<p>默认情况下，mongod也是没有管理员账户的。因此除非你在admin数据库中使用db.addUser()命令添加了管理员帐号，且使用--auth参数启动mongod，否则在数据库中任何人都可以无需认证执行所有命令。包括delete和shutdown。</p>
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+var cody = {
+  living:true,
+  age:23,
+  gender:'male',
+  getGender:function(){return cody.gender;}
+};
 
-<p>此外，mongod还会默认监听28017端口，同样是绑定所有ip。这是<a href="http://www.mongodb.org/display/DOCS/Http+Interface">一个mongod自带的web监控界面</a>。从中可以获取到数据库当前连接、log、状态、运行系统等信息。如果你开启了--rest参数，甚至可以直接通过web界面查询数据，执行mongod命令。</p>
+console.log(cody.getGender()); // logs 'male'
 
-<p>我试着花了一个晚上扫描了国内一个B段，国外一个B段。结果是国外开了78个mongodb，而国内有60台。其中我随意挑选了10台尝试连接，而只有一台机器加了管理员账户做了认证，其他则全都是不设防的城市。可见其问题还是比较严重的。</p>
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
 
-<p>其实Mongodb本身有非常<a href="http://www.mongodb.org/display/DOCS/Security+and+Authentication">详细的安全配置准则</a>，显然他也是想到了，然而他是将安全的任务推给用户去解决，这本身的策略就是偏向易用性的，对于安全性，则得靠边站了。</p>
+<p>注意在函数getGender里，由于在cody对象内部，我们可以通过.来获取gender属性(也就是cody.gender)。也可以用this来获取cody对象，因为this正是指向cody对象。</p>
 
-<h2><strong>用户信息保存及认证过程</strong></h2>
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+var cody = {
+  living:true,
+  age:23,
+  gender:'male',
+  getGender:function(){return this.gender;}
+};
 
-<p><strong>
-</strong>类似MySQL将系统用户信息保存在mysql.user表。mongodb也将系统用户的username、pwd保存在admin.system.users集合中。其中<a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L71">pwd
-= md5(username + ":mongo:" +
-real_password)</a>。这本身并没有什么问题。username和:mongo:相当于对原密码加了一个salt值，即使攻击者获取了数据库中保存的md5
-hash，也没法简单的从彩虹表中查出原始密码。</p>
+console.log(cody.getGender()); // logs 'male'
 
-<p>我们再来看看mongodb对客户端的认证交互是如何实现的。mongo
-client和server交互都是基于明文的，因此很容易被网络嗅探等方式抓取。这里我们使用数据库自带的<a href="http://www.mongodb.org/display/DOCS/mongosniff">mongosniff</a>，可以直接dump出客户端和服务端的所有交互数据包：</p>
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
 
-<div class="highlight"><pre><code class="perl"><span class="p">[</span><span class="n">root</span><span class="nv">@localhost</span> <span class="n">bin</span><span class="p">]</span><span class="c1"># ./mongosniff --source NET lo</span>
-<span class="n">sniffing</span> <span class="mi">27017</span> 
+<p>this.gender中this指向cody对象，而getGender函数可以操作cody对象。</p>
 
- <span class="sr">//</span> <span class="err">省略开头的数据包，直接看看认证流程。以下就是当用户输入</span><span class="n">db</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">real_passwd</span><span class="p">)</span><span class="err">后发生的交互。</span>
+<p>关于this的主题可能有点让人感到困惑，其实不必如此。仅记住，通常，this指向的对象正是包含函数的对象，而不是函数本身（当然也有例外，例如采用关键字new或者call()和apply()）。</p>
 
-<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>  <span class="o">--&gt;&gt;</span> <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span> <span class="n">admin</span><span class="o">.</span><span class="nv">$cmd</span>  <span class="mi">62</span> <span class="n">bytes</span>  <span class="n">id:8</span>        <span class="mi">8</span>
-        <span class="n">query:</span> <span class="p">{</span> <span class="n">getnonce:</span> <span class="mf">1.0</span> <span class="p">}</span>  <span class="n">ntoreturn:</span> <span class="o">-</span><span class="mi">1</span> <span class="n">ntoskip:</span> <span class="mi">0</span>
-<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span>  <span class="o">&lt;&lt;--</span>  <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>   <span class="mi">81</span> <span class="n">bytes</span>  <span class="n">id:7</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">8</span>
-        <span class="n">reply</span> <span class="n">n:1</span> <span class="n">cursorId:</span> <span class="mi">0</span>
-        <span class="p">{</span> <span class="n">nonce:</span> <span class="s">&quot;df97182fb47bd6d0&quot;</span><span class="p">,</span> <span class="n">ok:</span> <span class="mf">1.0</span> <span class="p">}</span>
-<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>  <span class="o">--&gt;&gt;</span> <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span> <span class="n">admin</span><span class="o">.</span><span class="nv">$cmd</span>  <span class="mi">152</span> <span class="n">bytes</span>  <span class="n">id:9</span>       <span class="mi">9</span>
-        <span class="n">query:</span> <span class="p">{</span> <span class="n">authenticate:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">user:</span> <span class="s">&quot;admin&quot;</span><span class="p">,</span> <span class="n">nonce:</span> <span class="s">&quot;df97182fb47bd6d0&quot;</span><span class="p">,</span> <span class="n">key:</span> <span class="s">&quot;3d839522b547931057284b6e1cd3a567&quot;</span> <span class="p">}</span>  <span class="n">ntoreturn:</span> <span class="o">-</span><span class="mi">1</span> <span class="n">ntoskip:</span> <span class="mi">0</span>
-<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span>  <span class="o">&lt;&lt;--</span>  <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>   <span class="mi">53</span> <span class="n">bytes</span>  <span class="n">id:8</span> <span class="mi">8</span> <span class="o">-</span> <span class="mi">9</span>
-        <span class="n">reply</span> <span class="n">n:1</span> <span class="n">cursorId:</span> <span class="mi">0</span>
-        <span class="p">{</span> <span class="n">ok:</span> <span class="mf">1.0</span> <span class="p">}</span>
-</code></pre></div>
+<p><strong>重要提示</strong></p>
 
+<p>****- 关键字this就像其他的变量，唯一不同就是你不能更改它。</p>
 
-<ol>
-<li><strong>第一步，client向server发送一个命令getnonce，向server申请一个随机值nonce。</strong></li>
-<li><strong>server返回一个16位的nonce。这里每次返回的值都不相同。</strong></li>
-<li><strong>第二步，client将用户输入的明文密码通过算法生成一个key，即 <a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L90">key = md5(nonce + username + md5(username + ":mongo:" + real_passwd))</a>，并将之连同用户名、nonce一起返回给server</strong></li>
-<li><strong>server收到数据，首先比对nonce是否为上次生成的nonce，然后比对key == md5(nonce + username + pwd)。如果相同，则<a href="https://github.com/mongodb/mongo/blob/r1.9.1/db/security_commands.cpp#L71">验证通过</a>。</strong></li>
-</ol>
+<p>-
+不同于传给函数的其他参数和变量，在调用函数的对象中，this是一个关键字(而不是属性)。</p>
 
+<p><strong>如何确定this的值？</strong></p>
 
-<p>由于至始至终没有密码hash在网络上传输，而是使用了类似挑战的机制，且每一次nonce的值都不同，因此即使攻击者截取到key的值，也没用办法通过重放攻击通过认证。</p>
+<p>this传递给所有的函数，它的值取决于函数运行时何时被调用。这里请注意，因为这是你需要记住的一个很特别的地方。</p>
 
-<p>然而当攻击者获取了数据库中保存的pwd
-hash，则认证机制就不会起到作用了。即使攻击者没有破解出pwd
-hash对应的密码原文。但是仍然可以通过发送md5(nonce + username +
-pwd)的方式直接通过server认证。这里实际上server是将用户的pwd
-hash当作了真正的密码去验证，并没有基于原文密码验证。在这点上和我之前分析的<a href="http://www.phpweblog.net/GaRY/archive/2010/08/20/mysql_client_to_server_auth_method.html">mysql的认证机制</a>其实没什么本质区别。当然或许这个也不算是认证机制的弱点，但是毕竟要获取mongodb的username和pwd的可能性会更大一些。</p>
+<p>下面的代码中myObject对象有个属性sayFoo，它指向函数sayFoo。当在全局域中调用sayFoo函数时，this指向window对象。当myObject调用函数时，this指向的是myObject。</p>
 
-<p><img src="/assets/files/2013-01/mongodb.png" alt="" /></p>
+<p>因为myObject有个叫foo的属性，在这里被使用。</p>
 
-<p>然而在Web的监控界面的认证中则有一些不同。当client来源不是localhost，这里的用户认证过程是基于HTTP
-401的。其过程与mongo认证大同小异。但是一个主要区别是：这里的nonce并没有随机化，而是<a href="https://github.com/mongodb/mongo/blob/r1.9.2/db/dbwebserver.cpp#L130">每次都是默认为"abc"</a>。</p>
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
 
-<p>利用这个特点，如果攻击者抓取了管理员一次成功的登录，那么他就可以重放这个数据包，直接进入Web监控页面。</p>
+var foo = 'foo';
+var myObject = {foo: 'I am myObject.foo'};
 
-<p>同样，攻击者还可以通过此接口直接暴力破解mongo的用户名密码。实际上27017和28017都没有对密码猜解做限制，但Web由于无需每次获取nonce，因此将会更为简便。</p>
+var sayFoo = function() {
+  console.log(this['foo']);
+};
 
-<h2>JavaScript的执行与保护</h2>
+￼￼// give myObject a sayFoo property and have it point to sayFoo function
+myObject.sayFoo = sayFoo;
+myObject.sayFoo(); // logs 'I am myObject.foo' 12
 
-<p>Mongodb本身最大的特点之一，就是他是使用javascript语言作为命令驱动的。黑客会比较关注这一点，因为其命令的支持程度，就是获取mongodb权限之后是否能进一步渗透的关键。</p>
+sayFoo(); // logs 'foo'
 
-<p>Javascript本身的标准库其实相当弱。无论是spidermonkey或者是v8引擎，其实都没有系统操作、文件操作相关的支持。对此，<a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/shell_utils.cpp#L890">mongodb做了一定的扩展</a>。可以看到，ls/cat/cd/hostname甚至runProgram都已经在Javascript的上下文中有实现。看到这里是不是已经迫不及待了？mongo
-shell中试一下输入ls("./")，看看返回。</p>
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
 
-<p>等等？结果怎么这么熟悉？哈哈，没错，其实这些api都是在client的上下文中实现的。一个小小玩笑:)</p>
+<p>很清楚，this的值取决于函数什么时候被调用。myObject.sayFoo和sayFoo都指向同样的函数，但sayFoo()调用的上下文不同，this的值也就不同。下面是类似的代码，head对象(window)显式使用，希望对你有用。</p>
 
-<p>那么在server端是否可以执行js呢？答案是肯定的。利用db.eval(code)——实际上底层执行的是db.$cmd.findOne({$eval:
-code})——可以在server端执行我们的js代码。</p>
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
 
-<p>当然在<a href="https://github.com/mongodb/mongo/blob/r1.9.2/scripting/utils.cpp#L67">server端也有js的上下文扩展</a>。显然mongod考虑到了安全问题（也可能是其他原因），因此在这里并没有提供client中这么强大的功能。当然mongodb还在不断更新，长期关注这个list，说不定以后就有类似load_file/exec之类的实现。</p>
+window.foo = 'foo';
+window.myObject = {foo: 'I am myObject.foo'};
+window.sayFoo = function() { ! console.log(this.foo); };
+window.myObject.sayFoo = window.sayFoo;
+window.myObject.sayFoo();
+window.sayFoo();
 
-<p>一劳永逸解决服务端js执行带来的问题可以使用<a href="http://www.mongodb.org/display/DOCS/Command+Line+Parameters">noscripting</a>参数。直接禁止server-side的js代码执行功能。</p>
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>确保当你有多个引用指向同一个函数的时候，你清楚的知道this的值是随调用函数的上下文的不同而改变。</p>
+
+<p><strong>重要提示</strong></p>
+
+<p>****- 除了this以外的所有变量和参数都属于静态变量范围(<a href="http://en.wikipedia.org/wiki/Lexical_scope#Lexical_scoping">lexical
+scope</a>)。</p>
+
+<p><strong>在嵌入函数内this指向head对象</strong></p>
+
+<p>你可能想知道在嵌入在另外一个函数的函数中使用this会发生什么事。不幸的是在ECMA 3中，this不遵循规律，它不指向函数属于的对象，而是指向head对象(<a href="http://blog.jobbole.com/12749/" title="浏览器">浏览器</a>的window对象)。</p>
+
+<p>在下面的代码，func2和func3中的this不再指向myObject，而是head对象。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var myObject = {
+  func1:function() {
+     console.log(this); //logs myObject
+     varfunc2=function() {
+        console.log(this); //logs window, and will do so from this point on
+        varfunc3=function() {
+           console.log(this); //logs window, as it’s the head object
+        }();
+     }();
+  }
+};
+
+myObject.func1();
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>然而在ECMAScript 5中，这个问题将会得到修正。现在，你应该意识到这个问题，尤其是当你将一个函数的值传递到另一个函数时。</p>
+
+<p>看看下面的代码，将一个匿名函数传给foo.func1，当在foo.func1中调用匿名函数(函数嵌套在另一个函数中)，匿名函数中this将会指向是head对象。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+var foo = {
+  func1:function(bar){
+    bar(); //logs window, not foo
+    console.log(this);//the this keyword here will be a reference to foo object
+  }
+};
+
+foo.func1(function(){console.log(this)});
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>现在你不会忘了，如果包含this的函数在另一个函数中，或者被另一个函数调用，this的值将会指向的是head对象(再说一次，这将在ECMAScript 5中被修正。)</p>
+
+<p><strong>解决嵌套函数的问题</strong></p>
+
+<p>为了使this的值不丢失，你可以在父函数中使用一个作用域链(scope chain)来保存对this进行引用。下面的代码中，使用一个叫that的变量，利用它的作用域，我们可以更好的保存函数上下文。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var myObject = {
+  myProperty:'Icanseethelight',
+    myMethod:function() {
+   var that=this; //store a reference to this (i.e.myObject) in myMethod scope varhelperFunctionfunction(){//childfunction
+   var helperFunction function() { //childfunction
+      //logs 'I can see the light' via scope chain because that=this
+           console.log(that.myProperty); //logs 'I can see the light'
+           console.log(this); // logs window object, if we don't use "that"
+        }();
+    }
+}
+
+myObject.myMethod(); // invoke myMethod
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p><strong>控制this的值</strong></p>
+
+<p>this的值通常取决于调用函数的上下文(除非使用关键字new，稍后会为你介绍)，但是你可以用apply()或call()指定触发一个函数时this指向的对象，以改变/控制this的值。用这两种方法就好像再说：“嘿，调用X函数，但让Z对象来作this的值。”这样做，JavaScript默认的this的值将被更改。</p>
+
+<p>下面，我们创建了一个对象和一个函数，然后我们通过call()来触发函数，所以函数中的this指向的是myOjbect。在myFunction函数中的this会操作myObject而不是head对象，这样我们就改变了在myFunction中this指向的对象。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var myObject = {};
+
+var myFunction = function(param1, param2) {
+  //setviacall()'this'points to my Object when function is invoked
+  this.foo = param1;
+  this.bar = param2;
+  console.log(this); //logs Object{foo = 'foo', bar = 'bar'}
+};
+
+myFunction.call(myObject, 'foo', 'bar'); // invoke function, set this value to myObject
+
+console.log(myObject) // logs Object {foo = 'foo', bar = 'bar'}
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>在上面的例子，我们用了call()，apply()也可适用于同样用法，二者的不同之处在于参数如何传给函数。用call()，参数用逗号分开，而用apply()，参数放在一个数组中传递。下面是同样的代码，但是用apply()。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var myObject = {};
+
+var myFunction = function(param1, param2) {
+  //set via apply(), this points to my Object when function is invoked
+  this.foo=param1;
+  this.bar=param2;
+  console.log(this); // logs Object{foo='foo', bar='bar'}
+};
+
+myFunction.apply(myObject, ['foo', 'bar']); // invoke function, set this value
+console.log(myObject); // logs Object {foo = 'foo', bar = 'bar'}
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p><strong>在自定义构造函数中用this</strong></p>
+
+<p>当函数用关键字new来触发，this的值–由于在构造函数中声明–指向实例本身。换种说法：在构造函数中，我们可以在对象真正创建之前，就用this来指定对象。这样看来，this值的更改和call()或apply()相似。</p>
+
+<p>下面，我们构造了一个构造函数Person，this指向创建的对象。当Person的对象创建后，this指向这个对象，并将属性name放在对象内，值为传给这个构造函数的参数值(name)。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var Person = function(name) {
+  this.name = name || 'johndoe'; // this will refer to the instanc ecreated
+}
+
+var cody = new Person('Cody Lindley'); // create an instance, based on Person constructor
+
+console.log(cody.name); // logs 'Cody Lindley'
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>这样，当用关键字new触发构造函数时，this指向“要创建的对象”。那么如果我们没有用关键字new，this的值将会指向触发Person的上下文——这时是head对象。让我们来看看下面的代码。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var Person = function(name) {
+  this.name=name||'johndoe';
+}
+
+var cody = Person('Cody Lindley'); // notice we did not use 'new'
+console.log(cody.name); // undefined, the value is actually set at window.name
+console.log(window.name); // logs 'Cody Lindley'
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p><strong>在prototype方法内的this指向构造实例</strong></p>
+
+<p>当一个方法作为一个构造函数的prototype属性时，这个方法中的this指向触发方法的实例。这里，我们有一个Person()的构造函数，它需要person的全名(full name)，为了获得全名(full name)，我们在Person.prototype中加入了一个whatIsMyFullName方法，所有的Person实例都继承该方法。这个方法中的this指向触发这个方法的实例(以及它的属性)。</p>
+
+<p>下面我创建了两个Person对象(cody和lisa)，继承的whatIsMyFullName方法包含的this就指向这个实例。</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
+
+var Person = function(x){
+    if(x){this.fullName = x};
+};
+
+Person.prototype.whatIsMyFullName = function() {
+    return this.fullName; // 'this' refers to the instance created from Person()
+}
+
+var cody = new Person('cody lindley');
+var lisa = new Person('lisa lindley');
+
+// call the inherited whatIsMyFullName method, which uses this to refer to the instance
+console.log(cody.whatIsMyFullName(), lisa.whatIsMyFullName());
+
+/* The prototype chain is still in effect, so if the instance does not have a
+fullName property, it will look for it in the prototype chain.
+Below, we add a fullName property to both the Person prototype and the Object
+prototype. See notes. */
+
+Object.prototype.fullName = 'John Doe';
+var john = new Person(); // no argument is passed so fullName is not added to instance
+console.log(john.whatIsMyFullName()); // logs 'John Doe'
+
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>在prototype对象内的方法里使用this，this就指向实例。如果实例不包含属性的话，prototype查找便开始了。</p>
+
+<p><strong>提示</strong></p>
+
+<p>-如果this指向的对象不包含想要查找的属性，那么这时对于任何属性都适用的法则在这里也适用，也就是，属性会沿着prototype链(prototype chain)上“寻找”。所以在我们的例子中，如果实例中不包含fullName属性，那么fullName就会查找Person.prototype.fullName，然后是Object.prototype.fullName。</p>
+
+<p>英文原文：<a href="http://net.tutsplus.com/tutorials/javascript-ajax/fully-understanding-the-this-keyword/?ref=vastwork">Fully Understanding the this Keyword</a> 
+编译：<a href="http://www.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/12203/">唐小娟</a></p>
 
 					<div class="meta asset-footer">
 						<p class="date-publish">
 							<span style="margin-left:1.2em;">Published: <span>
-							<date class="date-pub" title="2013-01-05" datetime="2013-01-05" pubdate>
-							<span class="year">2013-01-05</span>
+							<date class="date-pub" title="2012-02-01" datetime="2012-02-01" pubdate>
+							<span class="year">2012-02-01</span>
 							</date>
 						</p>
 						<ul class="list-category list-linear">
@@ -156,8 +350,8 @@ code})——可以在server端执行我们的js代码。</p>
 
   
      
-    	<li style="list-style:none;"><a href="/category.html#NoSql-ref">
-    		NoSql <span>16</span>
+    	<li style="list-style:none;"><a href="/category.html#javascript-ref">
+    		javascript <span>6</span>
     	</a></li>
     
   
@@ -172,7 +366,7 @@ code})——可以在server端执行我们的js代码。</p>
 
   
      
-    	<li><a href="/tags.html#Mongodb安全性初探-ref">Mongodb安全性初探 <span>1</span></a></li>
+    	<li><a href="/tags.html#javascript-ref">javascript <span>1</span></a></li>
     
   
 
@@ -180,7 +374,7 @@ code})——可以在server端执行我们的js代码。</p>
 
 						</ul>
 						<ul class="list-tag list-linear">
-							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html" target="_blank">http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html</a></li>
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.jobbole.com/12203/" target="_blank">http://blog.jobbole.com/12203/</a></li>
 
 						</ul>
 					</div><!-- meta -->
@@ -191,11 +385,11 @@ code})——可以在server端执行我们的js代码。</p>
 							<nav class="pagination">
 								<ul style="text-align:center;padding-top:5px;">
 									
-									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/12/15/http-protocol-proxy.html" title="View HTTP协议之代理">&laquo; HTTP协议之代理</a></li>
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2011/12/19/redis-install.html" title="View CentOS6.3下Redis安装">&laquo; CentOS6.3下Redis安装</a></li>
 									
 
 									
-									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2013/01/09/interesting-solution-http-status-code.html" title="View 趣解HTTP状态码">趣解HTTP状态码 &raquo;</a></li>
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html" title="View 前端必读：浏览器内部工作原理">前端必读：浏览器内部工作原理 &raquo;</a></li>
 									
 								</ul>
 							</nav>

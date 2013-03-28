@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Huang Ding</title>
+ <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-03-27T16:31:05+08:00</updated>
+ <updated>2013-03-28T13:26:25+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
-   <name>Huang Ding</name>
+   <name>HuangDing</name>
    <email>yif.com@gmail.com</email>
  </author>
 
@@ -41,10 +41,10 @@
 
 &lt;pre&gt;&lt;code&gt;var f = function foo(){
     return typeof foo; // foo是在内部作用域内有效
- };
- // foo在外部用于是不可见的
- typeof foo; // &quot;undefined&quot;
- f(); // &quot;function&quot;
+};
+// foo在外部用于是不可见的
+typeof foo; // &quot;undefined&quot;
+f(); // &quot;function&quot;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;这里想说一点的就是，在函数表达式中的foo，只能在函数内部引用，外面是不能引用的。&lt;/p&gt;
@@ -3200,6 +3200,103 @@ CS fork在这种技术的模块化方面看起来也很有趣。&lt;/p&gt;
 &lt;li&gt;&lt;p&gt;一个通用的真理就是，每一项技术的变化——从客户端-服务端技术开始甚至更早——需要十倍的成本才能进行转移。例如，从大型机到客户端-服务端、客户端-服务端到SOA、SOA到WEB、RDBMS到混合型持久化之间的转换都是如此。所以可以推断出，在将NoSQL加入到他们的产品决策上，很多的公司在迟疑和纠结。但是，大家也都知道，最先采用的公司会从这个两个领域获益并且能够快速集成NoSQL，所以在将来会占据更有利的位置。就这一点而言，NoSQL解决方案会一直存在并且评估起来会是有利可图的领域。&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
+</content>
+ </entry>
+ 
+ <entry>
+   <title>可伸缩系统的架构经验</title>
+   <link href="http://beango.github.com/archives/2013/02/27/scalability-system-architecture-lessons.html"/>
+   <updated>2013-02-27T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/02/27/scalability-system-architecture-lessons</id>
+   <content type="html">&lt;p&gt;来源：&lt;a href=&quot;http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/&quot;&gt;简单文本&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最近，阅读了Will Larson的文章&lt;a href=&quot;http://lethain.com/introduction-to-architecting-systems-for-scale/&quot;&gt;Introduction to Architecting System for Scale&lt;/a&gt;，感觉很有价值。作者分享了他在Yahoo!与Digg收获的设计可伸缩系统的架构经验。在我过往的架构经验中，由于主要参与开发企业软件系统，这种面向企业内部的软件系统通常不会有太大的负载量，太多的并发量，因而对于系统的可伸缩性考虑较少。大体而言，只要在系统部署上考虑集群以及负载均衡即可。本文给了我很多启发，现把本文的主要内容摘译出来，并结合自己对此的理解。&lt;/p&gt;
+
+&lt;p&gt;Larson首先认为，一个理想的系统，对于容量（Capacity）的增长应该与添加的硬件数是线性的关系。换言之，如果系统只有一台服务器，在增加了另一台同样的机器后，容量应该翻倍。以此类推。这种线性的容量伸缩方式，通常被称之为水平伸缩“Horizontal Scalability”。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-02/scalability.jpg&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability.jpg&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在设计一个健壮的系统时，自然必须首要考虑失败的情况。Larson认为，一个理想的系统是当失去其中一台服务器的时候，系统不会崩溃。当然，对应而言，失去一台服务器也会导致容量的响应线性减少。这种情况通常被称为冗余“Redundancy”。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;负载均衡&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;无论是水平伸缩还是冗余，都可以通过负载均衡来实现。负载均衡就好似一个协调请求的调停者，它会根据集群中机器的当前负载，合理的分配发往Web服务器的请求，以达到有效利用集群中各台机器资源的目的。显然，这种均衡器应该介于客户端与Web服务器之间，如下图所示：&lt;a href=&quot;/assets/files/2013-02/scalability01.png&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability01.png&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文提到了实现负载均衡的几种方法。其一是Smart
+Client，即将负载均衡的功能添加到数据库（以及缓存或服务）的客户端中。这是一种通过软件来实现负载均衡的方式，它的缺点是方案会比较复杂，不够健壮，也很难被重用（因为协调请求的逻辑会混杂在业务系统中）。对此，Larson在文章以排比的方式连续提出问题，以强化自己对此方案的不认可态度：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Is it attractive because it is the simplest solution? Usually, no. Is
+it seductive because it is the most robust? Sadly, no. Is it alluring
+because it’ll be easy to reuse? Tragically, no.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;第二种方式是采用硬件负载均衡器，例如&lt;a href=&quot;http://www.citrix.com/English/ps2/products/product.asp?contentID=21679&quot;&gt;Citrix NetScaler&lt;/a&gt;。不过，购买硬件的费用不菲，通常是一些大型公司才会考虑此方案。&lt;/p&gt;
+
+&lt;p&gt;如果既不愿意承受Smart Client的痛苦，又不希望花费太多费用去购买硬件，那就可以采用一种混合（Hybird）的方式，称之为软件负载均衡器（Software Load Balancer）。Larson提到了&lt;a href=&quot;http://haproxy.1wt.eu/&quot;&gt;HAProxy&lt;/a&gt;。它会运行在本地，需要负载均衡的服务都会在本地中得到均衡和协调。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为了减轻服务器的负载，还需要引入缓存。文章给出了常见的对缓存的分类，分别包括：预先计算结果（precalculating result，例如针对相关逻辑的前一天的访问量）、预先生成昂贵的索引（pre-generating expensive indexes，例如用户点击历史的推荐）以及在更快的后端存储频繁访问的数据的副本（例如&lt;a href=&quot;http://memcached.org/&quot;&gt;Memcached&lt;/a&gt;）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;应用缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;提供缓存的方式可以分为应用缓存和数据库缓存。此二者各擅胜场。应用缓存通常需要将处理缓存的代码显式地集成到应用代码中。这就有点像使用代理模式来为真实对象提供缓存。首先检查缓存中是否有需要的数据，如果有，就从缓存直接返回，否则再查询数据库。至于哪些值需要放到缓存中呢？有&lt;a href=&quot;http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used&quot;&gt;诸多算法&lt;/a&gt;，例如根据最近访问的，或者根据访问频率。使用Memcached的代码如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;key = &quot;user.%s&quot; % user_id
+user_blob = memcache.get(key)
+if user_blob is None:
+    user = mysql.query(&quot;SELECT * FROM users WHERE user_id=\&quot;%s\&quot;&quot;, user_id)
+    if user:
+        memcache.set(key, json.dumps(user))
+    return user
+else:
+    return json.loads(user_blob)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;数据库缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;数据库缓存对于应用代码没有污染，一些天才的DBA甚至可以在不修改任何代码的情况下，通过数据库调优来改进系统性能。例如通过配置Cassandra行缓存。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;内存缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为了提高性能，缓存通常是存储在内存中。常见的内存缓存包括Memcached和&lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt;。不过采用这种方式仍然需要合理的权衡。我们不可能一股脑儿的将所有数据都存放在内存中，虽然这会极大地改善性能，但比较起磁盘存储而言，RAM的代价更昂贵，同时还会影响系统的健壮性，因为内存中的数据没有持久化，容易丢失。正如之前提到的，我们应该将需要的数据放入缓存，通常的算法是&lt;a href=&quot;http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used&quot;&gt;least recently used&lt;/a&gt;，即LRU。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;CDN&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;提高性能，降低Web服务器负载的另一种常见做法是将静态媒体放入CDN（Content Distribution Network）中。如下图所示：&lt;a href=&quot;/assets/files/2013-02/scalability02.png&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability02.png&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;CDN可以有效地分担Web服务器的压力，使得应用服务器可以专心致志地处理动态页面；同时，CDN还可以通过地理分布来提高响应请求的性能。在设置了CDN后，当系统接收到请求时，首先会询问CDN以获得请求中需要的静态媒体（通常会通过HTTP Header来配置CDN能够缓存的内容）。如果请求的内容不可用，CDN会查询服务器以获得该文件，并在CDN本地进行缓存，最后再提供给请求者。如果当前网站并不大，引入CDN的效果不明显时，可以考虑暂不使用CDN，在将来可以通过使用一些轻量级的HTTP服务器如&lt;a href=&quot;http://nginx.org/&quot;&gt;Nginx&lt;/a&gt;，为静态媒体分出专门的子域名如static.domain.com来提供服务。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;缓存失效&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;引入缓存所带来的问题是如何保证真实数据与缓存数据之间的一致性。这一问题通常被称之为缓存失效（Cache Invalidation）。从高屋建瓴的角度来讲，解决这一问题的办法无非即使更新缓存中的数据。一种做法是直接将新值写入缓存中（通常被称为write-through cache）；另一种做法是简单地删除缓存中的值，在等到下一次读缓存值的时候再生成。&lt;/p&gt;
+
+&lt;p&gt;整体而言，要避免缓存实效，可以依赖于数据库缓存，或者为缓存数据添加有效期，又或者在实现应用程序逻辑时，尽量考虑避免此问题。例如不直接使用DELETE FROM a WHERE…来删除数据，而是先查询符合条件的数据，再使得缓存中对应的数据失效，继而根据其主键显式地删除这些行。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Off-Line处理&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这篇文章还提到了Off-Line的处理方式，即通过引入消息队列的方式来处理请求。事实上，在大多数企业软件系统中，这种方式也是较为常见的做法。在我撰写的文章《&lt;a href=&quot;http://agiledon.github.com/blog/2012/12/27/distributed-architecture-based-on-message/&quot;&gt;案例分析:基于消息的分布式架构&lt;/a&gt;》中，较为详细地介绍了这种架构。在引入消息队列后，Web服务器会充当消息的发布者，而在消息队列的另一端可以根据需要提供消费者Consumer。如下图所示。对于Off-Line的任务是否执行完毕，通常可以通过轮询或回调的方式来获知。&lt;a href=&quot;/assets/files/2013-02/scalability03.png&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability03.png&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;为了更好地提高代码可读性，可以在公开的接口定义中明确地标示该任务是On-Line还是Off-Line。&lt;/p&gt;
+
+&lt;p&gt;引入Message Queue，可以极大地缓解Web服务器的压力，因为它可以将耗时较长的任务转到专门的机器上去执行。&lt;/p&gt;
+
+&lt;p&gt;此外，通过引入定时任务，也可以有效地利用Web服务器的空闲时间来处理后台任务。例如，通过Spring Batch Job来执行每日、每周或者每月的定时任务。如果需要多台机器去执行这些定时任务，可以引入Spring提供的&lt;a href=&quot;https://puppetlabs.com/&quot;&gt;Puppet&lt;/a&gt;来管理这些服务器。Puppet提供了可读性强的声明性语言来完成对机器的配置。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Map-Reduce&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;对于大数据的处理，自然可以引入Map-Reduce。为整个系统专门引入一个Map-Reduce层来处理数据是有必要的。相对于使用SQL数据库作为数据中心的方式，Map-Reduce对可伸缩性的支持更好。Map-Reduce可以与任务的定时机制结合起来。如下图所示：&lt;a href=&quot;/assets/files/2013-02/scalability04.png&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability04.png&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;平台层&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Larson认为，大多数系统都是Web应用直接与数据库通信，但如果能加入一个平台层（Platform Layer），或许会更好。&lt;a href=&quot;/assets/files/2013-02/scalability05.png&quot; title=&quot;可伸缩系统的架构经验&quot;&gt;&lt;img src=&quot;/assets/files/2013-02/scalability05.png&quot; title=&quot;可伸缩系统的架构经验&quot; alt=&quot;可伸缩系统的架构经验&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;首先，将平台与Web应用分离，使得它们可以独立地进行伸缩。例如需要添加一个新的API，就可以添加新的平台服务器，而无需增加Web服务器。要知道，在这样一个独立的物理分层架构中，不同层次对服务器的要求是不一样的。例如，对于数据库服务器而言，由于需要频繁地对磁盘进行I/O操作，因此应保证数据库服务器的IO性能，如尽量使用固态硬盘。而对于Web服务器而言，则对CPU的要求比较高，尽可能采用多核CPU。&lt;/p&gt;
+
+&lt;p&gt;其次，增加一个额外的平台层，可以有效地提高系统的可重用性。例如我们可以将一些与系统共有特性以及横切关注点的内容（如对缓存的支持，对数据库的访问等功能）抽取到平台层中，作为整个系统的基础设施（Infrastructure）。尤其对于产品线系统而言，这种架构可以更好地为多产品提供服务。&lt;/p&gt;
+
+&lt;p&gt;最后，这种架构也可能对跨团队开发带来好处。平台可以抽离出一些与产品无关的接口，从而隐藏其具体实现的细节。如果划分合理，并能设计出相对稳定的接口，就可以使得各个团队可以并行开发。例如可以专门成立平台团队，致力于对平台的实现以及优化。&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
 </content>
  </entry>
  
@@ -6386,6 +6483,216 @@ The composition of a cluster can be altered dynamically. All RabbitMQ brokers st
 如果集群中只有内存节点，那么不能停止它们，否则所有的状态，消息等都会丢失&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+</content>
+ </entry>
+ 
+ <entry>
+   <title>我为什么向后端工程师推荐Node.js</title>
+   <link href="http://beango.github.com/archives/2012/08/12/why-recommend-nodejs.html"/>
+   <updated>2012-08-12T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/08/12/why-recommend-nodejs</id>
+   <content type="html">&lt;p&gt;来源：&lt;a href=&quot;http://www.infoq.com/cn/articles/why-recommend-nodejs&quot;&gt;李穆&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;科普文一则，说说我对&lt;a href=&quot;http://blog.jobbole.com/1254/&quot; title=&quot;Node.js 究竟是什么？&quot;&gt;Node.js&lt;/a&gt;的一些认识，以及我作为前端工程师为什么会向后端工程师推荐Node.js。&lt;/p&gt;
+
+&lt;p&gt;“Node.js 是服务器端的JavaScript运行环境，它具有无阻塞(non-blocking)和事件驱动(event-driven)等的特色，Node.js采用V8引擎，同样，Node.js实现了类似 Apache 和 nginx 的web服务，让你可以通过它来搭建基于 JavaScript的Web App。”&lt;/p&gt;
+
+&lt;p&gt;我想不仅仅是Node.js，当我们要引入任何一种新技术前都必须要搞清楚几个问题:&lt;/p&gt;
+
+&lt;p&gt;​1. 我们遇到了什么问题？&lt;/p&gt;
+
+&lt;p&gt;​2. 这项新技术解决什么问题，是否契合我们遇到的问题？&lt;/p&gt;
+
+&lt;p&gt;​3. 我们遇到问题的多种解决方案中，当前这项新技术的优势体现在哪儿？&lt;/p&gt;
+
+&lt;p&gt;​4. 使用新技术，带来哪些新问题，严重么，我们能否解决掉？&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;我们的问题：Server端阻塞&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Node.js被设计用来解决服务端阻塞问题.下面通过一段简单的代码解释何为阻塞：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//根据ID，在数据库中Persons表中查出Name
+ var name = db.query(&quot;select name from persons where id=1&quot;);
+ //进程等待数据查询完毕，然后使用查询结果。
+ output(&quot;name&quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这段代码的问题是在上面两个语句之间，在整个数据查询的过程中，当前程序进程往往只是在等待结果的返回.这就造成了进程的阻塞.对于高并发，I/O密集行的网络应用中，一方面进程很长时间处于等待状态，另一方面为了应付新的请求不断的增加新的进程.这样的浪费会导致系统支持QPS远远小于后端数据服务能够支撑的QPS，成为了系统的瓶颈.而且这样的系统也特别容易被慢链接攻击(客户端故意不接收或减缓接收数据，加长进程等待时间)。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;如何解决阻塞问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;可以引入事件处理机制解决这个问题。在查询请求发起之前注册数据加载事件的响应函数，请求发出之后立即将进程交出，而当数据返回后再触发这个事件并在预定好的事件响应函数中继续处理数据：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//定义如何后续数据处理函数
+function onDataLoad(name){
+   output(&quot;name&quot;);
+}
+//发起数据请求，同时指定数据返回后的回调函数
+db.query(&quot;select name from persons where id=1&quot;,onDataLoad);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们看到若按照这个思路解决阻塞问题，首先我们要提供一套高效的异步事件调度机制.而主要用于处理&lt;a href=&quot;http://blog.jobbole.com/12749/&quot; title=&quot;浏览器&quot;&gt;浏览器&lt;/a&gt;端的各种交互事件的JavaScript。相对于其他语言，至少有两个关键点特别适合完成这个任务。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;为什么JS适合解决阻塞问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;首先JavaScript是一种函数式&lt;a href=&quot;http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/&quot; title=&quot;如何选择语言和编程语言排名相关文章&quot;&gt;编程语言&lt;/a&gt;，函数编程语言最重要的数学基础是λ演算(lambda calculus) — 即函数对象可以作为其他函数对象的输入(参数)和输出(返回值)。&lt;/p&gt;
+
+&lt;p&gt;这个特性使得为事件指定回调函数变得很容易。特别是JavaScript还支持匿名函数。通过匿名函数的辅助，之前的代码可以进行简写如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;db.query(&quot;select name from persons where id=1&quot;,function(name){
+    output(name);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还有另一个关键问题是，异步回调的运行上下文保持(本文暂称其为”状态保持”)。我们先来看一段代码来说明何为状态保持：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//传统同步写法：将查询和结果打印抽象为一个方法
+function main(){
+    var id = &quot;1&quot;;
+    var name = db.query(&quot;select name from persons where id=&quot; + id);
+    output(&quot;person id:&quot; + id + &quot;, name:&quot; + name);
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;前面的写法在传统的阻塞是编程中非常常见，但接下来进行异步改写时会遇到一些困扰：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//异步写法：
+function main(){
+    var id = &quot;1&quot;;
+    db.query(&quot;select name from persons where id=&quot; + id,function(name){
+        output(&quot;person id:&quot; + id + &quot;, name:&quot; + name);//n秒后数据返回后执行回调
+    });
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;细心的朋友可能已经注意到，当等待了n秒数据查询结果返回后执行回调时。回调函数中却仍然使用了main函数的局部变量”id”，而”id”似乎应该在n秒前走出其作用域。为什么此时”id”仍然可以访问呢，这是因为JavaScript的另外一个重要语言特性：闭包(Closures)。接下来我来详解闭包的原委。&lt;/p&gt;
+
+&lt;p&gt;在复杂的应用中，我们一定会遇到这类场景。即在函数运行时需要访问函数定义时的上下文数据(注意：一定要区分函数定义时和函数运行时两个不同的时刻)。特别是在异步编程模型中，函数的定义和运行又分处不同的时间段，那么保持上下文的问题变得更加突出了。因为我们在任务执行一半时把资源交出去没有问题，但当任务需要再次继续时我们必须还原现场。&lt;/p&gt;
+
+&lt;p&gt;在这个例子中，db.query作为一个公共的数据库查询方法，把”id”这个业务数据传入给db.query，交由其保存是不太合适的。但我们可以稍作抽象，让db.query再支持一个需要保持状态的数据对象传入，当数据查询完毕后可以把这些状态数据原封不动的回传。如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+    var id = &quot;1&quot;;
+    var currentState = new Object();
+    currentState.person_id = id;
+    db.query(&quot;select name from persons where id=&quot; + id, function(name,state){
+        output(&quot;person id:&quot; + state.person_id + &quot;, name:&quot; + name);
+    },currentState);//注意currentState是db.query的第三个参数
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;记住这种重要的思路，我们再看看是否还能进一步的抽象？可以的，不过接下的动作之前，我们还要了解在JavaScript中一个函数也是一个对象。
+一个函数实例fn除了函数体的定义之外，我们仍然可以在这个函数对象实例之本身扩展其他属性，如fn.a=1;受到这个启发我们尝试把需要保持的状态直接绑定到函数实例上：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+    var id = &quot;1&quot;;
+    var currentState = new Object();
+    currentState.person_id = id;
+    function onDataLoad(name){
+        output(&quot;person id:&quot; + onDataLoad.state.person_id + &quot;, name:&quot; + name);
+    }
+    onDataLoad.state = currentState ;//为函数指定state属性，用于保持状态
+    db.query(&quot;select name from persons where id=&quot; + id, onDataLoad);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们做了什么？生成了currentState对象，然后在函数onDataLoad定义时，将currentState绑定给onDataLoad这个函数实例。那么在onDataLoad运行时，就可以拿到定义时的state对象了。JavaScript的闭包特性就是内置了这个过程而已。&lt;/p&gt;
+
+&lt;p&gt;在每个JavaScript函数运行时，都有一个运行时内部对象称为Execution Context，它包含如下Variable Object(VO,变量对象)， Scope Chain(作用域链)和”this” Value三部分。如图:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2012-08/why-recommend-nodejs.jpg&quot; title=&quot;why recommend nodejs&quot;&gt;&lt;img src=&quot;/assets/files/2012-08/why-recommend-nodejs.jpg&quot; title=&quot;why recommend nodejs&quot; alt=&quot;我为什么向后端工程师推荐Node.js&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;图片来自&lt;a href=&quot;http://dmitrysoshnikov.com/ecmascript/javascript-the-core/#execution-context&quot;&gt;ECMA-262 JavaScript .The Core&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;其中变量对象VO，包含了所有局部变量的引用。对于main函数，局部变量”id”存储在VO.id内。看起来用VO来代替我们的currentSate最合适了。但main函数还可能嵌套在其他函数之内，所以我们需要ScopeChain，它是一个包含当前运行函数VO和其所有父函数scope的数组。&lt;/p&gt;
+
+&lt;p&gt;所以在这个例子中，在onDataLoad函数定义时，就为默认为其绑定了一个[[scope]]属性指向其父函数的ExecutionContext的ScopeChain。而当函数onDataLoad执行时，就可以通过[[scope]]属性来访问父函数的VO对象来找到id，如果父函数的VO中没有id这个属性，就再继续向上查找其祖先的VO对象，直到找到id这个属性或到达最外层返回undefined。也正是因为这个引用，造成VO的引用计数不为0，在走出作用域时，才不会被垃圾回收。&lt;/p&gt;
+
+&lt;p&gt;很多朋友觉得闭包较难理解，其实我们只要能明确的区分函数定义和函数运行两个时机，那么闭包就是让函数在运行时能够访问到函数定义时的所处作用域内的所有变量，或者说函数定义时能访问到什么变量，那么在函数运行时通过相同的变量名一样能访问到。&lt;/p&gt;
+
+&lt;p&gt;关于状态保持是本文的重点，在我看到的多数Node.js的介绍文章中并没有详解这里，我们只是知道了要解决阻塞问题，但是JavaScript解决阻塞问题的优势到底在哪里，作为一名前端工程师，我想有必要花一些篇幅详细解释一下。&lt;/p&gt;
+
+&lt;p&gt;而之所以我叫它”状态保持”因为还有一个非常相似的场景可以类比：&lt;/p&gt;
+
+&lt;p&gt;用户从A页面提交表单到B页面，如果提交数据校验不通过，则需要返回A页面，同时保持用户在A页面填写的内容并提示用户修改不对的地方。从提交到校验出错再返回继续填写是一个包含网络交互的异步过程，这相当于填写表单这个任务过会儿再继续。&lt;/p&gt;
+
+&lt;p&gt;在传统网页开发中，用户的状态通过请求传递到服务端，交由后端状态保持(类似交给db.query的currentSate)。而使用Ajax的网页，因为并未离开原页面，那么服务端只要负责校验用户提交的数据是否正确即可，发送错误，返回错误处相关信息即可，这就是所谓前端状态保持。可以看到这个场景里边服务端做的事情变少了，变纯粹了。正如我们的例子中db.query不再存储转发第三个state参数，变得更在轻量。&lt;/p&gt;
+
+&lt;p&gt;我们看到通过JavaScript函数式语言特性，匿名函数支持和闭包很漂亮的解决了同步编程到异步编程转化过程中遇到的一系列最重要的问题。但JavaScript是否就是最好的？这就要回答我们引用新技术时需要考虑的最后一个问题了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用Node.js是否带来额外的困扰，如何解决？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Node.js性能真的是最好么？不用比较我们也可以得到结论，Node.js做无阻塞编程性能较难做到极致。何为极致？处理一个请求需要占用多少内存，多少cpu资源，多少带宽，有丁点浪费就不是极致。阻塞式编程浪费了大量进程资源只是在等待，导致大量内存和cpu的浪费。在这方面Node.js好很多，但也正是因为一些闭包等JavaScript内建机制也会导致资源的浪费，看下面的代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+    var id = &quot;1&quot;;
+    var str = &quot;...&quot;; //这里局部变量str存储一个2M的字符串
+    db.query(&quot;select name from persons where id=&quot; + id,function(name){
+        output(&quot;person id:&quot; + id + &quot;, name:&quot; + name);//n秒后数据返回后执行回调
+    });
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至少整个数据查询过程中，变量str所使用的2M内存并不会被释放，而str保持下去可能并没有意义。前面已经解释过闭包的原理，闭包并没有智能到只包起来今后可能被访问到的对象。即使不了解闭包的原理，也可以通过一段简单脚本验证这点：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+    var id = &quot;1&quot;;
+    var str = &quot;...&quot;; //这里存储一个2M的字符串
+    window.setTimeout(function(){
+        debugger; //我们在这里设置断点
+    },10000)
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们在回调函数当中只设置一个断点，并不指明我们要访问哪个变量。然后我们在控制台监视一下，id和str都是可以拿到的。&lt;/p&gt;
+
+&lt;p&gt;所以我来猜想一下，性能极端苛刻的场景，无阻塞是未来，但无阻塞发展下去，或者有更轻量的脚本引擎产生，或者JavaScript引擎可能要调整可以disable闭包，或者我们要通过给JS开发静态编译器在代码发布前自动优化我们的代码。&lt;/p&gt;
+
+&lt;p&gt;静态编译是如今JavaScript技术领域的又一个热点，我们都知道JavaScript是解释型脚本语言，在运行时自动编译。但是运行时编译只是将代码转为机器码执行，却并未覆盖传统编译型语言在编译阶段所做的任务。比如，语法检查，接口校验，全局性能优化等等。&lt;/p&gt;
+
+&lt;p&gt;最常见的JavaScript静态编译就是脚本压缩工具，在代码发布到线上之前，我们通过各种压缩工具，将代码压缩，达到减少网络传输量的问题。而在这个时间点，已经有越来越多的事情可做，比如：Google利用ClouserComplier提供的系列编译指令，让JavaScript更好的实现OO编程。也有GWT，CoffeeScript这样的项目，将其他语言编译为JavaScript。在淘宝我们在代码静态编译阶段来解决因JavaScript细粒度模块化改造引入各种性能问题，也用来对第三方提供JavaScript代码进行一定的安全检查。&lt;/p&gt;
+
+&lt;p&gt;我们期待前面的代码经过静态编译器编译后变成如下结果：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+    var id = &quot;1&quot;;
+    var str = &quot;...&quot;; //这里局部变量str存储一个2M的字符串
+    db.query(&quot;select name from persons where id=&quot; + id,function(name){
+        output(&quot;person id:&quot; + id + &quot;, name:&quot; + name);
+    });
+    str = &quot;&quot;; //通过这一行，及时释放不必要的内存占用。
+}
+main();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;除了性能方面的担忧，使用Node.js进行编程增加了代码编写的复杂度。因为我们习惯于阻塞式编程的写法，切换到异步模式编程，往往对于太多多层次的callback函数嵌套弄得不知所措。老赵最近开发了项目&lt;a href=&quot;https://github.com/JeffreyZhao/jscex&quot;&gt;JSCEX&lt;/a&gt;正是要解决这个问题，它让大家在遵守一些小的约定后，能够仍然保持同步编程的写法进行代码开发。写完的代码同样通过静态编译器编译成异步回调式模式的代码再交给JavaScript引擎执行。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Node.js还要解决什么问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;说了这么多，无阻塞编程要做的还远不止这些。首先需要一个高效的JS引擎，高效的事件池和线程池。另外几乎所有和Node.js交互的传统模块如文件系统，数据访问，HTTP解析，DNS解析都是阻塞式的，都需要额外改造。&lt;/p&gt;
+
+&lt;p&gt;Node.js作者极其团队，正是认清问题所在以及JS解决这些问题方面的优势。基于Google开源的高效JavaScript引擎V8，贡献了大量的智慧和精力解决上述大部分问题后才有Node.js横空出世。&lt;/p&gt;
+
+&lt;p&gt;当前Node社区如此火热，千余开源的&lt;a href=&quot;https://github.com/joyent/node/wiki/modules&quot;&gt;Node.js模块&lt;/a&gt;，活跃在WebFramework，WebSocket，RPC，模板引擎，数据抓取服务，图形图像几乎所有工程领域。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;后记&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;本文主要的信息来自Node.js作者在&lt;a href=&quot;http://s3.amazonaws.com/four.livejournal/20091117/jsconf.pdf&quot;&gt;JSConf09&lt;/a&gt;，&lt;a href=&quot;http://nodejs.org/jsconf2010.pdf&quot;&gt;JSConf10&lt;/a&gt;上的分享。而作为前端开发，着重讲了函数式编程，闭包对于无阻塞开发的重要意义。我期待这篇文章能够给前端和后端工程师都带来收获。&lt;/p&gt;
+
+&lt;p&gt;同样作为前端开发，不得不再插几句，说说服务端JS能够解决的另一个问题：当前的Web开发前后端使用不同的语言，很多相同的业务逻辑要前后端分别用不同语言重复实现。比如越来越多重度依赖JavaScript的胖客户端应用，当客户浏览器禁用JavaScript时，则需要使用服务端语言将主业务流程再实现一次，这即是前端常说的”渐进增强”。&lt;/p&gt;
+
+&lt;p&gt;当我们拥有了服务端JavaScript语言，我们自然就会想到能否利用Node.js做到”一次开发，渐进增强”。解决掉这个为小量用户，浪费大量时间的恼人的问题。这方面的实践，YAHOO仍然是先驱，早在一年多前开始YAHOO通过&lt;a href=&quot;https://github.com/davglass/nodejs-yui3&quot;&gt;nodejs-yui3&lt;/a&gt;项目做了很多卓越的贡献，而淘宝自主开发的前端框架&lt;a href=&quot;http://ued.taobao.com/blog/2010/11/04/nodejs-kissy/&quot;&gt;Kissy&lt;/a&gt;也有服务端运行的相关尝试。&lt;/p&gt;
+
+&lt;p&gt;JavaScript在诞生之时就不仅仅是浏览器端工具，如今JavaScript能够再一次回到服务端展示拳脚，感谢V8，感谢NodeJS作者，团队和社区的诸多贡献者，祝Node好运，JavaScript好运。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;关于作者&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;李穆，前端工程师，就职于淘宝广告技术部架构组，淘宝花名：李牧，专注淘宝广告引擎和业务系统前端开发。&lt;/p&gt;
 </content>
  </entry>
  
@@ -10385,6 +10692,293 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
 &lt;p&gt;&lt;img src=&quot;/assets/files/2012-02/2011110317002510.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　　虽然绿色div排在红色div后面，可能在正常流中也已经被绘制在后面，但z-index有更高优先级，所以在根box的堆栈中更靠前。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>完全理解关键字this</title>
+   <link href="http://beango.github.com/archives/2012/02/01/fully-understanding-the-this-keyword.html"/>
+   <updated>2012-02-01T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/02/01/fully-understanding-the-this-keyword</id>
+   <content type="html">&lt;p&gt;今天的教程来自天才的&lt;a href=&quot;http://codylindley.com/&quot;&gt;Cody Lindley&lt;/a&gt;的新书：《JavaScript启蒙教程&lt;a href=&quot;http://javascriptenlightenment.com/&quot;&gt;JavaScript Enlightenment&lt;/a&gt;》。他讨论了令人迷惑的关键字this，以及确定和设置this的值的方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;概念性的概述this&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当一个函数创建后，一个关键字this就随之(在后台)创建，它链接到一个对象，而函数正是在这个对象中进行操作。换句话说，关键字this可在函数中使用，是对一个对象的引用，而函数正是该对象的属性或方法。&lt;/p&gt;
+
+&lt;p&gt;让我们来看这个对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+var cody = {
+  living:true,
+  age:23,
+  gender:'male',
+  getGender:function(){return cody.gender;}
+};
+
+console.log(cody.getGender()); // logs 'male'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意在函数getGender里，由于在cody对象内部，我们可以通过.来获取gender属性(也就是cody.gender)。也可以用this来获取cody对象，因为this正是指向cody对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+var cody = {
+  living:true,
+  age:23,
+  gender:'male',
+  getGender:function(){return this.gender;}
+};
+
+console.log(cody.getGender()); // logs 'male'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;this.gender中this指向cody对象，而getGender函数可以操作cody对象。&lt;/p&gt;
+
+&lt;p&gt;关于this的主题可能有点让人感到困惑，其实不必如此。仅记住，通常，this指向的对象正是包含函数的对象，而不是函数本身（当然也有例外，例如采用关键字new或者call()和apply()）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;重要提示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;****- 关键字this就像其他的变量，唯一不同就是你不能更改它。&lt;/p&gt;
+
+&lt;p&gt;-
+不同于传给函数的其他参数和变量，在调用函数的对象中，this是一个关键字(而不是属性)。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;如何确定this的值？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;this传递给所有的函数，它的值取决于函数运行时何时被调用。这里请注意，因为这是你需要记住的一个很特别的地方。&lt;/p&gt;
+
+&lt;p&gt;下面的代码中myObject对象有个属性sayFoo，它指向函数sayFoo。当在全局域中调用sayFoo函数时，this指向window对象。当myObject调用函数时，this指向的是myObject。&lt;/p&gt;
+
+&lt;p&gt;因为myObject有个叫foo的属性，在这里被使用。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var foo = 'foo';
+var myObject = {foo: 'I am myObject.foo'};
+
+var sayFoo = function() {
+  console.log(this['foo']);
+};
+
+￼￼// give myObject a sayFoo property and have it point to sayFoo function
+myObject.sayFoo = sayFoo;
+myObject.sayFoo(); // logs 'I am myObject.foo' 12
+
+sayFoo(); // logs 'foo'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;很清楚，this的值取决于函数什么时候被调用。myObject.sayFoo和sayFoo都指向同样的函数，但sayFoo()调用的上下文不同，this的值也就不同。下面是类似的代码，head对象(window)显式使用，希望对你有用。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+window.foo = 'foo';
+window.myObject = {foo: 'I am myObject.foo'};
+window.sayFoo = function() { ! console.log(this.foo); };
+window.myObject.sayFoo = window.sayFoo;
+window.myObject.sayFoo();
+window.sayFoo();
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;确保当你有多个引用指向同一个函数的时候，你清楚的知道this的值是随调用函数的上下文的不同而改变。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;重要提示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;****- 除了this以外的所有变量和参数都属于静态变量范围(&lt;a href=&quot;http://en.wikipedia.org/wiki/Lexical_scope#Lexical_scoping&quot;&gt;lexical
+scope&lt;/a&gt;)。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;在嵌入函数内this指向head对象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;你可能想知道在嵌入在另外一个函数的函数中使用this会发生什么事。不幸的是在ECMA 3中，this不遵循规律，它不指向函数属于的对象，而是指向head对象(&lt;a href=&quot;http://blog.jobbole.com/12749/&quot; title=&quot;浏览器&quot;&gt;浏览器&lt;/a&gt;的window对象)。&lt;/p&gt;
+
+&lt;p&gt;在下面的代码，func2和func3中的this不再指向myObject，而是head对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var myObject = {
+  func1:function() {
+     console.log(this); //logs myObject
+     varfunc2=function() {
+        console.log(this); //logs window, and will do so from this point on
+        varfunc3=function() {
+           console.log(this); //logs window, as it’s the head object
+        }();
+     }();
+  }
+};
+
+myObject.func1();
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然而在ECMAScript 5中，这个问题将会得到修正。现在，你应该意识到这个问题，尤其是当你将一个函数的值传递到另一个函数时。&lt;/p&gt;
+
+&lt;p&gt;看看下面的代码，将一个匿名函数传给foo.func1，当在foo.func1中调用匿名函数(函数嵌套在另一个函数中)，匿名函数中this将会指向是head对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+var foo = {
+  func1:function(bar){
+    bar(); //logs window, not foo
+    console.log(this);//the this keyword here will be a reference to foo object
+  }
+};
+
+foo.func1(function(){console.log(this)});
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在你不会忘了，如果包含this的函数在另一个函数中，或者被另一个函数调用，this的值将会指向的是head对象(再说一次，这将在ECMAScript 5中被修正。)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;解决嵌套函数的问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为了使this的值不丢失，你可以在父函数中使用一个作用域链(scope chain)来保存对this进行引用。下面的代码中，使用一个叫that的变量，利用它的作用域，我们可以更好的保存函数上下文。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var myObject = {
+  myProperty:'Icanseethelight',
+    myMethod:function() {
+   var that=this; //store a reference to this (i.e.myObject) in myMethod scope varhelperFunctionfunction(){//childfunction
+   var helperFunction function() { //childfunction
+      //logs 'I can see the light' via scope chain because that=this
+           console.log(that.myProperty); //logs 'I can see the light'
+           console.log(this); // logs window object, if we don't use &quot;that&quot;
+        }();
+    }
+}
+
+myObject.myMethod(); // invoke myMethod
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;控制this的值&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;this的值通常取决于调用函数的上下文(除非使用关键字new，稍后会为你介绍)，但是你可以用apply()或call()指定触发一个函数时this指向的对象，以改变/控制this的值。用这两种方法就好像再说：“嘿，调用X函数，但让Z对象来作this的值。”这样做，JavaScript默认的this的值将被更改。&lt;/p&gt;
+
+&lt;p&gt;下面，我们创建了一个对象和一个函数，然后我们通过call()来触发函数，所以函数中的this指向的是myOjbect。在myFunction函数中的this会操作myObject而不是head对象，这样我们就改变了在myFunction中this指向的对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var myObject = {};
+
+var myFunction = function(param1, param2) {
+  //setviacall()'this'points to my Object when function is invoked
+  this.foo = param1;
+  this.bar = param2;
+  console.log(this); //logs Object{foo = 'foo', bar = 'bar'}
+};
+
+myFunction.call(myObject, 'foo', 'bar'); // invoke function, set this value to myObject
+
+console.log(myObject) // logs Object {foo = 'foo', bar = 'bar'}
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在上面的例子，我们用了call()，apply()也可适用于同样用法，二者的不同之处在于参数如何传给函数。用call()，参数用逗号分开，而用apply()，参数放在一个数组中传递。下面是同样的代码，但是用apply()。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var myObject = {};
+
+var myFunction = function(param1, param2) {
+  //set via apply(), this points to my Object when function is invoked
+  this.foo=param1;
+  this.bar=param2;
+  console.log(this); // logs Object{foo='foo', bar='bar'}
+};
+
+myFunction.apply(myObject, ['foo', 'bar']); // invoke function, set this value
+console.log(myObject); // logs Object {foo = 'foo', bar = 'bar'}
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;在自定义构造函数中用this&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当函数用关键字new来触发，this的值–由于在构造函数中声明–指向实例本身。换种说法：在构造函数中，我们可以在对象真正创建之前，就用this来指定对象。这样看来，this值的更改和call()或apply()相似。&lt;/p&gt;
+
+&lt;p&gt;下面，我们构造了一个构造函数Person，this指向创建的对象。当Person的对象创建后，this指向这个对象，并将属性name放在对象内，值为传给这个构造函数的参数值(name)。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var Person = function(name) {
+  this.name = name || 'johndoe'; // this will refer to the instanc ecreated
+}
+
+var cody = new Person('Cody Lindley'); // create an instance, based on Person constructor
+
+console.log(cody.name); // logs 'Cody Lindley'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样，当用关键字new触发构造函数时，this指向“要创建的对象”。那么如果我们没有用关键字new，this的值将会指向触发Person的上下文——这时是head对象。让我们来看看下面的代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var Person = function(name) {
+  this.name=name||'johndoe';
+}
+
+var cody = Person('Cody Lindley'); // notice we did not use 'new'
+console.log(cody.name); // undefined, the value is actually set at window.name
+console.log(window.name); // logs 'Cody Lindley'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;在prototype方法内的this指向构造实例&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当一个方法作为一个构造函数的prototype属性时，这个方法中的this指向触发方法的实例。这里，我们有一个Person()的构造函数，它需要person的全名(full name)，为了获得全名(full name)，我们在Person.prototype中加入了一个whatIsMyFullName方法，所有的Person实例都继承该方法。这个方法中的this指向触发这个方法的实例(以及它的属性)。&lt;/p&gt;
+
+&lt;p&gt;下面我创建了两个Person对象(cody和lisa)，继承的whatIsMyFullName方法包含的this就指向这个实例。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&quot;en&quot;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;script&amp;gt;
+
+var Person = function(x){
+    if(x){this.fullName = x};
+};
+
+Person.prototype.whatIsMyFullName = function() {
+    return this.fullName; // 'this' refers to the instance created from Person()
+}
+
+var cody = new Person('cody lindley');
+var lisa = new Person('lisa lindley');
+
+// call the inherited whatIsMyFullName method, which uses this to refer to the instance
+console.log(cody.whatIsMyFullName(), lisa.whatIsMyFullName());
+
+/* The prototype chain is still in effect, so if the instance does not have a
+fullName property, it will look for it in the prototype chain.
+Below, we add a fullName property to both the Person prototype and the Object
+prototype. See notes. */
+
+Object.prototype.fullName = 'John Doe';
+var john = new Person(); // no argument is passed so fullName is not added to instance
+console.log(john.whatIsMyFullName()); // logs 'John Doe'
+
+&amp;lt;/script&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在prototype对象内的方法里使用this，this就指向实例。如果实例不包含属性的话，prototype查找便开始了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;提示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;-如果this指向的对象不包含想要查找的属性，那么这时对于任何属性都适用的法则在这里也适用，也就是，属性会沿着prototype链(prototype chain)上“寻找”。所以在我们的例子中，如果实例中不包含fullName属性，那么fullName就会查找Person.prototype.fullName，然后是Object.prototype.fullName。&lt;/p&gt;
+
+&lt;p&gt;英文原文：&lt;a href=&quot;http://net.tutsplus.com/tutorials/javascript-ajax/fully-understanding-the-this-keyword/?ref=vastwork&quot;&gt;Fully Understanding the this Keyword&lt;/a&gt; 
+编译：&lt;a href=&quot;http://www.jobbole.com&quot;&gt;伯乐在线&lt;/a&gt; - &lt;a href=&quot;http://blog.jobbole.com/12203/&quot;&gt;唐小娟&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
