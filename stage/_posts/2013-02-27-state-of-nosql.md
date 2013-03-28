@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql,企业架构]
+categories: [NoSql,软件架构]
 date: 2013-02-27
 title: "NoSQL的现状"
 description: "NoSQL的现状"

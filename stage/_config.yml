@@ -13,10 +13,12 @@ markdown: rdiscount
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Huang Ding
+title : 程序员 - 博客 - HuangDing
+url : http://www.yif1.com
+type : website
 tagline: Site Tagline
 author :
-  name : Huang Ding
+  name : HuangDing
   email : yif.com@gmail.com
   github : beango
   twitter : beango

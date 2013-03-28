@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [企业架构]
+categories: [软件架构]
 date: 2012-04-15
 title: "使用缓存的9大误区（上）"
 description: "使用缓存的9大误区（上）"

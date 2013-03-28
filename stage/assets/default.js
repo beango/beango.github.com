@@ -10,10 +10,6 @@ function toggle(obj){
 	event.preventDefault();
 }
 
-$(function(){
-	$(".linkcodetoggle").parent().next().hide();
-});
-
 //plugin
 jQuery.fn.topLink = function(settings) {
   settings = jQuery.extend({
@@ -37,8 +33,11 @@ jQuery.fn.topLink = function(settings) {
   });
 };
 
-//usage w/ smoothscroll
-$(document).ready(function() {
+$(function() {
+  $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
+  window.prettyPrint && prettyPrint();
+  $(".linkcodetoggle").parent().next().hide();
+
   //set the link
   $('#top-link,#btm-link').topLink({
 	min: 0,
@@ -53,5 +52,4 @@ $(document).ready(function() {
 	e.preventDefault();
 	$.scrollTo('max',300);
   });
-});    
- 
+});

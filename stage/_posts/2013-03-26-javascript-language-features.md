@@ -36,10 +36,10 @@ redirecturl: http://freestyle21.cn/writings/javascript-core.html
 
     var f = function foo(){
         return typeof foo; // foo是在内部作用域内有效
-     };
-     // foo在外部用于是不可见的
-     typeof foo; // "undefined"
-     f(); // "function"
+    };
+    // foo在外部用于是不可见的
+    typeof foo; // "undefined"
+    f(); // "function"
 
 这里想说一点的就是，在函数表达式中的foo，只能在函数内部引用，外面是不能引用的。
 

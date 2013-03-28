@@ -1,6 +1,5 @@
 ---
 layout: post
-section: Archive
 categories: [职场]
 date: 2013-02-21
 title: "程序猿的真实生活(GIF)"

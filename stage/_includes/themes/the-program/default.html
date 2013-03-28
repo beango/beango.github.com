@@ -7,7 +7,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>{{ page.title }}</title>
-	<meta name="author" content="{{ site.author.name }}">
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='{{ page.title }}'/>
+	<meta property='og:url' content='{{ site.url }}'/>
+	<meta property='og:site_name' content='{{ site.title }}'/>
+	<meta property='og:type' content='article'/>
 	<link href='{{ ASSET_PATH }}/css/style.css' rel="stylesheet" media="all" />
 	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
 </head>
@@ -19,7 +23,7 @@
 			<div class="unit-inner unit-head-inner">
 				<nav class="nav-global">
 					<ul>
-						<li class="logo"><a href="/">{{ site.title }}</a></li>
+						<li class="logo"><a href="/">{{ site.author.name }}</a></li>
 						<li class="code"><a href="/code.html">code</a></li>
 						<li class="archive"><a href="/archive.html">archive</a></li>
 						<li class="category"><a href="/category.html">category</a></li>
@@ -101,17 +105,16 @@
 {% include JB/analytics %}<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
 <a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
 
-<script type="text/javascript" src='/assets/jquery-1.7.1.min.js'></script>
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
 <script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
 <script src='/assets/default.js'></script>
 <script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
-<script type="text/javascript">
-$(function() {
-  $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
-  window.prettyPrint && prettyPrint();
-  $(".linkcodetoggle").parent().next().hide();
-});
-</script>
+<script src="/assets/modernizr.min.js"></script>
 </body>
 </html>
