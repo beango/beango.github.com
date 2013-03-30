@@ -5,7 +5,7 @@ category: 高性能web
 date: 2011-09-11
 title: "memcached参数中文解释"
 description: "memcached参数中文解释"
-tags: [memcached参数]
+tags: [memcached]
 ---
 
 {% highlight perl %}

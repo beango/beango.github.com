@@ -5,7 +5,7 @@ categories: [NoSql]
 date: 2012-12-03
 title: "MongoDB 集群"
 description: "MongoDB 集群"
-tags: [MongoDB 集群]
+tags: [MongoDB, 集群]
 redirecturl: http://blog.nosqlfan.com/html/544.html
 ---
 {% include JB/setup %}

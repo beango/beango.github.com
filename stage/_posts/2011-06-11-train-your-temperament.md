@@ -5,7 +5,7 @@ category: 职场
 date: 2011-06-11
 title: "一点一滴培养你的气质"
 description: "一点一滴培养你的气质"
-tags: [培养气质]
+tags: [职场]
 ---
 
 ### 一：沉稳

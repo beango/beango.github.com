@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>解析 Nginx 负载均衡</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='解析 Nginx 负载均衡'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">解析 Nginx 负载均衡</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>来源：<a href="http://stblog.baidu-tech.com/?p=2027">百度搜索研发部</a></p>
+
+<p><strong>摘要</strong>：对于一个大型网站来说，负载均衡是永恒的话题。随着硬件技术的迅猛发展，越来越多的负载均衡硬件设备涌现出来，如F5 BIG-IP、Citrix NetScaler、Radware等等，虽然可以解决问题，但其高昂的价格却往往令人望而却步，因此负载均衡软件仍然是大部分公司的不二之选。nginx作为webserver的后起之秀，其优秀的反向代理功能和灵活的负载均衡策略受到了业界广泛的关注。本文将以工业生产为背景，从设计实现和具体应用等方面详细介绍nginx负载均衡策略。</p>
+
+<p><strong>关键字</strong>：nginx 负载均衡 反向代理</p>
+
+<p><strong>1.前言</strong></p>
+
+<p>随着互联网信息的爆炸性增长，负载均衡（load balance）已经不再是一个很陌生的话题，顾名思义，负载均衡即是将负载分摊到不同的服务单元，既保证服务的可用性，又保证响应足够快，给用户很好的体验。快速增长的访问量和数据流量催生了各式各样的负载均衡产品，很多专业的负载均衡硬件提供了很好的功能，但却价格不菲，这使得负载均衡软件大受欢迎，nginx就是其中的一个。</p>
+
+<p>nginx第一个公开版本发布于2004年，2011年发布了1.0版本。它的特点是稳定性高、功能强大、资源消耗低，从其目前的市场占有而言，nginx大有与apache抢市场的势头。其中不得不提到的一个特性就是其负载均衡功能，这也成了很多公司选择它的主要原因。本文将从源码的角度介绍nginx的内置负载均衡策略和扩展负载均衡策略，以实际的工业生产为案例，对比各负载均衡策略，为nginx使用者提供参考。</p>
+
+<p><strong>2.源码剖析</strong></p>
+
+<p>nginx的负载均衡策略可以划分为两大类：内置策略和扩展策略。内置策略包含加权轮询和ip hash，在默认情况下这两种策略会编译进nginx内核，只需在nginx配置中指明参数即可。扩展策略有很多，如fair、通用hash、consistent hash等，默认不编译进nginx内核。由于在nginx版本升级中负载均衡的代码没有本质性的变化，因此下面将以nginx1.0.15稳定版为例，从源码角度分析各个策略。</p>
+
+<p><strong>2.1. 加权轮询（weighted round robin）</strong></p>
+
+<p>轮询的原理很简单，首先我们介绍一下轮询的基本流程。如下是处理一次请求的流程图：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>图中有两点需要注意，第一，如果可以把加权轮询算法分为先深搜索和先广搜索，那么nginx采用的是先深搜索算法，即将首先将请求都分给高权重的机器，直到该机器的权值降到了比其他机器低，才开始将请求分给下一个高权重的机器；第二，当所有后端机器都down掉时，nginx会立即将所有机器的标志位清成初始状态，以避免造成所有的机器都处在timeout的状态，从而导致整个前端被夯住。</p>
+
+<p>接下来看下源码。nginx源码的目录结构很清晰，加权轮询所在路径为nginx-1.0.15/src/http/ngx_http_upstream_round_robin.[c|h]，在源码的基础上，针对重要的、不易理解的地方我加了注释。首先看下ngx_http_upstream_round_robin.h中的重要声明：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>从变量命名中，我们就可以大致猜出其作用。其中，current_weight和weight的区别主要是前者为权重排序的值，随着处理请求会动态的变化，后者是配置值，用于恢复初始状态。</p>
+
+<p>接下来看下轮询的创建过程，代码如下图所示。</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>这里有个tried变量需要做些说明。tried中记录了服务器当前是否被尝试连接过。他是一个位图。如果服务器数量小于32，则只需在一个int中即可记录下所有服务器状态。如果服务器数量大于32，则需在内存池中申请内存来存储。对该位图数组的使用可参考如下代码：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>最后是实际的策略代码，逻辑很简单，代码实现也只有30行，直接上代码。</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p><strong>2.2. ip hash</strong></p>
+
+<p>ip hash是nginx内置的另一个负载均衡的策略，流程和轮询很类似，只是其中的算法和具体的策略有些变化，如下图所示：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>ip hash算法的核心实现如下图：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>从代码中可以看出，hash值既与ip有关又与后端机器的数量有关。经过测试，上述算法可以连续产生1045个互异的value，这是该算法的硬限制。对此nginx使用了保护机制，当经过20次hash仍然找不到可用的机器时，算法退化成轮询。因此，从本质上说，ip hash算法是一种变相的轮询算法，如果两个ip的初始hash值恰好相同，那么来自这两个ip的请求将永远落在同一台服务器上，这为均衡性埋下了很深的隐患。</p>
+
+<p><strong>2.3. fair</strong></p>
+
+<p>fair策略是扩展策略，默认不被编译进nginx内核。其原理是根据后端服务器的响应时间判断负载情况，从中选出负载最轻的机器进行分流。这种策略具有很强的自适应性，但是实际的网络环境往往不是那么简单，因此要慎用。</p>
+
+<p><strong>2.4. 通用hash、一致性hash</strong></p>
+
+<p>这两种也是扩展策略，在具体的实现上有些差别，通用hash比较简单，可以以nginx内置的变量为key进行hash，一致性hash采用了nginx内置的一致性hash环，可以支持memcache。</p>
+
+<p><strong>3.对比测试</strong></p>
+
+<p>本测试主要为了对比各个策略的均衡性、一致性、容灾性等，从而分析出其中的差异性，并据此给出各自的适用场景。为了能够全面、客观的测试nginx的负载均衡策略，我们采用了两个测试工具、在不同场景下做测试，以此来降低环境对测试结果造成的影响。首先简单介绍测试工具、测试网络拓扑和基本的测试流程。</p>
+
+<p><strong>3.1. 测试工具</strong></p>
+
+<p><strong>3.1.1 easyABC</strong></p>
+
+<p>easyABC是公司内部开发的性能测试工具，采用epool模型实现，简单易上手，可以模拟GET/POST请求，极限情况下可以提供上万的压力，在公司内部得到了广泛的使用。由于被测试对象为反向代理服务器，因此需要在其后端搭建桩服务器，这里用nginx作为桩webserver，提供最基本的静态文件服务。</p>
+
+<p><strong>3.1.2 polygraph</strong></p>
+
+<p>polygraph是一款免费的性能测试工具，以对缓存服务、代理、交换机等方面的测试见长。它有规范的配置语言PGL（Polygraph Language），为软件提供了强大的灵活性。其工作原理如下图所示：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>polygraph提供client端和server端，将测试目标nginx放在二者之间，三者之间的网络交互均走http协议，只需配置ip+port即可。client端可以配置虚拟robot的个数以及每个robot发请求的速率，并向代理服务器发起随机的静态文件请求，server端将按照请求的url生成随机大小的静态文件做响应。这也是选用这个测试软件的一个<strong>主要原因</strong>：可以产生随机的url作为nginx各种hash策略的key。</p>
+
+<p>另外，polygraph还提供了日志分析工具，功能比较丰富，感兴趣的同学可以参考附录中的相关材料。</p>
+
+<p><strong>3.2. 测试环境</strong></p>
+
+<p>本测试运行在5台物理机上，其中被测对象单独搭在一台8核机器上，另外四台4核机器分别搭建了easyABC、webserver桩和polygraph，如下图所示：</p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p><strong>3.3. 测试方案</strong></p>
+
+<p>首先介绍下关键的测试指标：</p>
+
+<p><strong>均衡性</strong>：是否能够将请求均匀的发送给后端</p>
+
+<p><strong>一致性</strong>：同一个key的请求，是否能落到同一台机器</p>
+
+<p><strong>容灾性</strong>：当部分后端机器挂掉时，是否能够正常工作</p>
+
+<p>以上述指标为指导，我们针对如下四个测试场景分别用easyABC和polygraph进行测试：</p>
+
+<p>场景1      server_*均正常提供服务；</p>
+
+<p>场景2      server_4挂掉，其他正常；</p>
+
+<p>场景3      server_3、server_4挂掉，其他正常；</p>
+
+<p>场景4      server_*均恢复正常服务。</p>
+
+<p>上述四个场景将按照时间顺序进行，每个场景将建立在上一个场景基础上，被测试对象无需做任何操作，以最大程度模拟实际情况。另外，考虑到测试工具自身的特点，在easyabc上的测试压力在17000左右，polygraph上的测试压力在4000左右。以上测试均保证被测试对象可以正常工作，且无任何notice级别以上（alert/error/warn）的日志出现，在每个场景中记录下server_*的qps用于最后的策略分析。</p>
+
+<p><strong>3.4. 测试结果</strong></p>
+
+<p>表1和图1是轮询策略在两种测试工具下的负载情况。对比在两种测试工具下的测试结果会发现，结果完全一致，因此可以排除测试工具的影响。从图表中可以看出，轮询策略对于均衡性和容灾性都可以做到很好的满足。</p>
+
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>表2和图2是fair策略在两种测试工具下的负载情况。fair策略受环境影响非常大，在排除了测试工具的干扰之后，结果仍然有非常大的抖动。从直观上讲，这完全不满足均衡性。但是从另一个角度出发，恰恰是由于这种自适应性确保了在复杂的网络环境中能够物尽所用。因此，在应用到工业生产中之前，需要在具体的环境中做好测试工作。</p>
+
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a> </p>
+
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>以下图表是各种hash策略，所不同的仅仅是hash key或者是具体的算法实现，因此一起做对比。实际测试中发现，通用hash和一致性hash均存在一个问题：当某台后端的机器挂掉时，原有落到这台机器上的流量会丢失，但是在ip hash中就不存在这样的问题。正如上文中对ip hash源码的分析，当ip hash失效时，会退化为轮询策略，因此不会有丢失流量的情况。从这个层面上说，ip hash也可以看成是轮询的升级版。</p>
+
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx 负载均衡" /></a></p>
+
+<p>图5为ip hash策略，ip hash是nginx内置策略，可以看做是前两种策略的特例：以来源ip为key。由于测试工具不便于模拟海量ip下的请求，因此这里截取线上实际的情况加以分析，如下图所示：</p>
+
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a><a href="/assets/files/2012-09/Parse-nginx-load-balancing15.jpg"></a></p>
+
+<p>图5 ip hash策略</p>
+
+<p>图中前1/3使用轮询策略，中间段使用ip
+hash策略，后1/3仍然是轮询策略。可以明显的看出，ip
+hash的均衡性存在着很大的问题。原因并不难分析，在实际的网络环境中，有大量的高校出口路由器ip、企业出口路由器ip等网络节点，这些节点带来的流量往往是普通用户的成百上千倍，而ip
+hash策略恰恰是按照ip来划分流量，因此造成上述后果也就自然而然了。</p>
+
+<p><strong>4. 总结与展望</strong></p>
+
+<p>通过实际的对比测试，我们对nginx各个负载均衡策略进行了验证。下面从均衡性、一致性、容灾性以及适用场景等角度对比各种策略。(点击图片查看大图)</p>
+
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+
+<p>以上从源码和实际的测试数据角度分析说明了nginx负载均衡的策略，并给出了各种策略适合的应用场景。通过本文的分析不难发现，无论哪种策略都不是万金油，在具体的场景下应该选择哪种策略一定程度上依赖于使用者对这些策略的熟悉程度。希望本文的分析和测试数据能够对读者有所帮助，更希望有越来越多、越来越好的负载均衡策略产出。</p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							<span>Published: <span>
+							<date class="date-pub" title="2012-09-21" datetime="2012-09-21" pubdate>
+							<span class="year">2012-09-21</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#高性能web-ref">
+    		高性能web <span>14</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#负载均衡-ref">负载均衡 <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://stblog.baidu-tech.com/?p=2027" target="_blank">http://stblog.baidu-tech.com/?p=2027</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="View Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17">&laquo; Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a></li>
+									
+
+									
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/10/09/rabbitmq-install.html" title="View RabbitMQ安装及使用">RabbitMQ安装及使用 &raquo;</a></li>
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">HuangDing</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （12）</a></li>
+					 
+					  <li><a href="/category.html#软件架构-ref">软件架构 （10）</a></li>
+					 
+					  <li><a href="/category.html#.Net-ref">.Net （3）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （4）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （14）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （6）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （16）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#项目管理-ref">项目管理 （2）</a></li>
+					 
+					  <li><a href="/category.html#node.js-ref">node.js （1）</a></li>
+					 
+					  <li><a href="/category.html#OS系统-ref">OS系统 （4）</a></li>
+					 
+					  <li><a href="/category.html#python-ref">python （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/26/javascript-language-features.html" title="">浅谈JavaScript的语言特性</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/25/speeding-up-your-python-code.html" title="">加速你的Python代码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/22/scalable-web-architecture-and-distributed-systems.html" title="">可扩展Web架构与分布式系统</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/21/what-every-programmer-should-know-about-virtual-memory-part3.html" title="">每个程序员都应该了解的“虚拟内存”知识</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html" title="">每个程序员都应该了解的CPU高速缓存</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/08/efficient-css.html" title="">翻译-高效的CSS</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/01/what-every-programmer-should-know-about-memory-part1.html" title="">每个程序员都应该了解的内存知识</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/28/howto-strong-developer.html" title="">如何成为强大的程序员？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/27/state-of-nosql.html" title="">NoSQL的现状</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/27/scalability-system-architecture-lessons.html" title="">可伸缩系统的架构经验</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-03">2013-03 （7）</a></li><li><a href="/archive.html#arch-2013-02">2013-02 （5）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （5）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （5）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （2）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （2）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （6）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （4）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （2）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （2）</a></li><li><a href="/archive.html#arch-2011-11">2011-11 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li><li><a href="/archive.html#arch-2011-02">2011-02 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#浏览器-ref">浏览器 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#职场-ref">职场 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown-ref">Markdown <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#javascript-ref">javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr-ref">tcrmgr <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis-ref">iis <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#集群-ref">集群 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#UML-ref">UML <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#node.js-ref">node.js <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq-ref">rabbitmq <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#负载均衡-ref">负载均衡 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#框架-ref">框架 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#.Net-ref">.Net <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb-ref">Mongodb <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#安全性-ref">安全性 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#BSON-ref">BSON <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#优化-ref">优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机-ref">计算机 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序员-ref">程序员 <span>5</span></a></li>
+     
+    	<li><a href="/tags.html#NoSQL-ref">NoSQL <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存知识-ref">内存知识 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#css-ref">css <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#CPU高速缓存-ref">CPU高速缓存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#虚拟内存-ref">虚拟内存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Web架构-ref">Web架构 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#分布式系统-ref">分布式系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#python-ref">python <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+

@@ -25,3 +25,4 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 -   [Memcached内存分析、调优、集群](/code/memcached-memory-analysis-tuning-clustering.html)
 -	[Memcached原理和使用详解](/code/memcached-principle-and-use-detailed.html)
 -	[C#读取Excel](/code/csharp-office.html)
+-	[常用工具](/code/tools.html)

@@ -5,7 +5,7 @@ categories: [NoSql]
 date: 2012-06-17
 title: "解密Redis持久化"
 description: "解密Redis持久化"
-tags: [Redis持久化]
+tags: [Redis]
 redirecturl: http://blog.nosqlfan.com/html/3813.html
 ---
 {% include JB/setup %}

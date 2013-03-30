@@ -5,7 +5,7 @@ category : 高性能web
 date: 2012-06-29
 title: "Windows下nginx的启动，重启，关闭"
 description: "Windows下nginx的启动，重启，关闭"
-tags: [nginx]
+tags: [Nginx]
 ---
 
 {% highlight perl %}

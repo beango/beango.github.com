@@ -5,7 +5,7 @@ categories : [web开发,javascript]
 date: 2012-06-07
 title: "jQuery选择器大全"
 description: "jQuery选择器大全"
-tags: [jQuery, jQuery选择器]
+tags: [jQuery]
 ---
 
 选择器是jQuery最基础的东西，本文中列举的选择器基本上囊括了所有的jQuery选择器，也许各位通过这篇文章能够加深对jQuery选择器的理解，它们本身用法就非常简单，我更希望的是它能够提升个人编写jQuery代码的效率。本文配合截图、代码和简单的概括对所有jQuery选择器进行了介绍，也列举出了一些需要注意和区分的地方。

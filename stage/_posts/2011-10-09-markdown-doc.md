@@ -5,7 +5,7 @@ categories: [jekyll]
 date: 2011-10-09
 title: "Markdown语法说明 (简体中文版)"
 description: "Markdown语法说明 (简体中文版)"
-tags: [Markdown语法说明]
+tags: [Markdown]
 ---
 {% include JB/setup %}
 

@@ -642,7 +642,7 @@ a:hover {
   margin-bottom: 0;
 }
 .unit-article .entry-content img{
-  margin:auto;
+  margin-left:0;
   MAX-WIDTH: 100%!important;HEIGHT: auto!important;  
   width:expression(this.width>590?"590px":this.width)!important;
 }
@@ -673,12 +673,6 @@ a:hover {
 }
 .unit-article ol {
   list-style: decimal;
-}
-.unit-article ul li {
-  margin-left: 1.2em;
-}
-.unit-article ol li {
-  margin-left: 2.0em;
 }
 .unit-article li h1,
 .unit-article dt h1,

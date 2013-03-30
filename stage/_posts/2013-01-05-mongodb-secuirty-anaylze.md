@@ -5,7 +5,7 @@ categories: [NoSql]
 date: 2013-01-05
 title: "Mongodb安全性初探"
 description: "Mongodb安全性初探"
-tags: [Mongodb安全性初探]
+tags: [Mongodb, 安全性]
 redirecturl: http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html
 ---
 {% include JB/setup %}

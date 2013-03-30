@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>.Net垃圾回收机制原理（一）</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='.Net垃圾回收机制原理（一）'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="category"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+						<li class="wiki"><a href="/wiki/">wiki</a></li>
+						<li class="blog"><a href="#">blog</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">.Net垃圾回收机制原理（一）</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985010(en-us).aspx">Jeffrey Richter</a> ，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html">赵玉开</a></p>
+
+<p>有了Microsoft.Net clr中的垃圾回收机制<a href="http://blog.jobbole.com/821/" title="程序员的本质">程序员</a>不需要再关注什么时候释放内存，释放内存这件事儿完全由GC做了，对程序员来说是透明的。尽管如此，作为一个.Net程序员很有必要理解垃圾回收是如何工作的。这篇文章我们就来看下.Net是如何分配和管理托管内存的，之后再一步一步描述垃圾回收器工作的算法机制。</p>
+
+<p>为程序设计一个适当的内存管理策略是困难的也是乏味的，这个工作还会影响你专注于解决程序本身要解决的问题。有没有一种内置的方法可以帮助开发人员解决内存管理的问题呢？当然有了，在.Net中就是GC，垃圾回收。</p>
+
+<p>让我们想一下，每一个程序都要使用内存资源：例如屏幕显示，网络连接，数据库资源等等。实际上，在一个面向对象环境中，每一种类型都需要占用一点内存资源来存放他的数据，对象需要按照如下的步骤使用内存：</p>
+
+<p>​1. 为类型分配内存空间</p>
+
+<p>​2. 初始化内存，将内存设置为可用状态</p>
+
+<p>​3. 存取对象的成员</p>
+
+<p>​4. 销毁对象，使内存变成清空状态</p>
+
+<p>​5. 释放内存</p>
+
+<p>这种貌似简单的内存使用模式导致过很多的程序问题，有时候程序员可能会忘记释放不再使用的对象，有时候又会试图访问已经释放的对象。这两种bug通常都有一定的隐藏性，不容易发现，他们不像逻辑错误，发现了就可以修改掉。他们可能会在程序运行一段时间之后内存泄漏导致意外的崩溃。事实上，有很多工具可以帮助开发人员检测内存问题，比如：任务管理器，System Monitor AcitvieX Control, 以及Rational的Purify。</p>
+
+<p>而GC可以完全不需要开发人员去关注什么时候释放内存。然而，垃圾回收器并不是可以管理内存中的所有资源。有些资源垃圾回收器不知道该如何回收他们，这部分资源就需要开发人员自己写代码实现回收。在.Net framework中，开发人员通常会把清理这类资源的代码写到Close、Dispose或者Finalize方法中，稍后我们会看下Finalize方法，这个方法垃圾回收器会自动调用。</p>
+
+<p>不过，有很多对象是不需要自己实现释放资源的代码的，比如：Rectangle，清空它只需要清空它的left，right，width，height字段就可以了，这垃圾回收器完全可以做。下面让我们来看下内存是如何分配给对象使用的。</p>
+
+<p> </p>
+
+<p><strong>对象分配：</strong></p>
+
+<p>.Net
+clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime堆，不过你不需要关注什么时候释放对象，对象会在不用时自动释放。这样，就出现一个问题，垃圾回收器是怎么知道一个对象不再使用该回收了呢？我们稍后解释这个问题。</p>
+
+<p>现在有几种垃圾回收算法，每一种算法都为一种特定的环境做了性能优化，这篇文章我们关注的是clr的垃圾回收算法。让我们从一个基础概念谈起。</p>
+
+<p>当一个进程初始化之后，运行时会保留一段连续的空白内存空间，这块内存空间就是托管堆。托管堆会记录一个指针，我们叫它NextObjPtr，这个指针指向下一个对象的分配地址，最初的时候，这个指针指向托管堆的起始位置。</p>
+
+<p>应用程序使用new操作符创建一个新对象，这个操作符首先要确认托管堆剩余空间能放得下这个对象，如果能放得下，就把NextObjPtr指针指向这个对象，然后调用对象的构造函数，new操作符返回对象的地址。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-01.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-01.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net
+垃圾回收机制原理（一）" /></a></p>
+
+<p>图1托管堆</p>
+
+<p>这时候，NextObjPtr指向托管堆上下一个对象分配的位置，图1显示一个托管堆中有三个对象A、B和C。下一个对象会放在NextObjPtr指向的位置（紧挨着C对象）</p>
+
+<p>现在让我们再看一下c-runtime堆如何分配内存。在c-runtime堆，分配内存需要遍历一个链表的数据结构，直到找到一个足够大的内存块，这个内存块有可能会被拆分，拆分后链表中的指针要指向剩余内存空间，要确保链表的完好。对于托管堆，分配一个对象只是修改NextObjPtr指针的指向，这个速度是非常快的。事实上，在托管堆上分配一个对象和在线程栈上分配内存的速度很接近。</p>
+
+<p>到目前为止，托管堆上分配内存的速度似乎比在c-runtime堆上的更快，实现上也更简单一些。当然，托管堆获得这个优势是因为做了一个假设：地址空间是无限的。很显然这个假设是错误的。必须有一种机制保证这个假设成立。这个机制就是垃圾回收器。让我们看下它如何工作。</p>
+
+<p>当应用程序调用new操作符创建对象时，有可能已经没有内存来存放这个对象了。托管堆可以检测到NextObjPtr指向的空间是否超过了堆的大小，如果超过了就说明托管堆满了，就需要做一次垃圾回收了。</p>
+
+<p>在现实中，在0代堆满了之后就会触发一次垃圾回收。“代”是垃圾回收器提升性能的一种实现机制。“代”的意思是：新创建的对象是年轻一代，而在回收操作发生之前没有被回收掉的对象是较老的对象。将对象分成几代可以允许垃圾回收器只回收某一代的对象，而不是回收所有对象。</p>
+
+<p> </p>
+
+<p><strong>垃圾回收算法：</strong></p>
+
+<p>垃圾回收器检查看是否存在应用程序不再使用的对象。如果这样的对象存在，那么这些对象占用的空间就可以被回收（如果堆上没有足够的内存可用，那么new操作符就会抛出OutofMemoryException）。你可能会问垃圾回收器是怎样判断一个对象是否还在用呢？这个问题不太容易得到答案。</p>
+
+<p>每个应用程序都有一组根对象，根是一些存储位置，他们可能指向托管堆上的某个地址，也可能是null。例如，所有的全局和静态对象指针是应用程序的根对象，另外在线程栈上的局部变量/参数也是应用程序的根对象，还有CPU寄存器中的指向托管堆的对象也是根对象。存活的根对象列表由JIT（just-in-time）编译器和clr维护，垃圾回收器可以访问这些根对象的。</p>
+
+<p>当垃圾回收器开始运行，它会假设托管堆上的所有对象都是垃圾。也就是说，假定没有根对象，也没有根对象引用的对象。然后垃圾回收器开始遍历根对象并构建一个由所有和根对象之间有引用关系对象构成的图。</p>
+
+<p>图2显示，托管堆上应用程序的根对象是A，C，D和F，这几个对象就是图的一部分，然后对象D引用了对象H，那么对象H也被添加到图中；垃圾回收器会循环遍历所有可达对象。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-02.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-02.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+
+<p>图2 托管堆上的对象</p>
+
+<p>垃圾回收器会挨个遍历根对象和引用对象。如果垃圾回收器发现一个对象已经在图中就会换一个路径继续遍历。这样做有两个目的：一是提高性能，二是避免无限循环。</p>
+
+<p>所有的根对象都检查完之后，垃圾回收器的图中就有了应用程序中所有的可达对象。托管堆上所有不在这个图上的对象就是要做回收的垃圾对象了。构建好可达对象图之后垃圾回收器开始线性的遍历托管堆，找到连续垃圾对象块（可以认为是空闲内存）。然后垃圾回收器将非垃圾对象移动到一起（使用c语言中的memcpy函数），覆盖所有的内存碎片。当然，移动对象时要禁用所有对象的指针（因为他们都可能是错误的了）。因此垃圾回收器必须修改应用程序的根对象使他们指向对象的新内存地址。此外，如果某个对象包含另一个对象的指针，垃圾回收器也要负责修改引用。图3显示了一次回收之后的托管堆。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-03.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-03.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+
+<p>图3 回收之后的托管堆</p>
+
+<p>如图3所示在回收之后，所有的垃圾对象都被标识出来，而所有的非垃圾对象被移动到一起。所有的非垃圾对象的指针也被修改成移动后的内存地址，NextObjPtr指向最后一个非垃圾对象的后面。这时候new操作符就可以继续成功的创建对象了。</p>
+
+<p>如你看到的，垃圾回收会有显著的性能损失，这是使用托管堆的一个明显的缺点。
+不过，要记着内存回收操作旨在托管堆慢了之后才会执行。在满之前托管堆的性能比c-runtime堆的性能好要好。运行时垃圾回收器还会做一些性能优化，我们在下一篇文章中谈论这个。</p>
+
+<p>下面的代码说明了对象是如何被创建管理的：</p>
+
+<pre><code>class Application {
+    public static int Main(String[] args) {
+
+      // ArrayList object created in heap, myArray is now a root
+      ArrayList myArray = new ArrayList();
+
+      // Create 10000 objects in the heap
+      for (int x = 0; x &lt; 10000; x++) {
+         myArray.Add(new Object());    // Object object created in heap
+      }
+
+      // Right now, myArray is a root (on the thread's stack). So, 
+      // myArray is reachable and the 10000 objects it points to are also 
+      // reachable.
+      Console.WriteLine(a.Length);
+
+      // After the last reference to myArray in the code, myArray is not 
+      // a root.
+      // Note that the method doesn't have to return, the JIT compiler 
+      // knows
+      // to make myArray not a root after the last reference to it in the 
+      // code.
+
+      // Since myArray is not a root, all 10001 objects are not reachable
+      // and are considered garbage.  However, the objects are not 
+      // collected until a GC is performed.
+   }
+}
+</code></pre>
+
+<p>也许你会问，GC这么好，为什么ANSI C++中没有它呢？
+原因是垃圾回收器必须能找到应用程序的根对象列表，必须找到对象的指针。而在C++中对象的指针之间是可以相互转换的，没有办法知道指针指向的是一个什么对象的指针。在CLR中，托管堆知道对象的实际类型。而元数据（metadata）信息可以用来判断对象引用了什么成员对象。</p>
+
+<p> </p>
+
+<p><strong>垃圾回收和Finalization</strong></p>
+
+<p>垃圾回收器提供了一个额外的功能，它可以在对象被标识为垃圾后自动调用其Finalize方法（前提是对象重写了object的Finalize方法）。</p>
+
+<p>Finalize方法是object对象的一个虚方法，如果需要你可以重写这个方法，但是这个方法只能通过类似c++析构函数的方式重写。例如：</p>
+
+<pre><code>{
+    ~Foo(){
+        Console.WriteLine(“Foo Finalize”);
+    }
+}
+</code></pre>
+
+<p>这里用过C++的程序员要特别注意，Finalize方法的写法和C++的析构函数完全一样，但是，.Net中的Finalize方法和析构函数的却是不一样的，托管对象是不能被析构的，只能通过垃圾回收回收。</p>
+
+<p>当你设计一个类时，最好避免重写Finalize方法，原因如下：</p>
+
+<p>​1.实现Finalize的对象会被提升到更老的“代”，这会增加内存压力，使对象和此对象的关联对象不能在成为垃圾的第一时间回收掉。</p>
+
+<p>​2. 这些对象分配时间会更长</p>
+
+<p>​3.让垃圾回收器执行Finalize方法会明显的损耗性能。请记住，每一个实现了Finalize方法的对象都需要执行Finalize方法，如果有一个长度为10000的数组对象，每个对象都需要执行Finalize方法</p>
+
+<p>​4. 重写Finalize方法的对象可能会引用其他没有实现Finalize方法的对象，这些对象也会延迟回收</p>
+
+<p>​5.
+你没有办法控制什么时候执行Finalize方法。如果要在Finalize方法中释放类似数据库连接之类的资源，就有可能导致数据库资源在时候后很久才得以释放</p>
+
+<p>​6.当程序崩溃时，一些对象还被引用，他们的Finalize方法就没有机会执行了。这种情况会在后台线程使用对象，或者对象在程序退出时，或者AppDomain卸载时。另外，默认情况下，当应用程序被强制结束时Finalize方法也不会执行。当然所有的操作系统资源会被回收；但是在托管堆上的对象不会回收。你可以通过调用GC的RequestFinalizeOnShutdown方法改变这种行为。</p>
+
+<p>​7.运行时不能控制多个对象Finalize方法执行的顺序。而有时候对象的销毁可能有顺序性</p>
+
+<p>如果你定义的对象必须实现Finalize方法，那么要确保Finalize方法尽可能快的执行，要避免所有可能引起阻塞的操作，包括任何线程同步操作。另外，要确保Finalize方法不会引起任何异常，如果有异常垃圾回收器会继续执行其他对象的Finalize方法直接忽略掉异常。</p>
+
+<p>当编译器生成代码时会自动在构造函数上调用基类的构造函数。同样C++的编译器也会为析构函数自动添加基类析构函数的调用。但是，.Net中的Finalize函数不是这样子，编译器不会对Finalize方法做特殊处理。如果你想在Finalize方法中调用父类的Finalize方法，必须自己显示添加调用代码。</p>
+
+<p>请注意在C#中Finalize方法的写法和c++中的析构函数一样，但是C#不支持析构函数，不要让这种写法欺骗你。</p>
+
+<p> </p>
+
+<p><strong>GC调用Finalize方法的内部实现</strong></p>
+
+<p>表面看，垃圾回收器嗲用Finalize方法很简单，你创建一个对象，当对象回收时调用它的Finalize方法。但是事实上要复杂一些。</p>
+
+<p>当应用程序创建一个新对象时，new操作符在堆上分配内存。如果对象实现了Finalize方法。对象的指针会放到终结队列中。终结队列是由垃圾回收器控制的内部数据结构。在队列中每一个对象在回收时都需要调用它们的Finalize方法。</p>
+
+<p>下图显示的堆上包含几个对象，其中一些对象是跟对象，一些对象不是。当对象C、E、F、I和J创建时，系统会检测这些对象实现了Finalize方法，并将它们的指针放到终结队列中。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-04.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-04.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+
+<p>Finalize方法要做的事情通常是回收垃圾回收器不能回收的资源，例如文件句柄，数据库连接等等。</p>
+
+<p>当垃圾回收时，对象B、E、G、H、I和J被标记为垃圾。垃圾回收器扫描终结队列找到这些对象的指针。当发现对象指针时，指针会被移动到Freachable队列。Freachable队列是另一个由垃圾回收器控制的内部数据结构。在Freachable队列中的每一个对象的Finalize方法将执行。</p>
+
+<p>垃圾回收之后，托管堆如图6所示。你可以看到对象B、G、H已经被回收了，因为这几个对象没有Finalize方法。然而对象E、I、J还没有被回收掉，因为他们的Finalize方法还没有执行。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-05.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-05.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+
+<p>图5 垃圾回收后的托管堆</p>
+
+<p>程序运行时会有一个专门的线程负责调用Freachable队列中对象的Finalize方法。当Freachable队列为空时，这个线程会休眠，当队列中有对象时，线程被唤醒，移除队列中的对象，并调用它们的Finalize方法。因此在执行Finalize方法时不要企图访问线程的local storage。</p>
+
+<p>终结队列（finalization queue）和Freachable队列之间的交互很巧妙。首先让我告诉你freachable的名字是怎么来的。F显然是finalization；在此队列中的每一个对象都在等待执行他们的Finalize方法；reachable意思是这些对象来了。另一种说法，Freachable队列中的对象被认为是跟对象，就像是全局变量或静态变量。因此，如果一个对象在freachable队列中，那么这个对象就不是垃圾。</p>
+
+<p>简短点说，当一个对象是不可达的，垃圾回收器会认为这个对象是垃圾。那么，当垃圾回收器将对象从终结队列移动到Freachable队列中，这些对象就不再是垃圾了，它们的内存也不会回收。从这一点上来讲，垃圾回收器已经完成标识垃圾，一些对象被标识成垃圾又被重新认为成非垃圾对象。垃圾回收器回收压缩内存，清空freachable队列，执行队列中每一个对象的Finalize方法。</p>
+
+<p><a href="/assets/files/2011-11/Net-GC-06.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-06.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+
+<p>图6 再次执行垃圾回收后的托管堆</p>
+
+<p>再次出发垃圾回收之后，实现Finalize方法的对象才被真正的回收。这些对象的Finalize方法已经执行过了，Freachable队列清空了。</p>
+
+<p> </p>
+
+<p><strong>垃圾回收让对象复活</strong></p>
+
+<p>在前面部分我们已经说了，当程序不使用某个对象时，这个对象会被回收。然而，如果对象实现了Finalize方法，只有当对象的Finalize方法执行之后才会认为这个对象是可回收对象并真正回收其内存。换句话说，这类对象会先被标识为垃圾，然后放到freachable队列中复活，然后执行Finalize之后才被回收。正是Finalize方法的调用，让这种对象有机会复活，我们可以在Finalize方法中让某个对象强引用这个对象；那么垃圾回收器就认为这个对象不再是垃圾了，对象就复活了。</p>
+
+<p>如下复活演示代码：</p>
+
+<pre><code>public class Foo {
+  ~Foo(){
+  Application.ObjHolder = this;
+  }
+}
+
+class Application{
+  static public Object ObjHolder = null;
+}
+</code></pre>
+
+<p>在这种情况下，当对象的Finalize方法执行之后，对象被Application的静态字段ObjHolder强引用，成为根对象。这个对象就复活了，而这个对象引用的对象也就复活了，但是这些对象的Finalize方法可能已经执行过了，可能会有意想不到的错误发生。</p>
+
+<p>事实上，当你设计自己的类型时，对象的终结和复活有可能完全不可控制。这不是一个好现象；处理这种情况的常用做法是在类中定义一个bool变量来表示对象是否执行过了Finalize方法，如果执行过Finalize方法，再执行其他方法时就抛出异常。</p>
+
+<p>现在，如果有其他的代码片段又将Application.ObjHolder设置为null，这个对象变成不可达对象。最终垃圾回收器会把对象当成垃圾并回收对象内存。请注意这一次对象不会出现在finalization队列中，它的Finalize方法也不会再执行了。</p>
+
+<p>复活只有有限的几种用处，你应该尽可能避免使用复活。尽管如此，当使用复活时，最好重新将对象添加到终结队列中，GC提供了静态方法ReRegisterForFinalize方法做这件事：
+ 如下代码:</p>
+
+<pre><code>public class Foo{
+  ~Foo(){
+  Application.ObjHolder = this;
+  GC.ReRegisterForFinalize(this);
+  }
+}
+</code></pre>
+
+<p>当对象复活时，重新将对象添加到复活队列中。需要注意的时如果一个对象已经在终结队列中，然后又调用了GC.ReRegisterForFinalize(obj)方法会导致此对象的Finalize方法重复执行。</p>
+
+<p>垃圾回收机制的目的是为开发人员简化内存管理。</p>
+
+<p>下一篇我们谈一下弱引用的作用，垃圾回收中的“代”，多线程中的垃圾回收和与垃圾回收相关的性能计数器。</p>
+
+<p> </p>
+
+					<div class="meta asset-footer">
+						<p class="date-publish">
+							<span>Published: <span>
+							<date class="date-pub" title="2012-12-13" datetime="2012-12-13" pubdate>
+							<span class="year">2012-12-13</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li style="list-style:none;"><a href="/category.html#.Net-ref">
+    		.Net <span>3</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#.Net-ref">.Net <span>2</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html" target="_blank">http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/12/04/cache-algorithm.html" title="View 缓存、缓存算法和缓存框架简介">&laquo; 缓存、缓存算法和缓存框架简介</a></li>
+									
+
+									
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/12/15/http-protocol-proxy.html" title="View HTTP协议之代理">HTTP协议之代理 &raquo;</a></li>
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">HuangDing</span> - <span class="fn email">yif.com@gmail.com</span></address></li>
+						<li class="github"><a href="http://github.com/beango/" rel="me">github.com/beango</a></li>
+						<li class="twitter"><a href="http://twitter.com/beango/" rel="me">twitter.com/beango</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>分类</h3>
+					<ul class="tag_box inline">
+					 
+					  <li><a href="/category.html#web开发-ref">web开发 （12）</a></li>
+					 
+					  <li><a href="/category.html#软件架构-ref">软件架构 （10）</a></li>
+					 
+					  <li><a href="/category.html#.Net-ref">.Net （3）</a></li>
+					 
+					  <li><a href="/category.html#职场-ref">职场 （4）</a></li>
+					 
+					  <li><a href="/category.html#高性能web-ref">高性能web （14）</a></li>
+					 
+					  <li><a href="/category.html#javascript-ref">javascript （6）</a></li>
+					 
+					  <li><a href="/category.html#jekyll-ref">jekyll （2）</a></li>
+					 
+					  <li><a href="/category.html#NoSql-ref">NoSql （16）</a></li>
+					 
+					  <li><a href="/category.html#Windows8开发-ref">Windows8开发 （1）</a></li>
+					 
+					  <li><a href="/category.html#项目管理-ref">项目管理 （2）</a></li>
+					 
+					  <li><a href="/category.html#node.js-ref">node.js （1）</a></li>
+					 
+					  <li><a href="/category.html#OS系统-ref">OS系统 （4）</a></li>
+					 
+					  <li><a href="/category.html#python-ref">python （1）</a></li>
+					
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard">
+					<h3>近期的日志</h3>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/26/javascript-language-features.html" title="">浅谈JavaScript的语言特性</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/25/speeding-up-your-python-code.html" title="">加速你的Python代码</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/22/scalable-web-architecture-and-distributed-systems.html" title="">可扩展Web架构与分布式系统</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/21/what-every-programmer-should-know-about-virtual-memory-part3.html" title="">每个程序员都应该了解的“虚拟内存”知识</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html" title="">每个程序员都应该了解的CPU高速缓存</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/08/efficient-css.html" title="">翻译-高效的CSS</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/03/01/what-every-programmer-should-know-about-memory-part1.html" title="">每个程序员都应该了解的内存知识</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/28/howto-strong-developer.html" title="">如何成为强大的程序员？</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/27/state-of-nosql.html" title="">NoSQL的现状</a>
+					</li>
+					</ul>
+					
+					<ul class="compact recent">
+					<li>
+						<a href="/archives/2013/02/27/scalability-system-architecture-lessons.html" title="">可伸缩系统的架构经验</a>
+					</li>
+					</ul>
+					
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>归档</h3>
+					<ul class="tag_box inline">
+					  <li><a href="/archive.html#arch-2013-03">2013-03 （7）</a></li><li><a href="/archive.html#arch-2013-02">2013-02 （5）</a></li><li><a href="/archive.html#arch-2013-01">2013-01 （5）</a></li><li><a href="/archive.html#arch-2012-12">2012-12 （5）</a></li><li><a href="/archive.html#arch-2012-11">2012-11 （1）</a></li><li><a href="/archive.html#arch-2012-10">2012-10 （1）</a></li><li><a href="/archive.html#arch-2012-09">2012-09 （2）</a></li><li><a href="/archive.html#arch-2012-08">2012-08 （2）</a></li><li><a href="/archive.html#arch-2012-07">2012-07 （3）</a></li><li><a href="/archive.html#arch-2012-06">2012-06 （6）</a></li><li><a href="/archive.html#arch-2012-05">2012-05 （3）</a></li><li><a href="/archive.html#arch-2012-04">2012-04 （2）</a></li><li><a href="/archive.html#arch-2012-03">2012-03 （4）</a></li><li><a href="/archive.html#arch-2012-02">2012-02 （2）</a></li><li><a href="/archive.html#arch-2011-12">2011-12 （2）</a></li><li><a href="/archive.html#arch-2011-11">2011-11 （1）</a></li><li><a href="/archive.html#arch-2011-10">2011-10 （3）</a></li><li><a href="/archive.html#arch-2011-09">2011-09 （1）</a></li><li><a href="/archive.html#arch-2011-08">2011-08 （1）</a></li><li><a href="/archive.html#arch-2011-06">2011-06 （2）</a></li><li><a href="/archive.html#arch-2011-03">2011-03 （1）</a></li><li><a href="/archive.html#arch-2011-02">2011-02 （1）</a></li>
+					</ul>
+				</div><!-- misc -->
+				<div class="misc vcard layout-page-footer">
+					<h3>tags</h3>
+					<ul class="tag_box inline">
+					    
+					  
+
+
+  
+     
+    	<li><a href="/tags.html#浏览器-ref">浏览器 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#StackOverflow-ref">StackOverflow <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#架构分析-ref">架构分析 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#职场-ref">职场 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#MongoDB-ref">MongoDB <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#jQuery-ref">jQuery <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown-ref">Markdown <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Redis-ref">Redis <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#Tokyo Tyrant-ref">Tokyo Tyrant <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#故障转移-ref">故障转移 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#高并发-ref">高并发 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#key-value持久系统-ref">key-value持久系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#javascript-ref">javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Memcached-ref">Memcached <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#tcrmgr-ref">tcrmgr <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Windows8-ref">Windows8 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#缓存-ref">缓存 <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#集群与缓存-ref">集群与缓存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#.NET-ref">.NET <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Performance-ref">Performance <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#iis-ref">iis <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#asp.net-ref">asp.net <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Javascript-ref">Javascript <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存泄露-ref">内存泄露 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#集群-ref">集群 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#UML-ref">UML <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#站着编程-ref">站着编程 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Nginx-ref">Nginx <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#互联网协议-ref">互联网协议 <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#node.js-ref">node.js <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#rabbitmq-ref">rabbitmq <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Centos-ref">Centos <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#PHP-ref">PHP <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Mysql-ref">Mysql <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#负载均衡-ref">负载均衡 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#RabbitMQ-ref">RabbitMQ <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#框架-ref">框架 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#.Net-ref">.Net <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Mongodb-ref">Mongodb <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#安全性-ref">安全性 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#HTTP状态码-ref">HTTP状态码 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#JavaScript-ref">JavaScript <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#BSON-ref">BSON <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#优化-ref">优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#计算机-ref">计算机 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#程序员-ref">程序员 <span>5</span></a></li>
+     
+    	<li><a href="/tags.html#NoSQL-ref">NoSQL <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#内存知识-ref">内存知识 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#css-ref">css <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#CPU高速缓存-ref">CPU高速缓存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#虚拟内存-ref">虚拟内存 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Web架构-ref">Web架构 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#分布式系统-ref">分布式系统 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#python-ref">python <span>1</span></a></li>
+    
+  
+
+
+
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+

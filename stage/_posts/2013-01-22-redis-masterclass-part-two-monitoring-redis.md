@@ -5,7 +5,7 @@ categories: [NoSql]
 date: 2013-01-22
 title: "Redis监控技巧"
 description: "Redis监控技巧"
-tags: [Redis监控]
+tags: [Redis]
 redirecturl: http://blog.nosqlfan.com/html/4166.html
 ---
 {% include JB/setup %}

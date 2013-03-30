@@ -4,7 +4,7 @@ categories: [职场]
 date: 2013-02-21
 title: "程序猿的真实生活(GIF)"
 description: "程序猿的真实生活(GIF)"
-tags: [程序猿]
+tags: [程序员]
 redirecturl: http://tech2ipo.com/58058
 ---
 {% include JB/setup %}

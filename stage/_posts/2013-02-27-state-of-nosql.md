@@ -5,7 +5,7 @@ categories: [NoSql,软件架构]
 date: 2013-02-27
 title: "NoSQL的现状"
 description: "NoSQL的现状"
-tags: [NoSQL现状]
+tags: [NoSQL]
 redirecturl: http://www.infoq.com/cn/articles/State-of-NoSQL
 ---
 {% include JB/setup %}

@@ -5,7 +5,7 @@ categories: [软件架构, 高性能web]
 date: 2012-08-21
 title: "rabbitmq集群-1 介绍"
 description: "rabbitmq集群-1 介绍"
-tags: [rabbitmq集群]
+tags: [rabbitmq]
 ---
 {% include JB/setup %}
 

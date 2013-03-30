@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, asp.net]
+categories: [软件架构, .Net]
 date: 2011-03-04
 title: "基于.NET的大型Web站点StackOverflow架构分析"
 description: "基于.NET的大型Web站点StackOverflow架构分析"

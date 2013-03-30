@@ -5,7 +5,7 @@ categories: [NoSql]
 date: 2011-10-15
 title: "MongoDB构架图分享"
 description: "MongoDB构架图分享"
-tags: [MongoDB构架图]
+tags: [MongoDB]
 redirecturl: http://blog.nosqlfan.com/html/3887.html
 ---
 {% include JB/setup %}
