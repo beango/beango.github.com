@@ -34,7 +34,7 @@ Usage:
       <ul class='list-linear' style="margin-left:0;overflow:hidden;zoom:1;">
     {% endif %}
   
-    <li style="float:left;width:90px;"><span>{{ post.date | date:"%Y-%m-%d" }}</span> &raquo; </li><li style="float:left;width:470px;"><a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
+    <li style="float:left;width:90px;height:22px;"><span>{{ post.date | date:"%Y-%m-%d" }}</span> &raquo; </li><li style="float:left;width:470px;height:22px;"><a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
   
     {% if forloop.last %}
       </ul>
