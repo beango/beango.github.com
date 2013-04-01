@@ -13,12 +13,12 @@
 				<div class="entry-content">
 					{{ content }}
 					<div class="meta asset-footer">
-						<p class="date-publish">
-							<span>Published: <span>
-							<date class="date-pub" title="{{ page.date | date:"%Y-%m-%d" }}" datetime="{{ page.date | date:"%Y-%m-%d" }}" pubdate>
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="{{ page.date | date:"%Y-%m-%d" }}" datetime="{{ page.date | date:"%Y-%m-%d" }}" pubdate>
 							<span class="year">{{ page.date | date:"%Y-%m-%d" }}</span>
-							</date>
-						</p>
+							</date></li>
+						</ul>
 						<ul class="list-category list-linear">
 							<li class="list-head">category: </li>
 							{% assign categories_list = page.categories %}

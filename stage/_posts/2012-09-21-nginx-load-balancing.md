@@ -4,7 +4,7 @@ categories: [高性能web]
 date: 2012-09-21
 title: "解析 Nginx 负载均衡"
 description: "解析 Nginx 负载均衡"
-tags: [Nginx, 负载均衡]
+tags: [Nginx]
 redirecturl: http://stblog.baidu-tech.com/?p=2027
 ---
 {% include JB/setup %}
