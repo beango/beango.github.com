@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-04-02T16:36:54+08:00</updated>
+ <updated>2013-04-06T17:22:27+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -4596,7 +4596,8 @@ client和server交互都是基于明文的，因此很容易被网络嗅探等�
 &lt;span class=&quot;mf&quot;&gt;127.0.0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;27017&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;--&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;127.0.0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;34142&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;53&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;id:8&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;reply&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n:1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cursorId:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ol&gt;
@@ -5229,7 +5230,8 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;DIRECT&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 
@@ -5803,7 +5805,8 @@ one顺着链接到了那个网站，接着阅读。&lt;/p&gt;
      &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
      &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hitCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;　&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// getters and setters&lt;/span&gt;
  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;这个缓存实体拥有缓存的key和value，这个实体的数据结构会被以下所有缓存算法用到。&lt;/p&gt;
@@ -5829,7 +5832,8 @@ one顺着链接到了那个网站，接着阅读。&lt;/p&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;err&quot;&gt;｝&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;上面的代码会被所有的缓存算法实现用到。这段代码是用来检查缓存元素是否在缓存中了，如果是，我们就替换它，但是如果我们找不到这个
@@ -5868,7 +5872,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setObjectKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;&lt;strong&gt;看看FIFO缓存算法的实现&lt;/strong&gt;&lt;/p&gt;
@@ -5904,7 +5909,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setObjectKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;&lt;strong&gt;看看LFU缓存算法的实现&lt;/strong&gt;&lt;/p&gt;
@@ -5974,7 +5980,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。&lt;/p&gt;
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lowestElement&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;今天的专题很特殊，因为我们有特殊的客人，事实上他们是我们想要听的与会者，但是首先，先介绍一下我们的客人：Random
@@ -6041,7 +6048,8 @@ Cache, FIFO Cache。让我们从 Random Cache开始。&lt;/p&gt;
     &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setObjectKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;这段代码的逻辑如 LRU算法
@@ -6153,7 +6161,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;_id&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;ObjectId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;4a9d40df81ba1487ccfaa635&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;host&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;localhost:10001&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
 &lt;span class=&quot;s&quot;&gt;&amp;quot;ok&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;&lt;strong&gt;BTW：&lt;/strong&gt;&lt;/p&gt;
@@ -6186,7 +6195,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pymongo&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pymongo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;127.0.0.1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;27017&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6197,7 +6207,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ChatRoom&lt;/span&gt;  
 &lt;span class=&quot;err&quot;&gt;或&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;ChatRoom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6208,7 +6219,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;account&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;  
 &lt;span class=&quot;err&quot;&gt;或&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;account&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Account&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6217,7 +6229,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collection_names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6227,7 +6240,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_one&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_one&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;keyword&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6239,7 +6253,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;u&amp;#39;UserName&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;libing&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;_id&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ObjectId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;4ded95c3b7780a774a099b7c&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;Email&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;libing@35.cn&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_one&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({},{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Email&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;u&amp;#39;UserName&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;libing&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;Email&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;u&amp;#39;libing@35.cn&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6251,7 +6266,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;libing&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}):&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6261,7 +6277,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;keyword&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6272,7 +6289,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;默认为升序&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pymongo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCENDING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;升序&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pymongo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DESCENDING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;降序&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6281,7 +6299,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pymongo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ASCENDING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Email&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pymongo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DESCENDING&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6290,7 +6309,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;AccountID&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;libing&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6299,7 +6319,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;libing&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;$set&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Email&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;xx@126.com&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Password&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6309,7 +6330,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Account&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;全部删除&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;UserName&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;keyword&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -6319,7 +6341,8 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;切换数据库&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropDatabase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;删除当前库&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 
@@ -7030,7 +7053,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmake&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.8.6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;gmake&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gmake&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7048,7 +7072,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;sr&quot;&gt;/usr/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;useradd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt;  
 &lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/data/m&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ysql&lt;/span&gt;  
 &lt;span class=&quot;nb&quot;&gt;chown&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mysql:mysql&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/data/m&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ysql&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7082,7 +7107,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DWITH_INNOBASE_STORAFE_ENGINE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#开启INNODB引擎，MyISAM MERGE MEMORY CSV是默认安装的  &lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DENABLE_LOCAL_INFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;\&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#开启 LOAD DATA INFILE，就是从文件导入数据库  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7112,7 +7138,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;engine&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyISAM&lt;/span&gt;  
 &lt;span class=&quot;c1&quot;&gt;#在 [mysqld] 段修改  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;max_allowed_packet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7128,7 +7155,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/scripts/m&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ysql_install_db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7143,7 +7171,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div style=&quot;display:none;&quot;&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/mysql/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysqladmin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123456&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7158,7 +7187,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div style=&quot;display:none;&quot;&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/mysql/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysqld_safe&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7175,7 +7205,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/mysql/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123456&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;show&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;databases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  
 &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7192,7 +7223,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;vi&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/etc/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;  
 &lt;span class=&quot;c1&quot;&gt;#加入  &lt;/span&gt;
 &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/mysql/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mysqld_safe&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7209,7 +7241,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;k&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mysql&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;%&amp;#39;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;用户名&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;（如果写成&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localhost&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;那此用户就不具有远程访问权限）&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;FLUSH&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PRIVILEGES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7228,7 +7261,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zxvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;libiconv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;libiconv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.14&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/configure --prefix=/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7246,7 +7280,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;  
 &lt;span class=&quot;sr&quot;&gt;/sbin/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ldconfig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;libltdl&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/ &amp;amp;&amp;amp; ./co&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nfigure&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ltdl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7262,7 +7297,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zxvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9.9.9&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9.9.9&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/ &amp;amp;&amp;amp; ./co&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nfigure&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7286,7 +7322,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;n&quot;&gt;ln&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/lib/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;so&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.2&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;so&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.2&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;ln&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/lib/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;so&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.2.0.1&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lib&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmhash&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;so&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;.2.0.1&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;ln&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/bin/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmcrypt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libmcrypt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7304,7 +7341,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;sr&quot;&gt;/sbin/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ldconfig&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7359,7 +7397,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;span class=&quot;c1&quot;&gt;#选择PHP.ini配置文件  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;php&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ini&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;production&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/usr/&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/php/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;etc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;php&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ini&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7401,7 +7440,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;span class=&quot;c1&quot;&gt;#返回安装包目录   &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;web&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7419,7 +7459,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zxvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pcre&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;8.13&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pcre&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;8.13&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/ &amp;amp;&amp;amp; ./co&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nfigure&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7445,7 +7486,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/var/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;  
 
 &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;../&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7503,7 +7545,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;php&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;phpinfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;  
 &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -7772,36 +7815,27 @@ main();
 &lt;ul&gt;
 &lt;li&gt;安装&lt;a href=&quot;http://rubyinstaller.org/downloads/&quot;&gt;RubyInstaller&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;安装&lt;a href=&quot;http://rubyinstaller.org/downloads/&quot;&gt;DevKit&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;安装Jekyll：&lt;/li&gt;
+&lt;li&gt;在DevKit目录找到msys.bat运行并安装Jekyll和rdiscount：&lt;/li&gt;
 &lt;/ul&gt;
 
 
-&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ gem install jekyll
+&lt;pre&gt;&lt;code&gt;$ gem install jekyll -v 0.11.2
+$ gem install rdiscount -v 1.6.8
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
 &lt;li&gt;安装&lt;a href=&quot;http://www.python.org/getit/&quot;&gt;Python&lt;/a&gt;（推荐Python 2.7.2）&lt;/li&gt;
 &lt;li&gt;安装Python &lt;a href=&quot;http://pypi.python.org/pypi/setuptools&quot;&gt;setuptools&lt;/a&gt;，找对应的exe文件下载安装。&lt;/li&gt;
 &lt;li&gt;添加 C:\Python27\Scripts（假设你的Python安装在C盘根目录下）到你的path&lt;/li&gt;
-&lt;li&gt;安装pygments:&lt;/li&gt;
+&lt;li&gt;转到Python27\Scripts目录下安装pygments:&lt;/li&gt;
 &lt;/ul&gt;
 
 
-&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ easy_install pygments
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;安装rdiscount:&lt;/li&gt;
-&lt;/ul&gt;
-
-
-&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ yum install rdiscount
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
@@ -7817,17 +7851,14 @@ main();
 &lt;/ul&gt;
 
 
-&lt;p&gt;登陆你的&lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt;账户，创建一个新的版本库，命名为&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;USERNAME.github.com
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;　　登陆你的&lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt;账户，创建一个新的版本库，命名为USERNAME.github.com&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;安装Jekyll引导程序（Jekyll-Bootstrap）&lt;/li&gt;
 &lt;/ul&gt;
 
 
-&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ git clone https://github.com/plusjade/jekyll-bootstrap.git USERNAME.github.com  
 $ cd USERNAME.github.com  
@@ -7849,7 +7880,7 @@ $ cd jekyll-bootstrap
 $ jekyll --server
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;在浏览器预览&lt;a href=&quot;http://localhost:4000/&quot;&gt;http://localhost:4000&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;　　在浏览器预览&lt;a href=&quot;http://localhost:4000/&quot;&gt;http://localhost:4000&lt;/a&gt;.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://jekyllbootstrap.com/lessons/jekyll-introduction.html&quot;&gt;更多介绍&lt;/a&gt;&lt;/li&gt;
@@ -7863,14 +7894,14 @@ $ jekyll --server
 &lt;/ul&gt;
 
 
-&lt;p&gt;假设你已经安装好了jekyll-bootstrap，以及其他一些基本运行环境和工具，首先启动你本地的WEBrick服务器（Ruby自带的）：&lt;/p&gt;
+&lt;p&gt;　　假设你已经安装好了jekyll-bootstrap，以及其他一些基本运行环境和工具，首先启动你本地的WEBrick服务器（Ruby自带的）：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ cd USERNAME.github.com  
 $ jekyll --server  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;别忘了把USERNAME换成你的GitHub用户名。&lt;br/&gt;
-你的Blog在这预览: &lt;a href=&quot;http://localhost:4000/&quot;&gt;http://localhost:4000/&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;　　别忘了把USERNAME换成你的GitHub用户名。&lt;br/&gt;
+　　你的Blog在这预览: &lt;a href=&quot;http://localhost:4000/&quot;&gt;http://localhost:4000/&lt;/a&gt;。&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;创建第一篇博文&lt;/li&gt;
@@ -7882,8 +7913,8 @@ $ jekyll --server
 &lt;pre&gt;&lt;code&gt;$ rake post title=&quot;Hello World&quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;情况下rake命令会在你的_posts目录下创建一个名为[年-月-日-posttitle.md]的文件，例如2012-05-04-Hello-World.md，名称中的空格会转换成“-”，时间为当前系统时间。当然这些都是可配置的。&lt;br/&gt;
-rake命令默认不会覆盖掉相同名称的文件。&lt;/p&gt;
+&lt;p&gt;　　情况下rake命令会在你的_posts目录下创建一个名为[年-月-日-posttitle.md]的文件，例如2012-05-04-Hello-World.md，名称中的空格会转换成“-”，时间为当前系统时间。当然这些都是可配置的。&lt;br/&gt;
+　　rake命令默认不会覆盖掉相同名称的文件。&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;创建第一个页面&lt;/li&gt;
@@ -7902,7 +7933,7 @@ $ rake page name=&quot;pages/about.md&quot;
 $ rake page name=&quot;pages/about&quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;发布&lt;/p&gt;
+&lt;p&gt;　　发布&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;完成一篇博文或者做一些修改之后可以用简单的git命令提交到远程的Github版本库。同时Github可以将md文件解析成html文件，通过USERNAME.github.com就可以访问刚才提交的博文。&lt;/li&gt;
@@ -7916,9 +7947,9 @@ $ git commit -m &quot;Add new content&quot;
 $ git push origin master
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;至此你就可以写自己的blog like a hacker。&lt;/p&gt;
+&lt;p&gt;　　至此你就可以写自己的blog like a hacker。&lt;/p&gt;
 
-&lt;p&gt;当然你还可以运用一些预置的主题，做一些自定义的配置，以及自己定义主题增加模板配置文件、增加Blog挂件、加入Google Analytics、Disqus等等，同样可以将一个静态网站做的栩栩如生。&lt;/p&gt;
+&lt;p&gt;　　当然你还可以运用一些预置的主题，做一些自定义的配置，以及自己定义主题增加模板配置文件、增加Blog挂件、加入Google Analytics、Disqus等等，同样可以将一个静态网站做的栩栩如生。&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;另外网站默认是托管在Github服务器（实际上是RackSpace的云服务器）上的，你还可以考虑免费的Heroku，至于GAE、EC2（免费一年），显然有些大材小用了。&lt;/li&gt;
@@ -7928,30 +7959,30 @@ $ git push origin master
 &lt;h3&gt;遇到的问题&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;本地post中出现中文不能正常编译&lt;br/&gt;
-由于windows下的git控制台MinGW默认不支持中文编码，需要将其设置为UTF-8，有两种解决方案：&lt;br/&gt;
-临时：控制台输入以下语句&lt;/li&gt;
+&lt;li&gt;本地post中出现中文不能正常编译&lt;/li&gt;
 &lt;/ul&gt;
 
 
-&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+&lt;p&gt;　　由于windows下的git控制台MinGW默认不支持中文编码，需要将其设置为UTF-8，有两种解决方案：&lt;br/&gt;
+　　临时：控制台输入以下语句&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ export LC_ALL=en_US.UTF-8  
 $ export LANG=en_US.UTF-8  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;永久：添加两个用户自定义的环境变量，LC_ALL=en_US.UTF-8 和 LANG=en_US.UTF-8（你想的没错，就是修改windows环境变量）&lt;/p&gt;
+&lt;p&gt;　　永久：添加两个用户自定义的环境变量，LC_ALL=en_US.UTF-8 和 LANG=en_US.UTF-8（你想的没错，就是修改windows环境变量）&lt;/p&gt;
 
-&lt;p&gt;另外Jekyll默认的Markdown引擎markup对中文的解析不是很好，建议换成rdiscount。在_config.yml文件中pygments: true上一行添加markdown: rdiscount。在此之前你必须首先安装Rdiscount。&lt;/p&gt;
+&lt;p&gt;　　另外Jekyll默认的Markdown引擎markup对中文的解析不是很好，建议换成rdiscount。在_config.yml文件中pygments: true上一行添加markdown: rdiscount。在此之前你必须首先安装Rdiscount。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ gem install rdiscount
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Liquid error: No such file or directory - pygmentize&lt;br/&gt;
-没有安装Pygments的缘故，如果你安装了python，只需要easy install。&lt;/li&gt;
+&lt;li&gt;Liquid error: No such file or directory - pygmentize&lt;/li&gt;
 &lt;/ul&gt;
 
+
+&lt;p&gt;　　没有安装Pygments的缘故，如果你安装了python，只需要easy install。&lt;/p&gt;
 
 &lt;p&gt;&lt;label/&gt;&lt;/p&gt;
 
@@ -7959,10 +7990,11 @@ $ export LANG=en_US.UTF-8
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Liquid error: bad file descriptor&lt;br/&gt;
-我的电脑上同时装了python2.7和python3.2，我想是这个原因。需要给albino.rb文件打个补丁，假设你的Ruby安装在D:\Program\，并且你已经把&lt;a href=&quot;https://gist.github.com/2592525&quot;&gt;albino-windows-refactor.patch&lt;/a&gt;补丁文件copy到了下边的目录：&lt;/li&gt;
+&lt;li&gt;Liquid error: bad file descriptor&lt;/li&gt;
 &lt;/ul&gt;
 
+
+&lt;p&gt;　　我的电脑上同时装了python2.7和python3.2，我想是这个原因。需要给albino.rb文件打个补丁，假设你的Ruby安装在D:\Program\，并且你已经把&lt;a href=&quot;https://gist.github.com/2592525&quot;&gt;albino-windows-refactor.patch&lt;/a&gt;补丁文件copy到了下边的目录：&lt;/p&gt;
 
 &lt;p&gt;&lt;label/&gt;&lt;/p&gt;
 
@@ -7971,12 +8003,13 @@ $ patch \&amp;lt; albino-windows-refactor.patch
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;侧边栏二级目录的链接不起作用&lt;br/&gt;
-这个问题花了不少时间，最终还是未能找到问题所在，无奈，只有自己动手丰衣足食，自己写js搞定。&lt;/li&gt;
+&lt;li&gt;侧边栏二级目录的链接不起作用&lt;/li&gt;
 &lt;/ul&gt;
 
 
-&lt;p&gt;首先看一下源码，在assets\app.js文件中的Toc中看可以看到：&lt;/p&gt;
+&lt;p&gt;　　这个问题花了不少时间，最终还是未能找到问题所在，无奈，只有自己动手丰衣足食，自己写js搞定。&lt;/p&gt;
+
+&lt;p&gt;　　首先看一下源码，在assets\app.js文件中的Toc中看可以看到：&lt;/p&gt;
 
 &lt;p&gt;&lt;label/&gt;&lt;/p&gt;
 
@@ -7985,7 +8018,7 @@ $ patch \&amp;lt; albino-windows-refactor.patch
 })  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;显然他在这为链接设置了href，但是调用了h2对象（也就是侧边栏目录的二级菜单）的id属性，而用Firebug查看最终解析成的html文件，发现&amp;lt;h2&gt;的id是不存在的，于是自然想到这在之前先为h2设置唯一的id属性。这个用jQuery很容易就能实现：&lt;/p&gt;
+&lt;p&gt;　　显然他在这为链接设置了href，但是调用了h2对象（也就是侧边栏目录的二级菜单）的id属性，而用Firebug查看最终解析成的html文件，发现&amp;lt;h2&gt;的id是不存在的，于是自然想到这在之前先为h2设置唯一的id属性。这个用jQuery很容易就能实现：&lt;/p&gt;
 
 &lt;p&gt;&lt;label/&gt;&lt;/p&gt;
 
@@ -7998,7 +8031,7 @@ YAM了貌似对空格比较敏感，需要一个空格的时候就不要敲多�
 &lt;/ul&gt;
 
 
-&lt;p&gt;另外post文件头中的属性配置也要注意：&lt;/p&gt;
+&lt;p&gt;　　另外post文件头中的属性配置也要注意：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;---  
 layout: post  
@@ -8009,19 +8042,19 @@ description: |
 ---  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;description第二行开头我敲了一个Tab（四个字符宽度）就出错了，一些细节，注意一下就好了。&lt;/p&gt;
+&lt;p&gt;　　description第二行开头我敲了一个Tab（四个字符宽度）就出错了，一些细节，注意一下就好了。&lt;/p&gt;
 
 &lt;h3&gt;域名绑定&lt;/h3&gt;
 
-&lt;p&gt;Github会为你分配一个类似于USERNAME.github.com的二级域名，如果你自己有一个顶级域名，你可以将它与Github提供的一个共有IP(204.232.175.78)绑定，这个在Github Pages上有详细介绍，在你的网站根目录下增加一个CNAME文件，里边写你自己的域名，再给你的域名增加一条A记录，稍等片刻之后就可以用你的域名访问了。&lt;/p&gt;
+&lt;p&gt;　　Github会为你分配一个类似于USERNAME.github.com的二级域名，如果你自己有一个顶级域名，你可以将它与Github提供的一个共有IP(204.232.175.78)绑定，这个在Github Pages上有详细介绍，在你的网站根目录下增加一个CNAME文件，里边写你自己的域名，再给你的域名增加一条A记录，稍等片刻之后就可以用你的域名访问了。&lt;/p&gt;
 
-&lt;p&gt;当然域名是需要花钱的，如果你舍不得花银子，免费的午餐还是会有的，你可以免费申请一个（当然也可以是多个）.tk的域名。DotTK提供yourname.tk的免费顶级域名。.tk是南太平洋岛国托克劳的国家域名，免费注册一个帐户可以任意申请.tk域名，支持域名转发（可隐藏原URL）、电邮转发、A记录解析、CNAME别名记录、MX邮件记录、设置DNS服务器等服务。当然免费的总是会有一些限制条件喽。&lt;/p&gt;
+&lt;p&gt;　　当然域名是需要花钱的，如果你舍不得花银子，免费的午餐还是会有的，你可以免费申请一个（当然也可以是多个）.tk的域名。DotTK提供yourname.tk的免费顶级域名。.tk是南太平洋岛国托克劳的国家域名，免费注册一个帐户可以任意申请.tk域名，支持域名转发（可隐藏原URL）、电邮转发、A记录解析、CNAME别名记录、MX邮件记录、设置DNS服务器等服务。当然免费的总是会有一些限制条件喽。&lt;/p&gt;
 
-&lt;p&gt;如果你注册的域名在90天内访问量少于25个，你的域名将被删除！
-如果你开通的电邮转发在90天内收到的邮件少于10封，你的电邮转发服务将被停止！
-另外很多看起来不错的域名不是免费的，要交费才能注册使用！比如说cn.tk。&lt;/p&gt;
+&lt;p&gt;　　如果你注册的域名在90天内访问量少于25个，你的域名将被删除！
+　　如果你开通的电邮转发在90天内收到的邮件少于10封，你的电邮转发服务将被停止！
+　　另外很多看起来不错的域名不是免费的，要交费才能注册使用！比如说cn.tk。&lt;/p&gt;
 
-&lt;p&gt;注册流程很简单，有中文版的，几十秒钟你的免费顶级域名就到手了，是不是很happy！&lt;/p&gt;
+&lt;p&gt;　　注册流程很简单，有中文版的，几十秒钟你的免费顶级域名就到手了，是不是很happy！&lt;/p&gt;
 
 &lt;h3&gt;其他&lt;/h3&gt;
 
@@ -8513,7 +8546,8 @@ mask）。&lt;/p&gt;
 &lt;span class=&quot;n&quot;&gt;ECHO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OK&lt;/span&gt;   
 &lt;span class=&quot;n&quot;&gt;GOTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cmd1&lt;/span&gt;   
 &lt;span class=&quot;n&quot;&gt;GOTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MENU&lt;/span&gt;   
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;&lt;a href=&quot;/assets/files/2012-06/nginx.bat&quot;&gt;猛击这里下载&lt;/a&gt;&lt;/p&gt;
@@ -13592,7 +13626,8 @@ vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好
 &lt;span class=&quot;n&quot;&gt;False&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 列出所有键值。（这时候已经存了4个了）&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;aaa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;bbb&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;key1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -15515,7 +15550,8 @@ _   底线
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;            &lt;span class=&quot;err&quot;&gt;设置后台日志队列的长度（默认：&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;            &lt;span class=&quot;err&quot;&gt;绑定协议&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;可能值：&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ascii&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;auto&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;（默认）&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;I&lt;/span&gt;            &lt;span class=&quot;err&quot;&gt;重写每个数据页尺寸。调整数据项最大尺寸。&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;memcached在线地址：&lt;a href=&quot;https://github.com/liuxd/MyTranslation/blob/master/translation/memcached-1.4.man&quot;&gt;https://github.com/liuxd/MyTranslation/blob/master/translation/memcached-1.4.man&lt;/a&gt;&lt;/p&gt;
@@ -15871,7 +15907,8 @@ function doSomethingElse(){
 &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Repository&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;baseurl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;http:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;downloads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;distro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongodb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/repo/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redhat&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/os/x&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;86_64&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;gpgcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -15891,7 +15928,8 @@ function doSomethingElse(){
 &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gen&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Repository&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;baseurl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;http:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;downloads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;distro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongodb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/repo/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;redhat&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/os/i&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;686&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;gpgcheck&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -15939,7 +15977,8 @@ function doSomethingElse(){
            &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;softwware&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scripts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;  
   
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#  &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -15975,7 +16014,8 @@ function doSomethingElse(){
            &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;other&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utilities&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;  
   
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#  &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -15993,7 +16033,8 @@ function doSomethingElse(){
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# yum install mongo-10gen-server  &lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# ls /usr/bin/mongo（tab键）  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;mongo&lt;/span&gt;         &lt;span class=&quot;n&quot;&gt;mongod&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;mongodump&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;mongoexport&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;mongofiles&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;mongoimport&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;mongorestore&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;mongos&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;mongostat&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;这些就是MongoDB的程序文件&lt;br/&gt;
@@ -16005,7 +16046,8 @@ function doSomethingElse(){
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;perl&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# yum install mongo-10gen   &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16018,7 +16060,8 @@ function doSomethingElse(){
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# /etc/init.d/mongod status  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;mongod&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1341&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;running&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;  
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#  &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;p&gt;说明安后服务器端已经在运行了&lt;/p&gt;
@@ -16118,7 +16161,8 @@ function doSomethingElse(){
 &lt;span class=&quot;c1&quot;&gt;#master = true  &lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;#source = slave.example.com  &lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#  &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -16220,7 +16264,8 @@ function doSomethingElse(){
                         &lt;span class=&quot;err&quot;&gt;关闭偏着保存大块数据。现在它是默认的，但是会变换&lt;/span&gt;  
   
 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#  &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
 
@@ -16238,7 +16283,8 @@ function doSomethingElse(){
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;@vm&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;# mongo  &lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;MongoDB&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;2.2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;  
 &lt;span class=&quot;n&quot;&gt;connecting&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16248,7 +16294,8 @@ function doSomethingElse(){
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;jack&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16258,7 +16305,8 @@ function doSomethingElse(){
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16267,7 +16315,8 @@ function doSomethingElse(){
 
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16277,7 +16326,8 @@ function doSomethingElse(){
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;joe&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;  
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#删除所有&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16289,7 +16339,8 @@ function doSomethingElse(){
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getIndexes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#查看所有索引&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#删除索引&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ensureIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;unique&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;#唯一索引&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16299,7 +16350,8 @@ function doSomethingElse(){
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongodump&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;数据库名&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;#将数据库备份在dump目录，-o my_mongodb_dump将数据库备份在my_mongodb_dump目录&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongorestore&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;数据库名&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;备份路径&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/*&lt;/span&gt;   &lt;span class=&quot;c&quot;&gt;#将备份路径下的文件恢复为数据库&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16309,7 +16361,8 @@ function doSomethingElse(){
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongoexport&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;数据库名&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;表名&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;表名&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dat&lt;/span&gt;   &lt;span class=&quot;c&quot;&gt;#将数据库中的表数据导出到dat文件&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;./&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mongoimport&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;数据库名&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;表名&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;表名&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dat&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;#将dat文件导入到数据库中的表&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 &lt;ul&gt;
@@ -16321,7 +16374,8 @@ function doSomethingElse(){
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MyTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;show&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;charpter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;this.content.length&amp;gt;0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 
 

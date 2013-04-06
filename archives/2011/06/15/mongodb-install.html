@@ -79,7 +79,8 @@
 <span class="n">name</span><span class="o">=</span><span class="mi">10</span><span class="n">gen</span> <span class="n">Repository</span>  
 <span class="n">baseurl</span><span class="o">=</span><span class="n">http:</span><span class="sr">//</span><span class="n">downloads</span><span class="o">-</span><span class="n">distro</span><span class="o">.</span><span class="n">mongodb</span><span class="o">.</span><span class="n">org</span><span class="sr">/repo/</span><span class="n">redhat</span><span class="sr">/os/x</span><span class="mi">86_64</span>  
 <span class="n">gpgcheck</span><span class="o">=</span><span class="mi">0</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -99,7 +100,8 @@
 <span class="n">name</span><span class="o">=</span><span class="mi">10</span><span class="n">gen</span> <span class="n">Repository</span>  
 <span class="n">baseurl</span><span class="o">=</span><span class="n">http:</span><span class="sr">//</span><span class="n">downloads</span><span class="o">-</span><span class="n">distro</span><span class="o">.</span><span class="n">mongodb</span><span class="o">.</span><span class="n">org</span><span class="sr">/repo/</span><span class="n">redhat</span><span class="sr">/os/i</span><span class="mi">686</span>  
 <span class="n">gpgcheck</span><span class="o">=</span><span class="mi">0</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -147,7 +149,8 @@
            <span class="p">:</span> <span class="n">server</span> <span class="n">softwware</span><span class="p">,</span> <span class="n">default</span> <span class="n">configuration</span> <span class="n">files</span><span class="p">,</span> <span class="ow">and</span> <span class="n">init</span><span class="o">.</span><span class="n">d</span> <span class="n">scripts</span><span class="o">.</span>  
   
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1">#  </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -183,7 +186,8 @@
            <span class="p">:</span> <span class="n">other</span> <span class="n">client</span> <span class="n">utilities</span><span class="o">.</span>  
   
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1">#  </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -201,7 +205,8 @@
 <div class="highlight"><pre><code class="perl"><span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1"># yum install mongo-10gen-server  </span>
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1"># ls /usr/bin/mongo（tab键）  </span>
 <span class="n">mongo</span>         <span class="n">mongod</span>        <span class="n">mongodump</span>     <span class="n">mongoexport</span>   <span class="n">mongofiles</span>    <span class="n">mongoimport</span>   <span class="n">mongorestore</span>  <span class="n">mongos</span>        <span class="n">mongostat</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>这些就是MongoDB的程序文件<br/>
@@ -213,7 +218,8 @@
 
 
 <div class="highlight"><pre><code class="perl"><span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1"># yum install mongo-10gen   </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -226,7 +232,8 @@
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1"># /etc/init.d/mongod status  </span>
 <span class="n">mongod</span> <span class="p">(</span><span class="n">pid</span> <span class="mi">1341</span><span class="p">)</span> <span class="n">is</span> <span class="n">running</span><span class="o">...</span>  
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1">#  </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>说明安后服务器端已经在运行了</p>
@@ -326,7 +333,8 @@
 <span class="c1">#master = true  </span>
 <span class="c1">#source = slave.example.com  </span>
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1">#  </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -428,7 +436,8 @@
                         <span class="err">关闭偏着保存大块数据。现在它是默认的，但是会变换</span>  
   
 <span class="p">[</span><span class="n">root</span><span class="nv">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c1">#  </span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -446,7 +455,8 @@
 <div class="highlight"><pre><code class="python"><span class="p">[</span><span class="n">root</span><span class="nd">@vm</span> <span class="o">~</span><span class="p">]</span><span class="c"># mongo  </span>
 <span class="n">MongoDB</span> <span class="n">shell</span> <span class="n">version</span><span class="p">:</span> <span class="mf">2.2</span><span class="o">.</span><span class="mi">1</span>  
 <span class="n">connecting</span> <span class="n">to</span><span class="p">:</span> <span class="n">test</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -456,7 +466,8 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;jack&quot;</span><span class="p">,</span><span class="s">&quot;age&quot;</span><span class="p">:</span><span class="mi">21</span><span class="p">})</span>  
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;joe&quot;</span><span class="p">,</span><span class="s">&quot;age&quot;</span><span class="p">:</span><span class="mi">24</span><span class="p">})</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -466,7 +477,8 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>  
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;joe&quot;</span><span class="p">})</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -475,7 +487,8 @@
 
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;joe&quot;</span><span class="p">},{</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;joe&quot;</span><span class="p">,</span><span class="s">&quot;age&quot;</span><span class="p">:</span><span class="mi">28</span><span class="p">})</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -485,7 +498,8 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;joe&quot;</span><span class="p">})</span>  
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span><span class="c">#删除所有</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -497,7 +511,8 @@
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">getIndexes</span><span class="p">()</span> <span class="c">#查看所有索引</span>
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">dropIndex</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span> <span class="c">#删除索引</span>
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">customer</span><span class="o">.</span><span class="n">ensureIndex</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">},{</span><span class="s">&quot;unique&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">})</span> <span class="c">#唯一索引</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -507,7 +522,8 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="o">./</span><span class="n">mongodump</span> <span class="o">-</span><span class="n">d</span> <span class="err">数据库名</span>  <span class="c">#将数据库备份在dump目录，-o my_mongodb_dump将数据库备份在my_mongodb_dump目录</span>
 <span class="o">&gt;</span> <span class="o">./</span><span class="n">mongorestore</span> <span class="o">-</span><span class="n">d</span> <span class="err">数据库名</span> <span class="err">备份路径</span><span class="o">/*</span>   <span class="c">#将备份路径下的文件恢复为数据库</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -517,7 +533,8 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;</span> <span class="o">./</span><span class="n">mongoexport</span> <span class="o">-</span><span class="n">d</span> <span class="err">数据库名</span> <span class="o">-</span><span class="n">c</span> <span class="err">表名</span> <span class="o">-</span><span class="n">o</span> <span class="err">表名</span><span class="o">.</span><span class="n">dat</span>   <span class="c">#将数据库中的表数据导出到dat文件</span>
 <span class="o">&gt;</span> <span class="o">./</span><span class="n">mongoimport</span> <span class="o">-</span><span class="n">d</span> <span class="err">数据库名</span> <span class="o">-</span><span class="n">c</span> <span class="err">表名</span> <span class="err">表名</span><span class="o">.</span><span class="n">dat</span>      <span class="c">#将dat文件导入到数据库中的表</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <ul>
@@ -529,7 +546,8 @@
 <span class="o">&gt;</span> <span class="n">use</span> <span class="n">MyTest</span><span class="p">;</span>
 <span class="o">&gt;</span> <span class="n">show</span> <span class="n">collections</span><span class="p">;</span>
 <span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">charpter</span><span class="o">.</span><span class="n">count</span><span class="p">({</span><span class="err">$</span><span class="n">where</span><span class="p">:</span> <span class="s">&quot;this.content.length&gt;0&quot;</span><span class="p">})</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 
