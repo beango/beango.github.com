@@ -144,7 +144,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="n">cd</span> <span class="n">cmake</span><span class="o">-</span><span class="mf">2.8.6</span><span class="o">/</span>  
 <span class="o">./</span><span class="n">configure</span>  
 <span class="n">gmake</span> <span class="o">&amp;&amp;</span> <span class="n">gmake</span> <span class="n">install</span>  <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -162,7 +163,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="sr">/usr/s</span><span class="n">bin</span><span class="o">/</span><span class="n">useradd</span> <span class="o">-</span><span class="n">g</span> <span class="n">mysql</span> <span class="n">mysql</span>  
 <span class="nb">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="sr">/data/m</span><span class="n">ysql</span>  
 <span class="nb">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">mysql:mysql</span> <span class="sr">/data/m</span><span class="n">ysql</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -196,7 +198,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="o">-</span><span class="n">DWITH_INNOBASE_STORAFE_ENGINE</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#开启INNODB引擎，MyISAM MERGE MEMORY CSV是默认安装的  </span>
 <span class="o">-</span><span class="n">DENABLE_LOCAL_INFILE</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span> <span class="c1">#开启 LOAD DATA INFILE，就是从文件导入数据库  </span>
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -226,7 +229,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="n">default</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">engine</span> <span class="o">=</span> <span class="n">MyISAM</span>  
 <span class="c1">#在 [mysqld] 段修改  </span>
 <span class="n">max_allowed_packet</span> <span class="o">=</span> <span class="mi">16</span><span class="n">M</span> 
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -242,7 +246,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 <div class="highlight"><pre><code class="perl"><span class="n">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="n">mysql</span>  
 <span class="o">.</span><span class="sr">/scripts/m</span><span class="n">ysql_install_db</span> <span class="o">--</span><span class="n">user</span><span class="o">=</span><span class="n">mysql</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -257,7 +262,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div style="display:none;">
 
 <div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqladmin</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="n">password</span> <span class="mi">123456</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -272,7 +278,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div style="display:none;">
 
 <div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqld_safe</span> <span class="o">&amp;</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -289,7 +296,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="o">-</span><span class="n">p</span> <span class="mi">123456</span>  
 <span class="n">show</span> <span class="n">databases</span><span class="p">;</span>  
 <span class="nb">exit</span><span class="p">;</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -306,7 +314,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div class="highlight"><pre><code class="perl"><span class="n">vi</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc</span><span class="o">.</span><span class="nb">local</span>  
 <span class="c1">#加入  </span>
 <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqld_safe</span> <span class="o">&amp;</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -323,7 +332,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div class="highlight"><pre><code class="perl"><span class="k">use</span> <span class="n">mysql</span><span class="p">;</span>
 <span class="n">update</span> <span class="n">user</span> <span class="n">set</span> <span class="n">host</span> <span class="o">=</span> <span class="s">&#39;%&#39;</span> <span class="n">where</span> <span class="n">user</span> <span class="o">=</span> <span class="s">&#39;用户名&#39;</span><span class="p">;</span> <span class="err">（如果写成</span> <span class="n">host</span><span class="o">=</span><span class="n">localhost</span> <span class="err">那此用户就不具有远程访问权限）</span>
 <span class="n">FLUSH</span> <span class="n">PRIVILEGES</span><span class="p">;</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -342,7 +352,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">/</span>  
 <span class="o">.</span><span class="sr">/configure --prefix=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">local</span>  
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -360,7 +371,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="o">./</span><span class="n">configure</span> <span class="o">&amp;&amp;</span>  <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>  
 <span class="sr">/sbin/</span><span class="n">ldconfig</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">libltdl</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">ltdl</span><span class="o">-</span><span class="n">install</span>  
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -376,7 +388,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 <div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span>  
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -400,7 +413,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2</span>  
 <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2.0.1</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2.0.1</span>  
 <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/bin/</span><span class="n">libmcrypt</span><span class="o">-</span><span class="n">config</span> <span class="sr">/usr/</span><span class="n">bin</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">-</span><span class="n">config</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -418,7 +432,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="sr">/sbin/</span><span class="n">ldconfig</span>  
 <span class="o">./</span><span class="n">configure</span>  
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -473,7 +488,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 <span class="c1">#选择PHP.ini配置文件  </span>
 <span class="n">cp</span> <span class="n">php</span><span class="o">.</span><span class="n">ini</span><span class="o">-</span><span class="n">production</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="n">etc</span><span class="o">/</span><span class="n">php</span><span class="o">.</span><span class="n">ini</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -515,7 +531,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 <span class="c1">#返回安装包目录   </span>
 <span class="n">cd</span> <span class="o">/</span><span class="n">web</span> 
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -533,7 +550,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 <div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span>  
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -559,7 +577,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="o">--</span><span class="n">pid</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/var/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">pid</span>  
 
 <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>  
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 
@@ -617,7 +636,8 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 <span class="o">&lt;</span><span class="p">?</span><span class="n">php</span>  
 <span class="n">phpinfo</span><span class="p">();</span>  
 <span class="p">?</span><span class="o">&gt;</span>   
-</code></pre></div>
+</code></pre>
+</div>
 
 </div>
 

@@ -350,7 +350,8 @@ one顺着链接到了那个网站，接着阅读。</p>
      <span class="kd">private</span> <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
      <span class="kd">private</span> <span class="kt">int</span> <span class="n">hitCount</span><span class="o">;</span><span class="err">　</span><span class="c1">// getters and setters</span>
  <span class="o">}</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>这个缓存实体拥有缓存的key和value，这个实体的数据结构会被以下所有缓存算法用到。</p>
@@ -376,7 +377,8 @@ one顺着链接到了那个网站，接着阅读。</p>
         <span class="k">return</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="err">｝</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>上面的代码会被所有的缓存算法实现用到。这段代码是用来检查缓存元素是否在缓存中了，如果是，我们就替换它，但是如果我们找不到这个
@@ -415,7 +417,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。</p>
     <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">]);</span>
 <span class="o">}</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p><strong>看看FIFO缓存算法的实现</strong></p>
@@ -451,7 +454,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。</p>
     <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">]);</span>
 <span class="o">}</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p><strong>看看LFU缓存算法的实现</strong></p>
@@ -521,7 +525,8 @@ Cache，FIFO Cache。让我们从 Random Cache开始。</p>
     <span class="o">}</span>
     <span class="k">return</span> <span class="n">lowestElement</span><span class="o">;</span>
 <span class="o">}</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>今天的专题很特殊，因为我们有特殊的客人，事实上他们是我们想要听的与会者，但是首先，先介绍一下我们的客人：Random
@@ -588,7 +593,8 @@ Cache, FIFO Cache。让我们从 Random Cache开始。</p>
     <span class="n">cache</span><span class="o">[</span><span class="n">head</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">head</span><span class="o">]);</span>
 <span class="o">}</span>
-</code></pre></div>
+</code></pre>
+</div>
 
 
 <p>这段代码的逻辑如 LRU算法
