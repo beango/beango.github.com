@@ -13,8 +13,8 @@ Jekyll是一个静态网站生成器，用ruby编写而成，结合了markdown�
 
 ### 准备工作 
 
--   安装[RubyInstaller](http://rubyinstaller.org/downloads/)
--   安装[DevKit](http://rubyinstaller.org/downloads/)
+-   安装[RubyInstaller](http://rubyinstaller.org/downloads/)（笔者１.９.３版本）
+-   安装[DevKit](http://rubyinstaller.org/downloads/)（Ruby 1.8.6 to 1.9.3使用 tdm-32-4.5.2）
 -   在DevKit目录找到msys.bat运行并安装Jekyll和rdiscount：
 
 <label />
@@ -135,7 +135,7 @@ Jekyll是一个静态网站生成器，用ruby编写而成，结合了markdown�
 
 <label/>
     $ cd D:\Program\Ruby193\lib\ruby\gems\1.9.1\gems\albino-1.3.3\lib  
-    $ patch \< albino-windows-refactor.patch
+    $ patch < albino-windows-refactor.patch
 
 -   侧边栏二级目录的链接不起作用
 

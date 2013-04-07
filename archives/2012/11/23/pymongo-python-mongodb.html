@@ -62,8 +62,7 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pymongo</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">27017</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -74,8 +73,7 @@
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">ChatRoom</span>  
 <span class="err">或</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span> <span class="o">=</span> <span class="n">conn</span><span class="p">[</span><span class="s">&#39;ChatRoom&#39;</span><span class="p">]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -86,8 +84,7 @@
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">account</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span>  
 <span class="err">或</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">account</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s">&quot;Account&quot;</span><span class="p">]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -96,8 +93,7 @@
 
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">collection_names</span><span class="p">()</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -107,8 +103,7 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;keyword&quot;</span><span class="p">})</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -120,8 +115,7 @@
 <span class="o">&gt;&gt;&gt;</span>    <span class="p">{</span><span class="s">u&#39;UserName&#39;</span><span class="p">:</span> <span class="s">u&#39;libing&#39;</span><span class="p">,</span> <span class="s">u&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;4ded95c3b7780a774a099b7c&#39;</span><span class="p">),</span> <span class="s">u&#39;Email&#39;</span><span class="p">:</span> <span class="s">u&#39;libing@35.cn&#39;</span><span class="p">}</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find_one</span><span class="p">({},{</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;Email&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>  
 <span class="o">&gt;&gt;&gt;</span>    <span class="p">{</span><span class="s">u&#39;UserName&#39;</span><span class="p">:</span> <span class="s">u&#39;libing&#39;</span><span class="p">,</span> <span class="s">u&#39;Email&#39;</span><span class="p">:</span> <span class="s">u&#39;libing@35.cn&#39;</span><span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -133,8 +127,7 @@
 <span class="o">&gt;&gt;&gt;</span>    <span class="n">item</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;libing&quot;</span><span class="p">}):</span>  
 <span class="o">&gt;&gt;&gt;</span>    <span class="n">item</span><span class="p">[</span><span class="s">&quot;UserName&quot;</span><span class="p">]</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -144,8 +137,7 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;keyword&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -156,8 +148,7 @@
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&quot;UserName&quot;</span><span class="p">)</span>  <span class="o">--</span><span class="err">默认为升序</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&quot;UserName&quot;</span><span class="p">,</span><span class="n">pymongo</span><span class="o">.</span><span class="n">ASCENDING</span><span class="p">)</span>   <span class="o">--</span><span class="err">升序</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s">&quot;UserName&quot;</span><span class="p">,</span><span class="n">pymongo</span><span class="o">.</span><span class="n">DESCENDING</span><span class="p">)</span>  <span class="o">--</span><span class="err">降序</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -166,8 +157,7 @@
 
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">([(</span><span class="s">&quot;UserName&quot;</span><span class="p">,</span><span class="n">pymongo</span><span class="o">.</span><span class="n">ASCENDING</span><span class="p">),(</span><span class="s">&quot;Email&quot;</span><span class="p">,</span><span class="n">pymongo</span><span class="o">.</span><span class="n">DESCENDING</span><span class="p">)])</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -176,8 +166,7 @@
 
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span><span class="s">&quot;AccountID&quot;</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;libing&quot;</span><span class="p">})</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -186,8 +175,7 @@
 
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;libing&quot;</span><span class="p">},{</span><span class="s">&quot;$set&quot;</span><span class="p">:{</span><span class="s">&quot;Email&quot;</span><span class="p">:</span><span class="s">&quot;xx@126.com&quot;</span><span class="p">,</span><span class="s">&quot;Password&quot;</span><span class="p">:</span><span class="s">&quot;123&quot;</span><span class="p">}})</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -197,8 +185,7 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>   <span class="o">--</span> <span class="err">全部删除</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">Test</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span><span class="s">&quot;UserName&quot;</span><span class="p">:</span><span class="s">&quot;keyword&quot;</span><span class="p">})</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 <ul>
@@ -208,8 +195,7 @@
 
 <div class="highlight"><pre><code class="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">use</span> <span class="n">test</span>   <span class="o">--</span> <span class="err">切换数据库</span>  
 <span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">dropDatabase</span><span class="p">()</span> <span class="o">--</span> <span class="err">删除当前库</span>
-</code></pre>
-</div>
+</code></pre></div>
 
 
 
