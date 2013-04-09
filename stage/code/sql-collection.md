@@ -8,7 +8,8 @@ description: "SQL － 基础(不断补充)"
 tags: [SQL]
 ---
 
--   游标和事务  
+游标和事务  
+----------
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
     begin try
@@ -44,24 +45,21 @@ tags: [SQL]
 
 说明：FETCH_STATUS检索到数据返回0，失败返回-1，可判断是否滚动未到结尾。
 
--   说明:临时过程用 \# 和 \#\#命名，可以由任何用户创建。创建过程后，局部过程的所有者是唯一可以使用该过程的用户。  
+临时过程/表  
+----------
 
-<a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
-    CREATE TABLE #DMPARHED  
-      (FMCD int,  
-      FMNAM varchar(50),  
-      MGYO1 smallint,  
-      constraint DMPARHED_P primary key (FMCD))
+用 \# 和 \#\#命名，可以由任何用户创建。创建过程后，局部过程的所有者是唯一可以使用该过程的用户。
+
+    CREATE TABLE #DMPARHED(...)
 
 
--   创建临时表的另类方法：  
+创建临时表的另类方法
 
-<label/>
     select * into #temp from Employees
 
--   利用with找出记录及其上（或下）级
+利用with找出记录及其上（或下）级
+------------------------------
 
-<a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
     WITH CategoryInfo AS(
       SELECT id,text,parentid FROM Recursive WHERE id = 10008
       UNION ALL
@@ -70,16 +68,17 @@ tags: [SQL]
 
     SELECT * FROM CategoryInfo
 
--   索引
+索引
+----------
 
-<label/>
     /*在OrderID上面创建聚集索引，索引列为OrderID*/  
     create unique clustered index IX_OrderID on Orders(OrderID)  
 
     /*在Orders表上创建非聚集索引IX_OrderDate*/  
     create index IX_OrderDate on Orders(OrderDate)
 
--   时间格式化
+时间格式化
+----------
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
     Select CONVERT(varchar(100), GETDATE(), 0): 05 16 2006 10:57AM  
@@ -109,7 +108,8 @@ tags: [SQL]
     Select CONVERT(varchar(100), GETDATE(), 103): 16/05/2006  
     Select CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
 
--   CTE批量插入
+CTE批量插入
+--------------------
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>  
     WITH Seq (num,CustomerNumber, CustomerName, CustomerCity) AS
@@ -127,19 +127,19 @@ tags: [SQL]
     FROM Seq
     OPTION (MAXRECURSION 0)
 
--   删除，修改
+删除，修改
+----------
 
 <label/>
     DELETE t1 FROM productappraise t1 INNER JOIN  product t2 ON t1.productid=t2.productid WHERE t2.companyid=@companyid 
 <label/>
     update t1 set t1.name='Liu' from t1 inner join t2 on t1.id = t2.tid
 
--   跨服务器查询
+跨服务器查询
+----------
 
 <a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
-    Exec sp_droplinkedsrvlogin DBVIP,Null  
-    Exec sp_dropserver DBVIP  
-
+     
     EXEC  sp_addlinkedserver  
         @server='DBVIP',--被访问的服务器别名   
         @srvproduct='',   
@@ -153,4 +153,8 @@ tags: [SQL]
         'sa', --帐号  
         'thankyoubobby' --密码  
 
-    Select * from DBVIP.Northwind.dbo.orders   
+    Select * from DBVIP.Northwind.dbo.orders  
+    
+    --删除连接
+    Exec sp_droplinkedsrvlogin DBVIP,Null  
+    Exec sp_dropserver DBVIP 

@@ -63,7 +63,7 @@ li.L7,
 li.L9 {  }
 
 /* desert scheme ported from vim to google prettify */
-pre.prettyprint { border: none; display: block; background-color: #333; padding: 1px 2px; }
+pre.prettyprint { border: none; display: block; background-color: #333; padding: 1px 1px 1px 5px; }
 pre.prettyprint .nocode { background-color: none; color: #000 }
 pre.prettyprint .str { color: #ffa0a0 } /* string  - pink */
 pre.prettyprint .kwd { color: #f0e68c; font-weight: bold }

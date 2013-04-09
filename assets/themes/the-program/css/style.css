@@ -670,7 +670,7 @@ a:hover {
 .unit-article ol,
 .unit-article dl {
   padding-left: 0;
-  margin-left: 2em;
+  margin-left: 24px;
 }
 .unit-article ol {
   list-style: decimal;

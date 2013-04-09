@@ -9,7 +9,8 @@ tags: [python,BeautifulSoup,mongodb]
 ---
 {% include JB/setup %}
 
-*   module.py  
+module.py  
+---------
 
 <a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
 <div style="display:none;">
@@ -51,7 +52,8 @@ class charpter(Document):
 {% endhighlight %}
 </div>
 
-*   crawl.py  
+crawl.py  
+--------------
 
 <a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
 <div style="display:none;">

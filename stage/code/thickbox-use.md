@@ -12,82 +12,56 @@ tags: [js,jquery,thickbox]
 {% include JB/setup %}
 
 ### 一  准备工作
--   首先在 HTML 文件的 head中导入jquery.js 和thickbox.js，thickbox.css文件：  
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-<script src="jquery.js" type="text/javascript"></script>    //jquery
-<script src="thickbox.js" type="text/javascript"></script>  //thickbox
-<link rel="stylesheet" href="thickbox.css" type="text/css" /> //弹出层样式
-{% endhighlight %}
-</div>
+-   首先在 HTML 文件的 head中导入jquery.js 和thickbox.js，thickbox.css文件：
+
+<label></label>
+    <script src="jquery.js" type="text/javascript"></script>    //jquery
+    <script src="thickbox.js" type="text/javascript"></script>  //thickbox
+    <link rel="stylesheet" href="thickbox.css" type="text/css" /> //弹出层样式
 
 ### 二  使用示例
 
--   单个图片： 
+-   单个图片：
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-//title控制显示的标题显示 
-<a href="big.jpg" title="点击小图看大图" class="thickbox">  
-    <img src="small.jpg" alt="Single Image" />  
-</a>
-{% endhighlight %}
-</div>
+<label></label>
+    <!-- title控制显示的标题显示  --> 
+    <a href="big.jpg" title="点击小图看大图" class="thickbox">  
+        <img src="small.jpg" alt="Single Image" />  
+    </a>
 
 -   一组图片 (设置一组相同的rel属性)*用 jquery-1.1.3.1.pack.js 时有效，更高级别的JQ库只会出现全屏黑*
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-<a href="1.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="1_t.jpg" alt="Plant1" /></a>  
-<a href="2.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="2_t.jpg" alt="Plant2" /></a>  
-<a href="3.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="3_t.jpg" alt="Plant3" /></a>  
-<a href="4.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="4_t.jpg" alt="Plant4" /></a>
-{% endhighlight %}
-</div>
+<label></label>
+    <a href="1.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="1_t.jpg" alt="Plant1" /></a>  
+    <a href="2.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="2_t.jpg" alt="Plant2" /></a>  
+    <a href="3.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="3_t.jpg" alt="Plant3" /></a>  
+    <a href="4.jpg" title="1" class="thickbox" rel="gallery-plants"><img src="4_t.jpg" alt="Plant4" /></a>
 
 -   内嵌内容：*可设定弹出层的高度、宽度、inlineId 控制显示的内容、modal控制是否显示标题栏*
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-<input type="button" alt="#TB_inline?height=200&width=300&inlineId=test" title="按钮" value="显示" class="thickbox" />
-或  
-<a href="#TB_inline?height=200&width=300&inlineId=hiddenModalContent&modal=true" title="链接" class="thickbox">显示</a>  
-<div id="test" style="display:none">这里是隐藏的内容</div>
-{% endhighlight %}
-</div>
+<label></label>
+    <input type="button" alt="#TB_inline?height=200&width=300&inlineId=test" title="按钮" value="显示" class="thickbox" />
+    或  
+    <a href="#TB_inline?height=200&width=300&inlineId=hiddenModalContent&modal=true" title="链接" class="thickbox">显示</a>  
+    <div id="test" style="display:none">这里是隐藏的内容</div>
 
 -   iframe方式弹出  
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-<a href="boxs.html?keepThis=true&TB_iframe=true&height=100&width=220&modal=true" title="显示IF" class="thickbox">显示</a>
-{% endhighlight %}
-</div>
+<label></label>
+    <a href="boxs.html?keepThis=true&TB_iframe=true&height=100&width=220&modal=true" title="显示IF" class="thickbox">显示</a>
+
 
 -   ajax方式弹出： 
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-<a href="box.html?height=350&width=350&modal=true" title="Ajax载入，页面无法查看源代码" class="thickbox">Example</a>
-{% endhighlight %}
-</div>
+<label></label>
+    <a href="box.html?height=350&width=350&modal=true" title="Ajax载入，页面无法查看源代码" class="thickbox">Example</a>
 
 -   关闭弹出框：
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-tb_remove();  
-self.parent.tb_remove();//如果是子页面
-{% endhighlight %}
-</div>
+<label></label>
+    tb_remove();  
+    self.parent.tb_remove();//如果是子页面
 
 ###三  自定义内容
 
@@ -98,12 +72,9 @@ self.parent.tb_remove();//如果是子页面
 查找.tb_overlaybg修改相关数值  
 
 -   关闭层：如果我们需要自己添加一个关闭按钮或者图片
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight javascript %}
-onclick="self.parent.tb_remove();"  
-{% endhighlight %}
-</div>
+
+<label></label>
+    onclick="self.parent.tb_remove();"  
 
 -   thickbox插件默认情况是点击灰色的遮罩层就会关闭取消  
 把两个$("#tb_overlay").click(tb_remove);去掉就可以取消掉

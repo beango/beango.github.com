@@ -62,18 +62,12 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;jquery.js&quot;</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/javascript&quot;</span><span class="o">&gt;&lt;</span><span class="sr">/script&gt;    /</span><span class="o">/</span><span class="nx">jquery</span>
-<span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;thickbox.js&quot;</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/javascript&quot;</span><span class="o">&gt;&lt;</span><span class="sr">/script&gt;  /</span><span class="o">/</span><span class="nx">thickbox</span>
-<span class="o">&lt;</span><span class="nx">link</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;stylesheet&quot;</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;thickbox.css&quot;</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span> <span class="o">/&gt;</span> <span class="c1">//弹出层样式</span>
+<pre><code>&lt;script src="jquery.js" type="text/javascript"&gt;&lt;/script&gt;    //jquery
+&lt;script src="thickbox.js" type="text/javascript"&gt;&lt;/script&gt;  //thickbox
+&lt;link rel="stylesheet" href="thickbox.css" type="text/css" /&gt; //弹出层样式
 </code></pre>
-</div>
-
-</div>
-
 
 <h3>二  使用示例</h3>
 
@@ -82,106 +76,70 @@
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="c1">//title控制显示的标题显示 </span>
-<span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;big.jpg&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;点击小图看大图&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span><span class="o">&gt;</span>  
-    <span class="o">&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;small.jpg&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;Single Image&quot;</span> <span class="o">/&gt;</span>  
-<span class="o">&lt;</span><span class="err">/a&gt;</span>
+<pre><code>&lt;!-- title控制显示的标题显示  --&gt; 
+&lt;a href="big.jpg" title="点击小图看大图" class="thickbox"&gt;  
+    &lt;img src="small.jpg" alt="Single Image" /&gt;  
+&lt;/a&gt;
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>一组图片 (设置一组相同的rel属性)<em>用 jquery-1.1.3.1.pack.js 时有效，更高级别的JQ库只会出现全屏黑</em></li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;1.jpg&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;gallery-plants&quot;</span><span class="o">&gt;&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;1_t.jpg&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;Plant1&quot;</span> <span class="o">/&gt;&lt;</span><span class="err">/a&gt;  </span>
-<span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;2.jpg&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;gallery-plants&quot;</span><span class="o">&gt;&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;2_t.jpg&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;Plant2&quot;</span> <span class="o">/&gt;&lt;</span><span class="err">/a&gt;  </span>
-<span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;3.jpg&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;gallery-plants&quot;</span><span class="o">&gt;&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;3_t.jpg&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;Plant3&quot;</span> <span class="o">/&gt;&lt;</span><span class="err">/a&gt;  </span>
-<span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;4.jpg&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;gallery-plants&quot;</span><span class="o">&gt;&lt;</span><span class="nx">img</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;4_t.jpg&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;Plant4&quot;</span> <span class="o">/&gt;&lt;</span><span class="err">/a&gt;</span>
+<pre><code>&lt;a href="1.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="1_t.jpg" alt="Plant1" /&gt;&lt;/a&gt;  
+&lt;a href="2.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="2_t.jpg" alt="Plant2" /&gt;&lt;/a&gt;  
+&lt;a href="3.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="3_t.jpg" alt="Plant3" /&gt;&lt;/a&gt;  
+&lt;a href="4.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="4_t.jpg" alt="Plant4" /&gt;&lt;/a&gt;
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>内嵌内容：<em>可设定弹出层的高度、宽度、inlineId 控制显示的内容、modal控制是否显示标题栏</em></li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;button&quot;</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">&quot;#TB_inline?height=200&amp;width=300&amp;inlineId=test&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;按钮&quot;</span> <span class="nx">value</span><span class="o">=</span><span class="s2">&quot;显示&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span> <span class="o">/&gt;</span>
-<span class="err">或</span>  
-<span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;#TB_inline?height=200&amp;width=300&amp;inlineId=hiddenModalContent&amp;modal=true&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;链接&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span><span class="o">&gt;</span><span class="err">显示</span><span class="o">&lt;</span><span class="err">/a&gt;  </span>
-<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">id</span><span class="o">=</span><span class="s2">&quot;test&quot;</span> <span class="nx">style</span><span class="o">=</span><span class="s2">&quot;display:none&quot;</span><span class="o">&gt;</span><span class="err">这里是隐藏的内容</span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+<pre><code>&lt;input type="button" alt="#TB_inline?height=200&amp;width=300&amp;inlineId=test" title="按钮" value="显示" class="thickbox" /&gt;
+或  
+&lt;a href="#TB_inline?height=200&amp;width=300&amp;inlineId=hiddenModalContent&amp;modal=true" title="链接" class="thickbox"&gt;显示&lt;/a&gt;  
+&lt;div id="test" style="display:none"&gt;这里是隐藏的内容&lt;/div&gt;
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>iframe方式弹出</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;boxs.html?keepThis=true&amp;TB_iframe=true&amp;height=100&amp;width=220&amp;modal=true&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;显示IF&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span><span class="o">&gt;</span><span class="err">显示</span><span class="o">&lt;</span><span class="err">/a&gt;</span>
+<pre><code>&lt;a href="boxs.html?keepThis=true&amp;TB_iframe=true&amp;height=100&amp;width=220&amp;modal=true" title="显示IF" class="thickbox"&gt;显示&lt;/a&gt;
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>ajax方式弹出：</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;box.html?height=350&amp;width=350&amp;modal=true&quot;</span> <span class="nx">title</span><span class="o">=</span><span class="s2">&quot;Ajax载入，页面无法查看源代码&quot;</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;thickbox&quot;</span><span class="o">&gt;</span><span class="nx">Example</span><span class="o">&lt;</span><span class="err">/a&gt;</span>
+<pre><code>&lt;a href="box.html?height=350&amp;width=350&amp;modal=true" title="Ajax载入，页面无法查看源代码" class="thickbox"&gt;Example&lt;/a&gt;
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>关闭弹出框：</li>
 </ul>
 
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<p><label></label></p>
 
-<div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="nx">tb_remove</span><span class="p">();</span>  
-<span class="nx">self</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">tb_remove</span><span class="p">();</span><span class="c1">//如果是子页面</span>
+<pre><code>tb_remove();  
+self.parent.tb_remove();//如果是子页面
 </code></pre>
-</div>
-
-</div>
-
 
 <h3>三  自定义内容</h3>
 
@@ -190,19 +148,14 @@
 将thickbox.js文件打开，查找关键字"or esc key"，将其删除，并将前面的close更改为[X]或"关闭"，然后把文件另存为UTF-8格式，如果不保存为UTF-8的话，将会出现乱码。</p></li>
 <li><p>修改遮罩层透明度修改thickbox.css。
 查找.tb_overlaybg修改相关数值</p></li>
-<li><p>关闭层：如果我们需要自己添加一个关闭按钮或者图片
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p></li>
+<li><p>关闭层：如果我们需要自己添加一个关闭按钮或者图片</p></li>
 </ul>
 
 
-<div style="display:none;">
+<p><label></label></p>
 
-<div class="highlight"><pre><code class="javascript"><span class="nx">onclick</span><span class="o">=</span><span class="s2">&quot;self.parent.tb_remove();&quot;</span>  
+<pre><code>onclick="self.parent.tb_remove();"  
 </code></pre>
-</div>
-
-</div>
-
 
 <ul>
 <li>thickbox插件默认情况是点击灰色的遮罩层就会关闭取消<br/>

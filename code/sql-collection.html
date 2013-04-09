@@ -55,10 +55,7 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<ul>
-<li>游标和事务</li>
-</ul>
-
+					<h2>游标和事务  </h2>
 
 <p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
@@ -96,36 +93,19 @@ end catch
 
 <p>说明：FETCH_STATUS检索到数据返回0，失败返回-1，可判断是否滚动未到结尾。</p>
 
-<ul>
-<li>说明:临时过程用 # 和 ##命名，可以由任何用户创建。创建过程后，局部过程的所有者是唯一可以使用该过程的用户。</li>
-</ul>
+<h2>临时过程/表  </h2>
 
+<p>用 # 和 ##命名，可以由任何用户创建。创建过程后，局部过程的所有者是唯一可以使用该过程的用户。</p>
 
-<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
-
-<pre><code>CREATE TABLE #DMPARHED  
-  (FMCD int,  
-  FMNAM varchar(50),  
-  MGYO1 smallint,  
-  constraint DMPARHED_P primary key (FMCD))
+<pre><code>CREATE TABLE #DMPARHED(...)
 </code></pre>
 
-<ul>
-<li>创建临时表的另类方法：</li>
-</ul>
-
-
-<p><label/></p>
+<p>创建临时表的另类方法</p>
 
 <pre><code>select * into #temp from Employees
 </code></pre>
 
-<ul>
-<li>利用with找出记录及其上（或下）级</li>
-</ul>
-
-
-<p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
+<h2>利用with找出记录及其上（或下）级</h2>
 
 <pre><code>WITH CategoryInfo AS(
   SELECT id,text,parentid FROM Recursive WHERE id = 10008
@@ -136,12 +116,7 @@ end catch
 SELECT * FROM CategoryInfo
 </code></pre>
 
-<ul>
-<li>索引</li>
-</ul>
-
-
-<p><label/></p>
+<h2>索引</h2>
 
 <pre><code>/*在OrderID上面创建聚集索引，索引列为OrderID*/  
 create unique clustered index IX_OrderID on Orders(OrderID)  
@@ -150,10 +125,7 @@ create unique clustered index IX_OrderID on Orders(OrderID)
 create index IX_OrderDate on Orders(OrderDate)
 </code></pre>
 
-<ul>
-<li>时间格式化</li>
-</ul>
-
+<h2>时间格式化</h2>
 
 <p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
@@ -185,10 +157,7 @@ Select CONVERT(varchar(100), GETDATE(), 103): 16/05/2006
 Select CONVERT(varchar(100), GETDATE(), 104): 16.05.2006
 </code></pre>
 
-<ul>
-<li>CTE批量插入</li>
-</ul>
-
+<h2>CTE批量插入</h2>
 
 <p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
@@ -208,10 +177,7 @@ FROM Seq
 OPTION (MAXRECURSION 0)
 </code></pre>
 
-<ul>
-<li>删除，修改</li>
-</ul>
-
+<h2>删除，修改</h2>
 
 <p><label/></p>
 
@@ -223,17 +189,11 @@ OPTION (MAXRECURSION 0)
 <pre><code>update t1 set t1.name='Liu' from t1 inner join t2 on t1.id = t2.tid
 </code></pre>
 
-<ul>
-<li>跨服务器查询</li>
-</ul>
-
+<h2>跨服务器查询</h2>
 
 <p><a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a></p>
 
-<pre><code>Exec sp_droplinkedsrvlogin DBVIP,Null  
-Exec sp_dropserver DBVIP  
-
-EXEC  sp_addlinkedserver  
+<pre><code>EXEC  sp_addlinkedserver  
     @server='DBVIP',--被访问的服务器别名   
     @srvproduct='',   
     @provider='SQLOLEDB',  
@@ -246,7 +206,11 @@ EXEC sp_addlinkedsrvlogin
     'sa', --帐号  
     'thankyoubobby' --密码  
 
-Select * from DBVIP.Northwind.dbo.orders   
+Select * from DBVIP.Northwind.dbo.orders  
+
+--删除连接
+Exec sp_droplinkedsrvlogin DBVIP,Null  
+Exec sp_dropserver DBVIP 
 </code></pre>
 
 				</div><!-- entry-content -->
