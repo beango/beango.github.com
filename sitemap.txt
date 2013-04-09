@@ -4,6 +4,7 @@ http://beango.github.com/atom.xml
 http://beango.github.com/category.html
 http://beango.github.com/code/csharp-office.html
 http://beango.github.com/code/css-collection.html
+http://beango.github.com/code/dotnet.html
 http://beango.github.com/code/js-method-collection.html
 http://beango.github.com/code/linux-command.html
 http://beango.github.com/code/memcached-memory-analysis-tuning-clustering.html
