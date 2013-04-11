@@ -5,7 +5,7 @@ categories: [OS系统]
 date: 2013-03-21
 title: "每个程序员都应该了解的“虚拟内存”知识"
 description: "每个程序员都应该了解的“虚拟内存”知识"
-tags: [程序员,虚拟内存]
+tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-virtual-memory-part3
 ---
 {% include JB/setup %}

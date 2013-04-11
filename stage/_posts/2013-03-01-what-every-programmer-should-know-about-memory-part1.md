@@ -5,7 +5,7 @@ categories: [OS系统]
 date: 2013-03-01
 title: "每个程序员都应该了解的内存知识"
 description: "每个程序员都应该了解的内存知识"
-tags: [程序员,内存知识]
+tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-memory-part1
 ---
 {% include JB/setup %}

@@ -19,10 +19,11 @@ type : website
 tagline: Site Tagline
 author :
   name : HuangDing
-  email : yif.com@gmail.com
+  email : 6588617@gmail.com
   github : beango
   twitter : beango
   feedburner : beango
+  weibo : http://weibo.com/u/1840153570
 demourl : http://www.yif1.com/demo
 
 # The production_url is only used when full-domain names are needed

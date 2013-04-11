@@ -5,7 +5,7 @@ categories: [OS系统]
 date: 2013-03-20
 title: "每个程序员都应该了解的CPU高速缓存"
 description: "每个程序员都应该了解的CPU高速缓存"
-tags: [程序员,CPU高速缓存]
+tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2
 ---
 {% include JB/setup %}

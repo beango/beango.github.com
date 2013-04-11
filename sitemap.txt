@@ -19,25 +19,6 @@ http://beango.github.com/index.html
 http://beango.github.com/info.html
 http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
-http://beango.github.com/wiki/database/ms_sqlserver.html
-http://beango.github.com/wiki/development-design/actionscript.html
-http://beango.github.com/wiki/development-design/database.html
-http://beango.github.com/wiki/development-design/dotnet.html
-http://beango.github.com/wiki/development-design/objectivec.html
-http://beango.github.com/wiki/development-design/php.html
-http://beango.github.com/wiki/development-design/python.html
-http://beango.github.com/wiki/development-design/ruby.html
-http://beango.github.com/wiki/development-design/web-front-end.html
-http://beango.github.com/wiki/index.html
-http://beango.github.com/wiki/other/open_source_projects.html
-http://beango.github.com/wiki/other/references.html
-http://beango.github.com/wiki/other/server.html
-http://beango.github.com/wiki/other/website.html
-http://beango.github.com/wiki/software/linux.html
-http://beango.github.com/wiki/software/osx.html
-http://beango.github.com/wiki/software/sublime-text.html
-http://beango.github.com/wiki/software/vim.html
-http://beango.github.com/wiki/software/windows.html
 
 http://beango.github.com/archives/2013/03/26/javascript-language-features.html
 http://beango.github.com/archives/2013/03/25/speeding-up-your-python-code.html
