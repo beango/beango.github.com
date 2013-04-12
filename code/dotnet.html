@@ -62,6 +62,22 @@
 <pre><code>System.IO.Path.Combine(HttpRuntime.AppDomainAppPath,"App_Data\\test.txt");
 </code></pre>
 
+<ul>
+<li>EF下修改指定的字段</li>
+</ul>
+
+
+<p><label></label></p>
+
+<pre><code>NorthwindEntities entities = new NorthwindEntities();
+
+entities.Products.Attach(product);
+var entry = entities.ObjectStateManager.GetObjectStateEntry(product);
+entry.SetModifiedProperty("ProductName"); 
+entry.SetModifiedProperty("Discontinued");
+entities.SaveChanges();
+</code></pre>
+
 				</div><!-- entry-content -->
 			</div><!-- bd -->
 		</div><!-- content -->
