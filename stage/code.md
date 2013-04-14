@@ -6,8 +6,6 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 ---
 {% include JB/setup %}
 
-<img class="inset right" title="Huang Ding" src="/assets/images/me_matrix.png" alt="Huang Ding in the Matrix" width="120px">
-
 ###Demos
 -   [thickbox](/code/thickbox-use.html)  
 	
