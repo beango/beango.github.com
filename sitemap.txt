@@ -20,6 +20,7 @@ http://beango.github.com/info.html
 http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
 
+http://beango.github.com/archives/2013/04/16/linux-netcat-command.html
 http://beango.github.com/archives/2013/03/26/javascript-language-features.html
 http://beango.github.com/archives/2013/03/25/speeding-up-your-python-code.html
 http://beango.github.com/archives/2013/03/22/scalable-web-architecture-and-distributed-systems.html
