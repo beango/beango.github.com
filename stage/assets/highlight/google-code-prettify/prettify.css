@@ -31,11 +31,6 @@
   .atv { color: #060 }
 }
 
-pre, code {
-  font-family: Monaco, Consolas, Menlo, "Courier New", monospace;
-  font-size: 12px;
-}
-
 /* Put a border around prettyprinted code snippets. */
 pre.prettyprint {
   display: block;
@@ -43,6 +38,8 @@ pre.prettyprint {
   border-radius: 5px;
   margin: 0 0 10px 0;
   width: auto;
+  font-family: 'Nobile', Helvetica, Arial, sans-serif;
+  font-size: 13px;
 }
 
 /* Specify class=linenums on a pre to get line numbering */

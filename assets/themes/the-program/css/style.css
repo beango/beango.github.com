@@ -663,8 +663,20 @@ a:hover {
   border-bottom: 1px dashed #d08688;
 }
 .unit-article blockquote {
-  border-left: 1em solid rgba(21, 25, 25, 0.8);
-  padding-left: 1em;
+  margin: 0 0 1em 0;
+  padding: 10px 20px 5px 20px;
+  font-size: 12px;
+  border-left: 5px solid #BA2835;
+  border-right: 1px solid #DDDDDD;
+  border-top: 1px solid #DDDDDD;
+  border-bottom: 1px solid #DDDDDD;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 4px rgba(150,150,150,.3);
+  -moz-box-shadow: 1px 1px 4px rgba(150,150,150,.3);
+  box-shadow: 1px 1px 4px rgba(150,150,150,.3);
 }
 .unit-article blockquote p {
   margin-left: 0;
