@@ -14,7 +14,7 @@
   font-family: 'Nobile';
   font-style: normal;
   font-weight: 400;
-  src: local('Nobile'), local('Nobile-Regular'), url(http://themes.googleusercontent.com/static/fonts/nobile/v4/LJdSuYk02E6wtyvk5bnaeA.woff) format('woff');
+  src: local('Nobile'), local('Nobile-Regular'), url(/assets/font/LJdSuYk02E6wtyvk5bnaeA.woff) format('woff');
 }
 
 .alignright {
