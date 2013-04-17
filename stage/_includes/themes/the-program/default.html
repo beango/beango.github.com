@@ -13,6 +13,7 @@
 	<meta property='og:site_name' content='{{ site.title }}'/>
 	<meta property='og:type' content='article'/>
 	<link href='{{ ASSET_PATH }}/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
 	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
 </head>
 <body>
@@ -29,6 +30,15 @@
 						<li class="category"><a href="/category.html">category</a></li>
 						<li class="about"><a href="/info.html">about</a></li>
 					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:{{ site.url }}">
+					</form>
 				</nav>
 			</div><!-- unit-inner -->
 		</div><!-- unit-head -->
