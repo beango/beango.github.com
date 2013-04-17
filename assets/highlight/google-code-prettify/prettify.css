@@ -38,6 +38,9 @@ pre.prettyprint {
   border-radius: 5px;
   margin: 0 0 10px 0;
   width: auto;
+}
+
+pre.prettyprint ol li code span {
   font-family: 'Nobile', Helvetica, Arial, sans-serif;
   font-size: 13px;
 }
