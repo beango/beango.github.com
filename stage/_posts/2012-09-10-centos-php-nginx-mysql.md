@@ -5,7 +5,7 @@ categories: [web开发]
 date: 2012-09-10
 title: "Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17"
 description: "Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17"
-tags: [Centos, PHP, Nginx, Mysql]
+tags: [centos, php, nginx, mysql]
 ---
 {% include JB/setup %}
 

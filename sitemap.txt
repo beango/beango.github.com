@@ -44,6 +44,7 @@ http://beango.github.com/archives/2012/12/13/dot-net-gc-1.html
 http://beango.github.com/archives/2012/12/04/cache-algorithm.html
 http://beango.github.com/archives/2012/12/03/mongodb-cluster.html
 http://beango.github.com/archives/2012/11/23/pymongo-python-mongodb.html
+http://beango.github.com/archives/2012/11/20/nginx-performance-optimization.html
 http://beango.github.com/archives/2012/10/09/rabbitmq-install.html
 http://beango.github.com/archives/2012/10/05/commong-nginx-configuration-options.html
 http://beango.github.com/archives/2012/09/21/nginx-load-balancing.html
@@ -79,6 +80,7 @@ http://beango.github.com/archives/2011/10/26/mongodb-running-state-performance-m
 http://beango.github.com/archives/2011/10/15/mongodb-architecture.html
 http://beango.github.com/archives/2011/10/09/markdown-doc.html
 http://beango.github.com/archives/2011/09/11/memcached-parameters-chinese-explain.html
+http://beango.github.com/archives/2011/09/08/nginx-upstream.html
 http://beango.github.com/archives/2011/08/11/jquery_best_practices.html
 http://beango.github.com/archives/2011/06/15/mongodb-install.html
 http://beango.github.com/archives/2011/06/11/train-your-temperament.html

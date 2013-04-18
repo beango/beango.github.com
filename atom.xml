@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-04-18T14:38:28+08:00</updated>
+ <updated>2013-04-18T16:59:02+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -6652,6 +6652,192 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 
 
 
+</content>
+ </entry>
+ 
+ <entry>
+   <title>nginx性能优化</title>
+   <link href="http://beango.github.com/archives/2012/11/20/nginx-performance-optimization.html"/>
+   <updated>2012-11-20T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/11/20/nginx-performance-optimization</id>
+   <content type="html">&lt;p&gt;作者：&lt;a href=&quot;http://www.dbasky.net&quot;&gt;Mike.Xu&lt;/a&gt; 发表于: December 28, 2009 9:09 PM&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://creativecommons.org/licenses/by/2.5/cn/&quot;&gt;&lt;/a&gt;转载时请务必以超链接形式标明文章&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx.html&quot;&gt;原始出处&lt;/a&gt;和作者信息及&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx.html&quot;&gt;本版权声明&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;链接：&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx.html&quot;&gt;http://www.dbasky.net/archives/2009/12/nginx.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;操作系统&lt;/strong&gt;：CentOS 5.3&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;nginx&lt;/strong&gt;的安装就不详细介绍了,请大家移步到我以前写的二篇文章&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.dbasky.net/archives/2009/03/nginphp-web.html&quot;&gt;Ngin＋php搭建高性能web服务器&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.dbasky.net/archives/2009/08/nginx-python-django-memcached-mysql-fastcgi.html&quot;&gt;搭建nginx + python + django +memcached+ mysql +fastcgi环境&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;1.编译安装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./configure --with-poll_module --with-http_ssl_module
+--with-http_gzip_static_module --with-http_perl_module
+--with-md5=/usr/include --with-md5-asm --with-sha1=/usr/include
+--with-sha1-asm
+make
+make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.制作SSL证书&lt;/p&gt;
+
+&lt;p&gt;生成CA证书&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -days 3650 -nodes -new -x509 -keyout ca.key -out ca.pem -config OpenSSL.cnf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成自签名ssl证书&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -days 3650 -nodes -new -keyout cert.key -out cert.pem -config OpenSSL.cnf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对证书进行签名&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl ca -days 3650 -out cert.pem -in cert.pem -extensions server -config OpenSSL.cnf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.配置优化&lt;/p&gt;
+
+&lt;p&gt;修改nginx.conf,工作进程10个，使用epoll事件模型，并发连接使用默认的1024个，启用gzip动态和静态压缩。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;worker_processes 10;
+
+events {
+  use epoll;
+  worker_connections 1024;
+}
+
+http {
+    gzip  on;
+    gzip_static on;
+
+    gzip_comp_level     9;
+    gzip_min_length     1k;
+    gzip_proxied        any;
+    gzip_types          text/plain text/xml application/xml application/xml+rss;
+    #gzip_disable        &quot;MSIE [1-6] \.&quot;;
+    #gzip_vary           on;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;复制cert.key和cert.pem到conf目录，去掉HTTPS server下面的注释，启用SSL。&lt;/p&gt;
+
+&lt;p&gt;4.启用php
+下载安装spawn-fcgi，建立/tmp/php-fcgi.sock的连接，并添加nginx配置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location ~ \.php$ {
+    root           html;
+    fastcgi_pass   unix:/tmp/php-fcgi.sock;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_param  PATH_INFO        $fastcgi_path_info;
+    fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+    include        fastcgi_params;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下载安装APC、eAccelerator为php加速。&lt;/p&gt;
+
+&lt;p&gt;建立缓存目录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir /var/tmp/eaccelerator
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;eAccelerator配置&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[eAccelerator]
+zend_extension_ts = &quot;/usr/lib/php5/ext/eAccelerator.so&quot;
+eaccelerator.shm_size = &quot;16&quot;
+eaccelerator.cache_dir = &quot;/var/tmp/eaccelerator&quot;
+eaccelerator.enable = &quot;1&quot;
+eaccelerator.optimizer = &quot;1&quot;
+eaccelerator.check_mtime = &quot;1&quot;
+eaccelerator.debug = &quot;0&quot;
+eaccelerator.filter = &quot;&quot;
+eaccelerator.shm_max = &quot;0&quot;
+eaccelerator.shm_ttl = &quot;0&quot;
+eaccelerator.shm_prune_period = &quot;0&quot;
+eaccelerator.shm_only = &quot;0&quot;
+eaccelerator.compress = &quot;1&quot;
+eaccelerator.compress_level = &quot;9&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5.启动nginx&lt;/p&gt;
+
+&lt;p&gt;运行命令&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo spawn-fcgi -f /usr/bin/php-cgi -s /tmp/php-fcgi.sock -F 2 -u nobody
+sudo /usr/local/nginx/sbin/nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了方便管理，使用如下脚本，保存为nginx，放到/etc/init.d目录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#! /bin/sh
+#
+# nginx daemon script
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/local/nginx/sbin/nginx
+NAME=nginx
+PIDFILE=/usr/local/nginx/logs/$NAME.pid
+PHPSOCKET=/tmp/php-fcgi.sock
+PHPPIDFILE=/tmp/run/php-fcgi.pid
+PHPSPAWN=&quot;spawn-fcgi -f /usr/bin/php-cgi -s $PHPSOCKET -P $PHPPIDFILE -F 2 -u nobody&quot;
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case &quot;$1&quot; in
+  start)
+echo &quot;Starting $NAME.&quot;
+$DAEMON
+$PHPSPAWN
+;;
+
+  stop)
+echo &quot;Stopping $NAME.&quot;
+$DAEMON -s stop
+kill `cat $PHPPIDFILE`
+rm -f $PHPSOCKET $PHPPIDFILE
+;;
+
+  restart)
+echo &quot;Restarting $NAME.&quot;
+$DAEMON -s reopen
+kill `cat $PHPPIDFILE`
+rm -f $PHPSOCKET $PHPPIDFILE
+$PHPSPAWN
+;;
+
+  reload)
+    if [ ! -f $PIDFILE ]; then
+      echo &quot;nginx not started.&quot;
+      exit 1
+    fi
+    echo &quot;Reloading $NAME.&quot;
+    $DAEMON -s reload
+    ;;
+
+  test)
+    $DAEMON -t
+    ;;
+
+  *)
+N=/etc/init.d/$NAME
+echo &quot;Usage: $N start|stop|restart|reload|test&quot; &amp;gt;&amp;amp;2
+exit 1
+;;
+esac
+
+exit 0 
+&lt;/code&gt;&lt;/pre&gt;
 </content>
  </entry>
  
@@ -15861,6 +16047,100 @@ _   底线
 
 
 &lt;p&gt;memcached在线地址：&lt;a href=&quot;https://github.com/liuxd/MyTranslation/blob/master/translation/memcached-1.4.man&quot;&gt;https://github.com/liuxd/MyTranslation/blob/master/translation/memcached-1.4.man&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>nginx upstream 的几种分配方式</title>
+   <link href="http://beango.github.com/archives/2011/09/08/nginx-upstream.html"/>
+   <updated>2011-09-08T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2011/09/08/nginx-upstream</id>
+   <content type="html">&lt;p&gt;作者：&lt;a href=&quot;http://www.dbasky.net&quot;&gt;Mike.Xu&lt;/a&gt; 发表于: December 11, 2009 12:11 PM&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://creativecommons.org/licenses/by/2.5/cn/&quot;&gt;&lt;/a&gt;转载时请务必以超链接形式标明文章&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx-upstream.html&quot;&gt;原始出处&lt;/a&gt;和作者信息及&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx-upstream.html&quot;&gt;本版权声明&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;链接：&lt;a href=&quot;http://www.dbasky.net/archives/2009/12/nginx-upstream.html&quot;&gt;http://www.dbasky.net/archives/2009/12/nginx-upstream.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt; 1、轮询（默认）&lt;/p&gt;
+
+&lt;p&gt;每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。&lt;/p&gt;
+
+&lt;p&gt;2、weight
+指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
+例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream bakend {
+  server 192.168.1.10 weight=10;
+  server 192.168.1.11 weight=10;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3、ip_hash&lt;/p&gt;
+
+&lt;p&gt;每个请求按访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，可以解决session的问题。
+例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream resinserver{
+  ip_hash;
+  server 192.168.1.10:8080;
+  server 192.168.1.11:8080;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4、fair（第三方）
+按后端服务器的响应时间来分配请求，响应时间短的优先分配。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream resinserver{
+  server server1;
+  server server2;
+  fair;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;5、url_hash（第三方）&lt;/p&gt;
+
+&lt;p&gt;按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，后端服务器为缓存时比较有效。&lt;/p&gt;
+
+&lt;p&gt;例：在upstream中加入hash语句，server语句中不能写入weight等其他的参数，hash_method是使用的hash算法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream resinserver{
+  server squid1:3128;
+  server squid2:3128;
+  hash $request_uri;
+  hash_method crc32;
+}
+
+tips:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;label&gt;&lt;/label&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream resinserver{#定义负载均衡设备的Ip及设备状态
+  ip_hash;
+  server 127.0.0.1:8000 down;
+  server 127.0.0.1:8080 weight=2;
+  server 127.0.0.1:6801;
+  server 127.0.0.1:6802 backup;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在需要使用负载均衡的server中增加&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;proxy_pass http://resinserver/;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每个设备的状态设置为:
+1.down 表示单前的server暂时不参与负载
+2.weight 默认为1.weight越大，负载的权重就越大。
+3.max_fails：允许请求失败的次数默认为1.当超过最大次数时，返回proxy_next_upstream模块定义的错误
+4.fail_timeout:max_fails次失败后，暂停的时间。
+5.backup：其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
+nginx支持同时设置多组的负载均衡，用来给不用的server来使用。&lt;/p&gt;
+
+&lt;p&gt;client_body_in_file_only 设置为On 可以讲client
+post过来的数据记录到文件中用来做debug
+client_body_temp_path 设置记录文件的目录 可以设置最多3层目录
+location 对URL进行匹配.可以进行重定向或者进行新的代理 负载均衡&lt;/p&gt;
 </content>
  </entry>
  

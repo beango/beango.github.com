@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>nginx性能优化</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='nginx性能优化'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">nginx性能优化</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>作者：<a href="http://www.dbasky.net">Mike.Xu</a> 发表于: December 28, 2009 9:09 PM</p>
+
+<p><a href="http://creativecommons.org/licenses/by/2.5/cn/"></a>转载时请务必以超链接形式标明文章<a href="http://www.dbasky.net/archives/2009/12/nginx.html">原始出处</a>和作者信息及<a href="http://www.dbasky.net/archives/2009/12/nginx.html">本版权声明</a>。</p>
+
+<p>链接：<a href="http://www.dbasky.net/archives/2009/12/nginx.html">http://www.dbasky.net/archives/2009/12/nginx.html</a></p>
+
+<p><strong>操作系统</strong>：CentOS 5.3</p>
+
+<p><strong>nginx</strong>的安装就不详细介绍了,请大家移步到我以前写的二篇文章</p>
+
+<p><a href="http://www.dbasky.net/archives/2009/03/nginphp-web.html">Ngin＋php搭建高性能web服务器</a></p>
+
+<p><a href="http://www.dbasky.net/archives/2009/08/nginx-python-django-memcached-mysql-fastcgi.html">搭建nginx + python + django +memcached+ mysql +fastcgi环境</a></p>
+
+<p>1.编译安装</p>
+
+<pre><code>./configure --with-poll_module --with-http_ssl_module
+--with-http_gzip_static_module --with-http_perl_module
+--with-md5=/usr/include --with-md5-asm --with-sha1=/usr/include
+--with-sha1-asm
+make
+make install
+</code></pre>
+
+<p>2.制作SSL证书</p>
+
+<p>生成CA证书</p>
+
+<pre><code>openssl req -days 3650 -nodes -new -x509 -keyout ca.key -out ca.pem -config OpenSSL.cnf
+</code></pre>
+
+<p>生成自签名ssl证书</p>
+
+<pre><code>openssl req -days 3650 -nodes -new -keyout cert.key -out cert.pem -config OpenSSL.cnf
+</code></pre>
+
+<p>对证书进行签名</p>
+
+<pre><code>openssl ca -days 3650 -out cert.pem -in cert.pem -extensions server -config OpenSSL.cnf
+</code></pre>
+
+<p>3.配置优化</p>
+
+<p>修改nginx.conf,工作进程10个，使用epoll事件模型，并发连接使用默认的1024个，启用gzip动态和静态压缩。</p>
+
+<pre><code>worker_processes 10;
+
+events {
+  use epoll;
+  worker_connections 1024;
+}
+
+http {
+    gzip  on;
+    gzip_static on;
+
+    gzip_comp_level     9;
+    gzip_min_length     1k;
+    gzip_proxied        any;
+    gzip_types          text/plain text/xml application/xml application/xml+rss;
+    #gzip_disable        "MSIE [1-6] \.";
+    #gzip_vary           on;
+}
+</code></pre>
+
+<p>复制cert.key和cert.pem到conf目录，去掉HTTPS server下面的注释，启用SSL。</p>
+
+<p>4.启用php
+下载安装spawn-fcgi，建立/tmp/php-fcgi.sock的连接，并添加nginx配置。</p>
+
+<pre><code>location ~ \.php$ {
+    root           html;
+    fastcgi_pass   unix:/tmp/php-fcgi.sock;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_param  PATH_INFO        $fastcgi_path_info;
+    fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+    include        fastcgi_params;
+}
+</code></pre>
+
+<p>下载安装APC、eAccelerator为php加速。</p>
+
+<p>建立缓存目录</p>
+
+<pre><code>mkdir /var/tmp/eaccelerator
+</code></pre>
+
+<p>eAccelerator配置</p>
+
+<pre><code>[eAccelerator]
+zend_extension_ts = "/usr/lib/php5/ext/eAccelerator.so"
+eaccelerator.shm_size = "16"
+eaccelerator.cache_dir = "/var/tmp/eaccelerator"
+eaccelerator.enable = "1"
+eaccelerator.optimizer = "1"
+eaccelerator.check_mtime = "1"
+eaccelerator.debug = "0"
+eaccelerator.filter = ""
+eaccelerator.shm_max = "0"
+eaccelerator.shm_ttl = "0"
+eaccelerator.shm_prune_period = "0"
+eaccelerator.shm_only = "0"
+eaccelerator.compress = "1"
+eaccelerator.compress_level = "9"
+</code></pre>
+
+<p>5.启动nginx</p>
+
+<p>运行命令</p>
+
+<pre><code>sudo spawn-fcgi -f /usr/bin/php-cgi -s /tmp/php-fcgi.sock -F 2 -u nobody
+sudo /usr/local/nginx/sbin/nginx
+</code></pre>
+
+<p>为了方便管理，使用如下脚本，保存为nginx，放到/etc/init.d目录</p>
+
+<pre><code>#! /bin/sh
+#
+# nginx daemon script
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/local/nginx/sbin/nginx
+NAME=nginx
+PIDFILE=/usr/local/nginx/logs/$NAME.pid
+PHPSOCKET=/tmp/php-fcgi.sock
+PHPPIDFILE=/tmp/run/php-fcgi.pid
+PHPSPAWN="spawn-fcgi -f /usr/bin/php-cgi -s $PHPSOCKET -P $PHPPIDFILE -F 2 -u nobody"
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+  start)
+echo "Starting $NAME."
+$DAEMON
+$PHPSPAWN
+;;
+
+  stop)
+echo "Stopping $NAME."
+$DAEMON -s stop
+kill `cat $PHPPIDFILE`
+rm -f $PHPSOCKET $PHPPIDFILE
+;;
+
+  restart)
+echo "Restarting $NAME."
+$DAEMON -s reopen
+kill `cat $PHPPIDFILE`
+rm -f $PHPSOCKET $PHPPIDFILE
+$PHPSPAWN
+;;
+
+  reload)
+    if [ ! -f $PIDFILE ]; then
+      echo "nginx not started."
+      exit 1
+    fi
+    echo "Reloading $NAME."
+    $DAEMON -s reload
+    ;;
+
+  test)
+    $DAEMON -t
+    ;;
+
+  *)
+N=/etc/init.d/$NAME
+echo "Usage: $N start|stop|restart|reload|test" &gt;&amp;2
+exit 1
+;;
+esac
+
+exit 0 
+</code></pre>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2012-11-20" datetime="2012-11-20" pubdate>
+							<span class="year">2012-11-20</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#nginx-ref">nginx <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#linux-ref">linux <span>2</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.dbasky.net/archives/2009/12/nginx.html" target="_blank">http://www.dbasky.net/archives/2009/12/nginx.html</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/10/09/rabbitmq-install.html" title="View RabbitMQ安装及使用">&laquo; RabbitMQ安装及使用</a></li>
+									
+
+									
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/11/23/pymongo-python-mongodb.html" title="View MongoDB的Python接口PyMongo">MongoDB的Python接口PyMongo &raquo;</a></li>
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+
