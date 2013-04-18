@@ -41,8 +41,8 @@ pre.prettyprint {
 }
 
 pre.prettyprint ol li code span {
-  font-family: 'Nobile', Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+  font-size: 1.2em;
 }
 
 /* Specify class=linenums on a pre to get line numbering */
