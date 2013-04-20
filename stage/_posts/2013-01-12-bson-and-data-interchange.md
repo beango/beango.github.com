@@ -1,11 +1,10 @@
 ---
 layout: post
-section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2013-01-12
 title: "BSON特性探讨及基于其特性的MongoDB优化"
 description: "BSON特性探讨及基于其特性的MongoDB优化"
-tags: [BSON, MongoDB, 优化]
+tags: [bson, mongodb, 优化]
 redirecturl: http://blog.nosqlfan.com/html/2914.html
 ---
 {% include JB/setup %}

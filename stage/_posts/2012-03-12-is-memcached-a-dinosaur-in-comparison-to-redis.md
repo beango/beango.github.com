@@ -5,7 +5,7 @@ categories: [NoSql,高性能web]
 date: 2012-03-12
 title: "Memcached真的过时了吗？"
 description: "Memcached真的过时了吗？"
-tags: [Memcached, Redis]
+tags: [memcached, redis]
 redirecturl: http://blog.nosqlfan.com/html/3729.html
 ---
 {% include JB/setup %}

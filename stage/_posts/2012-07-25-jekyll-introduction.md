@@ -5,7 +5,7 @@ categories: [jekyll]
 date: 2012-07-25
 title: "利用Jekyll搭建个人博客"
 description: "利用Jekyll搭建个人博客"
-tags: [Jekyll]
+tags: [jekyll]
 ---
 {% include JB/setup %}
 

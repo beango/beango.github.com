@@ -4,7 +4,7 @@ categories: [linux]
 date: 2013-04-16
 title: "Linux Netcat命令：网络工具中的瑞士军刀"
 description: "Linux Netcat命令：网络工具中的瑞士军刀"
-tags: [Linux]
+tags: [linux]
 redirecturl: http://www.oschina.net/translate/linux-netcat-command
 ---
 {% include JB/setup %}

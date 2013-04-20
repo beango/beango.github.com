@@ -5,7 +5,7 @@ categories: [高性能web]
 date: 2012-10-09
 title: "RabbitMQ安装及使用"
 description: "RabbitMQ安装及使用"
-tags: [RabbitMQ]
+tags: [rabbitmq]
 ---
 {% include JB/setup %}
 

@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2013-01-22
 title: "Redis监控技巧"
 description: "Redis监控技巧"
-tags: [Redis]
+tags: [redis]
 redirecturl: http://blog.nosqlfan.com/html/4166.html
 ---
 {% include JB/setup %}

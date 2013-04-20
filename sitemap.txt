@@ -51,6 +51,7 @@ http://beango.github.com/archives/2012/09/21/nginx-load-balancing.html
 http://beango.github.com/archives/2012/09/10/centos-php-nginx-mysql.html
 http://beango.github.com/archives/2012/08/21/rabbitmq-cluster.html
 http://beango.github.com/archives/2012/08/12/why-recommend-nodejs.html
+http://beango.github.com/archives/2012/08/11/cache-reconstruction-can-not-be-ignored.html
 http://beango.github.com/archives/2012/07/25/jekyll-introduction.html
 http://beango.github.com/archives/2012/07/15/internet-protocol-suite-part-ii.html
 http://beango.github.com/archives/2012/07/12/internet-protocol-suite-part-i.html
@@ -81,7 +82,7 @@ http://beango.github.com/archives/2011/10/15/mongodb-architecture.html
 http://beango.github.com/archives/2011/10/09/markdown-doc.html
 http://beango.github.com/archives/2011/09/11/memcached-parameters-chinese-explain.html
 http://beango.github.com/archives/2011/09/08/nginx-upstream.html
-http://beango.github.com/archives/2011/08/11/jquery_best_practices.html
+http://beango.github.com/archives/2011/08/11/jquery-best-practices.html
 http://beango.github.com/archives/2011/06/15/mongodb-install.html
 http://beango.github.com/archives/2011/06/11/train-your-temperament.html
 http://beango.github.com/archives/2011/03/04/stack-overflow-architecture-update-now-at-95-million-page-vi.html

@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2011-10-15
 title: "MongoDB构架图分享"
 description: "MongoDB构架图分享"
-tags: [MongoDB]
+tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3887.html
 ---
 {% include JB/setup %}

@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, .Net]
+categories: [软件架构, .net]
 date: 2011-03-04
 title: "基于.NET的大型Web站点StackOverflow架构分析"
 description: "基于.NET的大型Web站点StackOverflow架构分析"
-tags: [StackOverflow, 架构分析]
+tags: [stackOverflow, 架构分析]
 redirecturl: http://kb.cnblogs.com/page/92926/
 ---
 {% include JB/setup %}

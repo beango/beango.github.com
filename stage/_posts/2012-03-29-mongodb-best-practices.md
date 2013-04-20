@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2012-03-29
 title: "MongoDB最佳实践"
 description: "MongoDB最佳实践"
-tags: [MongoDB]
+tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3661.html
 ---
 {% include JB/setup %}

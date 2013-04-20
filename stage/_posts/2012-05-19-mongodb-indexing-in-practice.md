@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2012-05-19
 title: "MongoDB索引实战技巧"
 description: "MongoDB索引实战技巧"
-tags: [MongoDB]
+tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3656.html
 ---
 {% include JB/setup %}

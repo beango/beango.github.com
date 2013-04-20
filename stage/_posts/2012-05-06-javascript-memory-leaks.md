@@ -5,7 +5,7 @@ categories: [javascript]
 date: 2012-05-06
 title: "Javascript内存泄露"
 description: "Javascript内存泄露"
-tags: [Javascript,内存泄露]
+tags: [javascript,内存泄露]
 redirecturl: http://my.oschina.net/tsl0922/blog/56038
 ---
 {% include JB/setup %}

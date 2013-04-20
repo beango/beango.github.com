@@ -5,7 +5,7 @@ categories: [web开发]
 date: 2012-12-15
 title: "HTTP协议之代理"
 description: "HTTP协议之代理"
-tags: [Redis]
+tags: [redis]
 redirecturl: http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html
 ---
 {% include JB/setup %}

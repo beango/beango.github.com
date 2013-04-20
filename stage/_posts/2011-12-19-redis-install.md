@@ -1,10 +1,10 @@
 ---
 layout: post
-categories: [高性能web, NoSql]
+categories: [高性能web, nosql]
 date: 2011-12-19
 title: "CentOS6.3下Redis安装"
 description: "CentOS6.3下Redis安装"
-tags: [Redis]
+tags: [redis]
 ---
 {% include JB/setup %}
 

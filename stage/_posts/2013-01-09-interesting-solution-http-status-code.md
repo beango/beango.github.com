@@ -5,7 +5,7 @@ date: 2013-01-09
 title: "趣解HTTP状态码"
 description: "趣解HTTP状态码"
 summary: "趣解HTTP状态码"
-tags: [HTTP状态码]
+tags: [http状态码]
 redirecturl: http://www.cnblogs.com/diguage/archive/2012/07/22/2604099.html
 ---
  

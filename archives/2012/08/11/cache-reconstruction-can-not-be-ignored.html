@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>不可忽略的缓存重建</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='不可忽略的缓存重建'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">不可忽略的缓存重建</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>　　本文的主要内容来源于<a href="http://blog.nosqlfan.com/tags/mongodb" title="查看 MongoDB 的全部文章">MongoDB</a>官方博客，由NoSQLFan补充说明，本文对传统的分布式Cache系统进行了分析，指出了其在<a href="http://blog.nosqlfan.com/tags/%e7%bc%93%e5%ad%98" title="查看 缓存 的全部文章">缓存</a><a href="http://blog.nosqlfan.com/tags/%e9%87%8d%e5%bb%ba" title="查看 重建 的全部文章">重建</a>中会对数据库产生巨大压力的问题。并分析了MongoDB的mmap方案是如何规避这一问题的。</p>
+
+<p>　　如下图的架构，在数据库前端加上分布式的Cache（比如我们常用的Memcached），让客户端在访问时先查找Cache，Cache不命中再读数据库并将结构缓存在Cache中。这是目前比较常用的一种分担读压力的方法。</p>
+
+<p><img src="/assets/files/2012-08/zraqX.png" title="cache" alt="" /></p>
+
+<p>　　但是这个方法存在一个问题，如果前端的Cache挂掉，或者比较极端的整个机房断电了，那么在机器重启后，原来Cache机器在内存中的缓存会全部清空，在客户端访问过程中，会百分之百的不命中，这样数据库会在瞬间接受巨大的读压力。</p>
+
+<p>　　试想如果一个64GB的缓存<a href="http://blog.nosqlfan.com/tags/%e5%a4%b1%e6%95%88" title="查看 失效 的全部文章">失效</a>了，在其重建时，假设与数据库连接的千兆网卡，假设其以极限速度100M每秒从数据库取数据过来重建缓存，那么也需要10分钟才能建完。更何况这是理想情况，对于客户端触发式的随机缓存重建，可能会花掉更长的时间。这还是在数据库能提供100M每秒的数据读请求的前提下。</p>
+
+<p>　　我们经常看到一些网站挂掉后又恢复，恢复后又挂掉，如此反复几次才能真正恢复，原因就在于其第一次Cache倒了，数据库无法承受相应的读压力，在缓存重建了一小部分后被压死。相当于数据库每重启一次，可以恢复部分缓存，直到缓存的非命中率到达数据库可承受的压力时，才能够真正恢复服务。</p>
+
+<p>　　这个问题可以用一些可以提供持久化功能的缓存来实现，比如<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>，在未开启aof的情况下，其定期dump出来的rdb文件出能自动恢复出绝大部分数据，当然，在有的时候这可能导致缓存和数据库数据不一致的情况，需要根据应用场景选择性的使用。</p>
+
+<p>　　上面是对分布式Cache的问题，而对于很多数据库存储，实际上也几乎都是将热数据尽量放在内存中的。但很多数据库在实现上是自己在内存中实现了Cache机制，这样在数据库重启（非操作系统重启）时，这些Cache可能也就随之被清空了，对于数据库来说，也需要重建缓存，而数据库这时所有的操作可能都落在磁盘IO上，带来了同样的问题。</p>
+
+<p>　　而MongoDB与上面的方式不太一样，MongoDB采用mmap来将数据文件映射到内存中，所以当MongoDB重启时，这些映射的内存并不会清掉，因为它们是由操作系统维护的（所以当操作系统重启时，MongoDB才会有相同问题）。相对于其它一些自己维护Cache的数据库，MongoDB在重启后并不需要进行缓存重建与预热。</p>
+
+<p>　　另外，新浪微博的timyang也曾经提出过一种缓存重建加锁的方式，也能部分解决此问题。简单来说就是缓存重建时，当多个客户端对同一个缓存数据发起请求时，会在客户端采用加锁等待的方式，对同一个Cache的重建需要获取到相应的锁才行，只有一个客户端能拿到锁，并且只有拿到锁的客户端才能访问数据库重建缓存，其它的客户端都需要等待这个拿到锁的客户端重建好缓存后直接读缓存，其结果是对同一个缓存数据，只进行一次数据库重建访问。但是如果访问分散比较严重，还是会瞬间对数据库造成非常大的压力。</p>
+
+<p>下面是几点比较实用的知识：</p>
+
+<ul>
+<li>无论使用哪个存储，都最好先搞清楚其缓存重建的过程，如果一次重启就可能导致数据库崩溃，还是小心为好，最好把重启时间选在访问量比较小的时候。</li>
+<li>重启MongoDB不会导致MongoDB的缓存失效（除非重启服务器）</li>
+<li>当你重新mount磁盘时，文件系统的缓存会失效，这和重启机器时一样，MongoDB也无法避免</li>
+<li>一个使用MongoDB的小技巧，当MongoDB服务器刚启动时，你可以将其所有文件copy到/dev/null中，这会触发操作系统对这些文件的读操作，从而在内存允许的条件下，会将尽可能多的MongoDB数据文件映射到物理内存中。当然，如果在MongoDB运行过程中，你能够判断哪些文件保存的数据是热数据，也可以将这些文件copy到/dev/null来为其争取更多的物理内存。</li>
+</ul>
+
+
+<p>参考源：<a href="http://blog.mongodb.org/post/10407828262/cache-reheating-not-to-be-ignored">blog.mongodb.org</a></p>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2012-08-11" datetime="2012-08-11" pubdate>
+							<span class="year">2012-08-11</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#mongo-ref">mongo <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#nosql-ref">nosql <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#cache-ref">cache <span>3</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/3097.html" target="_blank">http://blog.nosqlfan.com/html/3097.html</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/07/25/jekyll-introduction.html" title="View 利用Jekyll搭建个人博客">&laquo; 利用Jekyll搭建个人博客</a></li>
+									
+
+									
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/08/12/why-recommend-nodejs.html" title="View 我为什么向后端工程师推荐Node.js">我为什么向后端工程师推荐Node.js &raquo;</a></li>
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+

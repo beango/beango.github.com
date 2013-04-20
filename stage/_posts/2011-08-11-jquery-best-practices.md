@@ -5,7 +5,7 @@ categories: [web开发,javascript]
 date: 2011-08-11
 title: "jQuery最佳实践"
 description: "jQuery最佳实践"
-tags: [jQuery]
+tags: [jquery,javascript]
 redirecturl: http://www.ruanyifeng.com/blog/2011/08/jquery_best_practices.html
 ---
 {% include JB/setup %}

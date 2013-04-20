@@ -5,7 +5,7 @@ categories: [高性能web]
 date: 2011-06-15
 title: "MongoDB安装及使用"
 description: "MongoDB安装及使用"
-tags: [MongoDB]
+tags: [mongodb]
 ---
 {% include JB/setup %}
 

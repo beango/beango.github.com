@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [高性能web, NoSql]
+categories: [高性能web, nosql]
 date: 2012-11-23
 title: "MongoDB的Python接口PyMongo"
 description: "MongoDB的Python接口PyMongo"
-tags: [MongoDB]
+tags: [mongodb]
 ---
 {% include JB/setup %}
 

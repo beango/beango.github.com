@@ -5,7 +5,7 @@ categories: [web开发, 高性能web]
 date: 2012-04-20
 title: "IIS是如何处理ASP.NET请求的"
 description: "IIS是如何处理ASP.NET请求的"
-tags: [iis ,asp.net]
+tags: [.net]
 redirecturl: http://kb.cnblogs.com/page/136274/
 ---
 {% include JB/setup %}

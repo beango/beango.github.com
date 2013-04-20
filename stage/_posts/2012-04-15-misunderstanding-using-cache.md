@@ -5,7 +5,7 @@ categories: [软件架构]
 date: 2012-04-15
 title: "使用缓存的9大误区（上）"
 description: "使用缓存的9大误区（上）"
-tags: [缓存 , 集群与缓存 , .NET , Performance]
+tags: [缓存 , 集群与缓存 , .net]
 redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 ---
 {% include JB/setup %}

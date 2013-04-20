@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [Windows8开发]
+categories: [windows]
 date: 2012-03-23
 title: "一张破图胜过长篇大论（译文：关于Windows 8的新编程体系）"
 description: "一张破图胜过长篇大论（译文：关于Windows 8的新编程体系）"
-tags: [Windows8]
+tags: [windows8]
 redirecturl: http://kb.cnblogs.com/page/136244/
 ---
 {% include JB/setup %}

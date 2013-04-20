@@ -4,7 +4,7 @@ categories: [项目管理]
 date: 2012-06-26
 title: "如何绘制业务流程图(二)"
 description: "如何绘制业务流程图(二)"
-tags: [UML]
+tags: [uml]
 redirecturl: http://heidixie.blog.sohu.com/222277336.html
 ---
 {% include JB/setup %}

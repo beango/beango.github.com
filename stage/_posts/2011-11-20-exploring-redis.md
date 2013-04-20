@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2011-11-20
 title: "Redis系统性介绍"
 description: "Redis系统性介绍"
-tags: [Redis]
+tags: [redis]
 redirecturl: http://blog.nosqlfan.com/html/3139.html
 ---
 {% include JB/setup %}

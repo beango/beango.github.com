@@ -5,7 +5,7 @@ categories: [软件架构,高性能web]
 date: 2012-12-04
 title: "缓存、缓存算法和缓存框架简介"
 description: "缓存、缓存算法和缓存框架简介"
-tags: [缓存, 框架]
+tags: [cache, 框架]
 redirecturl: http://www.leexiang.com/cache-algorithm
 ---
 {% include JB/setup %}

@@ -1,11 +1,11 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql]
+categories: [nosql]
 date: 2011-10-26
 title: "MongoDB运行状态、性能监控，分析"
 description: "MongoDB运行状态、性能监控，分析"
-tags: [MongoDB]
+tags: [mongodb]
 redirecturl: http://tech.lezi.com/archives/290
 ---
 {% include JB/setup %}
