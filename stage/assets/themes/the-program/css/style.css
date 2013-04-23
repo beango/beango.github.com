@@ -536,7 +536,7 @@ No styleguide reference.
   zoom: 1;
   line-height: normal;
   letter-spacing: normal;
-  margin-right: 16px;
+  margin-right: 10px;
   word-spacing: normal;
   vertical-align: middle;
 }
@@ -1030,6 +1030,7 @@ a:hover {
   .the-header {
     float: left;
     width: 18%;
+	position: fixed;
   }
   .the-header .unit-head {
     padding: 26px;
@@ -1068,6 +1069,7 @@ a:hover {
     float: left;
     width: 81%;
     margin-right: -350px;
+	margin-left:256px;
   }
   .body .unit-body {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
