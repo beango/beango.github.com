@@ -20,6 +20,7 @@ http://beango.github.com/info.html
 http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
 
+http://beango.github.com/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html
 http://beango.github.com/archives/2013/04/20/http-benchmark-rules.html
 http://beango.github.com/archives/2013/04/16/linux-netcat-command.html
 http://beango.github.com/archives/2013/03/26/javascript-language-features.html
