@@ -20,6 +20,7 @@ http://beango.github.com/info.html
 http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
 
+http://beango.github.com/archives/2013/04/23/several-reminder-in-nginx-fastcgi-cache-session-cache-limiter.html
 http://beango.github.com/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html
 http://beango.github.com/archives/2013/04/20/http-benchmark-rules.html
 http://beango.github.com/archives/2013/04/16/linux-netcat-command.html
@@ -43,6 +44,7 @@ http://beango.github.com/archives/2013/01/05/mongodb-secuirty-anaylze.html
 http://beango.github.com/archives/2012/12/25/dot-net-gc-2.html
 http://beango.github.com/archives/2012/12/15/http-protocol-proxy.html
 http://beango.github.com/archives/2012/12/13/dot-net-gc-1.html
+http://beango.github.com/archives/2012/12/09/mongodb-sharding-analysis.html
 http://beango.github.com/archives/2012/12/04/cache-algorithm.html
 http://beango.github.com/archives/2012/12/03/mongodb-cluster.html
 http://beango.github.com/archives/2012/11/23/pymongo-python-mongodb.html
