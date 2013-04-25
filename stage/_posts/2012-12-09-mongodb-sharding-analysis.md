@@ -145,5 +145,4 @@ mongodb 的 sharding 有很多优势，但是也同样有其局限性。
 
 在这里再说一下 sharding 集群的备份问题。由于后端数据节点仍然是普通的 mongod 或 replica set，所以备份其实和原先差不多。只是需要注意的是，备份前需要停止自动平衡，保证备份期间 sharding 的元数据不会变动，然后备份 shard 节点和 config 节点数据即可。
 
-P.S. 这篇东西是十月份我在 [thinkinlamp](http://www.thinkinlamp.com/)
-第三届数据库大会上的 topic 的内容的整理。
+P.S. 这篇东西是十月份我在 [thinkinlamp](http://www.thinkinlamp.com/)第三届数据库大会上的 topic 的内容的整理。
