@@ -7,9 +7,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>.net纠错</title>
+	<title>dotnet拾遗</title>
 	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='.net纠错'/>
+	<meta property='og:title' content='dotnet拾遗'/>
 	<meta property='og:url' content='http://www.yif1.com'/>
 	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
 	<meta property='og:type' content='article'/>
@@ -54,37 +54,82 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">.net纠错</h1>
+						<h1 class="h2 entry-title">dotnet拾遗</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					<ul>
-<li>获取文件绝对路径</li>
-</ul>
-
+					<h2>获取文件绝对路径</h2>
 
 <p><label></label></p>
 
 <pre><code>System.IO.Path.Combine(HttpRuntime.AppDomainAppPath,"App_Data\\test.txt");
 </code></pre>
 
-<ul>
-<li>EF下修改指定的字段</li>
-</ul>
+<h2>字符连接</h2>
 
+<p><a href="http://blog.zhaojie.me/2009/12/valuable-posts-index.html#string-concat-perf" target="blank">重谈字符串连接性能</a></p>
+
+<p>StringBuilder：如果能够确定目标字符串的最终长度，则可以使用StringBuilder。如果不能确定的话，也可以在一开始指定更大的容量，减少扩容的次数。</p>
+
+<pre><code>var builder = new StringBuilder(count * STR.Length);
+</code></pre>
+
+<p>String.Concat：如果不能确定最终长度，但是能够确定字符串的个数（如这个场景），可以将它们放在一个数组中，并调用String.Concat进行连接。</p>
+
+<pre><code>String.Concat(array);
+</code></pre>
+
+<h2>EF下修改指定的字段</h2>
 
 <p><label></label></p>
 
-<pre><code>NorthwindEntities entities = new NorthwindEntities();
+<pre><code>//NorthwindEntities : ObjectContext
+NorthwindEntities entities = new NorthwindEntities();
 
 entities.Products.Attach(product);
 var entry = entities.ObjectStateManager.GetObjectStateEntry(product);
 entry.SetModifiedProperty("ProductName"); 
 entry.SetModifiedProperty("Discontinued");
 entities.SaveChanges();
+</code></pre>
+
+<p>另外一种（继承自DBContext）修改方式：</p>
+
+<pre><code>public void UpdateObject(T obj,params string[] propertys)
+{
+    var entry = context.Entry&lt;T&gt;(obj);
+
+    if (propertys!=null)
+    {
+        IObjectContextAdapter objectContextAdatper = context;
+        ObjectContext objectContext = objectContextAdatper.ObjectContext;
+        ObjectStateEntry ose = objectContext.ObjectStateManager.GetObjectStateEntry(obj);
+        foreach (string property in propertys)
+        {
+            ose.SetModifiedProperty(property);
+        }
+    }
+
+    if (entry.State == EntityState.Detached)
+    {
+        entry.State = EntityState.Modified;
+    }
+    context.SaveChanges();
+}
+</code></pre>
+
+<h2>EF使用注意事项</h2>
+
+<p><label></label></p>
+
+<pre><code>//这样才会在数据库中分页.
+query.Skip((pageInfo.PageIndex - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();
+
+//尽量避免延迟加载，而是预加载
+var list = db.People.Include("StudentGrades").Where(ent =&gt; ent.PersonID &lt; 30).ToList();
 </code></pre>
 
 				</div><!-- entry-content -->
