@@ -60,9 +60,6 @@
   src: local('PT Sans Bold Italic'), local('PTSans-BoldItalic'), url(/assets/font/lILlYDvubYemzYzN7GbLkHhCUOGz7vYGh680lGh-uXM.woff) format('woff');
 }
 
-.alignright {
-  float: right;
-}
 #sub-nav .social {
   float: left;
   margin-right: -5px;

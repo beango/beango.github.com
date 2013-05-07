@@ -18,7 +18,7 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
     自动提交表单
 
 ###Favorite
--   [.Net纠错](/code/dotnet.html)
+-   [dotnet拾遗](/code/dotnet.html)
 
 -   [SQL收集](/code/sql-collection.html)
 

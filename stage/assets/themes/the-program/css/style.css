@@ -586,7 +586,6 @@ a:hover {
   font-family: "Electrolize",sans-serif;
   text-transform: uppercase;
   text-align: right;
-  float: right;
 }
 .the-header .nav-global .logo {
   text-transform: none;
@@ -978,7 +977,6 @@ a:hover {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     border-right: none 0;
     display: block;
-    width: 100%;
   }
   .the-header .unit-head .nav-global .logo a {
     font-size: 30px;
@@ -986,6 +984,9 @@ a:hover {
   }
   .the-header .unit-head .nav-global .logo a:hover {
     background-color: transparent;
+  }
+  #sub-nav {
+   margin-top: 20px;
   }
 }
 /*
@@ -1030,7 +1031,7 @@ a:hover {
   .the-header {
     float: left;
     width: 18%;
-	position: fixed;
+  position: fixed;
   }
   .the-header .unit-head {
     padding: 26px;
@@ -1069,7 +1070,7 @@ a:hover {
     float: left;
     width: 81%;
     margin-right: -350px;
-	margin-left:256px;
+  margin-left:256px;
   }
   .body .unit-body {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
@@ -1093,6 +1094,9 @@ a:hover {
     line-height: 52px;
     margin-top: 0;
     margin-bottom: 26px;
+  }
+  #sub-nav {
+   float: right;
   }
 }
 
