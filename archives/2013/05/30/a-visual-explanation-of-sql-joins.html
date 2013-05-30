@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>SQL联合语句的视觉解释</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='SQL联合语句的视觉解释'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">SQL联合语句的视觉解释</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。</p>
+
+<p>不过我还是喜欢这个观点，所以我们来看看能不能用上韦恩图。假设我们有下面两张表。表A在左边，表B在右边。我们给它们各四条记录。</p>
+
+<pre><code>id name       id  name
+-- ----       --  ----
+1  Pirate     1   Rutabaga
+2  Monkey     2   Pirate
+3  Ninja      3   Darth Vader
+4  Spaghetti  4   Ninja
+</code></pre>
+
+<p>我们用过name字段用几种不同方式把这些表联合起来，看能否得到和那些漂亮的韦恩图在概念上的匹配。</p>
+
+<pre><code>SELECT * FROM TableA
+INNER JOIN TableB
+ON TableA.name = TableB.name
+
+id  name       id   name
+--  ----       --   ----
+1   Pirate     2    Pirate
+3   Ninja      4    Ninja
+</code></pre>
+
+<p>内联合（inner join）只生成同时匹配表A和表B的记录集。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/iinner-join.png" title="inner join"><img src="/assets/files/2013-05/iinner-join.png" title="inner join" alt="inner join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<pre><code>SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.name = TableB.name
+
+id    name       id    name
+--    ----       --    ----
+1     Pirate     2     Pirate
+2     Monkey     null  null
+3     Ninja      4     Ninja
+4     Spaghetti  null  null
+null  null       1     Rutabaga       
+null  null       3     Darth Vader
+</code></pre>
+
+<p>全外联合（full outer join）生成表A和表B里的记录全集，包括两边都匹配的记录。如果有一边没有匹配的，缺失的这一边为null。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/Full-outer-join.png" title="Full outer join"><img src="/assets/files/2013-05/Full-outer-join.png" title="Full outer join" alt="Full outer join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<pre><code>SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+ON TableA.name = TableB.name
+
+id  name       id    name
+--  ----       --    ----
+1   Pirate     2     Pirate
+2   Monkey     null  null
+3   Ninja      4     Ninja
+4   Spaghetti  null  null
+</code></pre>
+
+<p>左外联合（left outer join）生成表A的所有记录，包括在表B里匹配的记录。如果没有匹配的，右边将是null。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/Left-outer-join.png" title="Left outer join"><img src="/assets/files/2013-05/Left-outer-join.png" title="Left outer join" alt="Left outer join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<pre><code>SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+ON TableA.name = TableB.name
+WHERE TableB.id IS null
+
+id  name       id     name
+--  ----       --     ----
+2   Monkey     null   null
+4   Spaghetti  null   null
+</code></pre>
+
+<p>为了生成只在表A里而不在表B里的记录集，我们用同样的左外联合，然后用where语句排除我们不想要的记录。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/WHERE-TableB.id-IS-nul.png" title="WHERE TableB.id IS nul"><img src="/assets/files/2013-05/WHERE-TableB.id-IS-nul.png" title="WHERE TableB.id IS nul" alt="" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<pre><code>SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.name = TableB.name
+WHERE TableA.id IS null 
+OR TableB.id IS null
+
+id    name       id    name
+--    ----       --    ----
+2     Monkey     null  null
+4     Spaghetti  null  null
+null  null       1     Rutabaga
+null  null       3     Darth Vader
+</code></pre>
+
+<p>为了生成对于表A和表B唯一的记录集，我们用同样的全外联合，然后用where语句排除两边都不想要的记录。（如下图）</p>
+
+<p> </p>
+
+<p><a href="/assets/files/2013-05/WHERE-TableA.id-IS-null.png" title="WHERE TableA.id IS null"><img src="/assets/files/2013-05/WHERE-TableA.id-IS-null.png" title="WHERE TableA.id IS null" alt="" /></a></p>
+
+<p>———————————————————–</p>
+
+<p>还有一种笛卡尔积或者<strong>交叉联合（cross join）</strong>，据我所知不能用韦恩图表示：</p>
+
+<pre><code>SELECT * FROM TableA
+CROSS JOIN TableB
+</code></pre>
+
+<p>这个把“所有”联接到“所有”，产生4乘4=16行，远多于原始的集合。如果你学过数学，你便知道为什么这个联合遇上大型的表很危险。</p>
+
+<p>英文原文；<a href="http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html">Jeff Atwood</a>，编译：<a href="http://www.jobbole.com" title="伯乐在线">伯乐</a>在线 – @<a href="http://weibo.com/deepfish2567" title="奇风余谷">奇风余谷</a></p>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2013-05-30" datetime="2013-05-30" pubdate>
+							<span class="year">2013-05-30</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#SQL-ref">SQL <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.jobbole.com/40443/" target="_blank">http://blog.jobbole.com/40443/</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2013/05/16/c-sharp-performance-optimization.html" title="View C#性能优化实践">&laquo; C#性能优化实践</a></li>
+									
+
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+

@@ -32,17 +32,7 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
-pre.prettyprint {
-  display: block;
-  background-color: #fff;
-  border-radius: 5px;
-  margin: 0 0 10px 0;
-  width: auto;
-}
-
-pre.prettyprint ol li code span {
-  font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
-}
+pre.prettyprint { padding: 2px; }
 
 /* Specify class=linenums on a pre to get line numbering */
 ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
@@ -59,19 +49,4 @@ li.L1,
 li.L3,
 li.L5,
 li.L7,
-li.L9 {  }
-
-/* desert scheme ported from vim to google prettify */
-pre.prettyprint { border: none; display: block; background-color: #333; padding: 1px 1px 1px 5px; }
-pre.prettyprint .nocode { background-color: none; color: #000 }
-pre.prettyprint .str { color: #ffa0a0 } /* string  - pink */
-pre.prettyprint .kwd { color: #f0e68c; font-weight: bold }
-pre.prettyprint .com { color: #87ceeb } /* comment - skyblue */
-pre.prettyprint .typ { color: #98fb98 } /* type    - lightgreen */
-pre.prettyprint .lit { color: #cd5c5c } /* literal - darkred */
-pre.prettyprint .pun { color: #fff }    /* punctuation */
-pre.prettyprint .pln { color: #fff }    /* plaintext */
-pre.prettyprint .tag { color: #f0e68c; font-weight: bold } /* html/xml tag    - lightyellow */
-pre.prettyprint .atn { color: #bdb76b; font-weight: bold } /* attribute name  - khaki */
-pre.prettyprint .atv { color: #ffa0a0 } /* attribute value - pink */
-pre.prettyprint .dec { color: #98fb98 } /* decimal         - lightgreen */
+li.L9 { background: #eee }
