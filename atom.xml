@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-05-31T11:39:10+08:00</updated>
+ <updated>2013-05-31T17:06:50+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -224,10 +224,7 @@
 
 &lt;p&gt;我希望这些内容是有用的，请在下面留言来分享你的想法。少年们，努力吧，写出更好的，更模块化的JavaScript。&lt;/p&gt;
 
-&lt;p&gt; &lt;/p&gt;
-
-&lt;p&gt;英文原文；&lt;a href=&quot;http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html&quot;&gt;ben cherry&lt;/a&gt;，编译：&lt;a href=&quot;http://www.jobbole.com&quot; title=&quot;伯乐在线&quot;&gt;伯乐&lt;/a&gt;在线
-– &lt;a href=&quot;http://blog.jobbole.com/author/%e7%8e%8b%e7%ad%b1/&quot;&gt;王筱&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;英文原文；&lt;a href=&quot;http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html&quot;&gt;ben cherry&lt;/a&gt;，编译：&lt;a href=&quot;http://www.jobbole.com&quot; title=&quot;伯乐在线&quot;&gt;伯乐&lt;/a&gt;在线 – &lt;a href=&quot;http://blog.jobbole.com/author/%e7%8e%8b%e7%ad%b1/&quot;&gt;王筱&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;译文链接：&lt;a href=&quot;http://blog.jobbole.com/40409/&quot;&gt;http://blog.jobbole.com/40409/&lt;/a&gt;&lt;/p&gt;
 </content>
@@ -698,6 +695,498 @@ list.BinarySearch(8); // 对于不存在的值，会使用负数表示位置，�
 &lt;p&gt;· &lt;strong&gt;进度条，提升用户体验&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;有时候，以上提到的方案都没有办法快速响应用户操作。进度条、一直转圈圈的图片、提示性文字（如&quot;你的操作可能需要较长时间，请耐心等待&quot;）等，都可以有效的提升用户体验，可以作为最后方案来考虑。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Java 代码优化过程的实例介绍</title>
+   <link href="http://beango.github.com/archives/2013/04/27/j-lo-codeoptimize.html"/>
+   <updated>2013-04-27T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/04/27/j-lo-codeoptimize</id>
+   <content type="html">&lt;p&gt;来源: &lt;a href=&quot;http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.html?ca=drs-&quot;&gt;IBM developerworks&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;简介：&lt;/strong&gt; 通过笔者经历的一个项目实例，本文介绍了 Java 代码优化的过程，总结了优化 Java 程序的一些最佳实践，分析了进行优化的方法，并解释了性能提升的原因。从多个角度分析导致性能低的原因，并逐个进行优化，最终使得程序的性能得到极大提升，代码的可读性、可扩展性更强。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;衡量程序的标准&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;衡量一个程序是否优质，可以从多个角度进行分析。其中，最常见的衡量标准是程序的时间复杂度、空间复杂度，以及代码的可读性、可扩展性。针对程序的时间复杂度和空间复杂度，想要优化程序代码，需要对数据结构与算法有深入的理解，并且熟悉计算机系统的基本概念和原理；而针对代码的可读性和可扩展性，想要优化程序代码，需要深入理解软件架构设计，熟知并会应用合适的&lt;a href=&quot;http://www.amazon.cn/gp/product/B001130JN8/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;amp;tag=vastwork-23&amp;amp;linkCode=as2&amp;amp;camp=536&amp;amp;creative=3200&amp;amp;creativeASIN=B001130JN8&quot; title=&quot;1&quot;&gt;设计模式&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;首先，如今计算机系统的存储空间已经足够大了，达到了 TB 级别，因此相比于空间复杂度，时间复杂度是程序员首要考虑的因素。为了追求高性能，在某些频繁操作执行时，甚至可以考虑用空间换取时间。其次，由于受到处理器制造工艺的物理限制、成本限制，CPU 主频的增长遇到了瓶颈，摩尔定律已渐渐失效，每隔 18 个月 CPU 主频即翻倍的时代已经过去了，程序员的编程方式发生了彻底的改变。在目前这个多核多处理器的时代，涌现了原生支持多线程的语言（如Java）以及分布式并行计算框架（如 Hadoop）。为了使程序充分地利用多核CPU，简单地实现一个单线程的程序是远远不够的，程序员需要能够编写出并发或者并行的多线程程序。最后，大型软件系统的代码行数达到了百万级，如果没有一个设计良好的软件架构，想在已有代码的基础上进行开发，开发代价和维护成本是无法想象的。一个设计良好的软件应该具有可读性和可扩展性，遵循“开闭原则”、“依赖倒置原则”、“面向接口编程”等。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;项目介绍&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;本文将介绍笔者经历的一个项目中的一部分，通过这个实例剖析代码优化的过程。下面简要地介绍该系统的相关部分。&lt;/p&gt;
+
+&lt;p&gt;该系统的开发语言为 Java，部署在共拥有 4 核 CPU 的 Linux 服务器上，相关部分主要有以下操作：通过某外部系统 D 提供的 REST API 获取信息，从中提取出有效的信息，并通过 JDBC 存储到某数据库系统 S 中，供系统其他部分使用，上述操作的执行频率为每天一次，一般在午夜当系统空闲时定时执行。为了实现高可用性（High Availability），外部系统 D 部署在两台服务器上，因此需要分别从这两台服务器上获取信息并将信息插入数据库中，有效信息的条数达到了上千条，数据库插入操作次数则为有效信息条数的两倍。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 1. 系统体系结构图&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-04/image002.jpg&quot; title=&quot;Java 代码优化过程的实例介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-04/image002.jpg&quot; title=&quot;Java 代码优化过程的实例介绍&quot; alt=&quot;Java代码优化过程的实例介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;为了快速地实现预期效果，在最初的实现中优先考虑了功能的实现，而未考虑系统性能和代码可读性等。系统大致有以下的实现：
+（1）REST API获取信息、数据库操作可能抛出的异常信息都被记录到日志文件中，作为调试用；&lt;br/&gt;
+（2）共有 5 次数据库连接操作，包括第一次清空数据库表，针对两个外部系统 D 各有两次数据库插入操作，这 5 个连接都是独立的，用完之后即释放；&lt;br/&gt;
+（3）所有的数据库插入语句都是使用java.sql.Statement类生成的；&lt;br/&gt;
+（4）所有的数据库插入语句，都是单条执行的，即生成一条执行一条；&lt;br/&gt;
+（5）整个过程都是在单个线程中执行的，包括数据库表清空操作，数据库插入操作，释放数据库连接；&lt;br/&gt;
+（6）数据库插入操作的JDBC代码散布在代码中。虽然这个版本的系统可以正常运行，达到了预期的效果，但是效率很低，从通过REST API 获取信息，到解析并提取有效信息，再到数据库插入操作，总共耗时 100 秒左右。而预期的时间应该在一分钟以内，这显然是不符合要求的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;代码优化过程&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;笔者开始分析整个过程有哪些耗时操作，以及如何提升效率，缩短程序执行的时间。通过 REST API 获取信息，因为是使用外部系统提供的API，所以无法在此处提升效率；取得信息之后解析出有效部分，因为是对特定格式的信息进行解析，所以也无效率提升的空间。所以，效率可以大幅度提升的空间在数据库操作部分以及程序控制部分。下面，分条叙述对耗时操作的改进方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;针对日志记录的优化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;关闭日志记录，或者更改日志输出级别。&lt;/strong&gt;因为从两台服务器的外部系统 D 上获取到的信息是相同的，所以数据库插入操作会抛出异常，异常信息类似于“Attempt to insert duplicate record”，这样的异常信息跟有效信息的条数相等，有上千条。这种情况是能预料到的，所以可以考虑关闭日志记录，或者不关闭日志记录而是更改日志输出级别，只记录严重级别（severe level）的错误信息，并将此类操作的日志级别调整为警告级别（warning level），这样就不会记录以上异常信息了。本项目使用的是 Java 自带的日志记录类，以下配置文件将日志输出级别设置为严重级别。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 1. log.properties 设置日志输出级别的片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# default file output is in user ’ s home directory. 
+# levels can be: SEVERE, WARNING, INFO, FINE, FINER, FINEST 
+java.util.logging.ConsoleHandler.level=SEVERE 
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter 
+java.util.logging.FileHandler.append=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过上述的优化之后，性能有了大幅度的提升，从原来的 100 秒左右降到了 50 秒左右。为什么仅仅不记录日志就能有如此大幅度的性能提升呢？查阅资料，发现已经有人做了相关的研究与实验。经常听到 Java 程序比 C/C++ 程序慢的言论，但是运行速度慢的真正原因是什么，估计很多人并不清楚。对于 CPU 密集型的程序（即程序中包含大量计算），Java 程序可以达到 C/C++ 程序同等级别的速度，但是对于 I/O 密集型的程序（即程序中包含大量 I/O 操作），Java 程序的速度就远远慢于 C/C++ 程序了，很大程度上是因为 C/C++ 程序能直接访问底层的存储设备。因此，不记录日志而得到大幅度性能提升的原因是，Java 程序的 I/O 操作较慢，是一个很耗时的操作。&lt;/p&gt;
+
+&lt;p&gt;针对数据库连接的优化&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;共享数据库连接。&lt;/strong&gt;共有 5 次数据库连接操作，每次都需重新建立数据库连接，数据库插入操作完成之后又立即释放了，数据库连接没有被复用。为了做到共享数据库连接，可以通过单例模式（Singleton Pattern）获得一个相同的数据库连接，每次数据库连接操作都共享这个数据库连接。这里没有使用数据库连接池（Database Connection Pool）是因为在程序只有少量的数据库连接操作，只有在大量并发数据库连接的时候才需要连接池。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 2. 共享数据库连接的代码片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class JdbcUtil { 
+    private static Connection con; 
+    // 从配置文件读取连接数据库的信息
+    private static String driverClassName; 
+    private static String url; 
+    private static String username; 
+    private static String password; 
+    private static String currentSchema; 
+    private static Properties properties = new Properties(); 
+
+    static { 
+    // driverClassName, url, username, password, currentSchema 等从配置文件读取，代码略去
+        try { 
+            Class.forName(driverClassName); 
+        } catch (ClassNotFoundException e) { 
+            e.printStackTrace(); 
+        } 
+        properties.setProperty(&quot;user&quot;, username); 
+        properties.setProperty(&quot;password&quot;, password); 
+        properties.setProperty(&quot;currentSchema&quot;, currentSchema); 
+        try { 
+            con = DriverManager.getConnection(url, properties); 
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        } 
+    } 
+    private JdbcUtil() {} 
+     // 获得一个单例的、共享的数据库连接
+     public static Connection getConnection() { 
+        return con; 
+    } 
+    public static void close() throws SQLException { 
+        if (con != null) 
+            con.close(); 
+    } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过上述的优化之后，性能有了小幅度的提升，从 50 秒左右降到了 40 秒左右。共享数据库连接而得到的性能提升的原因是，数据库连接是一个耗时耗资源的操作，需要同远程计算机进行网络通信，建立 TCP 连接，还需要维护连接状态表，建立数据缓冲区。如果共享数据库连接，则只需要进行一次数据库连接操作，省去了多次重新建立数据库连接的时间。&lt;/p&gt;
+
+&lt;p&gt;针对插入数据库记录的优化 1&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用预编译 SQL。&lt;/strong&gt;具体做法是使用 java.sql.PreparedStatement 代替 java.sql.Statement 生成 SQL 语句。PreparedStatement 使得数据库预先编译好 SQL 语句，可以传入参数。而 Statement 生成的 SQL 语句在每次提交时，数据库都需进行编译。在执行大量类似的 SQL 语句时，可以使用 PreparedStatement 提高执行效率。使用 PreparedStatement 的另一个好处是不需要拼接 SQL 语句，代码的可读性更强。通过上述的优化之后，性能有了小幅度的提升，从 40 秒左右降到了 30\~35 秒左右。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 3. 使用 Statement 的代码片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 需要拼接 SQL 语句，执行效率不高，代码可读性不强
+StringBuilder sql = new StringBuilder(); 
+sql.append(&quot;insert into table1(column1,column2) values('&quot;); 
+sql.append(column1Value); 
+sql.append(&quot;','&quot;); 
+sql.append(column2Value); 
+sql.append(&quot;');&quot;); 
+
+Statement st; 
+try { 
+    st = con.createStatement(); 
+    st.executeUpdate(sql.toString()); 
+} catch (SQLException e) { 
+    e.printStackTrace(); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 4. 使用 PreparedStatement 的代码片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 预编译 SQL 语句，执行效率高，可读性强
+String sql = “insert into table1(column1,column2) values(?,?)”; 
+PreparedStatement pst = con.prepareStatement(sql); 
+pst.setString(1,column1Value); 
+pst.setString(2,column2Value); 
+pst.execute();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;针对插入数据库记录的优化 2&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用 SQL 批处理。&lt;/strong&gt;通过 java.sql.PreparedStatement 的 addBatch 方法将 SQL 语句加入到批处理，这样在调用 execute 方法时，就会一次性地执行 SQL 批处理，而不是逐条执行。通过上述的优化之后，性能有了小幅度的提升，从 30\~35 秒左右降到了 30 秒左右。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;针对多线程的优化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用多线程实现并发 / 并行。&lt;/strong&gt;清空数据库表的操作、把从 2 个外部系统 D 取得的数据插入数据库记录的操作，是相互独立的任务，可以给每个任务分配一个线程执行。清空数据库表的操作应该先于数据库插入操作完成，可以通过 java.lang.Thread 类的 join 方法控制线程执行的先后次序。在单核 CPU 时代，操作系统中某一时刻只有一个线程在运行，通过进程/线程调度，给每个线程分配一小段执行的时间片，可以实现多个进程/线程的并发（concurrent）执行。而在目前的多核多处理器背景下，操作系统中同一时刻可以有多个线程并行（parallel）执行，大大地提高了计算速度。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 5. 使用多线程的代码片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Thread t0 = new Thread(new ClearTableTask()); 
+Thread t1 = new Thread(new StoreServersTask(ADDRESS1)); 
+Thread t2 = new Thread(new StoreServersTask(ADDRESS2)); 
+
+try { 
+    t0.start(); 
+    // 执行完清空操作后，再进行后续操作
+    t0.join(); 
+    t1.start(); 
+    t2.start(); 
+    t1.join(); 
+    t2.join(); 
+} catch (InterruptedException e) { 
+    e.printStackTrace(); 
+} 
+
+// 断开数据库连接
+try { 
+    JdbcUtil.close(); 
+} catch (SQLException e) { 
+    e.printStackTrace(); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过上述的优化之后，性能有了大幅度的提升，从 30 秒左右降到了 15 秒以下，10\~15秒之间。使用多线程而得到的性能提升的原因是，系统部署所在的服务器是多核多处理器的，使用多线程，给每个任务分配一个线程执行，可以充分地利用 CPU 计算资源。&lt;/p&gt;
+
+&lt;p&gt;笔者试着给每个任务分配两个线程执行，希望能使程序运行得更快，但是事与愿违，此时程序运行的时间反而比每个任务分配一个线程执行的慢，大约 20 秒。笔者推测，这是因为线程较多（相对于 CPU 的内核数），使得 CPU 忙于线程的上下文切换，过多的线程上下文切换使得程序的性能反而不如之前。因此，要根据实际的硬件环境，给任务分配适量的线程执行。&lt;/p&gt;
+
+&lt;p&gt;针对设计模式的优化&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用 DAO 模式抽象出数据访问层。&lt;/strong&gt;原来的代码中混杂着 JDBC 操作数据库的代码，代码结构显得十分凌乱。使用 DAO 模式（Data Access Object Pattern）可以抽象出数据访问层，这样使得程序可以独立于不同的数据库，即便访问数据库的代码发生了改变，上层调用数据访问的代码无需改变。并且程序员可以摆脱单调繁琐的数据库代码的编写，专注于业务逻辑层面的代码的开发。通过上述的优化之后，性能并未有提升，但是代码的可读性、可扩展性大大地提高了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 2. DAO 模式的层次结构&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-04/image003.jpg&quot; title=&quot;Java 代码优化过程的实例介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-04/image003.jpg&quot; title=&quot;Java 代码优化过程的实例介绍&quot; alt=&quot;Java代码优化过程的实例介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 6. 使用 DAO 模式的代码片段&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// DeviceDAO.java，定义了 DAO 抽象，上层的业务逻辑代码引用该接口，面向接口编程
+ public interface DeviceDAO { 
+    public void add(Device device); 
+ } 
+
+ // DeviceDAOImpl.java，DAO 实现，具体的 SQL 语句和数据库操作由该类实现
+ public class DeviceDAOImpl implements DeviceDAO { 
+    private Connection con; 
+    public DeviceDAOImpl() { 
+        // 获得数据库连接，代码略去
+    } 
+ @Override
+ public void add(Device device) { 
+        // 使用 PreparedStatement 进行数据库插入记录操作，代码略去
+    } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;回顾以上代码优化过程：关闭日志记录、共享数据库连接、使用预编译 SQL、使用 SQL 批处理、使用多线程实现并发 / 并行、使用 DAO 模式抽象出数据访问层，程序运行时间从最初的 100 秒左右降低到 15 秒以下，在性能上得到了很大的提升，同时也具有了更好的可读性和可扩展性。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;结束语&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通过该项目实例，笔者深深地感到，想要写出一个性能优化、可读性可扩展性强的程序，需要对计算机系统的基本概念、原理，&lt;a href=&quot;http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/&quot; title=&quot;如何选择语言和编程语言排名相关文章&quot;&gt;编程语言&lt;/a&gt;的特性，软件系统架构设计都有较深入的理解。“纸上得来终觉浅，绝知此事要躬行”，想要将这些基本理论、编程技巧融会贯通，还需要不断地实践，并总结心得体会。&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Python中函数式编程，第三部分</title>
+   <link href="http://beango.github.com/archives/2013/04/25/python-functional-programming-part3.html"/>
+   <updated>2013-04-25T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/04/25/python-functional-programming-part3</id>
+   <content type="html">&lt;p&gt;英文原文：&lt;a href=&quot;http://www.ibm.com/developerworks/linux/library/l-prog3/index.html&quot;&gt;Charming Python: Functional programming in Python, Part 3&lt;/a&gt;，翻译：&lt;a href=&quot;http://www.oschina.net/translate/python-functional-programming-part3&quot;&gt;开源中国&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;摘要：&lt;/strong&gt;  作者David Mertz在其文章《可爱的Python：“Python中的函数式编程”》中的&lt;a href=&quot;http://blog.jobbole.com/35028/&quot;&gt;第一部分&lt;/a&gt;和&lt;a href=&quot;http://blog.jobbole.com/35042/&quot;&gt;第二部分&lt;/a&gt;中触及了函数式编程的大量基本概念。本文中他将继续前面的讨论，解释函数式编程的其它功能，如currying和Xoltar
+Toolkit中的其它一些高阶函数。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;表达式绑定&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有一位从不满足于解决部分问题读者，名叫Richard Davies，提出了一个问题，问是否可以将所有的绑定全部都转移到一个单个的表达式之中。首先让我们简单看看，我们为什么想这么做，然后再看看由comp.lang.python中的一位朋友提供的一种异常优雅地写表达式的方式。&lt;/p&gt;
+
+&lt;p&gt;让我们回想一下功能模块的绑定类。使用该类的特性，我们可以确认在一个给定的范围块内，一个特定的名字仅仅代表了一个唯一的事物。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;具有重新绑定向导的 Python 函数式编程(FP)&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from functional import *
+&amp;gt;&amp;gt;&amp;gt; let = Bindings()
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda lst: lst[0]
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda lst: lst[2]
+Traceback (innermost last):
+  File &quot;&amp;lt;stdin&amp;gt;&quot;, line 1, in ?
+  File &quot;d:\tools\functional.py&quot;, line 976, in __setattr__
+
+raise BindingError, &quot;Binding '%s' cannot be modified.&quot; % name
+functional.BindingError:  Binding 'car' cannot be modified.
+&amp;gt;&amp;gt;&amp;gt; let.car(range(10))
+0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;绑定类在一个模块或者一个功能定义范围内做这些我们希望的事情，但是没有办法在一条表达式内使之工作。然而在ML家族语言(译者注：ML是一种通用的函数式&lt;a href=&quot;http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/&quot; title=&quot;如何选择语言和编程语言排名相关文章&quot;&gt;编程语言&lt;/a&gt;),在一条表达式内创建绑定是很自然的事。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Haskell 命名绑定表达式&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-- car (x:xs) = x  -- *could* create module-level binding
+list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
+
+-- 'where' clause for expression-level binding
+firsts1 = [car x | x &amp;lt;- list_of_list] where car (x:xs) = x
+
+-- 'let' clause for expression-level binding
+firsts2 = let car (x:xs) = x in [car x | x &amp;lt;- list_of_list]
+
+-- more idiomatic higher-order 'map' technique
+firsts3 = map car list_of_list where car (x:xs) = x
+
+-- Result: firsts1 == firsts2 == firsts3 == [1,4,7]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Greg Ewing发现用Python的list概念实现同样的效果是有可能的；甚至我们可以用几乎与Haskell语法一样干净的方式做到。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python 2.0+ 命名绑定表达式&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
+&amp;gt;&amp;gt;&amp;gt; [car_x for x in list_of_list for car_x in
+ (x[0],)]
+[1, 4, 7]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在列表解析（list comprehension）中将表达式放入一个单项元素（a single-item tuple）中的这个小技巧，并不能为使用带有表达式级绑定的高阶函数提供任何思路。要使用这样的高阶函数，还是需要使用块级（block-level）绑定，就象以下所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python中的使用块级绑定的’map()’&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
+&amp;gt;&amp;gt;&amp;gt; let = Bindings()
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda l: l[0]
+&amp;gt;&amp;gt;&amp;gt; map(let.car,list_of_list)
+[1, 4, 7]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样真不错，但如果我们想使用函数map()，那么其中的绑定范围可能会比我们想要的更宽一些。然而，我们可以做到的，哄骗列表解析让它替我们做名字绑定，即使其中的列表并不是我们最终想要得到的列表的情况下也没问题：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;从Python的列表解析中“走下舞台”&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Compare Haskell expression:
+# result = func car_car
+#          where
+#              car (x:xs) = x
+#              car_car = car (car list_of_list)
+#              func x = x + x^2
+&amp;gt;&amp;gt;&amp;gt; [func for x in list_of_list
+...       
+for car in (x[0],)
+...       
+for func in (car+car**2,)][0]
+2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们对list_of_list列表中第一个元素的第一个元素进行了一次算数运算，而且期间还对该算术运算进行了命名（但其作用域仅仅是在表达式的范围内）。作为一种“优化”，我们可以不用费心创建多于一个元素的列表就能开始运算了，因为我们结尾处用的索引为0，所以我们仅仅选择的是第一个元素。：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;从列表解析中高效地走下舞台&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Compare Haskell expression:
+# result = func car_car
+#          where
+#              car (x:xs) = x
+#              car_car = car (car list_of_list)
+#              func x = x + x^2
+&amp;gt;&amp;gt;&amp;gt; [func for x in list_of_list
+...       
+for car in (x[0],)
+...       
+for func in (car+car**2,)][0]
+2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;高阶函数：currying&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Python内建的三个最常用的高阶函数是：map()、reduce()和filter()。这三个函数所做的事情 —— 以及谓之为“高阶”（higher-order）的原因 —— 是接受其它函数作为它们的（部分）参数。还有别的一些不属于内置的高阶函数，还会返回函数对象。
+藉由函数对象在Python中具有首要地位，
+Python一直都有能让其使用者构造自己的高阶函数的能力。举个如下所示的小例子：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python中一个简单函数工厂（function factory）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; def
+ foo_factory():
+...    
+def
+ foo():
+...        
+print
+&quot;Foo function from factory&quot;
+...    
+return foo
+...
+&amp;gt;&amp;gt;&amp;gt; f = foo_factory()
+&amp;gt;&amp;gt;&amp;gt; f()
+Foo function from factory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本系列文章的第二部分我讨论过的Xoltar Toolkit中，有一组非常好用的高阶函数。Xoltar的functional模块中提供的绝大多数高阶函数都是在其它各种不同的传统型函数式编程语言中发展出来的高阶函数，其有用性已经过多年的实践验证。&lt;/p&gt;
+
+&lt;p&gt;可能其中最著名、最有用和最重要的高阶函数要数curry()了。函数curry()的名字取自于逻辑学家Haskell Curry，前文提及的一种编程语言也是用他姓名当中的名字部分命名的。”currying”背后隐含的意思是，（几乎）每一个函数都可以视为只带一个参数的部分函数（partial function）。要使currying能够用起来所需要做的就是让函数本身的返回值也是个函数，只不过所返回的函数“缩小了范围”或者是“更加接近完整的函数”。这和我在第二部分中提到的闭包特别相似 —— 对经过curry后的返回的后继函数进行调用时一步一步“填入”最后计算所需的更多数据（附加到一个过程（procedure）之上的数据）&lt;/p&gt;
+
+&lt;p&gt;现在让我们先用Haskell中一个很简单例子对curry进行讲解，然后在Python中使用functional模块重复展示一下这个简单的例子：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;在Haskell计算中使用Curry&lt;/strong&gt;*&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;computation a b c d = (a + b^2+ c^3 + d^4)
+check = 1 + 2^2 + 3^3 + 5^4
+
+fillOne   = computation 1
+-- specify &quot;a&quot;
+fillTwo   = fillOne 2    
+-- specify &quot;b&quot;
+fillThree = fillTwo 3    
+-- specify &quot;c&quot;
+answer    = fillThree 5  
+-- specify &quot;d&quot;
+
+-- Result: check == answer == 657
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在使用Python：&lt;/p&gt;
+
+&lt;p&gt;在Python计算中使用Curry&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from functional import curry
+&amp;gt;&amp;gt;&amp;gt; computation = lambda a,b,c,d: (a + b**2 + c**3 + d**4)
+&amp;gt;&amp;gt;&amp;gt; computation(1,2,3,5)
+657
+&amp;gt;&amp;gt;&amp;gt; fillZero  = curry(computation)
+&amp;gt;&amp;gt;&amp;gt; fillOne   = fillZero(1)  
+# specify &quot;a&quot;
+&amp;gt;&amp;gt;&amp;gt; fillTwo   = fillOne(2)   
+# specify &quot;b&quot;
+&amp;gt;&amp;gt;&amp;gt; fillThree = fillTwo(3)   
+# specify &quot;c&quot;
+&amp;gt;&amp;gt;&amp;gt; answer    = fillThree(5) 
+# specify &quot;d&quot;
+&amp;gt;&amp;gt;&amp;gt; answer
+657
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第二部分中提到过的一个简单的计税程序的例子，当时用的是闭包（这次使用curry()），可以用来进一步做个对比：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Python中curry后的计税程序
+
+from functional import *
+
+taxcalc = lambda income,rate,deduct: (income-(deduct))*rate
+
+taxCurry = curry(taxcalc)
+taxCurry = taxCurry(50000)
+taxCurry = taxCurry(0.30)
+taxCurry = taxCurry(10000)
+print &quot;Curried taxes due =&quot;,taxCurry
+
+print &quot;Curried expression taxes due =&quot;, \
+      curry(taxcalc)(50000)(0.30)(10000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和使用闭包不同，我们需要以特定的顺序（从左到右）对参数进行curry处理。当要注意的是，functional模块中还包含一个rcurry()类，能够以相反的方向进行curry处理（从右到左）。&lt;/p&gt;
+
+&lt;p&gt;从一个层面讲，其中的第二个print语句同简单的同普通的taxcalc(50000,0.30,10000)函数调用相比只是个微小的拼写方面的变化。但从另一个不同的层面讲，它清晰地一个概念，那就是，每个函数都可以变换成仅仅带有一个参数的函数，这对于刚刚接触这个概念的人来讲，会有一种特别惊奇的感觉。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;其它高阶函数&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;除了上述的curry功能，functional模块简直就是一个很有意思的高阶函数万能口袋。此外，无论用还是不用functional模块，编写你自己的高阶函数真的并不难。至少functional模块中的那些高阶函数为你提供了一些很值一看的思路。\&lt;/p&gt;
+
+&lt;p&gt;它里面的其它高阶函数在很大程度上感觉有点象是“增强”版本的标准高阶函数map()、filter()和reduce()。这些函数的工作模式通常大致如此：将一个或多个函数以及一些列表作为参数接收进来，然后对这些列表参数运行它前面所接收到的函数。在这种工作模式方面，有非常大量很有意思也很有用的摆弄方法。还有一种模式是：拿到一组函数后，将这组函数的功能组合起来创建一个新函数。这种模式同样也有大量的变化形式。下面让我们看看functional模块里到底还有哪些其它的高阶函数。&lt;/p&gt;
+
+&lt;p&gt;sequential()和also()这两个函数都是在一系列成分函数（component function）的基础上创建一个新函数。然后这些成分函数可以通过使用相同的参数进行调用。两者的主要区别就在于，sequential()需要一个单个的函数列表作为参数，而also()接受的是一系列的多个参数。在多数情况下，对于函数的副作用而已这些会很有用，只是sequential()可以让你随意选择将哪个函数的返回值作为组合起来后的新函数的返回值。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt; 顺序调用一系列函数(使用相同的参数)&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; def a(x):
+...     print x,
+...     return &quot;a&quot;
+...
+&amp;gt;&amp;gt;&amp;gt; def b(x):
+...     print x*2,
+...     return &quot;b&quot;
+...
+&amp;gt;&amp;gt;&amp;gt; def c(x):
+...     print x*3,
+...     return &quot;c&quot;
+...
+&amp;gt;&amp;gt;&amp;gt; r = also(a,b,c)
+&amp;gt;&amp;gt;&amp;gt; r
+&amp;lt;functional.sequential instance at 0xb86ac&amp;gt;
+&amp;gt;&amp;gt;&amp;gt; r(5)
+5 10 15
+'a'
+&amp;gt;&amp;gt;&amp;gt; sequential([a,b,c],main=c)('x')
+x xx xxx
+'c'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;isjoin()和conjoin()这两个函数同equential()和also()在创建新函数并对参数进行多个成分函数的调用方面非常相似。只是disjoin()函数用来查询成分函数中是否有一个函数的返回值（针对给定的参数）为真；conjoin()函数用来查询是否所有的成分函数的返回值都为真。在这些函数中只要条件允许就会使用逻辑短路，因此disjoin()函数可能不会出现某些副作用。joinfuncs()i同also()类似，但它返回的是由所有成分函数的返回值组成的一个元组（tuple），而不是选中的某个主函数。&lt;/p&gt;
+
+&lt;p&gt;前文所述的几个函数让你可以使用相同的参数对一系列函数进行调用，而any()、all()和none_of()这三个让你可以使用一个参数列表对同一个函数进行多次调用。在大的结构方面，这些函数同内置的map()、reduce()和filter()有点象。但funtional模块中的这三个高阶函数中都是对一组返回值进行布尔（boolean）运算得到其返回值的。例如：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt; 对一系列返回值的真、假情况进行判断&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from functional import *
+&amp;gt;&amp;gt;&amp;gt; isEven = lambda n: (n%2 == 0)
+&amp;gt;&amp;gt;&amp;gt; any([1,3,5,8], isEven)
+1
+&amp;gt;&amp;gt;&amp;gt; any([1,3,5,7], isEven)
+0
+&amp;gt;&amp;gt;&amp;gt; none_of([1,3,5,7], isEven)
+1
+&amp;gt;&amp;gt;&amp;gt; all([2,4,6,8], isEven)
+1
+&amp;gt;&amp;gt;&amp;gt; all([2,4,6,7], isEven)
+0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有点数学基础的人会对这个高阶函数非常感兴趣：iscompose().将多个函数进行合成（compostion）指的是，将一个函数的返回值同下个函数的输入“链接到一起”。对多个函数进行合成的程序员需要负责保证函数间的输入和输出是相互匹配的，不过这个条件无论是程序员在何时想使用返回值时都是需要满足的。举个简单的例子和阐明这一点：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt; 创建合成函数&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; def minus7(n): return n-7
+...
+&amp;gt;&amp;gt;&amp;gt; def times3(n): return n*3
+...
+&amp;gt;&amp;gt;&amp;gt; minus7(10)
+3
+&amp;gt;&amp;gt;&amp;gt; minustimes = compose(times3,minus7)
+&amp;gt;&amp;gt;&amp;gt; minustimes(10)
+9
+&amp;gt;&amp;gt;&amp;gt; times3(minus7(10))
+9
+&amp;gt;&amp;gt;&amp;gt; timesminus = compose(minus7,times3)
+&amp;gt;&amp;gt;&amp;gt; timesminus(10)
+23
+&amp;gt;&amp;gt;&amp;gt; minus7(times3(10))
+23
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;后会有期&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;衷心希望我对高阶函数的思考能够引起读者的兴趣。无论如何，请动手试一试。试着编写一些你自己的高阶函数；一些可能很有用，很强大。告诉我它如何运行；或许这个系列之后的章节会讨论读者不断提供的新观点，新想法。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/03/04/python-functional-programming-part1.html&quot; title=&quot;Python中函数式编程，第一部分&quot;&gt;Python中的函数式编程，第一部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/11/python-functional-programming-part2.html&quot; title=&quot;Python中函数式编程，第二部分&quot;&gt;Python中的函数式编程，第二部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/25/python-functional-programming-part3.html&quot; title=&quot;Python中的函数式编程，第三部分&quot;&gt;Python中的函数式编程，第三部分&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
@@ -1729,6 +2218,208 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&amp;gt;&amp;amp;1 | nc -l 1567 &amp;gt; /tmp/t
 &lt;p&gt;&lt;strong&gt;参考文档&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://linux.die.net/man/1/nc&quot;&gt;Netcat手册&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Python中函数式编程，第二部分</title>
+   <link href="http://beango.github.com/archives/2013/04/11/python-functional-programming-part2.html"/>
+   <updated>2013-04-11T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/04/11/python-functional-programming-part2</id>
+   <content type="html">&lt;p&gt;英文原文：&lt;a href=&quot;http://www.ibm.com/developerworks/linux/library/l-prog2/index.html&quot;&gt;Charming Python: Functional programming in Python, Part 2&lt;/a&gt;，翻译：&lt;a href=&quot;http://www.oschina.net/translate/python-functional-programming-part2&quot;&gt;开源中国&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;摘要：&lt;/strong&gt; 
+本专栏继续让David对Python中的函数式编程(FP)进行介绍。读完本文，可以享受到使用不同的编程范型（paradigm）解决问题所带来的乐趣。David在本文中对FP中的多个中级和高级概念进行了详细的讲解。&lt;/p&gt;
+
+&lt;p&gt;一个对象就是附有若干过程（procedure）的一段数据。。。一个闭包（closure）就是附有一段数据的一个过程（procedure）。&lt;/p&gt;
+
+&lt;p&gt;在我讲解函数式编程的上一篇文章，&lt;a href=&quot;http://blog.jobbole.com/35028/&quot;&gt;第一部分&lt;/a&gt;，中，我介绍了FP中的一些基本概念。本文将更加深入的对这个内容十分丰富的概念领域进行探讨。在我们探讨的大部分内容中，Bryn Keller的”Xoltar Toolkit”为我们提供一些非常有价值的帮助作用。Keller将FP中的许多强项集中到了一个很棒且很小的模块中，他在这个模块中用纯Python代码实现了这些强项。除了&lt;em&gt;functional&lt;/em&gt;模块外，Xoltar Toolkit还包含了一个&lt;em&gt;延迟（&lt;strong&gt;lazy&lt;/strong&gt;）&lt;/em&gt;模块，对“仅在需要时”才进行求值提供了支持。许多传统的函数式语言中也都具有延迟求值的手段，这样，使用Xoltar Toolkit中的这些组件，你就可以做到使用象Haskell这样的函数式语言能够做到的大部分事情了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;绑定（Binding）&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有心的读者会记得，我在第一部分中所述的函数式技术中指出过Python的一个局限。具体讲，就是Python中没有任何手段禁止对用来指代函数式表达式的名字进行重新绑定。在FP中，名字一般是理解为对比较长的表达式的简称，但这里面隐含了一个诺言，就是“同一个表达式总是具有同一个值”。如果对用来指代的名字重新进行绑定，就会违背这个诺言。例如，假如我们如以下所示，定义了一些要用在函数式程序中的简记表达式:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python中由于重新绑定而引起问题的FP编程片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; car = lambda lst: lst[0]
+&amp;gt;&amp;gt;&amp;gt; cdr = lambda lst: lst[1:]
+&amp;gt;&amp;gt;&amp;gt; sum2 = lambda lst: car(lst)+car(cdr(lst))
+&amp;gt;&amp;gt;&amp;gt; sum2(range(10))
+1
+&amp;gt;&amp;gt;&amp;gt; car = lambda lst: lst[2]
+&amp;gt;&amp;gt;&amp;gt; sum2(range(10))
+5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;非常不幸，程序中完全相同的表达式sum2(range(10))在两个不同的点求得的值却不相同,尽管在该表达式的参数中根本没有使用任何可变的（mutable）变量。&lt;/p&gt;
+
+&lt;p&gt;幸运的是，functional模块提供了一个叫做Bindings(由鄙人向Keller进行的提议，proposed to Keller by yours truly)的类，可以用来避免这种重新绑定（至少可以避免意外的重新绑定，Python并不阻止任何拿定主意就是要打破规则的程序员）。尽管要用Bindings类就需要使用一些额外的语法，但这么做就能让这种事故不太容易发生。Keller在functional模块里给出的例子中，有个Bindings的实例名字叫做let（我推测这么叫是为了仿照ML族语言中的let关键字）。例如，我们可以这么做：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python中对重新绑定进行监视后的FP编程片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from functional import *
+&amp;gt;&amp;gt;&amp;gt; let = Bindings()
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda lst: lst[0]
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda lst: lst[2]
+Traceback (innermost last):
+  File &quot;&amp;lt;stdin&amp;gt;&quot;, line 1, in ?
+  File &quot;d:\tools\functional.py&quot;, line 976, in __setattr__
+    raise BindingError, &quot;Binding '%s' cannot be modified.&quot; % name
+functional.BindingError:  Binding 'car' cannot be modified.
+&amp;gt;&amp;gt;&amp;gt; car(range(10))
+0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;显而易见，在真正的程序中应该去做一些事情，捕获这种”BindingError”异常，但发出这些异常这件事，就能够避免产生这一大类的问题。&lt;/p&gt;
+
+&lt;p&gt;functional模块随同Bindings一起还提供了一个叫做namespace的函数，这个函数从Bindings实例中弄出了一个命名空间(实际就是个字典)。如果你想计算一个表达式，而该表达式是在定义于一个Bindings中的一个（不可变）命名空间中时，这个函数就可以很方便地拿来使用。Python的eval()函数允许在命名空间中进行求值。举个例子就能说明这一切：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python中使用不可变命名空间的FP编程片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; let = Bindings()      # &quot;Real world&quot; function names
+&amp;gt;&amp;gt;&amp;gt; let.r10 = range(10)
+&amp;gt;&amp;gt;&amp;gt; let.car = lambda lst: lst[0]
+&amp;gt;&amp;gt;&amp;gt; let.cdr = lambda lst: lst[1:]
+&amp;gt;&amp;gt;&amp;gt; eval('car(r10)+car(cdr(r10))', namespace(let))
+&amp;gt;&amp;gt;&amp;gt; inv = Bindings()      # &quot;Inverted list&quot; function names
+&amp;gt;&amp;gt;&amp;gt; inv.r10 = let.r10
+&amp;gt;&amp;gt;&amp;gt; inv.car = lambda lst: lst[-1]
+&amp;gt;&amp;gt;&amp;gt; inv.cdr = lambda lst: lst[:-1]
+&amp;gt;&amp;gt;&amp;gt; eval('car(r10)+car(cdr(r10))', namespace(inv))
+17
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;FP中有一个特别有引人关注的概念叫做闭包。实际上，闭包充分引起了很多程序员的关注，即使通常意义上的非函数式&lt;a href=&quot;http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/&quot; title=&quot;如何选择语言和编程语言排名相关文章&quot;&gt;编程语言&lt;/a&gt;，比如Perl和Ruby，都包含了闭包这一特性。此外，Python 2.1 目前一定会添加上词法域（lexical scoping），
+这样一来就提供的闭包的绝大多数功能。那么，闭包到底是什么？Steve Majewski最近在Python新闻组中对这个概念的特性提出了一个准确的描述：
+就是说，闭包就象是FP的Jekyll，OOP（面向对象编程）的 Hyde（或者可能是将这两个角色互换）（译者注：Jekyll和Hyde是一部小说中的两个人物）.和象对象实例类似，闭包是一种把一堆数据和一些功能打包一起进行传递的手段。&lt;/p&gt;
+
+&lt;p&gt;先让我们后退一小步，看看对象和闭包都能解决一些什么样的问题，然后再看看在两样都不用的情况下这些问题是如何得到解决的。函数返回的值通常是由它在计算过程中使用的上下文决定的。最常见可能也是最显然的指定该上下文的方式就是给函数传递一些参数，让该函数对这些参数进行一些运算。但有时候在参数的“背景”（background）和“前景”（foreground）两者之间也有一种自然的区分，也就是说，函数在某特定时刻正在做什么和函数“被配置”为处于多种可能的调用情况之下这两者之间有不同之处。\&lt;/p&gt;
+
+&lt;p&gt;在集中处理前景的同时，有多种方式进行背景处理。一种就是“忍辱负重”，每次调用时都将函数需要的每个参数传递给函数。这通常就相对于在函数调用链中不断的将很多值（或者是一个具有很多字段的数据结构）传上传下，就是因为在链中的某个地方可能会用到这些值。下面举个简单的例子：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;用了货船变量的Python代码片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; def a(n):
+...     add7 = b(n)
+...     return add7
+...
+&amp;gt;&amp;gt;&amp;gt; def b(n):
+...     i = 7
+...     j = c(i,n)
+...     return j
+...
+&amp;gt;&amp;gt;&amp;gt; def c(i,n):
+...     return i+n
+...
+&amp;gt;&amp;gt;&amp;gt; a(10)     # Pass cargo value for use downstream
+17
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在上述的货船变量例子中，函数b()中的变量n毫无意义，就只是为了传递给函数c()。另一种办法是使用全局变量:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;使用全局变量的Python代码片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; N = 10
+&amp;gt;&amp;gt;&amp;gt; def  addN(i):
+...     global N
+...     return i+N
+...
+&amp;gt;&amp;gt;&amp;gt; addN(7)   # Add global N to argument
+17
+&amp;gt;&amp;gt;&amp;gt; N = 20
+&amp;gt;&amp;gt;&amp;gt; addN(6)   # Add global N to argument
+26
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;全局变量N只要你想调用ddN()就可以直接使用，就不需要显式地传递这个全局背景“上下文”了。有个稍微更加Python化的技巧，可以用来在定义函数时，通过使用缺省参数将一个变量“冻结”到该函数中：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;使用冻结变量的Python代码片段&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; N = 10
+&amp;gt;&amp;gt;&amp;gt; def addN(i, n=N):
+...     return i+n
+...
+&amp;gt;&amp;gt;&amp;gt; addN(5)   # Add 10
+15
+&amp;gt;&amp;gt;&amp;gt; N = 20
+&amp;gt;&amp;gt;&amp;gt; addN(6)   # Add 10 (current N doesn't matter)
+16
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们冻结的变量实质上就是个闭包。我们将一些数据“附加”到了addN()函数之上。对于一个完整的闭包而言，在函数addN()定义时所出现的数据，应该在该函数被调用时也可以拿到。然而，本例中（以及更多更健壮的例子中），使用缺省参数让足够的数据可用非常简单。函数addN()不再使用的变量因而对计算结构捕获产生丝毫影响。&lt;/p&gt;
+
+&lt;p&gt;现在让我们再看一个用OOP的方式解决一个稍微更加现实的问题。今年到了这个时候，让我想起了颇具“面试”风格的计税程序，先收集一些数据，数据不一定有什么特别的顺序，最后使用所有这些数据进行一个计算。让我们为这种情况些个简化版本的程序：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python风格的计税类/实例&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class TaxCalc:
+    def taxdue(self):return (self.income-self.deduct)*self.rate
+taxclass = TaxCalc()
+taxclass.income = 50000
+taxclass.rate = 0.30
+taxclass.deduct = 10000
+print&quot;Pythonic OOP taxes due =&quot;, taxclass.taxdue()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在我们的TaxCalc类(或者更准确的讲，在它的实例中)，我们先收集了一些数据，数据的顺序随心所欲，然后所有需要的数据收集完成后，我们可以调用这个对象的一个方法，对这堆数据进行计算。所有的一切都呆在一个实例中，而且，不同的实例可以拥有一堆不同的数据。能够创建多个实例，而多个实例仅仅是数据不同，这通过“全局变量”和“冻结变量”这两种方法是无法办到的。”货船”方法能够做到这一点，但从那个展开的例子中我们能够看出，它可能不得不在开始时就传递多个数值。讨论到这里，注意到OOP风格的消息传递方式可能会如何来解决这一问题会非常有趣(Smalltalk或者Self与此类似，我所用过的好几种xBase的变种OOP语言也是类似的）：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Smalltalk风格的(Python) 计税程序&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class TaxCalc:
+    def taxdue(self):return (self.income-self.deduct)*self.rate
+    def setIncome(self,income):
+        self.income = income
+        return self
+    def setDeduct(self,deduct):
+        self.deduct = deduct
+        return self
+    def setRate(self,rate):
+        self.rate = rate
+        return self
+print&quot;Smalltalk-style taxes due =&quot;, \
+      TaxCalc().setIncome(50000).setRate(0.30).setDeduct(10000).taxdue()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每个”setter”方法都返回self可以让我们将每个方法调用的结果当作“当前”对象进行处理。这和FP中的闭包方式有些相似。&lt;/p&gt;
+
+&lt;p&gt;通过使用Xoltar toolkit，我们可以生成完整的闭包，能够将数据和函数结合起来，获得我们所需的特性；另外还可以让多个闭包（以前成为对象）包含不同的数据：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Python的函数式风格的计税程序&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from functional import *
+
+taxdue        = lambda: (income-deduct)*rate
+incomeClosure = lambda income,taxdue: closure(taxdue)
+deductClosure = lambda deduct,taxdue: closure(taxdue)
+rateClosure   = lambda rate,taxdue: closure(taxdue)
+
+taxFP = taxdue
+taxFP = incomeClosure(50000,taxFP)
+taxFP = rateClosure(0.30,taxFP)
+taxFP = deductClosure(10000,taxFP)
+print&quot;Functional taxes due =&quot;,taxFP()
+
+print&quot;Lisp-style taxes due =&quot;, \
+      incomeClosure(50000,
+          rateClosure(0.30,
+              deductClosure(10000, taxdue)))()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们所定义的每个闭包函数可以获取函数定义范围内的任意值，然后将这些值绑定到改函数对象的全局范围之中。然而，一个函数的全局范围并不一定就是真正的模块全局范围，也和不同的闭包的“全局”范围不相同。闭包就是“将数据带”在了身边。\&lt;/p&gt;
+
+&lt;p&gt;在我们的例子中，我们利用了一些特殊的函数把特定的绑定限定到了一个闭包作用范围之中(income,deduct,rate)。要想修改设计，将任意的绑定限定在闭包之中，也非常简单。只是为了好玩，在本例子中我们也使用了两种稍微不同的函数式风格。第一种风格连续将多个值绑定到了闭包的作用范围；通过允许taxFP成为可变的变量，这些“添加绑定”的代码行可以任意顺序出现。然而，如果我们想要使用tax_with_Income这样的不可变名字，我们就需要以特定的顺序来安排这几行进行绑定的代码，将靠前的绑定结果传递给下一个绑定。无论在哪种情况下，在全部所需数据都绑定进闭包范围之后，我们就可以调用“种子”（seeded）方法了。&lt;/p&gt;
+
+&lt;p&gt;第二种风格在我看来，更象是Lisp（那些括号最象了）。除去美学问题，这第二种风格有两点值得注意。第一点就是完全避免了名字绑定，变成了一个单个的表达式，连语句都没有使用（关于为什么不使用语句很重要，请参见P第一部分）。\&lt;/p&gt;
+
+&lt;p&gt;第二点是闭包的“Lips”风格的用法和前文给出的“Smalltalk”风格的信息传递何其相似。实际上两者都在调用taxdue()函数/方法的过程中积累了所有值(如果以这种原始的方式拿不到正确的数据，两种方式都会出错）。“Smalltalk”风格的方法中每一步传递的是一个对象，而“Lisp”风格的方法中传递是持续进行的。但实际上，函数式编程和面向对象式编程两者旗鼓相当。&lt;/p&gt;
+
+&lt;p&gt;在本文中，我们干掉了函数式编程领域中更多的内容。剩下的要比以前（本小节的题目是个小玩笑；很不幸，这里还没有解释过尾递归的概念）少多了（或者可以证明也简单多了？）。阅读functional模块中的源代码是继续探索FP中大量概念的一种非常好的方法。该模块中的注释很完备，在注释里为模块中的大多数方法/类提供了相关的例子。其中有很多简化性的元函数（meta-function）本专栏里并没有讨论到的，使用这些元函数可以大大简化对其它函数的结合（combination）和交互（interaction）的处理。对于想继续探索函数式范型的Python程序员而言，这些绝对值得好好看看。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/03/04/python-functional-programming-part1.html&quot; title=&quot;Python中函数式编程，第一部分&quot;&gt;Python中的函数式编程，第一部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/11/python-functional-programming-part2.html&quot; title=&quot;Python中函数式编程，第二部分&quot;&gt;Python中的函数式编程，第二部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/25/python-functional-programming-part3.html&quot; title=&quot;Python中的函数式编程，第三部分&quot;&gt;Python中的函数式编程，第三部分&lt;/a&gt;&lt;/p&gt;
 </content>
  </entry>
  
@@ -4047,6 +4738,1030 @@ Invalid，变更的、独占的、共享的、无效的)。协议的名称来自
  </entry>
  
  <entry>
+   <title>注释驱动的 Spring cache 缓存介绍</title>
+   <link href="http://beango.github.com/archives/2013/03/16/os-cn-spring-cache.html"/>
+   <updated>2013-03-16T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/03/16/os-cn-spring-cache</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;概述&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Spring 3.1引入了激动人心的基于注释（annotation）的缓存（cache）技术，它本质上不是一个具体的缓存实现方案（例如EHCache 或者OSCache），而是一个对缓存使用的抽象，通过在既有代码中添加少量它定义的各种annotation，即能够达到缓存方法的返回对象的效果。&lt;/p&gt;
+
+&lt;p&gt;Spring 的缓存技术还具备相当的灵活性，不仅能够使用 SpEL（Spring Expression Language）来定义缓存的 key 和各种condition，还提供开箱即用的缓存临时存储方案，也支持和主流的专业缓存例如 EHCache 集成。&lt;/p&gt;
+
+&lt;p&gt;其特点总结如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;通过少量的配置 annotation 注释即可使得既有代码支持缓存&lt;/li&gt;
+&lt;li&gt;支持开箱即用 Out-Of-The-Box，即不用安装和部署额外第三方组件即可使用缓存&lt;/li&gt;
+&lt;li&gt;支持 Spring Express Language，能使用对象的任何属性或者方法来定义缓存的 key 和 condition&lt;/li&gt;
+&lt;li&gt;支持 AspectJ，并通过其实现任何方法的缓存支持&lt;/li&gt;
+&lt;li&gt;支持自定义 key 和自定义缓存管理者，具有相当的灵活性和扩展性&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;本文将针对上述特点对 Spring cache 进行详细的介绍，主要通过一个简单的例子和原理介绍展开，然后我们将一起看一个比较实际的缓存例子，最后会介绍 spring cache 的使用限制和注意事项。OK，Let ’ s begin!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;原来我们是怎么做的&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这里先展示一个完全自定义的缓存实现，即不用任何第三方的组件来实现某种对象的内存缓存。&lt;/p&gt;
+
+&lt;p&gt;场景是：对一个账号查询方法做缓存，以账号名称为 key，账号对象为value，当以相同的账号名称查询账号的时候，直接从缓存中返回结果，否则更新缓存。账号查询服务还支持 reload 缓存（即清空缓存）。&lt;/p&gt;
+
+&lt;p&gt;首先定义一个实体类：账号类，具备基本的 id 和 name 属性，且具备 getter 和 setter 方法&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 1. Account.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package cacheOfAnno; 
+
+ public class Account { 
+   private int id; 
+   private String name; 
+
+   public Account(String name) { 
+     this.name = name; 
+   } 
+   public int getId() { 
+     return id; 
+   } 
+   public void setId(int id) { 
+     this.id = id; 
+   } 
+   public String getName() { 
+     return name; 
+   } 
+   public void setName(String name) { 
+     this.name = name; 
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后定义一个缓存管理器，这个管理器负责实现缓存逻辑，支持对象的增加、修改和删除，支持值对象的泛型。如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 2. MyCacheManager.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package oldcache; 
+
+ import java.util.Map; 
+ import java.util.concurrent.ConcurrentHashMap; 
+
+ public class MyCacheManager&amp;lt;T&amp;gt; { 
+   private Map&amp;lt;String,T&amp;gt; cache = 
+       new ConcurrentHashMap&amp;lt;String,T&amp;gt;(); 
+
+   public T getValue(Object key) { 
+     return cache.get(key); 
+   } 
+
+   public void addOrUpdateCache(String key,T value) { 
+     cache.put(key, value); 
+   } 
+
+   public void evictCache(String key) {// 根据 key 来删除缓存中的一条记录
+     if(cache.containsKey(key)) { 
+       cache.remove(key); 
+     } 
+   } 
+
+   public void evictCache() {// 清空缓存中的所有记录
+     cache.clear(); 
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好，现在我们有了实体类和一个缓存管理器，还需要一个提供账号查询的服务类，此服务类使用缓存管理器来支持账号查询缓存，如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 3. MyAccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package oldcache; 
+
+ import cacheOfAnno.Account; 
+
+ public class MyAccountService { 
+   private MyCacheManager&amp;lt;Account&amp;gt; cacheManager; 
+
+   public MyAccountService() { 
+     cacheManager = new MyCacheManager&amp;lt;Account&amp;gt;();// 构造一个缓存管理器
+   } 
+
+   public Account getAccountByName(String acctName) { 
+     Account result = cacheManager.getValue(acctName);// 首先查询缓存
+     if(result!=null) { 
+       System.out.println(&quot;get from cache...&quot;+acctName); 
+       return result;// 如果在缓存中，则直接返回缓存的结果
+     } 
+     result = getFromDB(acctName);// 否则到数据库中查询
+     if(result!=null) {// 将数据库查询的结果更新到缓存中
+       cacheManager.addOrUpdateCache(acctName, result); 
+     } 
+     return result; 
+   } 
+
+   public void reload() { 
+     cacheManager.evictCache(); 
+   } 
+
+   private Account getFromDB(String acctName) { 
+     System.out.println(&quot;real querying db...&quot;+acctName); 
+     return new Account(acctName); 
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们开始写一个测试类，用于测试刚才的缓存是否有效&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 4. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package oldcache; 
+
+ public class Main { 
+
+   public static void main(String[] args) { 
+     MyAccountService s = new MyAccountService(); 
+     // 开始查询账号
+     s.getAccountByName(&quot;somebody&quot;);// 第一次查询，应该是数据库查询
+     s.getAccountByName(&quot;somebody&quot;);// 第二次查询，应该直接从缓存返回
+
+     s.reload();// 重置缓存
+     System.out.println(&quot;after reload...&quot;); 
+
+     s.getAccountByName(&quot;somebody&quot;);// 应该是数据库查询
+     s.getAccountByName(&quot;somebody&quot;);// 第二次查询，应该直接从缓存返回
+
+   } 
+
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按照分析，执行结果应该是：首先从数据库查询，然后直接返回缓存中的结果，重置缓存后，应该先从数据库查询，然后返回缓存中的结果，实际的执行结果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 5. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...somebody// 第一次从数据库加载
+ get from cache...somebody// 第二次从缓存加载
+ after reload...// 清空缓存
+ real querying db...somebody// 又从数据库加载
+ get from cache...somebody// 从缓存加载
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出我们的缓存起效了，但是这种自定义的缓存方案有如下劣势：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;缓存代码和业务代码耦合度太高，如上面的例子，AccountService 中的 getAccountByName（）方法中有了太多缓存的逻辑，不便于维护和变更&lt;/li&gt;
+&lt;li&gt;不灵活，这种缓存方案不支持按照某种条件的缓存，比如只有某种类型的账号才需要缓存，这种需求会导致代码的变更&lt;/li&gt;
+&lt;li&gt;缓存的存储这块写的比较死，不能灵活的切换为使用第三方的缓存模块&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;如果你的代码中有上述代码的影子，那么你可以考虑按照下面的介绍来优化一下你的代码结构了，也可以说是简化，你会发现，你的代码会变得优雅的多！&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hello World，注释驱动的 Spring Cache&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hello World 的实现目标&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;本 Hello World 类似于其他任何的 Hello World 程序，从最简单实用的角度展现 spring cache 的魅力，它基于刚才自定义缓存方案的实体类Account.java，重新定义了 AccountService.java 和测试类 Main.java（注意这个例子不用自己定义缓存管理器，因为 spring 已经提供了缺省实现）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;需要的 jar 包&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为了实用 spring cache 缓存方案，在工程的 classpath 必须具备下列 jar 包。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;图 1. 工程依赖的 jar 包图&lt;/em&gt;&lt;/strong&gt;
+&lt;a href=&quot;/assets/files/2013-03/image001.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-03/image001.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot; alt=&quot;注释驱动的 Spring cache 缓存介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;注意这里我引入的是最新的 spring 3.2.0.M1 版本 jar 包，其实只要是 spring 3.1 以上，都支持 spring cache。其中 spring-context-*.jar 包含了 cache 需要的类。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;定义实体类、服务类和相关配置文件&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;实体类就是上面自定义缓存方案定义的Account.java，这里重新定义了服务类，如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 6. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package cacheOfAnno; 
+
+ import org.springframework.cache.annotation.CacheEvict; 
+ import org.springframework.cache.annotation.Cacheable; 
+
+ public class AccountService { 
+   @Cacheable(value=&quot;accountCache&quot;)// 使用了一个缓存名叫 accountCache 
+   public Account getAccountByName(String userName) { 
+     // 方法内部实现不考虑缓存逻辑，直接实现业务
+     System.out.println(&quot;real query account.&quot;+userName); 
+     return getFromDB(userName); 
+   } 
+
+   private Account getFromDB(String acctName) { 
+     System.out.println(&quot;real querying db...&quot;+acctName); 
+     return new Account(acctName); 
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意，此类的 getAccountByName 方法上有一个注释 annotation，即@Cacheable(value=”accountCache”)，这个注释的意思是，当调用这个方法的时候，会从一个名叫accountCache的缓存中查询，如果没有，则执行实际的方法（即查询数据库），并将执行的结果存入缓存中，否则返回缓存中的对象。这里的缓存中的key 就是参数 userName，value 就是 Account 对象。“accountCache”缓存是在spring*.xml 中定义的名称。&lt;/p&gt;
+
+&lt;p&gt;好，因为加入了 spring，所以我们还需要一个 spring 的配置文件来支持基于注释的缓存&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 7. Spring-cache-anno.xml&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+ xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;
+    xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+
+http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+http://www.springframework.org/schema/cache
+
+
+http://www.springframework.org/schema/cache/spring-cache.xsd&quot;&amp;gt;
+
+   &amp;lt;cache:annotation-driven /&amp;gt;
+
+   &amp;lt;bean id=&quot;accountServiceBean&quot; class=&quot;cacheOfAnno.AccountService&quot;/&amp;gt; 
+
+    &amp;lt;!-- generic cache manager --&amp;gt;
+   &amp;lt;bean id=&quot;cacheManager&quot;
+   class=&quot;org.springframework.cache.support.SimpleCacheManager&quot;&amp;gt;
+     &amp;lt;property name=&quot;caches&quot;&amp;gt; 
+       &amp;lt;set&amp;gt; 
+         &amp;lt;bean
+           class=&quot;org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean&quot;
+           p:name=&quot;default&quot; /&amp;gt; 
+
+         &amp;lt;bean
+           class=&quot;org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean&quot;
+           p:name=&quot;accountCache&quot; /&amp;gt; 
+       &amp;lt;/set&amp;gt; 
+     &amp;lt;/property&amp;gt; 
+   &amp;lt;/bean&amp;gt; 
+ &amp;lt;/beans&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意这个 spring 配置文件有一个关键的支持缓存的配置项：&lt;code&gt;&amp;lt;cache:annotation-driven /&amp;gt;，&lt;/code&gt;这个配置项缺省使用了一个名字叫 cacheManager 的缓存管理器，这个缓存管理器有一个 spring 的缺省实现，即org.springframework.cache.support.SimpleCacheManager，这个缓存管理器实现了我们刚刚自定义的缓存管理器的逻辑，它需要配置一个属性caches，即此缓存管理器管理的缓存集合，除了缺省的名字叫 default 的缓存，我们还自定义了一个名字叫 accountCache 的缓存，使用了缺省的内存存储方案 ConcurrentMapCacheFactoryBean，它是基于 java.util.concurrent.ConcurrentHashMap 的一个内存缓存实现方案。&lt;/p&gt;
+
+&lt;p&gt;OK，现在我们具备了测试条件，测试代码如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 8. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package cacheOfAnno; 
+
+ import org.springframework.context.ApplicationContext; 
+ import org.springframework.context.support.ClassPathXmlApplicationContext; 
+
+ public class Main { 
+   public static void main(String[] args) { 
+     ApplicationContext context = new ClassPathXmlApplicationContext( 
+        &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+     AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+     // 第一次查询，应该走数据库
+     System.out.print(&quot;first query...&quot;); 
+     s.getAccountByName(&quot;somebody&quot;); 
+     // 第二次查询，应该不查数据库，直接返回缓存的值
+     System.out.print(&quot;second query...&quot;); 
+     s.getAccountByName(&quot;somebody&quot;); 
+     System.out.println(); 
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的测试代码主要进行了两次查询，第一次应该会查询数据库，第二次应该返回缓存，不再查数据库，我们执行一下，看看结果&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 9. 执行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; first query...real query account.somebody// 第一次查询
+ real querying db...somebody// 对数据库进行了查询
+ second query...// 第二次查询，没有打印数据库查询日志，直接返回了缓存中的结果
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出我们设置的基于注释的缓存起作用了，而在 AccountService.java 的代码中，我们没有看到任何的缓存逻辑代码，只有一行注释：@Cacheable(value=”accountCache”)，就实现了基本的缓存方案，是不是很强大？&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;如何清空缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;好，到目前为止，我们的 spring cache 缓存程序已经运行成功了，但是还不完美，因为还缺少一个重要的缓存管理逻辑：清空缓存，当账号数据发生变更，那么必须要清空某个缓存，另外还需要定期的清空所有缓存，以保证缓存数据的可靠性。&lt;/p&gt;
+
+&lt;p&gt;为了加入清空缓存的逻辑，我们只要对 AccountService.java 进行修改，从业务逻辑的角度上看，它有两个需要清空缓存的地方&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;当外部调用更新了账号，则我们需要更新此账号对应的缓存&lt;/li&gt;
+&lt;li&gt;当外部调用说明重新加载，则我们需要清空所有缓存&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 10. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package cacheOfAnno; 
+
+import org.springframework.cache.annotation.CacheEvict; 
+import org.springframework.cache.annotation.Cacheable; 
+
+public class AccountService { 
+  @Cacheable(value=&quot;accountCache&quot;)// 使用了一个缓存名叫 accountCache 
+  public Account getAccountByName(String userName) { 
+    // 方法内部实现不考虑缓存逻辑，直接实现业务
+    return getFromDB(userName); 
+  } 
+  &amp;lt;strong&amp;gt;@CacheEvict(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)// 清空 accountCache 缓存&amp;lt;/strong&amp;gt;
+               &amp;lt;strong&amp;gt; public void updateAccount(Account account) {&amp;lt;/strong&amp;gt;
+    updateDB(account); 
+  } 
+
+&amp;lt;strong&amp;gt; @CacheEvict(value=&quot;accountCache&quot;,allEntries=true)// 清空 accountCache 缓存&amp;lt;/strong&amp;gt;
+  public void reload() { 
+  } 
+
+  private Account getFromDB(String acctName) { 
+    System.out.println(&quot;real querying db...&quot;+acctName); 
+    return new Account(acctName); 
+  } 
+
+  private void updateDB(Account account) { 
+    System.out.println(&quot;real update db...&quot;+account.getName()); 
+  } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 11. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package cacheOfAnno; 
+
+ import org.springframework.context.ApplicationContext; 
+ import org.springframework.context.support.ClassPathXmlApplicationContext; 
+
+ public class Main { 
+
+   public static void main(String[] args) { 
+     ApplicationContext context = new ClassPathXmlApplicationContext( 
+        &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+     AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+     // 第一次查询，应该走数据库
+     System.out.print(&quot;first query...&quot;); 
+     s.getAccountByName(&quot;somebody&quot;); 
+     // 第二次查询，应该不查数据库，直接返回缓存的值
+     System.out.print(&quot;second query...&quot;); 
+     s.getAccountByName(&quot;somebody&quot;); 
+     System.out.println(); 
+
+     &amp;lt;strong&amp;gt;System.out.println(&quot;start testing clear cache...&quot;);&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; // 更新某个记录的缓存，首先构造两个账号记录，然后记录到缓存中&amp;lt;/strong&amp;gt;
+     Account account1 = s.getAccountByName(&quot;somebody1&quot;); 
+     Account account2 = s.getAccountByName(&quot;somebody2&quot;); 
+ &amp;lt;strong&amp;gt; // 开始更新其中一个&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; account1.setId(1212);&amp;lt;/strong&amp;gt;
+     s.updateAccount(account1); 
+ &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody1&quot;);// 因为被更新了，所以会查询数据库&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody2&quot;);// 没有更新过，应该走缓存&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody1&quot;);// 再次查询，应该走缓存&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; // 更新所有缓存&amp;lt;/strong&amp;gt;
+     s.reload(); 
+ &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody1&quot;);// 应该会查询数据库&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody2&quot;);// 应该会查询数据库&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody1&quot;);// 应该走缓存&amp;lt;/strong&amp;gt;
+                &amp;lt;strong&amp;gt; s.getAccountByName(&quot;somebody2&quot;);// 应该走缓存&amp;lt;/strong&amp;gt;
+   } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 12. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; first query...real querying db...somebody 
+ second query... 
+ start testing clear cache... 
+ real querying db...somebody1 
+ real querying db...somebody2 
+ real update db...somebody1 
+ real querying db...somebody1 
+ real querying db...somebody1 
+ real querying db...somebody2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果和我们期望的一致，所以，我们可以看出，spring cache 清空缓存的方法很简单，就是通过 @CacheEvict 注释来标记要清空缓存的方法，当这个方法被调用后，即会清空缓存。注意其中一个@CacheEvict(value=”accountCache”,key=”#account.getName()”)，其中的 Key是用来指定缓存的 key 的，这里因为我们保存的时候用的是 account 对象的 name 字段，所以这里还需要从参数 account 对象中获取 name 的值来作为 key，前面的# 号代表这是一个 SpEL 表达式，此表达式可以遍历方法的参数对象，具体语法可以参考 Spring 的相关文档手册。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;如何按照条件操作缓存&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;前面介绍的缓存方法，没有任何条件，即所有对 accountService 对象的 getAccountByName 方法的调用都会起动缓存效果，不管参数是什么值，如果有一个需求，就是只有账号名称的长度小于等于 4 的情况下，才做缓存，大于 4 的不使用缓存，那怎么实现呢？&lt;/p&gt;
+
+&lt;p&gt;Spring cache 提供了一个很好的方法，那就是基于 SpEL 表达式的 condition 定义，这个 condition 是 @Cacheable 注释的一个属性，下面我来演示一下&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 13. AccountService.java（getAccountByName 方法修订，支持条件）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @Cacheable(value=&quot;accountCache&quot;,condition=&quot;#userName.length() &amp;lt;= 4&quot;)// 缓存名叫 accountCache 
+ public Account getAccountByName(String userName) { 
+ // 方法内部实现不考虑缓存逻辑，直接实现业务
+ return getFromDB(userName); 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意其中的 condition=”#userName.length() &amp;lt;=4”，这里使用了 SpEL 表达式访问了参数 userName 对象的 length() 方法，条件表达式返回一个布尔值，true/false，当条件为true，则进行缓存操作，否则直接调用方法执行的返回结果。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 14. 测试方法&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; s.getAccountByName(&quot;somebody&quot;);// 长度大于 4，不会被缓存
+ s.getAccountByName(&quot;sbd&quot;);// 长度小于 4，会被缓存
+ s.getAccountByName(&quot;somebody&quot;);// 还是查询数据库
+ s.getAccountByName(&quot;sbd&quot;);// 会从缓存返回
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 15. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...somebody 
+ real querying db...sbd 
+ real querying db...somebody
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可见对长度大于 4 的账号名 (somebody) 没有缓存，每次都查询数据库。&lt;/p&gt;
+
+&lt;p&gt;如果有多个参数，如何进行 key 的组合&lt;/p&gt;
+
+&lt;p&gt;假设 AccountService 现在有一个需求，要求根据账号名、密码和是否发送日志查询账号信息，很明显，这里我们需要根据账号名、密码对账号对象进行缓存，而第三个参数“是否发送日志”对缓存没有任何影响。所以，我们可以利用 SpEL 表达式对缓存 key 进行设计&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 16. Account.java（增加 password 属性）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; private String password; 
+ public String getPassword() { 
+   return password; 
+ } 
+ public void setPassword(String password) { 
+   this.password = password; 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 17. AccountService.java（增加 getAccount 方法，支持组合 key）&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @Cacheable(value=&quot;accountCache&quot;,key=&quot;#userName.concat(#password)&quot;) 
+ public Account getAccount(String userName,String password,boolean sendLog) { 
+   // 方法内部实现不考虑缓存逻辑，直接实现业务
+   return getFromDB(userName,password); 
+
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意上面的 key 属性，其中引用了方法的两个参数 userName 和 password，而
+sendLog 属性没有考虑，因为其对缓存没有影响。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 18. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; public static void main(String[] args) { 
+   ApplicationContext context = new ClassPathXmlApplicationContext( 
+      &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+   AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+   s.getAccount(&quot;somebody&quot;, &quot;123456&quot;, true);// 应该查询数据库
+   s.getAccount(&quot;somebody&quot;, &quot;123456&quot;, true);// 应该走缓存
+   s.getAccount(&quot;somebody&quot;, &quot;123456&quot;, false);// 应该走缓存
+   s.getAccount(&quot;somebody&quot;, &quot;654321&quot;, true);// 应该查询数据库
+   s.getAccount(&quot;somebody&quot;, &quot;654321&quot;, true);// 应该走缓存
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述测试，是采用了相同的账号，不同的密码组合进行查询，那么一共有两种组合情况，所以针对数据库的查询应该只有两次。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 19. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...userName=somebody password=123456 
+ real querying db...userName=somebody password=654321
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和我们预期的一致。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;如何做到：既要保证方法被调用，又希望结果被缓存&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;根据前面的例子，我们知道，如果使用了 @Cacheable 注释，则当重复使用相同参数调用方法的时候，方法本身不会被调用执行，即方法本身被略过了，取而代之的是方法的结果直接从缓存中找到并返回了。&lt;/p&gt;
+
+&lt;p&gt;现实中并不总是如此，有些情况下我们希望方法一定会被调用，因为其除了返回一个结果，还做了其他事情，例如记录日志，调用接口等，这个时候，我们可以用 @CachePut 注释，这个注释可以确保方法被执行，同时方法的返回值也被记录到缓存中。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 20. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @Cacheable(value=&quot;accountCache&quot;)// 使用了一个缓存名叫 accountCache 
+ public Account getAccountByName(String userName) { 
+   // 方法内部实现不考虑缓存逻辑，直接实现业务
+   return getFromDB(userName); 
+ } 
+ &amp;lt;strong&amp;gt;@CachePut(value=&quot;accountCache&quot;,key=&quot;#account.getName()&quot;)// 更新 accountCache 缓存&amp;lt;/strong&amp;gt;
+ public Account updateAccount(Account account) { 
+   return updateDB(account); 
+ } 
+ private Account updateDB(Account account) { 
+   System.out.println(&quot;real updating db...&quot;+account.getName()); 
+   return account; 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 21. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public static void main(String[] args) { 
+   ApplicationContext context = new ClassPathXmlApplicationContext( 
+      &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+   AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+
+   Account account = s.getAccountByName(&quot;someone&quot;); 
+   account.setPassword(&quot;123&quot;); 
+   s.updateAccount(account); 
+   account.setPassword(&quot;321&quot;); 
+   s.updateAccount(account); 
+   account = s.getAccountByName(&quot;someone&quot;); 
+   System.out.println(account.getPassword()); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如上面的代码所示，我们首先用 getAccountByName 方法查询一个人 someone 的账号，这个时候会查询数据库一次，但是也记录到缓存中了。然后我们修改了密码，调用了 updateAccount 方法，这个时候会执行数据库的更新操作且记录到缓存，我们再次修改密码并调用 updateAccount 方法，然后通过 getAccountByName 方法查询，这个时候，由于缓存中已经有数据，所以不会查询数据库，而是直接返回最新的数据，所以打印的密码应该是“321”&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 22. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...someone 
+ real updating db...someone 
+ real updating db...someone 
+ 321
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和分析的一样，只查询了一次数据库，更新了两次数据库，最终的结果是最新的密码。说明 @CachePut 确实可以保证方法被执行，且结果一定会被缓存。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;@Cacheable、@CachePut、@CacheEvict 注释介绍&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;通过上面的例子，我们可以看到 spring cache 主要使用两个注释标签，即 @Cacheable、@CachePut 和 @CacheEvict，我们总结一下其作用和配置方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;表 1. @Cacheable 作用和配置方法&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;ibm-data-table&quot; summary=&quot;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th style=&quot;vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@Cacheable 的作用&lt;/strong&gt;
+                    &lt;/th&gt;&lt;th colspan=&quot;2&quot; style=&quot;vertical-align:top&quot;&gt;
+主要针对方法配置，能够根据方法的请求参数对其结果进行缓存
+&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;3&quot; style=&quot;text-align:center; vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@Cacheable 主要的参数&lt;/strong&gt;
+                    &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ value 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的名称，在 spring 配置文件中定义，必须指定至少一个
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”mycache”) 或者 &lt;br&gt;
+ @Cacheable(value={”cache1”,”cache2”} 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ key 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”testcache”,key=”#userName”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ condition 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才进行缓存
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”testcache”,condition=”#userName.length()&amp;gt;2”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;表 2. @CachePut 作用和配置方法&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;ibm-data-table&quot; summary=&quot;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th style=&quot;vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@CachePut 的作用&lt;/strong&gt;
+                    &lt;/th&gt;&lt;th colspan=&quot;2&quot; style=&quot;vertical-align:top&quot;&gt;
+主要针对方法配置，能够根据方法的请求参数对其结果进行缓存，和 @Cacheable 不同的是，它每次都会触发真实方法的调用
+&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;3&quot; style=&quot;text-align:center; vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@CachePut 主要的参数&lt;/strong&gt;
+                    &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ value 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的名称，在 spring 配置文件中定义，必须指定至少一个
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”mycache”) 或者 &lt;br&gt;
+ @Cacheable(value={”cache1”,”cache2”} 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ key 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”testcache”,key=”#userName”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ condition 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才进行缓存
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @Cacheable(value=”testcache”,condition=”#userName.length()&amp;gt;2”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;表 3. @CacheEvict 作用和配置方法&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; class=&quot;ibm-data-table&quot; summary=&quot;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;th style=&quot;vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@CachEvict 的作用&lt;/strong&gt;
+                    &lt;/th&gt;&lt;th colspan=&quot;2&quot; style=&quot;vertical-align:top&quot;&gt;
+主要针对方法配置，能够根据一定的条件对缓存进行清空
+&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;3&quot; style=&quot;text-align:center; vertical-align:top&quot;&gt;
+                        &lt;strong&gt;@CacheEvict 主要的参数&lt;/strong&gt;
+                    &lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ value 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的名称，在 spring 配置文件中定义，必须指定至少一个
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @CachEvict(value=”mycache”) 或者 &lt;br&gt;
+ @CachEvict(value={”cache1”,”cache2”} 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ key 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的 key，可以为空，如果指定要按照 SpEL 表达式编写，如果不指定，则缺省按照方法的所有参数进行组合
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @CachEvict(value=”testcache”,key=”#userName”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ condition 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+缓存的条件，可以为空，使用 SpEL 编写，返回 true 或者 false，只有为 true 才清空缓存
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @CachEvict(value=”testcache”,&lt;br&gt;
+ condition=”#userName.length()&amp;gt;2”) 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ allEntries 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+是否清空所有缓存内容，缺省为 false，如果指定为 true，则方法调用后将立即清空所有缓存
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @CachEvict(value=”testcache”,allEntries=true) 
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+ beforeInvocation 
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+是否在方法执行前就清空，缺省为 false，如果指定为 true，则在方法还没有执行的时候就清空缓存，缺省情况下，如果方法执行抛出异常，则不会清空缓存
+&lt;/td&gt;&lt;td style=&quot;vertical-align:top&quot;&gt;
+例如：&lt;br&gt;
+ @CachEvict(value=”testcache”，beforeInvocation=true) 
+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+
+&lt;p&gt;&lt;strong&gt;基本原理&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;和 spring 的事务管理类似，spring cache 的关键原理就是 spring AOP，通过 spring AOP，其实现了在方法调用前、调用后获取方法的入参和返回值，进而实现了缓存的逻辑。我们来看一下下面这个图：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;图 2. 原始方法调用图&lt;/em&gt;&lt;/strong&gt;
+&lt;a href=&quot;/assets/files/2013-03/image002.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-03/image002.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot; alt=&quot;注释驱动的 Spring cache缓存介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;上图显示，当客户端“Calling code”调用一个普通类 Plain Object 的 foo() 方法的时候，是直接作用在 pojo 类自身对象上的，客户端拥有的是被调用者的直接的引用。&lt;/p&gt;
+
+&lt;p&gt;而 Spring cache 利用了 Spring AOP 的动态代理技术，即当客户端尝试调用 pojo 的 foo（）方法的时候，给他的不是 pojo 自身的引用，而是一个动态生成的代理类&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;图 3. 动态代理调用图&lt;/em&gt;&lt;/strong&gt;
+&lt;a href=&quot;/assets/files/2013-03/image003.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-03/image003.jpg&quot; title=&quot;注释驱动的 Spring cache 缓存介绍&quot; alt=&quot;注释驱动的 Spring cache 缓存介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图所示，这个时候，实际客户端拥有的是一个代理的引用，那么在调用 foo() 方法的时候，会首先调用 proxy 的 foo() 方法，这个时候 proxy 可以整体控制实际的 pojo.foo() 方法的入参和返回值，比如缓存结果，比如直接略过执行实际的 foo() 方法等，都是可以轻松做到的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; 扩展性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;直到现在，我们已经学会了如何使用开箱即用的 spring cache，这基本能够满足一般应用对缓存的需求，但现实总是很复杂，当你的用户量上去或者性能跟不上，总需要进行扩展，这个时候你或许对其提供的内存缓存不满意了，因为其不支持高可用性，也不具备持久化数据能力，这个时候，你就需要自定义你的缓存方案了，还好，spring 也想到了这一点。&lt;/p&gt;
+
+&lt;p&gt;我们先不考虑如何持久化缓存，毕竟这种第三方的实现方案很多，我们要考虑的是，怎么利用 spring 提供的扩展点实现我们自己的缓存，且在不改原来已有代码的情况下进行扩展。&lt;/p&gt;
+
+&lt;p&gt;首先，我们需要提供一个 CacheManager 接口的实现，这个接口告诉 spring 有哪些 cache 实例，spring 会根据 cache 的名字查找 cache 的实例。另外还需要自己实现 Cache 接口，Cache 接口负责实际的缓存逻辑，例如增加键值对、存储、查询和清空等。利用 Cache 接口，我们可以对接任何第三方的缓存系统，例如 EHCache、OSCache，甚至一些内存数据库例如 memcache 或者 h2db 等。下面我举一个简单的例子说明如何做。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 23. MyCacheManager&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package cacheOfAnno; 
+
+ import java.util.Collection; 
+
+ import org.springframework.cache.support.AbstractCacheManager; 
+
+ public class MyCacheManager extends AbstractCacheManager { 
+   private Collection&amp;lt;? extends MyCache&amp;gt; caches; 
+
+   /** 
+   * Specify the collection of Cache instances to use for this CacheManager. 
+   */ 
+   public void setCaches(Collection&amp;lt;? extends MyCache&amp;gt; caches) { 
+     this.caches = caches; 
+   } 
+
+   @Override 
+   protected Collection&amp;lt;? extends MyCache&amp;gt; loadCaches() { 
+     return this.caches; 
+   } 
+
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的自定义的 CacheManager 实际继承了 spring 内置的 AbstractCacheManager，实际上仅仅管理 MyCache 类的实例。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 24. MyCache&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package cacheOfAnno; 
+
+ import java.util.HashMap; 
+ import java.util.Map; 
+
+ import org.springframework.cache.Cache; 
+ import org.springframework.cache.support.SimpleValueWrapper; 
+
+ public class MyCache implements Cache { 
+   private String name; 
+   private Map&amp;lt;String,Account&amp;gt; store = new HashMap&amp;lt;String,Account&amp;gt;();; 
+
+   public MyCache() { 
+   } 
+
+   public MyCache(String name) { 
+     this.name = name; 
+   } 
+
+   @Override 
+   public String getName() { 
+     return name; 
+   } 
+
+   public void setName(String name) { 
+     this.name = name; 
+   } 
+
+   @Override 
+   public Object getNativeCache() { 
+     return store; 
+   } 
+
+   @Override 
+   public ValueWrapper get(Object key) { 
+     ValueWrapper result = null; 
+     Account thevalue = store.get(key); 
+     if(thevalue!=null) { 
+       thevalue.setPassword(&quot;from mycache:&quot;+name); 
+       result = new SimpleValueWrapper(thevalue); 
+     } 
+     return result; 
+   } 
+
+   @Override 
+   public void put(Object key, Object value) { 
+     Account thevalue = (Account)value; 
+     store.put((String)key, thevalue); 
+   } 
+
+   @Override 
+   public void evict(Object key) { 
+   } 
+
+   @Override 
+   public void clear() { 
+   } 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的自定义缓存只实现了很简单的逻辑，但这是我们自己做的，也很令人激动是不是，主要看 get 和 put 方法，其中的 get 方法留了一个后门，即所有的从缓存查询返回的对象都将其 password 字段设置为一个特殊的值，这样我们等下就能演示“我们的缓存确实在起作用！”了。&lt;/p&gt;
+
+&lt;p&gt;这还不够，spring 还不知道我们写了这些东西，需要通过 spring*.xml 配置文件告诉它&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 25. Spring-cache-anno.xml&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;
+   xmlns:p=&quot;http://www.springframework.org/schema/p&quot;  
+   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans.xsd 
+     http://www.springframework.org/schema/cache 
+     http://www.springframework.org/schema/cache/spring-cache.xsd&quot;&amp;gt; 
+
+   &amp;lt;cache:annotation-driven /&amp;gt; 
+
+   &amp;lt;bean id=&quot;accountServiceBean&quot; class=&quot;cacheOfAnno.AccountService&quot;/&amp;gt; 
+
+    &amp;lt;!-- generic cache manager --&amp;gt; 
+   &amp;lt;bean id=&quot;cacheManager&quot; class=&quot;cacheOfAnno.MyCacheManager&quot;&amp;gt;
+     &amp;lt;property name=&quot;caches&quot;&amp;gt; 
+       &amp;lt;set&amp;gt; 
+         &amp;lt;bean 
+           class=&quot;cacheOfAnno.MyCache&quot;
+           p:name=&quot;accountCache&quot; /&amp;gt; 
+       &amp;lt;/set&amp;gt; 
+     &amp;lt;/property&amp;gt; 
+   &amp;lt;/bean&amp;gt; 
+&amp;lt;/beans&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意上面配置文件的黑体字，这些配置说明了我们的 cacheManager 和我们自己的 cache 实例。&lt;/p&gt;
+
+&lt;p&gt;好，什么都不说，测试！&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 26. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; public static void main(String[] args) { 
+   ApplicationContext context = new ClassPathXmlApplicationContext( 
+      &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+   AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+
+   Account account = s.getAccountByName(&quot;someone&quot;); 
+   System.out.println(&quot;passwd=&quot;+account.getPassword()); 
+   account = s.getAccountByName(&quot;someone&quot;); 
+   System.out.println(&quot;passwd=&quot;+account.getPassword()); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的测试代码主要是先调用 getAccountByName 进行一次查询，这会调用数据库查询，然后缓存到 mycache 中，然后我打印密码，应该是空的；下面我再次查询 someone 的账号，这个时候会从 mycache 中返回缓存的实例，记得上面的后门么？我们修改了密码，所以这个时候打印的密码应该是一个特殊的值&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 27. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...someone 
+ passwd=null 
+ passwd=from mycache:accountCache 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果符合预期，即第一次查询数据库，且密码为空，第二次打印了一个特殊的密码。说明我们的 myCache 起作用了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; 注意和限制&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;基于 proxy 的 spring aop 带来的内部调用问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;上面介绍过 spring cache 的原理，即它是基于动态生成的 proxy 代理机制来对方法的调用进行切面，这里关键点是对象的引用问题，如果对象的方法是内部调用（即 this 引用）而不是外部引用，则会导致 proxy 失效，那么我们的切面就失效，也就是说上面定义的各种注释包括 @Cacheable、@CachePut 和 @CacheEvict 都会失效，我们来演示一下。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 28. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; public Account getAccountByName2(String userName) { 
+   return this.getAccountByName(userName); 
+ } 
+
+ @Cacheable(value=&quot;accountCache&quot;)// 使用了一个缓存名叫 accountCache 
+ public Account getAccountByName(String userName) { 
+   // 方法内部实现不考虑缓存逻辑，直接实现业务
+   return getFromDB(userName); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面我们定义了一个新的方法 getAccountByName2，其自身调用了 getAccountByName 方法，这个时候，发生的是内部调用（this），所以没有走 proxy，导致 spring cache 失效&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 29. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; public static void main(String[] args) { 
+   ApplicationContext context = new ClassPathXmlApplicationContext( 
+      &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+   AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+
+   s.getAccountByName2(&quot;someone&quot;); 
+   s.getAccountByName2(&quot;someone&quot;); 
+   s.getAccountByName2(&quot;someone&quot;); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 30. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...someone 
+ real querying db...someone 
+ real querying db...someone 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可见，结果是每次都查询数据库，缓存没起作用。要避免这个问题，就是要避免对缓存方法的内部调用，或者避免使用基于 proxy 的 AOP 模式，可以使用基于 aspectJ 的 AOP 模式来解决这个问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;@CacheEvict 的可靠性问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;我们看到，@CacheEvict 注释有一个属性 beforeInvocation，缺省为 false，即缺省情况下，都是在实际的方法执行完成后，才对缓存进行清空操作。期间如果执行方法出现异常，则会导致缓存清空不被执行。我们演示一下&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 31. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @CacheEvict(value=&quot;accountCache&quot;,allEntries=true)// 清空 accountCache 缓存
+ public void reload() { 
+   throw new RuntimeException(); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意上面的代码，我们在 reload 的时候抛出了运行期异常，这会导致清空缓存失败。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 32. Main.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; public static void main(String[] args) { 
+   ApplicationContext context = new ClassPathXmlApplicationContext( 
+      &quot;spring-cache-anno.xml&quot;);// 加载 spring 配置文件
+
+   AccountService s = (AccountService) context.getBean(&quot;accountServiceBean&quot;); 
+
+   s.getAccountByName(&quot;someone&quot;); 
+   s.getAccountByName(&quot;someone&quot;); 
+   try { 
+     s.reload(); 
+   } catch (Exception e) { 
+   } 
+   s.getAccountByName(&quot;someone&quot;); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的测试代码先查询了两次，然后reload，然后再查询一次，结果应该是只有第一次查询走了数据库，其他两次查询都从缓存，第三次也走缓存因为 reload 失败了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 33. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;real querying db...someone 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和预期一样。那么我们如何避免这个问题呢？我们可以用 @CacheEvict 注释提供的 beforeInvocation 属性，将其设置为true，这样，在方法执行前我们的缓存就被清空了。可以确保缓存被清空。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 34. AccountService.java&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @CacheEvict(value=&quot;accountCache&quot;,allEntries=true,beforeInvocation=true)
+ // 清空 accountCache 缓存
+ public void reload() { 
+   throw new RuntimeException(); 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意上面的代码，我们在 @CacheEvict 注释中加了 beforeInvocation 属性，确保缓存被清空。&lt;/p&gt;
+
+&lt;p&gt;执行相同的测试代码&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 35. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...someone 
+ real querying db...someone 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样，第一次和第三次都从数据库取数据了，缓存清空有效。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;非 public 方法问题&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;和内部调用问题类似，非 public 方法如果想实现基于注释的缓存，必须采用基于 AspectJ 的 AOP 机制，这里限于篇幅不再细述。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; 其他技巧&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Dummy CacheManager 的配置和作用&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有的时候，我们在代码迁移、调试或者部署的时候，恰好没有 cache 容器，比如 memcache 还不具备条件，h2db 还没有装好等，如果这个时候你想调试代码，岂不是要疯掉？这里有一个办法，在不具备缓存条件的时候，在不改代码的情况下，禁用缓存。&lt;/p&gt;
+
+&lt;p&gt;方法就是修改 spring*.xml 配置文件，设置一个找不到缓存就不做任何操作的标志位，如下&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 36. Spring-cache-anno.xml&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; 
+ xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:cache=&quot;http://www.springframework.org/schema/cache&quot;
+   xmlns:p=&quot;http://www.springframework.org/schema/p&quot;  
+   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd 
+     http://www.springframework.org/schema/cache 
+     http://www.springframework.org/schema/cache/spring-cache.xsd&quot;&amp;gt; 
+
+   &amp;lt;cache:annotation-driven /&amp;gt; 
+
+   &amp;lt;bean id=&quot;accountServiceBean&quot; class=&quot;cacheOfAnno.AccountService&quot;/&amp;gt; 
+
+    &amp;lt;!-- generic cache manager --&amp;gt; 
+   &amp;lt;bean id=&quot;simpleCacheManager&quot; 
+   class=&quot;org.springframework.cache.support.SimpleCacheManager&quot;&amp;gt; 
+     &amp;lt;property name=&quot;caches&quot;&amp;gt; 
+       &amp;lt;set&amp;gt; 
+         &amp;lt;bean 
+           class=&quot;org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean&quot;
+           p:name=&quot;default&quot; /&amp;gt; 
+       &amp;lt;/set&amp;gt; 
+     &amp;lt;/property&amp;gt; 
+   &amp;lt;/bean&amp;gt; 
+
+   &amp;lt;!-- dummy cacheManager  --&amp;gt; 
+   &amp;lt;bean id=&quot;cacheManager&quot; 
+   class=&quot;org.springframework.cache.support.CompositeCacheManager&quot;&amp;gt;
+     &amp;lt;property name=&quot;cacheManagers&quot;&amp;gt; 
+       &amp;lt;list&amp;gt; 
+         &amp;lt;ref bean=&quot;simpleCacheManager&quot; /&amp;gt; 
+       &amp;lt;/list&amp;gt; 
+     &amp;lt;/property&amp;gt; 
+     &amp;lt;property name=&quot;fallbackToNoOpCache&quot; value=&quot;true&quot; /&amp;gt; 
+   &amp;lt;/bean&amp;gt; 
+
+ &amp;lt;/beans&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意以前的 cacheManager 变为了 simpleCacheManager，且没有配置 accountCache 实例，后面的 cacheManager 的实例是一个CompositeCacheManager，他利用了前面的 simpleCacheManager 进行查询，如果查询不到，则根据标志位 fallbackToNoOpCache 来判断是否不做任何缓存操作。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 37. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; real querying db...someone 
+ real querying db...someone 
+ real querying db...someone 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出，缓存失效。每次都查询数据库。因为我们没有配置它需要的 accountCache 实例。&lt;/p&gt;
+
+&lt;p&gt;如果将上面 xml 配置文件的 fallbackToNoOpCache 设置为 false，再次运行，则会得到&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;清单 38. 运行结果&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; Exception in thread &quot;main&quot; java.lang.IllegalArgumentException: 
+   Cannot find cache named [accountCache] for CacheableOperation 
+     [public cacheOfAnno.Account 
+     cacheOfAnno.AccountService.getAccountByName(java.lang.String)]
+     caches=[accountCache] | condition='' | key=''
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可见，在找不到 accountCache，且没有将 fallbackToNoOpCache 设置为 true 的情况下，系统会抛出异常。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; 小结&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;总之，注释驱动的 spring cache 能够极大的减少我们编写常见缓存的代码量，通过少量的注释标签和配置文件，即可达到使代码具备缓存的能力。且具备很好的灵活性和扩展性。但是我们也应该看到，spring cache 由于急于 spring AOP 技术，尤其是动态的 proxy 技术，导致其不能很好的支持方法的内部调用或者非 public 方法的缓存设置，当然这都是可以解决的问题，通过学习这个技术，我们能够认识到，AOP 技术的应用还是很广泛的，如果有兴趣，我相信你也能基于 AOP 实现自己的缓存方案。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>翻译-高效的CSS</title>
    <link href="http://beango.github.com/archives/2013/03/08/efficient-css.html"/>
    <updated>2013-03-08T00:00:00+08:00</updated>
@@ -4235,6 +5950,236 @@ CSS选择器效率从高到低的排序如下：&lt;/p&gt;
 &lt;h3&gt;更多高效选择器&lt;/h3&gt;
 
 &lt;p&gt;我还不能完全介绍Steve Souders的网站和书籍，它们是如此之好，以至于值得你花更多时间来阅读和推荐。这个家伙只有他自己才了解自己！&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Python中函数式编程，第一部分</title>
+   <link href="http://beango.github.com/archives/2013/03/04/python-functional-programming-part1.html"/>
+   <updated>2013-03-04T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/03/04/python-functional-programming-part1</id>
+   <content type="html">&lt;p&gt;英文原文：&lt;a href=&quot;http://www.ibm.com/developerworks/linux/library/l-prog/index.html&quot;&gt;Charming Python: Functional programming in Python, Part 1&lt;/a&gt;，翻译：&lt;a href=&quot;http://www.oschina.net/translate/python-functional-programming-part1&quot;&gt;开源中国&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;摘要&lt;/strong&gt;：虽然人们总把Python当作过程化的，面向对象的语言，但是他实际上包含了函数化编程中，你需要的任何东西。这篇文章主要讨论函数化编程的一般概念，并说明用Python来函数化编程的技术。&lt;/p&gt;
+
+&lt;p&gt;我们最好从艰难的问题开始出发：“到底什么是函数化编程呢？”其中一个答案可能是这样的，函数化编程就是你在使用Lisp这样的语言时所做的（还有Scheme，Haskell，ML，OCAML，Mercury，Erlang和其他一些语言）。这是一个保险的回答，但是它解释得并不清晰。不幸的是对于什么是函数化编程，很难能有一个协调一致的定义，即使是从函数化变成本身出发，也很难说明。这点倒很像盲人摸象。不过，把它拿来和命令式编程（imperative programming）做比较也不错（命令式编程就像你在用C，Pascal，C++，Java，Perl，Awk，TCL和很多其他类似语言时所做的，至少大部分一样 ）。&lt;/p&gt;
+
+&lt;p&gt;让我们回想一下功能模块的绑定类。使用该类的特性，我们可以确认在一个给定的范围块内，一个特定的名字仅仅代表了一个唯一的事物。&lt;/p&gt;
+
+&lt;p&gt;我个人粗略总结了一下，认为函数式编程至少应该具有下列几点中的多个特点。在谓之为函数式的语言中，要做到这些就比较容易，但要做到其它一些事情不是很难就是完全不可能：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;函数具有首要地位(对象)。也就是说，能对“数据”做什么事，就要能对函数本身做到那些事（比如将函数作为参数传递给另外一个函数）。&lt;/li&gt;
+&lt;li&gt;将递归作为主要的控制结构。在有些函数式语言中，都不存在其它的“循环”结构。&lt;/li&gt;
+&lt;li&gt;列表处理作为一个重点（例如，Lisp语言的名字）。列表往往是通过对子列表进行递归取代了循环。&lt;/li&gt;
+&lt;li&gt;“纯”函数式语言会完全避免副作用。这么做就完全弃绝了命令式语言中几乎无处不在的这种做法：将第一个值赋给一个变量之后为了跟踪程序的运行状态，接着又将另外一个值赋给同一个变量。&lt;/li&gt;
+&lt;li&gt;函数式编程不是不鼓励就是完全禁止使用&lt;em&gt;语句&lt;/em&gt;，而是通过对表达式(换句话说，就是函数加上参数）求值（evaluation of expressions）完成任务.
+在最纯粹的情形下，一个程序就是一个表达式（再加上辅助性的定义）&lt;/li&gt;
+&lt;li&gt;函数式编程中最关心的是要对&lt;em&gt;什么&lt;/em&gt;进行计算，而不是要&lt;em&gt;怎么来&lt;/em&gt;进行计算。&lt;/li&gt;
+&lt;li&gt;在很多函数式&lt;a href=&quot;http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/&quot; title=&quot;如何选择语言和编程语言排名相关文章&quot;&gt;编程语言&lt;/a&gt;中都会用到“高阶”（higher order）函数
+(换句话说，高阶函数就是对对函数进行运算的函数进行运算的函数）。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;函数式编程的倡导者们认为，所有这些特性都有助于更快地编写出更多更简洁并且更不容易出Bug的代码。而且，计算机科学、逻辑学和数学这三个领域中的高级理论家发现，函数式编程语言和程序的形式化特性在证明起来比命令式编程语言和程序要简单很多。&lt;/p&gt;
+
+&lt;h2&gt;Python内在的函数式功能&lt;/h2&gt;
+
+&lt;p&gt;自Python 1.0起，Python就已具有了以上所列中的绝大多数特点。但是就象Python所具有的大多数特性一样，这些特点出现在了一种混合了各种特性的语言中。 和Python的OOP（面向对象编程）特性非常象，你想用多少就用多少，剩下的都可以不管（直到你随后需要用到它们为止）。在Python 2.0中，加入了&lt;em&gt;列表解析&lt;/em&gt;（&lt;em&gt;list comprehensions&lt;/em&gt;）这个非常好用的”语法糖“。尽管列表解析没有添加什么新功能，但它让很多旧功能看起来好了&lt;em&gt;不少&lt;/em&gt;。&lt;/p&gt;
+
+&lt;p&gt;Python中函数式编程的基本要素包括functionsmap()、reduce()、filter()和lambda算子（operator）。
+在Python 1.x中，apply()函数也可以非常方便地拿来将一个函数的列表返回值直接用于另外一个函数。Python 2.0为此提供了一个改进后的语法。可能有点让人惊奇，使用如此之少的函数（以及基本的算子）几乎就足以写出任何Python程序了；更加特别的是，几乎用不着什么执行流程控制语句。&lt;/p&gt;
+
+&lt;p&gt;所有(if,elif,else,assert,try,except,finally,for,break,continue,while,def)这些都都能通过仅仅使用函数式编程中的函数和算子就能以函数式编程的风格处理好。尽管真正地在程序中完全排除使用所有流程控制命令可能只在想参加”Python混乱编程“大赛（可将Python代码写得跟Lisp代码非常象）时才有意义，但这对理解函数式编程如何通过函数和递归表达流程控制很有价值。&lt;/p&gt;
+
+&lt;h2&gt;剔除流程控制语句&lt;/h2&gt;
+
+&lt;p&gt;剔除练习首先要考虑的第一件事是，实际上，Python会对布尔表达式求值进行“短路”处理。这就为我们提供了一个if/elif/else分支语句的表达式版（假设每个分支只调用一个函数，不是这种情况时也很容易组织成重新安排成这种情况）。
+这里给出怎么做：&lt;/p&gt;
+
+&lt;p&gt;对Python中的条件调用进行短路处理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Normal statement-based flow control
+if &amp;lt;cond1&amp;gt;:   func1()
+elif &amp;lt;cond2&amp;gt;: func2()
+else:         func3()
+
+# Equivalent &quot;short circuit&quot; expression
+(&amp;lt;cond1&amp;gt; and func1()) or (&amp;lt;cond2&amp;gt; and func2()) or (func3())
+
+# Example &quot;short circuit&quot; expression
+&amp;gt;&amp;gt;&amp;gt; x = 3
+&amp;gt;&amp;gt;&amp;gt; def pr(s): return s
+&amp;gt;&amp;gt;&amp;gt; (x==1 and pr('one')) or (x==2 and pr('two')) or (pr('other'))
+'other'
+&amp;gt;&amp;gt;&amp;gt; x = 2
+&amp;gt;&amp;gt;&amp;gt; (x==1 and pr('one')) or (x==2 and pr('two')) or (pr('other'))
+'two'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们的表达式版本的条件调用看上去可能不算什么，更象是个小把戏；然而，如果我们注意到lambda算子必须返回一个表达式，这就更值得关注了。既然如我们所示，表达式能够通过短路包含一个条件判断，那么，lambda表达式就是个完全通用的表达条件判断返回值的手段了。我们来一个例子：&lt;/p&gt;
+
+&lt;p&gt;Python中短路的Lambda&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; pr = lambda s:s
+&amp;gt;&amp;gt;&amp;gt; namenum = lambda x: (x==1 and pr(&quot;one&quot;)) \
+....                  or (x==2 and pr(&quot;two&quot;)) \
+....                  or (pr(&quot;other&quot;))
+&amp;gt;&amp;gt;&amp;gt; namenum(1)
+'one'
+&amp;gt;&amp;gt;&amp;gt; namenum(2)
+'two'
+&amp;gt;&amp;gt;&amp;gt; namenum(3)
+'other'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;将函数作为具有首要地位的对象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;前面的例子已经表明了Python中函数具有首要地位，但有点委婉。当我们用lambda操作创建一个&lt;em&gt;函数对象&lt;/em&gt;时，我们所得到的东西是完全通用的。就其本质而言，我们可以将我们的对象同名字”pr”和”namenum”绑定到一起,以完全相同的方式，我们也也完全可以将数字23或者字符串”spam”同这些名字绑定到一起。但是，就象我们可以无需将其绑定到任何名字之上就能直接使用数字23（也就是说，它可以用作函数的参数）一样，我们也可以直接使用我们使用lambda创建的函数对象，而无需将其绑定到任何名字之上。在Python中，函数就是另外一种我们能够就像某种处理的值。&lt;/p&gt;
+
+&lt;p&gt;我们对具有首要地位的对象做的比较多的事情就是，将它们作为参数传递给函数式编程固有的函数map()、reduce()和filter()。这三个函数接受的第一个参数都是一个函数对象。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;map()针对指定给它的一个或多个列表中每一项对应的内容，执行一次作为参数传递给它的那个函数，最后返回一个结果列表。&lt;/li&gt;
+&lt;li&gt;reduce()针对每个后继项以及最后结果的累积结果，执行一次作为参数传递给它的那个函数；例如，reduce(lambdan,m:n*m,range(1,10))是求”10的阶乘”的意思（换言之，将每一项和前面所得的乘积进行相乘）&lt;/li&gt;
+&lt;li&gt;filter()使用那个作为参数传递给它的函数，对一个列表中的所有项进行”求值“，返回一个由所有能够通过那个函数测试的项组成的经过遴选后的列表。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;我们经常也会把函数对象传递给我们自己定义的函数，不过一般情况下这些自定义的函数就是前文提及的内建函数的某种形式的组合。&lt;/p&gt;
+
+&lt;p&gt;通过组合使用这三种函数式编程内建的函数，能够实现范围惊人的“执行流程”操作(全都不用语句，仅仅使用表达式实现)。&lt;/p&gt;
+
+&lt;h2&gt; Python中的函数式循环&lt;/h2&gt;
+
+&lt;p&gt;替换循环语言和条件状态语言块同样简单。for可以直接翻译成map()函数。正如我们的条件执行，我们会需要简化语句块成简单的函数调用（我们正在接近通常能做的）：&lt;/p&gt;
+
+&lt;p&gt;替换循环&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for e in lst:  func(e)      # statement-based loop
+map(func,lst)           # map()-based loop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过这种方法，对有序程序流将有一个相似的函数式方式。那就是，命令式编程几乎是由大量“做这，然后做那，之后做其它的”语句组成。map()让我们只要做这样：&lt;/p&gt;
+
+&lt;p&gt;Map-based 动作序列&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# let's create an execution utility function
+do_it = lambda f: f()
+
+# let f1, f2, f3 (etc) be functions that perform actions
+
+map(do_it, [f1,f2,f3])   # map()-based action sequence
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通常，我们的整个主要的程序都可以使用一个map表达式加上一些函数列表的执行来完成这个程序。最高级别的函数的另一个方便的特性是你可以把它们放在一个列表里。&lt;/p&gt;
+
+&lt;p&gt;翻译while会稍稍复杂一些，但仍然可以直接地完成：&lt;/p&gt;
+
+&lt;p&gt;Python中的函数式”while”循环&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# statement-based while loop
+while &amp;lt;cond&amp;gt;:
+    &amp;lt;pre-suite&amp;gt;
+    if &amp;lt;break_condition&amp;gt;:
+        break
+    else:
+        &amp;lt;suite&amp;gt;
+
+# FP-style recursive while loop
+def while_block():
+    &amp;lt;pre-suite&amp;gt;
+    if &amp;lt;break_condition&amp;gt;:
+        return 1
+    else:
+        &amp;lt;suite&amp;gt;
+    return 0
+
+while_FP = lambda: (&amp;lt;cond&amp;gt; and while_block()) or while_FP()
+while_FP()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在翻译while循环时，我们仍然需要使用while_block()函数，这个函数本身里面可以包含语句而不是仅仅包含表达式。但我们可能还能够对这个函数再进行更进一步的剔除过程（就像前面模版中的对if/else进行短路处理一样）。还有，&amp;lt;cond&gt;很难对普通的测试有什么用，比如while myvar==7，既然循环体（在设计上）不能对任何变量的值进行修改（当然，在while_block()中可以修改全局变量）。有一种方法可以用来为while_block()添加更有用的条件判断，让while_block()返回一个有意义的值，然后将这个返回值同循环结束条件进行比较。现在应该来看一个剔除其中语句的具体例子了：&lt;/p&gt;
+
+&lt;p&gt;Python中’echo’循环&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# imperative version of &quot;echo()&quot;
+def echo_IMP():
+    while 1:
+        x = raw_input(&quot;IMP -- &quot;)
+        if x == 'quit':
+            break
+        else
+            print x
+echo_IMP()
+
+# utility function for &quot;identity with side-effect&quot;
+def monadic_print(x):
+    print x
+    return x
+
+# FP version of &quot;echo()&quot;
+echo_FP = lambda: monadic_print(raw_input(&quot;FP -- &quot;))=='quit' or echo_FP()
+echo_FP()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在上面的例子中我们所做的，就是想办法将一个涉及I/O、循环和条件判断的小程序，表达为一个递归方式的纯粹的表达式 （确切地说，表达为一个可以在需要的情况下传递到别的地方的函数对象）。我们&lt;em&gt;的确&lt;/em&gt;仍然使用了实用函数monadic_print()，但这个函数是完全通用的，而且可以用于以后我们可能会创建的每个函数式程序的表达式中（它的代价是一次性的）。请注意，任何包含monadic_print(x)的表达式的&lt;em&gt;值&lt;/em&gt;都是一样的，好像它只是包含了一个x而已。函数式编程中（特别是在Haskell中）的函数有一种叫做”monad”（一元）的概念，这种一元函数“实际什么都不做，只是在执行过程中产生一个副作用”。&lt;/p&gt;
+
+&lt;h2&gt; 避免副作用&lt;/h2&gt;
+
+&lt;p&gt;在做完这些没有非常明智的理由陈述，并把晦涩的嵌套表达式代替他们之后，一个很自然的问题是“为什么要这样做？！”　我描述的函数式编程在Python中都实现了。但是最重要的特性和一个有具体用处——就是避免副作用（或至少它们阻止如monads的特殊区域）。程序错误的大部分——并且这些问题驱使程序员去debug——出现是因为在程序的运行中变量获取了非期望的值。函数式编程简单地通过从不给变量赋值而绕过了这个问题。&lt;/p&gt;
+
+&lt;p&gt;现在让我们看一段非常普通的命令式代码。这段代码的目的是打印出乘积大于25的一对一对数字所组成的一个列表。组成每对数字的每一个数字都是取自另外的两个列表。这种事情和很多程序员在他们的编程中经常做的一些事情比较相似。命令式的解决方式有可能就象下面这样：&lt;/p&gt;
+
+&lt;p&gt;命令式的”打印大乘积”的Python代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Nested loop procedural style for finding big products
+xs = (1,2,3,4)
+ys = (10,15,3,22)
+bigmuls = []
+# ...more stuff...
+for x in xs:
+    for y in ys:
+        # ...more stuff...
+        if x*y &amp;gt; 25:
+            bigmuls.append((x,y))
+            # ...more stuff...
+# ...more stuff...
+print bigmuls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个项目足够小了，好像没有地方会出什么差错。但有可能在这段代码中我们会嵌入一些同时完成其它任务的代码。用”more stuff”（其它代码）注释掉的部分，就是有可能存在导致出现bug的副作用的地方。在那三部分的任何一点上，变量sxs、ys、bigmuls、x、y都有可能在这段按照理想情况简化后的代码中取得一个出人意料的值。还有，这段代码执行完后，后继代码有可能需要也有可能不需要对所有这些变量中的值有所预期。显而易见，将这段代码封装到函数/实例中，小心处理变量的作用范围，就能够避免这种类型的错误。你也可以总是将使用完毕的变量del掉。但在实践中，这里指出的这种类型的错误很常见。&lt;/p&gt;
+
+&lt;p&gt;以一种函数式的途径一举消除这些副作用所产生的错误，这样就达到了我们的目的。一种可能的代码如下：&lt;/p&gt;
+
+&lt;p&gt;以函数式途径达到我们的目的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bigmuls = lambda xs,ys: filter(lambda (x,y):x*y &amp;gt; 25, combine(xs,ys))
+combine = lambda xs,ys: map(None, xs*len(ys), dupelms(ys,len(xs)))
+dupelms = lambda lst,n: reduce(lambda s,t:s+t, map(lambda l,n=n: [l]*n, lst))
+print bigmuls((1,2,3,4),(10,15,3,22))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在例子中我们绑定我们的匿名（lambda）函数对象到变量名，但严格意义上讲这并不是必须的。我们可以用简单的嵌套定义来代替之。这不仅是为了代码的可读性，我们才这样做的；而且是因为combine()函数在任何地方都是一个非常好的功能函数（函数从两个输入的列表读入数据生成一个相应的pair列表）。函数dupelms()只是用来辅助函数combine()的。即使这个函数式的例子跟命令式的例子显得要累赘些，不过一旦你考虑到功能函数的重用，则新的bigmuls()中代码就会比命令式的那个要稍少些。&lt;/p&gt;
+
+&lt;p&gt;这个函数式例子的真正优点在于：在函数中绝对没有改变变量的值。这样就&lt;strong&gt;&lt;em&gt;不可能&lt;/em&gt;&lt;/strong&gt;在之后的代码（或者从之前的代码）中产生不可预期的副作用。显然，在函数中没有副作用，并不能保证代码的正确性，但它仍然是一个优点。无论如何请注意，Python（不像很多其它的函数式语言）不会阻止名字bigmuls，combine和dupelms的再次绑定。如果combine()运行在之后的程序中意味着有所不同时，所有的预测都会失效。你可能会需要新建一个单例类来包含这个不变的绑定（也就是说，s.bigmuls之类的）；但是这一例并没有空间来做这些。&lt;/p&gt;
+
+&lt;p&gt;一个明显值得注意的是，我们特定的目标是定制Python 2的一些特性。而不是命令式的或函数式编程的例子，最好的（也是函数式的）方法是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;print [(x,y) for x in (1,2,3,4) for y in (10,15,3,22) if x*y &amp;gt; 25]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt; 结束语&lt;/h2&gt;
+
+&lt;p&gt;我已经列出了把每一个Python控制流替换成一个相等的函数式代码的方法（在程序中减少副作用）。高效翻译一个特定的程序需要一些额外的思考，但我们已经看出内置的函数式功能是全面且完善的。在接下来的文章里，我们会看到更多函数式编程的高级技巧；并且希望我们接下来能够摸索到函数式编程风格的更多优点和缺点。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/03/04/python-functional-programming-part1.html&quot; title=&quot;Python中函数式编程，第一部分&quot;&gt;Python中的函数式编程，第一部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/11/python-functional-programming-part2.html&quot; title=&quot;Python中函数式编程，第二部分&quot;&gt;Python中的函数式编程，第二部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/archives/2013/04/25/python-functional-programming-part3.html&quot; title=&quot;Python中的函数式编程，第三部分&quot;&gt;Python中的函数式编程，第三部分&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
 </content>
  </entry>
  
@@ -9609,6 +11554,334 @@ wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 
 &lt;/div&gt;
 
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Java编码易疏忽的十个问题</title>
+   <link href="http://beango.github.com/archives/2012/09/07/10-java-questions-easy-to-ignore.html"/>
+   <updated>2012-09-07T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/09/07/10-java-questions-easy-to-ignore</id>
+   <content type="html">&lt;p&gt;在Java编码中，我们容易犯一些错误，也容易疏忽一些问题，因此笔者对日常编码中曾遇到的一些经典情形归纳整理成文，以共同探讨。&lt;/p&gt;
+
+&lt;h2&gt;1. 纠结的同名&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;很多类的命名相同（例如：常见于异常、常量、日志等类），导致在import时，有时候张冠李戴，这种错误有时候很隐蔽。因为往往同名的类功能也类似，所以IDE不会提示warn。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;写完代码时，扫视下import部分，看看有没有不熟悉的。替换成正确导入后，要注意下注释是否也作相应修改。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;命名尽量避开重复名，特别要避开与JDK中的类重名，否则容易导入错，同时存在大量重名类，在查找时，也需要更多的辨别时间。&lt;/p&gt;
+
+&lt;h2&gt;2. 想当然的API&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有时候调用API时，会想当然的通过名字直接自信满满地调用，导致很惊讶的一些错误：&lt;/p&gt;
+
+&lt;p&gt;示例一：flag是true？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;boolean flag = Boolean.getBoolean(&quot;true&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可能老是false。&lt;/p&gt;
+
+&lt;p&gt;示例二：这是去年的今天吗（今年是2012年，不考虑闰年）？结果还是2012年：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Calendar calendar = GregorianCalendar.getInstance();
+calendar.roll(Calendar.DAY_OF_YEAR, -365);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面的才是去年：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;calendar.add(Calendar.DAY_OF_YEAR, -365); 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决办法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;问自己几个问题，这个方法我很熟悉吗？有没有类似的API?区别是什么？就示例一而言，需要区别的如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Boolean.valueOf(b) VS Boolean.parseBoolean(b) VS Boolean.getBoolean(b);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;名字起的更详细点，注释更清楚点，不要不经了解、测试就想当然的用一些API，如果时间有限，用自己最为熟悉的API。&lt;/p&gt;
+
+&lt;h2&gt;3. 有时候溢出并不难&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有时候溢出并不难，虽然不常复现：&lt;/p&gt;
+
+&lt;p&gt;示例一：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;long x=Integer.MAX_VALUE+1;
+System.out.println(x);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;x是多少？竟然是-2147483648，明明加上1之后还是long的范围。类似的经常出现在时间计算：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;数字1×数字2×数字3… 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;示例二：&lt;/p&gt;
+
+&lt;p&gt;在检查是否为正数的参数校验中，为了避免重载，选用参数number,于是下面代码结果小于0，也是因为溢出导致：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Number i=Long.MAX_VALUE;
+System.out.println(i.intValue()&amp;gt;0);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;让第一个操作数是long型，例如加上L或者l（不建议小写字母l，因为和数字1太相似了）；&lt;/li&gt;
+&lt;li&gt;不确定时，还是使用重载吧，即使用doubleValue()，当参数是BigDecimal参数时，也不能解决问题。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;对数字运用要保持敏感：涉及数字计算就要考虑溢出；涉及除法就要考虑被除数是0；实在容纳不下了可以考虑BigDecimal之类。&lt;/p&gt;
+
+&lt;h2&gt;4. 日志跑哪了？&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有时候觉得log都打了，怎么找不到？&lt;/p&gt;
+
+&lt;p&gt;示例一：没有stack trace！&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; } catch (Exception ex) {
+    log.error(ex);
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;示例二：找不到log！&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;} catch (ConfigurationException e) {
+    e.printStackTrace();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;替换成log.error(ex.getMessage(),ex);&lt;/li&gt;
+&lt;li&gt;换成普通的log4j吧，而不是System.out。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;API定义应该避免让人犯错，如果多加个重载的log.error(Exception)自然没有错误发生&lt;/li&gt;
+&lt;li&gt;在产品代码中，使用的一些方法要考虑是否有效，使用e.printStackTrace()要想下终端(Console)在哪。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;5. 遗忘的volatile&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在DCL模式中，总是忘记加一个Volatile。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private static CacheImpl instance;  //lose volatile
+public static CacheImpl getInstance() {
+    if (instance == null) {
+        synchronized (CacheImpl.class) {
+            if (instance == null) {
+                instance = new CacheImpl (); 
+            }
+        }
+    }
+    return instance;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;毋庸置疑，加上一个吧，synchronized锁的是一块代码（整个方法或某个代码块），保证的是这”块“代码的可见性及原子性，但是instance == null第一次判断时不再范围内的。所以可能读出的是过期的null。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;我们总是觉得某些低概率的事件很难发生，例如某个时间并发的可能性、某个异常抛出的可能性，所以不加控制，但是如果可以，还是按照前人的“最佳实践”来写代码吧。至少不用过多解释为啥另辟蹊径。&lt;/p&gt;
+
+&lt;h2&gt;6. 不要影响彼此&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在释放多个IO资源时，都会抛出IOException ，于是可能为了省事如此写：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public static void inputToOutput(InputStream is, OutputStream os,
+           boolean isClose) throws IOException {
+    BufferedInputStream bis = new BufferedInputStream(is, 1024);
+    BufferedOutputStream bos = new BufferedOutputStream(os, 1024);  
+    ….
+    if (isClose) {
+       bos.close();
+       bis.close();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设bos关闭失败，bis还能关闭吗？当然不能！&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;解决办法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然抛出的是同一个异常，但是还是各自捕获各的为好。否则第一个失败，后一个面就没有机会去释放资源了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;代码/模块之间可能存在依赖，要充分识别对相互的依赖。&lt;/p&gt;
+
+&lt;h2&gt;7. 用断言取代参数校验&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;如题所提，作为防御式编程常用的方式：断言，写在产品代码中做参数校验等。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private void send(List&amp;lt; Event&amp;gt; eventList)  {
+    assert eventList != null;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;换成正常的统一的参数校验方法。因为断言默认是关闭的，所以起不起作用完全在于配置，如果采用默认配置，经历了eventList != null结果还没有起到作用，徒劳无功。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有的时候，代码起不起作用，不仅在于用例，还在于配置，例如断言是否启用、log级别等，要结合真实环境做有用编码。&lt;/p&gt;
+
+&lt;h2&gt;8. 用户认知负担有时候很重&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;先来比较三组例子，看看那些看着更顺畅？&lt;/p&gt;
+
+&lt;p&gt;示例一：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public void caller(int a, String b, float c, String d) {
+    methodOne(d, z, b);
+    methodTwo(b, c, d);
+}
+public void methodOne(String d, float z, String b)  
+public void methodTwo(String b, float c, String d)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;示例二：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public boolean remove(String key, long timeout) {
+             Future&amp;lt; Boolean&amp;gt; future = memcachedClient.delete(key);
+public boolean delete(String key, long timeout) {
+             Future&amp;lt; Boolean&amp;gt; future = memcachedClient.delete(key);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;示例三：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public static String getDigest(String filePath, DigestAlgorithm algorithm)
+public static String getDigest(String filePath, DigestAlgorithm digestAlgorithm)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;保持参数传递顺序；&lt;/li&gt;
+&lt;li&gt;remove变成了delete，显得突兀了点， 统一表达更好；&lt;/li&gt;
+&lt;li&gt;保持表达，少缩写也会看起来流畅点。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在编码过程中，不管是参数的顺序还是命名都尽量统一，这样用户的认知负担会很少，不要要用户容易犯错或迷惑。例如用枚举代替string从而不让用户迷惑到底传什么string,诸如此类。&lt;/p&gt;
+
+&lt;h2&gt;9. 忽视日志记录时机、级别&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;存在下面两则示例：&lt;/p&gt;
+
+&lt;p&gt;示例一：该不该记录日志？&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;catch (SocketException e)
+{
+    LOG.error(&quot;server error&quot;, e);
+    throw new ConnectionException(e.getMessage(), e);
+}   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;示例二：记什么级别日志？&lt;/p&gt;
+
+&lt;p&gt;在用户登录系统中，每次失败登录：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;LOG.warn(&quot;Failed to login by &quot;+username+&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;移除日志记录：在遇到需要re-throw的异常时，如果每个人都按照先记录后throw的方式去处理，那么对一个错误会记录太多的日志，所以不推荐如此做；但是如果re-throw出去的exception没有带完整的trace(即cause)，那么最好还是记录下。&lt;/li&gt;
+&lt;li&gt;如果恶意登录，那系统内部会出现太多WARN，从而让管理员误以为是代码错误。可以反馈用户以错误，但是不要记录用户错误的行为，除非想达到控制的目的。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;日志改不改记？记成什么级别？如何记？这些都是问题，一定要根据具体情况，需要考虑：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;是用户行为错误还是代码错误？&lt;/li&gt;
+&lt;li&gt;记录下来的日志，能否能给别人在不造成过多的干扰前提下提供有用的信息以快速定位问题。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;10. 忘设初始容量&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;现象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在JAVA中，我们常用Collection中的Map做Cache,但是我们经常会遗忘设置初始容量。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cache = new LRULinkedHashMap&amp;lt; K, V&amp;gt;(maxCapacity);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;初始容量的影响有多大？拿LinkedHashMap来说，初始容量如果不设置默认是16，超过16×LOAD_FACTOR,会resize(2* table.length),扩大2倍：采用 Entry[] newTable = new Entry[newCapacity];transfer(newTable)，即整个数组Copy，那么对于一个需要做大容量CACHE来说，从16变成一个很大的数量，需要做多少次数组复制可想而知。如果初始容量就设置很大，自然会减少resize,不过可能会担心，初始容量设置很大时，没有Cache内容仍然会占用过大体积。其实可以参考以下表格简单计算下,初始时还没有cache内容, 每个对象仅仅是4字节引用而已。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;memory for reference fields (4 bytes each);&lt;/li&gt;
+&lt;li&gt;memory for primitive fields&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;laleb /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;----------- ----------------
+Java type   Bytes required
+boolean     1
+byte         
+char        2
+short        
+int         4
+float        
+long        8
+double       
+----------- ----------------
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;启示&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;不仅是map,还有stringBuffer等，都有容量resize的过程，如果数据量很大，就不能忽视初始容量可以考虑设置下，否则不仅有频繁的resize还容易浪费容量。&lt;/p&gt;
+
+&lt;p&gt;在Java编程中，除了上面枚举的一些容易忽视的问题，日常实践中还存在很多。相信通过不断的总结和努力，可以将我们的程序完美呈现给读者。&lt;/p&gt;
 </content>
  </entry>
  

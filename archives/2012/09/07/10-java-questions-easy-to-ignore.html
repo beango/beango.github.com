@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Java编码易疏忽的十个问题</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='Java编码易疏忽的十个问题'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Java编码易疏忽的十个问题</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>在Java编码中，我们容易犯一些错误，也容易疏忽一些问题，因此笔者对日常编码中曾遇到的一些经典情形归纳整理成文，以共同探讨。</p>
+
+<h2>1. 纠结的同名</h2>
+
+<p><strong>现象</strong></p>
+
+<p>很多类的命名相同（例如：常见于异常、常量、日志等类），导致在import时，有时候张冠李戴，这种错误有时候很隐蔽。因为往往同名的类功能也类似，所以IDE不会提示warn。</p>
+
+<p><strong>解决</strong></p>
+
+<p>写完代码时，扫视下import部分，看看有没有不熟悉的。替换成正确导入后，要注意下注释是否也作相应修改。</p>
+
+<p><strong>启示</strong></p>
+
+<p>命名尽量避开重复名，特别要避开与JDK中的类重名，否则容易导入错，同时存在大量重名类，在查找时，也需要更多的辨别时间。</p>
+
+<h2>2. 想当然的API</h2>
+
+<p><strong>现象</strong></p>
+
+<p>有时候调用API时，会想当然的通过名字直接自信满满地调用，导致很惊讶的一些错误：</p>
+
+<p>示例一：flag是true？</p>
+
+<pre><code>boolean flag = Boolean.getBoolean("true");
+</code></pre>
+
+<p>可能老是false。</p>
+
+<p>示例二：这是去年的今天吗（今年是2012年，不考虑闰年）？结果还是2012年：</p>
+
+<pre><code>Calendar calendar = GregorianCalendar.getInstance();
+calendar.roll(Calendar.DAY_OF_YEAR, -365);
+</code></pre>
+
+<p>下面的才是去年：</p>
+
+<pre><code>calendar.add(Calendar.DAY_OF_YEAR, -365); 
+</code></pre>
+
+<p><strong>解决办法</strong></p>
+
+<p>问自己几个问题，这个方法我很熟悉吗？有没有类似的API?区别是什么？就示例一而言，需要区别的如下：</p>
+
+<pre><code>Boolean.valueOf(b) VS Boolean.parseBoolean(b) VS Boolean.getBoolean(b);
+</code></pre>
+
+<p><strong>启示</strong></p>
+
+<p>名字起的更详细点，注释更清楚点，不要不经了解、测试就想当然的用一些API，如果时间有限，用自己最为熟悉的API。</p>
+
+<h2>3. 有时候溢出并不难</h2>
+
+<p><strong>现象</strong></p>
+
+<p>有时候溢出并不难，虽然不常复现：</p>
+
+<p>示例一：</p>
+
+<pre><code>long x=Integer.MAX_VALUE+1;
+System.out.println(x);
+</code></pre>
+
+<p>x是多少？竟然是-2147483648，明明加上1之后还是long的范围。类似的经常出现在时间计算：</p>
+
+<pre><code>数字1×数字2×数字3… 
+</code></pre>
+
+<p>示例二：</p>
+
+<p>在检查是否为正数的参数校验中，为了避免重载，选用参数number,于是下面代码结果小于0，也是因为溢出导致：</p>
+
+<pre><code>Number i=Long.MAX_VALUE;
+System.out.println(i.intValue()&gt;0);
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<ol>
+<li>让第一个操作数是long型，例如加上L或者l（不建议小写字母l，因为和数字1太相似了）；</li>
+<li>不确定时，还是使用重载吧，即使用doubleValue()，当参数是BigDecimal参数时，也不能解决问题。</li>
+</ol>
+
+
+<p><strong>启示</strong></p>
+
+<p>对数字运用要保持敏感：涉及数字计算就要考虑溢出；涉及除法就要考虑被除数是0；实在容纳不下了可以考虑BigDecimal之类。</p>
+
+<h2>4. 日志跑哪了？</h2>
+
+<p><strong>现象</strong></p>
+
+<p>有时候觉得log都打了，怎么找不到？</p>
+
+<p>示例一：没有stack trace！</p>
+
+<pre><code> } catch (Exception ex) {
+    log.error(ex);
+ }
+</code></pre>
+
+<p>示例二：找不到log！</p>
+
+<pre><code>} catch (ConfigurationException e) {
+    e.printStackTrace();
+}
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<ol>
+<li>替换成log.error(ex.getMessage(),ex);</li>
+<li>换成普通的log4j吧，而不是System.out。</li>
+</ol>
+
+
+<p><strong>启示</strong></p>
+
+<ol>
+<li>API定义应该避免让人犯错，如果多加个重载的log.error(Exception)自然没有错误发生</li>
+<li>在产品代码中，使用的一些方法要考虑是否有效，使用e.printStackTrace()要想下终端(Console)在哪。</li>
+</ol>
+
+
+<h2>5. 遗忘的volatile</h2>
+
+<p><strong>现象</strong></p>
+
+<p>在DCL模式中，总是忘记加一个Volatile。</p>
+
+<pre><code>private static CacheImpl instance;  //lose volatile
+public static CacheImpl getInstance() {
+    if (instance == null) {
+        synchronized (CacheImpl.class) {
+            if (instance == null) {
+                instance = new CacheImpl (); 
+            }
+        }
+    }
+    return instance;
+}
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<p>毋庸置疑，加上一个吧，synchronized锁的是一块代码（整个方法或某个代码块），保证的是这”块“代码的可见性及原子性，但是instance == null第一次判断时不再范围内的。所以可能读出的是过期的null。</p>
+
+<p><strong>启示</strong></p>
+
+<p>我们总是觉得某些低概率的事件很难发生，例如某个时间并发的可能性、某个异常抛出的可能性，所以不加控制，但是如果可以，还是按照前人的“最佳实践”来写代码吧。至少不用过多解释为啥另辟蹊径。</p>
+
+<h2>6. 不要影响彼此</h2>
+
+<p><strong>现象</strong></p>
+
+<p>在释放多个IO资源时，都会抛出IOException ，于是可能为了省事如此写：</p>
+
+<pre><code>public static void inputToOutput(InputStream is, OutputStream os,
+           boolean isClose) throws IOException {
+    BufferedInputStream bis = new BufferedInputStream(is, 1024);
+    BufferedOutputStream bos = new BufferedOutputStream(os, 1024);  
+    ….
+    if (isClose) {
+       bos.close();
+       bis.close();
+    }
+}
+</code></pre>
+
+<p>假设bos关闭失败，bis还能关闭吗？当然不能！</p>
+
+<p><strong>解决办法</strong></p>
+
+<p>虽然抛出的是同一个异常，但是还是各自捕获各的为好。否则第一个失败，后一个面就没有机会去释放资源了。</p>
+
+<p><strong>启示</strong></p>
+
+<p>代码/模块之间可能存在依赖，要充分识别对相互的依赖。</p>
+
+<h2>7. 用断言取代参数校验</h2>
+
+<p><strong>现象</strong></p>
+
+<p>如题所提，作为防御式编程常用的方式：断言，写在产品代码中做参数校验等。例如：</p>
+
+<pre><code>private void send(List&lt; Event&gt; eventList)  {
+    assert eventList != null;
+}
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<p>换成正常的统一的参数校验方法。因为断言默认是关闭的，所以起不起作用完全在于配置，如果采用默认配置，经历了eventList != null结果还没有起到作用，徒劳无功。</p>
+
+<p><strong>启示</strong></p>
+
+<p>有的时候，代码起不起作用，不仅在于用例，还在于配置，例如断言是否启用、log级别等，要结合真实环境做有用编码。</p>
+
+<h2>8. 用户认知负担有时候很重</h2>
+
+<p><strong>现象</strong></p>
+
+<p>先来比较三组例子，看看那些看着更顺畅？</p>
+
+<p>示例一：</p>
+
+<pre><code>public void caller(int a, String b, float c, String d) {
+    methodOne(d, z, b);
+    methodTwo(b, c, d);
+}
+public void methodOne(String d, float z, String b)  
+public void methodTwo(String b, float c, String d)
+</code></pre>
+
+<p>示例二：</p>
+
+<pre><code>public boolean remove(String key, long timeout) {
+             Future&lt; Boolean&gt; future = memcachedClient.delete(key);
+public boolean delete(String key, long timeout) {
+             Future&lt; Boolean&gt; future = memcachedClient.delete(key);
+</code></pre>
+
+<p>示例三：</p>
+
+<pre><code>public static String getDigest(String filePath, DigestAlgorithm algorithm)
+public static String getDigest(String filePath, DigestAlgorithm digestAlgorithm)
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<ol>
+<li>保持参数传递顺序；</li>
+<li>remove变成了delete，显得突兀了点， 统一表达更好；</li>
+<li>保持表达，少缩写也会看起来流畅点。</li>
+</ol>
+
+
+<p><strong>启示</strong></p>
+
+<p>在编码过程中，不管是参数的顺序还是命名都尽量统一，这样用户的认知负担会很少，不要要用户容易犯错或迷惑。例如用枚举代替string从而不让用户迷惑到底传什么string,诸如此类。</p>
+
+<h2>9. 忽视日志记录时机、级别</h2>
+
+<p><strong>现象</strong></p>
+
+<p>存在下面两则示例：</p>
+
+<p>示例一：该不该记录日志？</p>
+
+<pre><code>catch (SocketException e)
+{
+    LOG.error("server error", e);
+    throw new ConnectionException(e.getMessage(), e);
+}   
+</code></pre>
+
+<p>示例二：记什么级别日志？</p>
+
+<p>在用户登录系统中，每次失败登录：</p>
+
+<pre><code>LOG.warn("Failed to login by "+username+");
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<ol>
+<li>移除日志记录：在遇到需要re-throw的异常时，如果每个人都按照先记录后throw的方式去处理，那么对一个错误会记录太多的日志，所以不推荐如此做；但是如果re-throw出去的exception没有带完整的trace(即cause)，那么最好还是记录下。</li>
+<li>如果恶意登录，那系统内部会出现太多WARN，从而让管理员误以为是代码错误。可以反馈用户以错误，但是不要记录用户错误的行为，除非想达到控制的目的。</li>
+</ol>
+
+
+<p><strong>启示</strong></p>
+
+<p>日志改不改记？记成什么级别？如何记？这些都是问题，一定要根据具体情况，需要考虑：</p>
+
+<ol>
+<li>是用户行为错误还是代码错误？</li>
+<li>记录下来的日志，能否能给别人在不造成过多的干扰前提下提供有用的信息以快速定位问题。</li>
+</ol>
+
+
+<h2>10. 忘设初始容量</h2>
+
+<p><strong>现象</strong></p>
+
+<p>在JAVA中，我们常用Collection中的Map做Cache,但是我们经常会遗忘设置初始容量。</p>
+
+<pre><code>cache = new LRULinkedHashMap&lt; K, V&gt;(maxCapacity);
+</code></pre>
+
+<p><strong>解决</strong></p>
+
+<p>初始容量的影响有多大？拿LinkedHashMap来说，初始容量如果不设置默认是16，超过16×LOAD_FACTOR,会resize(2* table.length),扩大2倍：采用 Entry[] newTable = new Entry[newCapacity];transfer(newTable)，即整个数组Copy，那么对于一个需要做大容量CACHE来说，从16变成一个很大的数量，需要做多少次数组复制可想而知。如果初始容量就设置很大，自然会减少resize,不过可能会担心，初始容量设置很大时，没有Cache内容仍然会占用过大体积。其实可以参考以下表格简单计算下,初始时还没有cache内容, 每个对象仅仅是4字节引用而已。</p>
+
+<ul>
+<li>memory for reference fields (4 bytes each);</li>
+<li>memory for primitive fields</li>
+</ul>
+
+
+<p><laleb /></p>
+
+<pre><code>----------- ----------------
+Java type   Bytes required
+boolean     1
+byte         
+char        2
+short        
+int         4
+float        
+long        8
+double       
+----------- ----------------
+</code></pre>
+
+<p><strong>启示</strong></p>
+
+<p>不仅是map,还有stringBuffer等，都有容量resize的过程，如果数据量很大，就不能忽视初始容量可以考虑设置下，否则不仅有频繁的resize还容易浪费容量。</p>
+
+<p>在Java编程中，除了上面枚举的一些容易忽视的问题，日常实践中还存在很多。相信通过不断的总结和努力，可以将我们的程序完美呈现给读者。</p>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2012-09-07" datetime="2012-09-07" pubdate>
+							<span class="year">2012-09-07</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#java-ref">java <span>3</span></a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.infoq.com/cn/articles/10-java-questions-easy-to-ignore" target="_blank">http://www.infoq.com/cn/articles/10-java-questions-easy-to-ignore</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="unit-foot">
+						<div class="unit-inner unit-foot-inner">
+							<nav class="pagination">
+								<ul style="text-align:center;padding-top:5px;">
+									
+									<li class="prev" style="float:left;margin-left:0;"><a class="internal" rel="prev"  href="/archives/2012/08/21/rabbitmq-cluster.html" title="View rabbitmq集群-1 介绍">&laquo; rabbitmq集群-1 介绍</a></li>
+									
+
+									
+									<li class="next" style="float:right;"><a class="internal" rel="next"  href="/archives/2012/09/10/centos-php-nginx-mysql.html" title="View Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17 &raquo;</a></li>
+									
+								</ul>
+							</nav>
+						</div>
+					</div>
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+  
+
+<a class='top-link' id="top-link" style="cursor:pointer;"><img src="/assets/images/back-top.png" width="20" border=0 alt="返回顶部" title="返回顶部"></a>
+<a class='btm-link' id="btm-link" style="cursor:pointer;"><img src="/assets/images/back-btm.png" width="20" border=0 alt="跳到底部" title="跳到底部"></a>
+
+<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+<!--
+!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
+ //-->
+</script>
+<script type="text/javascript" src="/assets/jquery.scrollTo-1.4.2.js"></script>
+<script src='/assets/default.js'></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+</body>
+</html>
+

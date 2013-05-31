@@ -209,8 +209,6 @@ JavaScript有一个特征叫做隐藏的全局变量。当一个变量名被使�
 
 我希望这些内容是有用的，请在下面留言来分享你的想法。少年们，努力吧，写出更好的，更模块化的JavaScript。
 
- 
-
 英文原文；[ben cherry](http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html)，编译：[伯乐](http://www.jobbole.com "伯乐在线")在线 – [王筱](http://blog.jobbole.com/author/%e7%8e%8b%e7%ad%b1/)
 
 译文链接：[http://blog.jobbole.com/40409/](http://blog.jobbole.com/40409/)
