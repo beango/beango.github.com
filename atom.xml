@@ -4,13 +4,97 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-05-31T17:06:50+08:00</updated>
+ <updated>2013-06-01T11:34:29+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
    <email>6588617@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>优化技巧分享：把内存消耗降低至原来的1/20</title>
+   <link href="http://beango.github.com/archives/2013/06/01/reducing-memory-consumption-by-20x.html"/>
+   <updated>2013-06-01T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/06/01/reducing-memory-consumption-by-20x</id>
+   <content type="html">&lt;p&gt;这是最近发生的又一起内存相关的事件了。这个案例是从一个最近的客户报告中提取出来，一个异常运行的应用在其产品中反复报告内存耗尽。&lt;/p&gt;
+
+&lt;p&gt;这个症状是由我们的一个实验性功能发现，它主要用来监测某一类数据结构的使用情况。它提供了一个信号探针，结果会指向问题源代码的某一位置。为了保护客户的隐私，我们人为重建了该例子并保持它同原真实场景在技术层面的一致性。你可以免费在此处&lt;a href=&quot;http://www.plumbr.eu/files/plumbr-optimization-sample.zip&quot;&gt;下载到源码&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;故事开始于一组从外界源加载进来的对象。同外部的信息交互是基于XML的接口，这本身并没什么大不了的，但事实上“基于XML的格式进行通讯”的实现细节被分散到了系统的每一个角落。传入系统的文档是首先被转换成XMLBean实例，然后在整个系统范围内被使用，这中做法听起来有点傻。&lt;/p&gt;
+
+&lt;p&gt;整个问题中最核心的部分是一个延迟加载的缓冲方案。缓存的对象是“Person”的实例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Imports and methods removed to improve readability 
+public class Person { 
+    private String id;
+    private Date dateOfBirth;
+    private String forename;
+    private String surname;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;你也许会说这才能消耗多少内存呢。但当我们揭开进一步的细节时，发现事情就变了味了。表面上根据设计，声称实现只用到的诸如上文提到的那样一些简单的类，但真实的情形是使用了基于模型生成的数据结构。使用的模型是诸如下面的这个简化的XSD片段。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;xs:schema targetNamespace=&quot;http://plumbr.eu&quot;
+    xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
+    elementFormDefault=&quot;qualified&quot;&amp;gt;
+    &amp;lt;xs:element name=&quot;person&quot;&amp;gt;
+        &amp;lt;xs:complexType&amp;gt;
+            &amp;lt;xs:sequence&amp;gt;
+                &amp;lt;xs:element name=&quot;id&quot; type=&quot;xs:string&quot;/&amp;gt;
+                &amp;lt;xs:element name=&quot;dateOfBirth&quot; type=&quot;xs:dateTime&quot;/&amp;gt;
+                &amp;lt;xs:element name=&quot;forename&quot; type=&quot;xs:string&quot;/&amp;gt;
+                &amp;lt;xs:element name=&quot;surname&quot; type=&quot;xs:string&quot;/&amp;gt;
+            &amp;lt;/xs:sequence&amp;gt;
+        &amp;lt;/xs:complexType&amp;gt;
+    &amp;lt;/xs:element&amp;gt;
+&amp;lt;/xs:schema&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;a href=&quot;http://xmlbeans.apache.org/&quot;&gt;XMLBeans&lt;/a&gt;，开发者生成了该模型，并在真实的场景中使用。现在我们回到开始的这个缓存的方案上来，假设它设计初衷是为了支持最多1.3M Person类的实例，而我们实际却要塞进去同等数量的大家伙，这从根上就注定了失败。&lt;/p&gt;
+
+&lt;p&gt;跑一组测试用例后，发现1.3M个基于XMLBean的生成的实例需要消耗大概1.5GB的堆空间。我们当时想这肯定可以做的更好。&lt;/p&gt;
+
+&lt;p&gt;第一个改进是显而易见的，外部同系统内部集成的实现细节是不应该把影响传递给系统的每一个角落的。所以我们把缓存改成了使用简单的&lt;a href=&quot;http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html&quot;&gt;java.util.HashMap&amp;lt;Long,Person&gt;&lt;/a&gt;。ID是键，Person是值。我们发现内存的消耗立即降低到了214MB。但这还不能令我们满意。&lt;/p&gt;
+
+&lt;p&gt;由于Map中的键是一个数，我们有十足的理由使用&lt;a href=&quot;http://trove.starlight-systems.com/&quot;&gt;Trove Collections&lt;/a&gt;来进一步降低它的内存消耗。这在实现上的改动很快，我们只需把&lt;a href=&quot;http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html&quot;&gt;HashMap&lt;/a&gt;改成&lt;a href=&quot;http://trove4j.sourceforge.net/javadocs/gnu/trove/map/hash/TLongObjectHashMap.html&quot;&gt;TLongObjectHashMap&amp;lt;Person&gt;&lt;/a&gt;，堆的消耗进一步降低到了143MB。&lt;/p&gt;
+
+&lt;p&gt;活干到这个程度我们已经可以收工了，但是工程师的好奇心驱使我们要更进一步。不由自主的我们发现了系统的数据存在着大量的重复信息。例如Date Of Birth其实已经在ID中编码了，所以Date Of Birth可以直接从ID中得到，而不必使用额外的空间去它。&lt;/p&gt;
+
+&lt;p&gt;经过改良，Person类现在变成了这个样子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Imports and methods removed to improve readability
+public class Person {
+    private String id;
+    private String forename;
+    private String surname;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重新跑一边测试证实我们的改进的确有效，堆消耗降低到了93MB。但是我们还未满足。&lt;/p&gt;
+
+&lt;p&gt;该应用在64位的机器上使用老的JDK6。默认情况下，这么做不能&lt;a href=&quot;https://wikis.oracle.com/display/HotSpotInternals/CompressedOops&quot;&gt;压缩普通对象&lt;/a&gt;的指针的。通过参数”&lt;a href=&quot;https://wikis.oracle.com/display/HotSpotInternals/CompressedOops&quot;&gt;-XX:UseCompressedOops&lt;/a&gt;“切换到压缩模式使我们获得了额外的收获，现在我们的内存消耗降低到了73MB。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-06/comparing-heap-consumption.png&quot; title=&quot;comparing-heap-consumption&quot;&gt;&lt;img src=&quot;/assets/files/2013-06/comparing-heap-consumption.png&quot; title=&quot;comparing-heap-consumption&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当然，我们还能走的更远。比如基于键值建立B-tree，但这已经开始影响到了代码的可读性，所以我们决定到此为止。降低21.5倍的堆内存应该已经是一个足够好的结果了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;让我们在重复一下学到了什么&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;别把同外部模块的整合影响到系统的每一个角落&lt;/li&gt;
+&lt;li&gt;冗余的数据可能带来开销。在可能的情况下尽量消除它&lt;/li&gt;
+&lt;li&gt;基本数据类型是你最经常打交道的朋友，务必知道些关于它们的工具，如果还没玩过&lt;a href=&quot;http://trove.starlight-systems.com/&quot;&gt;Trove&lt;/a&gt;请立刻开始吧&lt;/li&gt;
+&lt;li&gt;JVM自带的优化技术不可忽视&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;如果你对这个实验很好奇，请在此处&lt;a href=&quot;http://www.plumbr.eu/files/plumbr-optimization-sample.zip&quot;&gt;下载相关的代码&lt;/a&gt;。使用到的的测量工具和其具体描述可以在这篇&lt;a href=&quot;http://plumbr.eu/blog/how-much-memory-do-i-need-part-3-measure-dont-guess&quot;&gt;博文&lt;/a&gt;找到。&lt;/p&gt;
+
+&lt;p&gt;原文链接： &lt;a href=&quot;http://plumbr.eu/blog/reducing-memory-consumption-by-20x&quot;&gt;Nikita Salnikov-Tarnovski&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>深入研究JavaScript的Module模式</title>
@@ -7049,6 +7133,227 @@ else:
 &lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20c0wj1dbg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;来源：&lt;a href=&quot;http://www.javacodegeeks.com/2013/02/the-reality-of-developers-life.html&quot;&gt;javacodegeeks&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Java 安全模型介绍</title>
+   <link href="http://beango.github.com/archives/2013/02/21/j-lo-javasecurity.html"/>
+   <updated>2013-02-21T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/02/21/j-lo-javasecurity</id>
+   <content type="html">&lt;p&gt;来源：&lt;a href=&quot;http://www.ibm.com/developerworks/cn/java/j-lo-javasecurity/&quot;&gt;IBM developerworks&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;作为一种诞生于互联网兴起时代的语言，Java从一开始就带有安全上的考虑，如何保证通过互联网下载到本地的 Java程序是安全的，如何对 Java 程序访问本地资源权限进行有限授权，这些安全角度的考虑一开始就影响到 Java 语言的设计与实现。可以说 Java 在这些方面的探索与经验，对后来的一些语言与产品都带来了积极影响。&lt;/p&gt;
+
+&lt;p&gt;本篇文章中将介绍 Java 中安全模型，以及如何利用安全访问控制机制来实现一些特定目的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Java 中的安全模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在 Java 中将执行程序分成本地和远程两种，本地代码默认视为可信任的，而远程代码则被看作是不受信的。对于授信的本地代码，可以访问一切本地资源。而对于非授信的远程代码在早期的 Java 实现中，安全依赖于沙箱 (Sandbox) 机制。沙箱机制就是将 Java
+代码限定在虚拟机 (JVM) 特定的运行范围中，并且严格限制代码对本地系统的资源访问，通过这样的措施来保证对远程代码的有效隔离，防止对本地系统造成破坏。如图 1 所示，&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 1.JDK1.0 安全模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-01/java-security-strategy-01.gif&quot; title=&quot;Java 安全模型介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-01/java-security-strategy-01.gif&quot; title=&quot;Java 安全模型介绍&quot; alt=&quot;Java安全模型介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;但如此严格的安全机制也给程序的功能扩展带来障碍，比如当用户希望远程代码访问本地系统的文件时候，就无法实现。因此在后续的Java1.1版本中，针对安全机制做了改进，增加了安全策略，允许用户指定代码对本地资源的访问权限。如图 2 所示，&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 2.JDK1.1 安全模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-01/java-security-strategy-02.gif&quot; title=&quot;Java 安全模型介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-01/java-security-strategy-02.gif&quot; title=&quot;Java 安全模型介绍&quot; alt=&quot;Java安全模型介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在 Java1.2 版本中，再次改进了安全机制，增加了代码签名。不论本地代码或是远程代码，都会按照用户的安全策略设定，由类加载器加载到虚拟机中权限不同的运行空间，来实现差异化的代码执行权限控制。如图 3 所示，&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 3.JDK1.2 安全模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-01/java-security-strategy-03.gif&quot; title=&quot;Java 安全模型介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-01/java-security-strategy-03.gif&quot; title=&quot;Java 安全模型介绍&quot; alt=&quot;Java安全模型介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;当前最新的安全机制实现，则引入了域 (Domain) 的概念。虚拟机会把所有代码加载到不同的系统域和应用域，系统域部分专门负责与关键资源进行交互，而各个应用域部分则通过系统域的部分代理来对各种需要的资源进行访问。虚拟机中不同的受保护域(Protected Domain)，对应不一样的权限(Permission)。存在于不同域中的类文件就具有了当前域的全部权限，如图 4 所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 4. 最新安全模型&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/files/2013-01/java-security-strategy-04.gif&quot; title=&quot;Java 安全模型介绍&quot;&gt;&lt;img src=&quot;/assets/files/2013-01/java-security-strategy-04.gif&quot; title=&quot;Java 安全模型介绍&quot; alt=&quot;Java安全模型介绍&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;以上提到的都是基本的 Java 安全模型概念，在应用开发中还有一些关于安全的复杂用法，其中最常用到的 API 就是 doPrivileged。doPrivileged 方法能够使一段受信任代码获得更大的权限，甚至比调用它的应用程序还要多，可做到临时访问更多的资源。有时候这是非常必要的，可以应付一些特殊的应用场景。例如，应用程序可能无法直接访问某些系统资源，但这样的应用程序必须得到这些资源才能够完成功能。针对这种情况，Java SDK 给域提供了 doPrivileged 方法，让程序突破当前域权限限制，临时扩大访问权限。下面内容会详细讲解一下安全相关的方法使用。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Java 安全控制实现&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Java SDK 中与安全相关的类和接口都放在 java.security 包中，其中既包括访问控制配置及细粒度访问控制框架的实现，还包括签名和加解密的实现。本文中涉及到的安全访问控制主要与安全包中访问控制框架相关，这里面最常用的就是 AccessContorller 类。通过下图的描述，您可以了解 ACC(Access Contorller) 机制是如何运作的。&lt;/p&gt;
+
+&lt;p&gt;在某一个线程的调用栈中，当 AccessController 的 checkPermission 方法被最近的调用程序（例如 A 类中的方法）调用时，对于程序要求的所有访问权限，ACC 决定是否授权的基本算法如下：&lt;/p&gt;
+
+&lt;p&gt;​1. 如果调用链中的某个调用程序没有所需的权限，将抛出AccessControlException；&lt;/p&gt;
+
+&lt;p&gt;​2. 若是满足以下情况即被授予权限：&lt;/p&gt;
+
+&lt;p&gt;​a. 调用程序访问另一个有该权限域里程序的方法，并且此方法标记为有访问“特权”；&lt;/p&gt;
+
+&lt;p&gt;​b. 调用程序所调用（直接或间接）的后续对象都有上述权限。&lt;/p&gt;
+
+&lt;p&gt;在上面例子的调用链中，假定 E 域和 F 域不具备 X 权限 (permission)，而在 C.class 对应的 G 域具有 X 权限，同时 C 使用 X 权限的对外接口 Y 方法是通过 doPrivilege 方式实现。那么，B.class A.class 调用 Y 方法就都具备 X 权限。如果 Y 方法没有标注 doPrivilege，那么对 Y 方法的调用就不具备 X 权限。&lt;/p&gt;
+
+&lt;p&gt;还有一种特殊的情况，就是访问控制上下文的继承问题。当一个线程创建另一个新线程时，会同时创建新的堆栈。如果创建新线程时没有保留当前的安全上下文，也就是线程相关的安全信息，则新线程调用AccessController.checkPermission检验权限时，安全访问控制机制只会根据新线程的上下文来决定安全性问题，而不会考虑其父线程的相应权限。这个清除堆栈的做法本身并不会给系统带来安全隐患，但它会使源代码，尤其是系统代码的编写容易出现错误。例如，对安全框架实现不熟悉编程人员可能会很自然地认为，子线程执行的信任代码继承了父线程执行的不可信任代码的安全限制特性。当从子线程内访问受控制的资源时，如果父线程的安全上下文信息并未保存，就会导致意外的安全漏洞。因为丢失的父线程中安全限制数据会使子线程将资源传递给一些不可信任的代码。因此，在创建新线程时，必须确保利用父线程创建，或利用其他形式创建代码。总之，要保证让子线程自动继承父线程的安全性上下文，这样子线程中的后续 AccessController.checkPermission 调用就会考虑所继承的父线程的安全特性。&lt;/p&gt;
+
+&lt;p&gt;需要注意是 AccessController 类的 checkPermission
+方法将在当前执行线程的上下文，包括继承的上下文中进行安全检查。当这种安全检查只能在不同的上下文中进行时就会出现问题。意即，本应在一个线程上下文内部进行的安全检查，有时却需要在不同上下文中进行。例如，当一个线程将某个事件传给另一个线程时，如果所请求的事件服务要求访问某种安全受控资源，则为其请求事件服务的第二个线程将没有事件产生源线程相应的上下文来完成所需的访问控制决策。为解决这样的问题，Java 在 AccessController 类中提供了 getContext 方法和 AccessControlContext 对象。通过 getContext 方法可获取当前调用上下文的“快照(snapshot)”，然后将其存放到返回的 AccessControlContext 对象中。调用的样例程序如下所示：AccessControlContext acc = AccessController.getContext();&lt;/p&gt;
+
+&lt;p&gt;getContext方法将当前上下文的快照信息捕获，然后执行程序就可以通过检查前后不同上下文中的信息，即比较快照上下文信息与本上下文信息，然后来做出对受控资源访问控制的决策。上面问题就可以如下方式来解决，当前一个线程把某个请求事件传给第二个线程时，同时捕获其上下文信息并将这些信息提供给后一个线程。略有不同的是，AccessControlContext 类本身的 checkPermission 方法可根据它自身携带的上下文信息来决定访问控制，而不是根据当前正在执行的线程上下文。因此必要时，后一个线程可直接通过调用前一个线程上下文快照本身的权限检查方法来执行相应的安全检查。如下，acc.checkPermission(permission)，上述方法调用等同于在前一个线程的上下文中执行相同的安全检查，尽管访问控制检查实际上是在后一个线程中完成的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;安全控制使用的代码实例&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;上面关于安全控制使用的描述还是比较晦涩，下面将通过一个代码示例进行说明。&lt;/p&gt;
+
+&lt;p&gt;在 Eclipse 开发环境中建立两个不同工程：projectX 和 projectY。我们会给 projectX 工程中的 bin 目录赋予写文件的权限，换句话说就是允许所有存在于此目录中的 class 文件可以自由的在 bin 目录中进行文件写操作。然后，我们会在 projectY
+工程中调用 projectX 工程中的一个文件操作工具类。这个工具类提供两种类型接口，一种是特权访问方式，另外一种是普通访问方式。由于在 projectY 工程中的文件是不具备在 projectX 工程中 bin 目录的任何写权限，所以通过三种不同访问方式的调用结果，我们就可以很清楚地了解到 Java 中安全控制该如何使用。&lt;/p&gt;
+
+&lt;p&gt;假定 ProjectX 的项目路径为 D:\workspace\projectX\&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package learn.java.security; 
+
+ import java.io.File; 
+ import java.io.IOException; 
+ import java.security.AccessControlException; 
+ import java.security.AccessController; 
+ import java.security.PrivilegedAction; 
+
+ public class FileUtil { 
+    // 工程 A 执行文件的路径   
+    private final static String FOLDER_PATH = &quot;D:\\workspace\\projectX\\bin&quot;; 
+
+    public static void makeFile(String fileName) { 
+        try { 
+            // 尝试在工程 A 执行文件的路径中创建一个新文件
+            File fs = new File(FOLDER_PATH + &quot;\\&quot; + fileName); 
+            fs.createNewFile(); 
+        } catch (AccessControlException e) { 
+            e.printStackTrace(); 
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+        } 
+    } 
+
+    public static void doPrivilegedAction(final String fileName) { 
+        // 用特权访问方式创建文件
+        AccessController.doPrivileged(new PrivilegedAction&amp;lt;String&amp;gt;() { 
+            @Override 
+            public String run() { 
+                makeFile(fileName); 
+                return null; 
+            } 
+        }); 
+    } 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假定 ProjectY 的项目路径为 D:\workspace\projectY\&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; package demo.security; 
+
+ import java.io.File; 
+ import java.io.IOException; 
+ import java.security.AccessControlException; 
+
+ import learn.java.security.FileUtil; 
+
+ public class DemoDoPrivilege { 
+
+    public static void main(String[] args) { 
+        System.out.println(&quot;***************************************&quot;); 
+        System.out.println(&quot;I will show AccessControl functionality...&quot;); 
+
+        System.out.println(&quot;Preparation step : turn on system permission check...&quot;); 
+        // 打开系统安全权限检查开关
+        System.setSecurityManager(new SecurityManager()); 
+        System.out.println(); 
+
+        System.out.println(&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;); 
+        System.out.println(&quot;
+        Create a new file named temp1.txt via privileged action ...&quot;); 
+        // 用特权访问方式在工程 A 执行文件路径中创建 temp1.txt 文件
+        FileUtil.doPrivilegedAction(&quot;temp1.txt&quot;); 
+        System.out.println(&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;); 
+        System.out.println(); 
+
+        System.out.println(&quot;/////////////////////////////////////////&quot;); 
+        System.out.println(&quot;Create a new file named temp2.txt via File ...&quot;); 
+        try { 
+            // 用普通文件操作方式在工程 A 执行文件路径中创建 temp2.txt 文件
+            File fs = new File( 
+                    &quot;D:\\workspace\\projectX\\bin\\temp2.txt&quot;); 
+            fs.createNewFile(); 
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+        } catch (AccessControlException e1) { 
+            e1.printStackTrace(); 
+        } 
+        System.out.println(&quot;/////////////////////////////////////////&quot;); 
+        System.out.println(); 
+
+        System.out.println(&quot;-----------------------------------------&quot;); 
+        System.out.println(&quot;create a new file named temp3.txt via FileUtil ...&quot;); 
+        // 直接调用普通接口方式在工程 A 执行文件路径中创建 temp3.txt 文件
+        FileUtil.makeFile(&quot;temp3.txt&quot;); 
+        System.out.println(&quot;-----------------------------------------&quot;); 
+        System.out.println(); 
+
+        System.out.println(&quot;***************************************&quot;); 
+    } 
+ } 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;应用的安全访问控制策略文件 (MyPolicy.txt) 如下 , 假定安全策略文件放于 projectY 工程的根目录下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; // 授权工程 A 执行文件路径中文件在本目录中的写文件权限
+ grant codebase &quot;file:/D:/workspace/projectX/bin&quot;
+ { 
+  permission java.io.FilePermission 
+    &quot;D:\\workspace\\projectX\\bin\\*&quot;, &quot;write&quot;; 
+ }; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面就可以运行程序了，您可以选择在 Eclipse 开发环境中直接运行，也可以通过命令行来执行。命令行执行如下所示，假定当前执行目录就是 projectY 的根目录。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; java -Djava.security.policy=.\\MyPolicy.txt -classpath 
+ D:\workspace\projectY\bin;D:\workspace\projectX\bin demo.security.DemoDoPrivilege
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行结果如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; *************************************** 
+ I will show AccessControl functionality... 
+ Preparation step : turn on system permission check... 
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+ Create a new file named temp1.txt via privileged action ... 
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+ //////////////////////////////////////// 
+ Create a new file named temp2.txt via File ... 
+ java.security.AccessControlException: Access denied (java.io.FilePermission 
+      D:\workspace\projectX\bin\temp2.txt write) 
+     at java.security.AccessController.checkPermission(AccessController.java:108) 
+     at java.lang.SecurityManager.checkPermission(SecurityManager.java:533) 
+     at java.lang.SecurityManager.checkWrite(SecurityManager.java:963) 
+     at java.io.File.createNewFile(File.java:882) 
+     at demo.security.DemoDoPrivilege.main(DemoDoPrivilege.java:32) 
+ //////////////////////////////////////// 
+
+ ---------------------------------------- 
+ create a new file named temp3.txt via FileUtil ... 
+ java.security.AccessControlException: Access denied (java.io.FilePermission 
+     D:\workspace\projectX\bin\temp3.txt write) 
+     at java.security.AccessController.checkPermission(AccessController.java:108) 
+     at java.lang.SecurityManager.checkPermission(SecurityManager.java:533) 
+     at java.lang.SecurityManager.checkWrite(SecurityManager.java:963) 
+     at java.io.File.createNewFile(File.java:882) 
+     at learn.java.security.FileUtil.makeFile(FileUtil.java:16) 
+     at demo.security.DemoDoPrivilege.main(DemoDoPrivilege.java:43) 
+ ---------------------------------------- 
+
+ *************************************** 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过程序打印结果来看，当往 projectX 工程中 bin 目录创建temp1.txt，temp2.txt，temp3.txt文件时候，除了通过特权访问方式可以创建成功外，通过普通接口访问或者直接文件操作方式都会失败，失败的原因都是没有通过权限检查。对照前文所描述的权限检查规则，用一句话总结就是想访问安全资源，要么调用链上权限齐全，要么就要用特权。特权访问机制实际上就是给应用开后门的使用上需要小心，所以这也给代码实现带来新的考虑，开放范围一定要限定好，否则可能留下安全隐患。&lt;/p&gt;
 </content>
  </entry>
  
@@ -16221,6 +16526,407 @@ Redis can help a lot (think at timeline caching).&lt;/li&gt;
 
 &lt;p&gt;来源：&lt;a href=&quot;http://stackoverflow.com/questions/2873249/is-memcached-a-dinosaur-in-comparison-to-redis&quot;&gt;Is memcached a dinosaur in comparison to
 Redis?&lt;/a&gt;（其他人的回答同样值得一看）&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>理解Java对象序列化</title>
+   <link href="http://beango.github.com/archives/2012/02/13/java-serializable.html"/>
+   <updated>2012-02-13T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2012/02/13/java-serializable</id>
+   <content type="html">&lt;p&gt;**
+关于Java序列化的文章早已是汗牛充栋了，本文是对我个人过往学习，理解及应用Java序列化的一个总结。此文内容涉及Java序列化的基本原理，以及多种方法对序列化形式进行定制。在撰写本文时，既参考了Thinking in Java, Effective Java，JavaWorld，developerWorks中的相关文章和其它网络资料，也加入了自己的实践经验与理解，文、码并茂，希望对大家有所帮助。(2012.02.14最后更新)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 什么是Java对象序列化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Java平台允许我们在内存中创建可复用的Java对象，但一般情况下，只有当JVM处于运行时，这些对象才可能存在，即，这些对象的生命周期不会比JVM的生命周期更长。但在现实应用中，就可能要求在JVM停止运行之后能够保存(持久化)指定的对象，并在将来重新读取被保存的对象。Java对象序列化就能够帮助我们实现该功能。&lt;/p&gt;
+
+&lt;p&gt;使用Java对象序列化，在保存对象时，会把其状态保存为一组字节，在未来，再将这些字节组装成对象。必须注意地是，对象序列化保存的是对象的&quot;状态&quot;，即它的成员变量。由此可知，对象序列化不会关注类中的静态变量。&lt;/p&gt;
+
+&lt;p&gt;除了在持久化对象时会用到对象序列化之外，当使用RMI(远程方法调用)，或在网络中传递对象时，都会用到对象序列化。Java序列化API为处理对象序列化提供了一个标准机制，该API简单易用，在本文的后续章节中将会陆续讲到。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 简单示例&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在Java中，只要一个类实现了java.io.Serializable接口，那么它就可以被序列化。此处将创建一个可序列化的类Person，本文中的所有示例将围绕着该类或其修改版。
+Gender类，是一个枚举类型，表示性别&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public enum Gender {
+    MALE, FEMALE
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果熟悉Java枚举类型的话，应该知道每个枚举类型都会默认继承类java.lang.Enum，而该类实现了Serializable接口，所以枚举类型对象都是默认可以被序列化的。&lt;/p&gt;
+
+&lt;p&gt;Person类，实现了Serializable接口，它包含三个字段：name，String类型；age，Integer类型；gender，Gender类型。另外，还重写该类的toString()方法，以方便打印Person实例中的内容。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Serializable {
+    private String name = null;
+    private Integer age = null;
+    private Gender gender = null;
+    public Person() {
+        System.out.println(&quot;none-arg constructor&quot;);
+    }
+
+    public Person(String name, Integer age, Gender gender) {
+        System.out.println(&quot;arg constructor&quot;);
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;[&quot; + name + &quot;, &quot; + age + &quot;, &quot; + gender + &quot;]&quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SimpleSerial，是一个简单的序列化程序，它先将一个Person对象保存到文件person.out中，然后再从该文件中读出被存储的Person对象，并打印该对象。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class SimpleSerial {
+
+    public static void main(String[] args) throws Exception {
+        File file = new File(&quot;person.out&quot;);
+
+        ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(file));
+        Person person = new Person(&quot;John&quot;, 101, Gender.MALE);
+        oout.writeObject(person);
+        oout.close();
+
+        ObjectInputStream oin = new ObjectInputStream(new FileInputStream(file));
+        Object newPerson = oin.readObject(); // 没有强制转换到Person类型
+        oin.close();
+        System.out.println(newPerson);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述程序的输出的结果为：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  [John, 31, MALE]&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;此时必须注意的是，当重新读取被保存的Person对象时，并没有调用Person的任何构造器，看起来就像是直接使用字节将Person对象还原出来的。
+当Person对象被保存到person.out文件中之后，我们可以在其它地方去读取该文件以还原对象，但必须确保该读取程序的CLASSPATH中包含有Person.class(哪怕在读取Person对象时并没有显示地使用Person类，如上例所示)，否则会抛出ClassNotFoundException。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. Serializable的作用&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;为什么一个类实现了Serializable接口，它就可以被序列化呢？在上节的示例中，使用ObjectOutputStream来持久化对象，在该类中有如下代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private void writeObject0(Object obj, boolean unshared) throws IOException {
+    ...
+    if (obj instanceof String) {
+        writeString((String) obj, unshared);
+    } else if (cl.isArray()) {
+        writeArray(obj, desc, unshared);
+    } else if (obj instanceof Enum) {
+        writeEnum((Enum) obj, desc, unshared);
+    } else if (obj instanceof Serializable) {
+        writeOrdinaryObject(obj, desc, unshared);
+    } else {
+        if (extendedDebugInfo) {
+            throw new NotSerializableException(cl.getName() + &quot;\n&quot;
+                    + debugInfoStack.toString());
+        } else {
+            throw new NotSerializableException(cl.getName());
+        }
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从上述代码可知，如果被写对象的类型是String，或数组，或Enum，或Serializable，那么就可以对该对象进行序列化，否则将抛出NotSerializableException。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4. 默认序列化机制&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;如果仅仅只是让某个类实现Serializable接口，而没有其它任何处理的话，则就是使用默认序列化机制。使用默认机制，在序列化对象时，不仅会序列化当前对象本身，还会对该对象引用的其它对象也进行序列化，同样地，这些其它对象引用的另外对象也将被序列化，以此类推。所以，如果一个对象包含的成员变量是容器类对象，而这些容器所含有的元素也是容器类对象，那么这个序列化的过程就会较复杂，开销也较大。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5. 影响序列化&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在现实应用中，有些时候不能使用默认序列化机制。比如，希望在序列化过程中忽略掉敏感数据，或者简化序列化过程。下面将介绍若干影响序列化的方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5.1 transient关键字&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当某个字段被声明为transient后，默认序列化机制就会忽略该字段。此处将Person类中的age字段声明为transient，如下所示，&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Serializable {
+    ...
+    transient private Integer age = null;
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再执行SimpleSerial应用程序，会有如下输出：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;   arg constructor  
+&amp;gt;   [John, null, MALE]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可见，age字段未被序列化。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5.2 writeObject()方法与readObject()方法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;对于上述已被声明为transitive的字段age，除了将transitive关键字去掉之外，是否还有其它方法能使它再次可被序列化？方法之一就是在Person类中添加两个方法：writeObject()与readObject()，如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Serializable {
+    ...
+    transient private Integer age = null;
+    ...
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(age);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        age = in.readInt();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在writeObject()方法中会先调用ObjectOutputStream中的defaultWriteObject()方法，该方法会执行默认的序列化机制，如5.1节所述，此时会忽略掉age字段。然后再调用writeInt()方法显示地将age字段写入到ObjectOutputStream中。readObject()的作用则是针对对象的读取，其原理与writeObject()方法相同。
+    再次执行SimpleSerial应用程序，则又会有如下输出：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  [John, 31, MALE]&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;必须注意地是，writeObject()与readObject()都是private方法，那么它们是如何被调用的呢？毫无疑问，是使用反射。详情可见ObjectOutputStream中的writeSerialData方法，以及ObjectInputStream中的readSerialData方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5.3 Externalizable接口&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;无论是使用transient关键字，还是使用writeObject()和readObject()方法，其实都是基于Serializable接口的序列化。JDK中提供了另一个序列化接口--Externalizable，使用该接口之后，之前基于Serializable接口的序列化机制就将失效。此时将Person类修改成如下，&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Externalizable {
+
+    private String name = null;
+    transient private Integer age = null;
+    private Gender gender = null;
+
+    public Person() {
+        System.out.println(&quot;none-arg constructor&quot;);
+    }
+
+    public Person(String name, Integer age, Gender gender) {
+        System.out.println(&quot;arg constructor&quot;);
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(age);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        age = in.readInt();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此时再执行SimpleSerial程序之后会得到如下结果：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  none-arg constructor&lt;br/&gt;
+  [null, null, null]&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;从该结果，一方面可以看出Person对象中任何一个字段都没有被序列化。另一方面，如果细心的话，还可以发现这此次序列化过程调用了Person类的无参构造器。&lt;/p&gt;
+
+&lt;p&gt;Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成。如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段。这也就是为什么输出结果中所有字段的值均为空。&lt;/p&gt;
+
+&lt;p&gt;另外，若使用Externalizable进行序列化，当读取对象时，会调用被序列化类的无参构造器去创建一个新的对象，然后再将被保存对象的字段的值分别填充到新对象中。这就是为什么在此次序列化过程中Person类的无参构造器会被调用。由于这个原因，实现Externalizable接口的类必须要提供一个无参的构造器，且它的访问权限为public。&lt;/p&gt;
+
+&lt;p&gt;对上述Person类作进一步的修改，使其能够对name与age字段进行序列化，但要忽略掉gender字段，如下代码所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Externalizable {
+
+    private String name = null;
+    transient private Integer age = null;
+    private Gender gender = null;
+
+    public Person() {
+        System.out.println(&quot;none-arg constructor&quot;);
+    }
+
+    public Person(String name, Integer age, Gender gender) {
+        System.out.println(&quot;arg constructor&quot;);
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(age);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        age = in.readInt();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(name);
+        out.writeInt(age);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        name = (String) in.readObject();
+        age = in.readInt();
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行SimpleSerial之后会有如下结果：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  none-arg constructor&lt;br/&gt;
+  [John, 31, null]&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;5.4 readResolve()方法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当我们使用Singleton模式时，应该是期望某个类的实例应该是唯一的，但如果该类是可序列化的，那么情况可能会略有不同。此时对第2节使用的Person类进行修改，使其实现Singleton模式，如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Serializable {
+
+    private static class InstanceHolder {
+        private static final Person instatnce = new Person(&quot;John&quot;, 31, Gender.MALE);
+    }
+
+    public static Person getInstance() {
+        return InstanceHolder.instatnce;
+    }
+
+    private String name = null;
+
+    private Integer age = null;
+
+    private Gender gender = null;
+
+    private Person() {
+        System.out.println(&quot;none-arg constructor&quot;);
+    }
+
+    private Person(String name, Integer age, Gender gender) {
+        System.out.println(&quot;arg constructor&quot;);
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同时要修改SimpleSerial应用，使得能够保存/获取上述单例对象，并进行对象相等性比较，如下代码所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class SimpleSerial {
+
+    public static void main(String[] args) throws Exception {
+        File file = new File(&quot;person.out&quot;);
+        ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(file));
+        oout.writeObject(Person.getInstance()); // 保存单例对象
+        oout.close();
+
+        ObjectInputStream oin = new ObjectInputStream(new FileInputStream(file));
+        Object newPerson = oin.readObject();
+        oin.close();
+        System.out.println(newPerson);
+
+        System.out.println(Person.getInstance() == newPerson); // 将获取的对象与Person类中的单例对象进行相等性比较
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行上述应用程序后会得到如下结果：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  [John, 31, MALE]&lt;br/&gt;
+  false&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;值得注意的是，从文件person.out中获取的Person对象与Person类中的单例对象并不相等。为了能在序列化过程仍能保持单例的特性，可以在Person类中添加一个readResolve()方法，在该方法中直接返回Person的单例对象，如下所示：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Person implements Serializable {
+
+    private static class InstanceHolder {
+        private static final Person instatnce = new Person(&quot;John&quot;, 31, Gender.MALE);
+    }
+
+    public static Person getInstance() {
+        return InstanceHolder.instatnce;
+    }
+
+    private String name = null;
+
+    private Integer age = null;
+
+    private Gender gender = null;
+
+    private Person() {
+        System.out.println(&quot;none-arg constructor&quot;);
+    }
+
+    private Person(String name, Integer age, Gender gender) {
+        System.out.println(&quot;arg constructor&quot;);
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        return InstanceHolder.instatnce;
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再次执行本节的SimpleSerial应用后将有如下输出：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;  arg constructor&lt;br/&gt;
+  [John, 31, MALE]&lt;br/&gt;
+  true&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;无论是实现Serializable接口，或是Externalizable接口，当从I/O流中读取对象时，readResolve()方法都会被调用到。实际上就是用readResolve()中返回的对象直接替换在反序列化过程中创建的对象，而被创建的对象则会被垃圾回收掉。
+(持续更新中...)&lt;/p&gt;
 </content>
  </entry>
  

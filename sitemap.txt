@@ -20,6 +20,7 @@ http://www.yif1.com/info.html
 http://www.yif1.com/sitemap.txt
 http://www.yif1.com/tags.html
 
+http://www.yif1.com/archives/2013/06/01/reducing-memory-consumption-by-20x.html
 http://www.yif1.com/archives/2013/05/31/javascript-module-pattern-in-depth.html
 http://www.yif1.com/archives/2013/05/30/a-visual-explanation-of-sql-joins.html
 http://www.yif1.com/archives/2013/05/16/c-sharp-performance-optimization.html
@@ -43,6 +44,7 @@ http://www.yif1.com/archives/2013/02/28/howto-strong-developer.html
 http://www.yif1.com/archives/2013/02/27/state-of-nosql.html
 http://www.yif1.com/archives/2013/02/27/scalability-system-architecture-lessons.html
 http://www.yif1.com/archives/2013/02/21/the-reality-of-developers-life.html
+http://www.yif1.com/archives/2013/02/21/j-lo-javasecurity.html
 http://www.yif1.com/archives/2013/02/18/booting.html
 http://www.yif1.com/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html
 http://www.yif1.com/archives/2013/01/12/bson-and-data-interchange.html
@@ -85,6 +87,7 @@ http://www.yif1.com/archives/2012/03/29/mongodb-best-practices.html
 http://www.yif1.com/archives/2012/03/23/a-bad-picture-is-worth-a-thousand-long-discussions.html
 http://www.yif1.com/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html
 http://www.yif1.com/archives/2012/03/12/is-memcached-a-dinosaur-in-comparison-to-redis.html
+http://www.yif1.com/archives/2012/02/13/java-serializable.html
 http://www.yif1.com/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html
 http://www.yif1.com/archives/2012/02/01/fully-understanding-the-this-keyword.html
 http://www.yif1.com/archives/2011/12/19/redis-install.html
