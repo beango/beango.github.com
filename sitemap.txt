@@ -87,6 +87,7 @@ http://www.yif1.com/archives/2012/03/29/mongodb-best-practices.html
 http://www.yif1.com/archives/2012/03/23/a-bad-picture-is-worth-a-thousand-long-discussions.html
 http://www.yif1.com/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html
 http://www.yif1.com/archives/2012/03/12/is-memcached-a-dinosaur-in-comparison-to-redis.html
+http://www.yif1.com/archives/2012/02/20/java-heap-space-memory-size-jvm.html
 http://www.yif1.com/archives/2012/02/13/java-serializable.html
 http://www.yif1.com/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html
 http://www.yif1.com/archives/2012/02/01/fully-understanding-the-this-keyword.html
