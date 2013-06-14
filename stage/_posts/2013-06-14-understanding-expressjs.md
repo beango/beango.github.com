@@ -1,10 +1,10 @@
 ---
 layout: post
-categories: [nodejs]
+categories: [node.js]
 date: 2013-06-14
 title: "(译)深入理解Express.js"
 description: "(译)深入理解Express.js"
-tags: [nodejs]
+tags: [node.js]
 redirecturl: http://xvfeng.me/posts/understanding-expressjs/
 ---
 {% include JB/setup %}
