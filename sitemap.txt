@@ -2,6 +2,7 @@
 http://www.yif1.com/archive.html
 http://www.yif1.com/atom.xml
 http://www.yif1.com/category.html
+http://www.yif1.com/code/csharp-NAT-file.html
 http://www.yif1.com/code/csharp-office.html
 http://www.yif1.com/code/css-collection.html
 http://www.yif1.com/code/dotnet.html

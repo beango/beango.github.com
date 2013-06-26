@@ -38,4 +38,6 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 
 -	[C#读取Excel](/code/csharp-office.html)
 
+-	[C#读写局域网文件](/code/csharp-NAT-file.html)
+
 -	[常用工具](/code/tools.html)
