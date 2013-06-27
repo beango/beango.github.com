@@ -1027,14 +1027,14 @@ a:hover {
 /*
   Huge-screen layout 
 */
-@media only screen and (min-width: 1410px) {
+@media only screen and (min-width: 910px) {
   .the-header {
     float: left;
-    width: 18%;
-  position: fixed;
+    width: 256px;
+    position: fixed;
   }
   .the-header .unit-head {
-    padding: 26px;
+    padding: 6px;
   }
   .the-header .unit-head .nav-global li {
     float: none;
@@ -1068,16 +1068,15 @@ a:hover {
     -moz-box-shadow: #ffffff 0px 0px 2px;
     -o-box-shadow: #ffffff 0px 0px 2px;
     float: left;
-    width: 81%;
-    margin-right: -350px;
-  margin-left:256px;
+    width: 75%;
+	margin-left:256px;
   }
   .body .unit-body {
     border-right: 1px solid rgba(0, 0, 0, 0.2);
     -webkit-box-shadow: #ffffff 0px 0px 2px;
     -moz-box-shadow: #ffffff 0px 0px 2px;
     -o-box-shadow: #ffffff 0px 0px 2px;
-    margin-right: 350px;
+    margin-right: 50px;
     padding: 26px 52px;
     min-height: 1050px;
   }
@@ -1303,22 +1302,6 @@ text-shadow: 1px 1px 0px #eeeeee;
   -moz-box-shadow:0 0 3px black;
   padding:10px;
 }
-.top-link { 
-  display:none; 
-  position:fixed; 
-  right:335px; 
-  bottom:44px; 
-  color:#fff;
-}
-.btm-link { 
-  display:none; 
-  position:fixed; 
-  right:335px; 
-  bottom:14px; 
-  color:#fff;
-}
-.options ul li a { display: block; padding: 8px 12px 6px; font-weight: bold; font-size: 15px; height: 20px; line-height: 20px; text-decoration: none; color: #fff; background: #8CA1AF url(../images/gradient-light.png) bottom left repeat-x; box-shadow: 0 1px 1px #465158; -moz-box-shadow: 0 1px 1px #465158; -webkit-box-shadow: 0 1px 1px #465158; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5); }
-.options ul li a:hover { background-color: #697983; box-shadow: 0 1px 0px #465158; -moz-box-shadow: 0 1px 0px #465158; -webkit-box-shadow: 0 1px 0px #465158; }
 /* HIGHLIGHTER */
 pre {
   margin-bottom: 1.0em;
