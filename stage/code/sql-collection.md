@@ -135,6 +135,57 @@ CTE批量插入
 <label/>
     update t1 set t1.name='Liu' from t1 inner join t2 on t1.id = t2.tid
 
+判断数据库是否存在 
+--------------------
+
+<label/>
+    if exists(select * from master..sysdatabases where name=N'库名') 
+      print 'exists' 
+    else 
+      print 'not exists' 
+
+判断要创建的表名是否存在
+------------------------
+
+<label/>
+    if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[表名]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+      drop table [dbo].[表名] -- 删除表 
+    GO 
+
+判断要创建临时表是否存在 
+------------------------
+
+<label/>
+    If Object_Id('Tempdb.dbo.#Test') Is Not Null 
+      print '存在' 
+    Else 
+      print '不存在' 
+
+判断要创建的存储过程名是否存在 
+------------------------------
+
+<label/>
+    if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[存储过程名]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) 
+      -- 删除存储过程 
+      drop procedure [dbo].[存储过程名] 
+    GO 
+ 
+判断要创建的视图名是否存在
+------------------------------
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[视图名]') and OBJECTPROPERTY(id, N'IsView') = 1) 
+      -- 删除视图 
+      drop view [dbo].[视图名] 
+    GO 
+ 
+判断要创建的函数名是否存在
+---------------
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[函数名]') and xtype in (N'FN', N'IF', N'TF')) 
+      -- 删除函数 
+      drop function [dbo].[函数名] 
+    GO 
+
 跨服务器查询
 ----------
 
