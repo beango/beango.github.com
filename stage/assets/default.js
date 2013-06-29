@@ -14,4 +14,6 @@ $(function() {
     $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto');
     window.prettyPrint && prettyPrint();
     $(".linkcodetoggle").parent().next().hide();
+    $("#wordcloud").tagcloud({colormin:"d88",colormax:"0a0"});
+    $("#wordcloud-left").tagcloud({type:"list",sizemin:8,colormin:"d88",colormax:"0a0"});
 });

@@ -40,6 +40,13 @@
 						<input type="hidden" name="q" value="site:{{ site.url }}">
 					</form>
 				</nav>
+				
+				<nav id="nav-tags">
+					<ul id="wordcloud-left" style="list-style: square outside none; margin: 16px 0px; padding: 0px; position: static; width: 248px; ">
+					  {% assign tags_list = site.tags %}  
+					  {% include JB/tags_list %}
+					</ul>
+				</nav>
 			</div><!-- unit-inner -->
 		</div><!-- unit-head -->
 	</header>
@@ -66,14 +73,15 @@
 {% include JB/analytics %}
 
 <script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
-
 <script type="text/javascript">
 <!--
 !window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
  //-->
 </script>
-<script src='/assets/default.js'></script>
 <script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
 <script src="/assets/modernizr.min.js"></script>
+<script src="/assets/jquery.tagcloud.min.js"></script>
+<script src='/assets/default.js'></script>
+
 </body>
 </html>
