@@ -32,7 +32,7 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 -   [正则大全](/code/preg.html)
 
 ###Posts
--   [Memcached内存分析、调优、集群](/code/memcached-memory-analysis-tuning-clustering.html)
+- [Memcached内存分析、调优、集群](/code/memcached-memory-analysis-tuning-clustering.html)
 
 -	[Memcached原理和使用详解](/code/memcached-principle-and-use-detailed.html)
 
@@ -41,3 +41,9 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 -	[C#读写局域网文件](/code/csharp-NAT-file.html)
 
 -	[常用工具](/code/tools.html)
+
+###教程
+
+-	[NodeJS 和 Socket.io 中文入门教程](/code/nodejs-and-socketio-tutorial.html)
+
+-	[Mongoose 基本功能使用](/code/mongoose-tutorial.html)

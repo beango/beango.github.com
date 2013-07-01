@@ -4,7 +4,7 @@ categories: [nosql]
 date: 2012-08-11
 title: "不可忽略的缓存重建"
 description: "不可忽略的缓存重建"
-tags: [mongo,nosql,cache]
+tags: [mongodb,nosql,cache]
 redirecturl: http://blog.nosqlfan.com/html/3097.html
 ---
 {% include JB/setup %}

@@ -10,6 +10,8 @@ http://www.yif1.com/code/js-method-collection.html
 http://www.yif1.com/code/linux-command.html
 http://www.yif1.com/code/memcached-memory-analysis-tuning-clustering.html
 http://www.yif1.com/code/memcached-principle-and-use-detailed.html
+http://www.yif1.com/code/mongoose-tutorial.html
+http://www.yif1.com/code/nodejs-and-socketio-tutorial.html
 http://www.yif1.com/code/preg.html
 http://www.yif1.com/code/python-crawl-pages.html
 http://www.yif1.com/code/sql-collection.html
@@ -21,6 +23,7 @@ http://www.yif1.com/info.html
 http://www.yif1.com/sitemap.txt
 http://www.yif1.com/tags.html
 
+http://www.yif1.com/archives/2013/07/01/javascript-common-traps-and-special-usage.html
 http://www.yif1.com/archives/2013/06/14/understanding-expressjs.html
 http://www.yif1.com/archives/2013/06/01/reducing-memory-consumption-by-20x.html
 http://www.yif1.com/archives/2013/05/31/javascript-module-pattern-in-depth.html

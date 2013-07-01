@@ -4,7 +4,7 @@ categories: [测试]
 date: 2013-04-20
 title: "HTTP负载测试"
 description: "HTTP负载测试"
-tags: [测试]
+tags: [Iperf, Siege]
 redirecturl: http://www.oschina.net/translate/http_benchmark_rules
 ---
 {% include JB/setup %}

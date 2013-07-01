@@ -5,7 +5,7 @@ categories: [软件架构, 高性能web, nosql]
 date: 2011-12-03
 title: "利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统"
 description: "利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统"
-tags: [memcached, tokyo tyrant, 故障转移, 高并发]
+tags: [memcached, tokyo tyrant]
 redirecturl: http://blog.s135.com/post/362/3/1/
 ---
 

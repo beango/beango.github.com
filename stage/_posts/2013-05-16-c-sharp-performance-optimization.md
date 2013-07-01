@@ -4,7 +4,7 @@ categories: [.net]
 date: 2013-05-16
 title: "C#性能优化实践"
 description: "C#性能优化实践"
-tags: [C#性能]
+tags: [.net]
 redirecturl: http://www.infoq.com/cn/articles/C-sharp-performance-optimization
 ---
 {% include JB/setup %}

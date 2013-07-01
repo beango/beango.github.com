@@ -7,9 +7,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>MongoDB构架图分享</title>
+	<title>Mongoose 基本功能使用</title>
 	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='MongoDB构架图分享'/>
+	<meta property='og:title' content='Mongoose 基本功能使用'/>
 	<meta property='og:url' content='http://www.yif1.com'/>
 	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
 	<meta property='og:type' content='article'/>
@@ -162,159 +162,206 @@
 			<div class="unit-inner unit-body-inner">
 				<div class="entry-content">
 					
-<article class="unit-article layout-post">
+<article class="unit-article layout-page">
 	<div class="unit-inner unit-article-inner">
 		<div class="content">
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">MongoDB构架图分享</h1>
+						<h1 class="h2 entry-title">Mongoose 基本功能使用</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>本文图片来自Ricky
-Ho的博文<a href="http://horicky.blogspot.jp/2012/04/mongodb-architecture.html">MongoDB构架</a>（<a href="http://blog.nosqlfan.com/tags/mongodb" title="查看 MongoDB 的全部文章">MongoDB</a>
-Architecture），这是个一听就感觉很宽泛的话题，但是作者在文章中确实对MongoDB由内至外的<a href="http://blog.nosqlfan.com/tags/%e6%9e%b6%e6%9e%84" title="查看 架构 的全部文章">架构</a>进行了剖析。本文截取了其文章中的几张重点架构示意图片进行简单描述。希望对大家有用。</p>
+					<p>Mongoose 是 MongoDB 数据库的模型工具，为 NodeJS 设计，工作于异步环境下。</p>
 
-<h3>MongoDB数据文件内部结构</h3>
+<p>与其它同类工具相比，一回更喜欢它灵活友好的 API。相似的，还存在MongoSkin，MongoLian，以及原生驱动 node-mongodb-native等。</p>
 
-<p><a href="/assets/files/2012-10/O6EzR.png"><img src="/assets/files/2012-10/O6EzR.png" alt="" /></a></p>
+<h2>Mongoose 是什么？</h2>
 
-<ol>
-<li>MongoDB在数据存储上按命名空间来划分，一个collection是一个命名空间，一个索引也是一个命名空间</li>
-<li>同一个命名空间的数据被分成很多个Extent，Extent之间使用双向链表连接</li>
-<li>在每一个Extent中，保存了具体每一行的数据，这些数据也是通过双向链接连接的</li>
-<li>每一行数据存储空间不仅包括数据占用空间，还可能包含一部分附加空间，这使得在数据update变大后可以不移动位置</li>
-<li>索引以BTree结构实现</li>
-</ol>
+<p>Mongoose 是 MongoDB 数据库的模型工具，为 NodeJS 设计，工作于异步环境下。</p>
 
+<p>与其它同类工具相比，一回更喜欢它灵活友好的 API。相似的，还存在MongoSkin，MongoLian，以及原生驱动 node-mongodb-native等。</p>
 
-<p>相关阅读：《<a href="http://blog.nosqlfan.com/html/3515.html">MongoDB数据文件内部结构</a>》</p>
+<h2>查询文档</h2>
 
-<h3>在MongoDB中实现事务</h3>
+<p>查询多条文档：</p>
 
-<p><a href="/assets/files/2012-10/qklTw.png"><img src="/assets/files/2012-10/qklTw.png" alt="" /></a></p>
+<pre><code>Model.find(query, fields, options, callback);
+</code></pre>
 
-<p>众所周知，MongoDB只支持对单行记录的原子性修改，并不支持对多行数据的原子操作。但是通过上图中的变态操作，实际你也可以自己实现事务。其步骤如图所未：</p>
+<p>其中 Model 为 Mongoose 模型对象。</p>
 
-<ul>
-<li>第1步：先记录一条事务记录，将要修改的多行记录的修改值写到里面，并设置其状态为init（如果这时候操作中断，那么在重新启动时，会判断到他处于init状态，从而将其保存的多行修改操作应用到具体的行上）</li>
-<li>第2步：然后更新具体要修改的行，将刚才写的事务记录的标识写到它的tran字段中</li>
-<li>第3步：将事务记录的状态从init变成pending（如果在这时候操作中断，那么在重新启动时，会判断到它的状态是pending的，这时候查看其所有对应的多条要修改的记录，如果其tran有值，那么就进行第4步，如果没值，说明第4步已经执行过了，直接将其状态从pending变成commited了就行）</li>
-<li>第4步：将需要修改的多条记录的相应值修改了，并且unset掉之前的tran字段</li>
-<li>第5步：将事务记录那一条的状态从pending变成commited，事务完成</li>
-</ul>
+<p>query参数与 MongoDB 查询条件一致。</p>
 
+<p>fields 指定查询的键，一般我们需要哪些键就指定哪些，以节省系统内存消耗，输入[]，则查询所有的键。</p>
 
-<p>其实上面的步骤并不罕见，在支持事务的DBMS中，其事务原子性提交的保证大多都与上面类似。其实事务记录的tran那条记录，就类似于这些DBMS中的redolog一样。</p>
+<p>options 选项，有 limit, skip, populate 等等。</p>
 
-<h3>MongoDB数据同步</h3>
+<p>callback 则是回调函数，查询完毕后执行。该回调函数支持传入两个参数，分别为 err 和 result，如果 err 为非假则说明查询发生了错误，可以 console.log(err) 将错误打印到控制台；如果 result 为假，则说明没有查到符合条件的数据。</p>
 
-<p><a href="/assets/files/2012-10/8SKjb.png"><img src="/assets/files/2012-10/8SKjb.png" alt="" /></a></p>
+<p>查询单条文档参数与 find 是一样的，只不过返回的是一条数据。</p>
 
-<p>上图是MongoDB采用Replica Sets模式的同步流程</p>
+<pre><code>Model.findOne(query, fields, options, callback);
+</code></pre>
 
-<ul>
-<li>红色箭头表示写操作写到Primary上，然后异步同步到多个Secondary上</li>
-<li>蓝色箭头表示读操作可以从Primary或Secondary任意一个上读</li>
-<li>各个Primary与Secondary之间一直保持心跳同步检测，用于判断Replica
-Sets的状态</li>
-</ul>
+<p>查询单条文档，还有一种最高效的方式，根据文档 ID 查询：</p>
 
+<pre><code>Model.findById(id, fields, options, callback);
+</code></pre>
 
-<h3>分片机制</h3>
+<h2>创建文档</h2>
 
-<p><a href="/assets/files/2012-10/wlqvf.png"><img src="/assets/files/2012-10/wlqvf.png" alt="" /></a></p>
+<p>Mongoose 为模型对象提供了 create 方法用于创建 MongoDB 文档，语法如下：</p>
 
-<ul>
-<li>MongoDB的分片是指定一个分片key来进行，数据按范围分成不同的chunk，每个chunk的大小有限制</li>
-<li>有多个分片节点保存这些chunk，每个节点保存一部分的chunk</li>
-<li>每一个分片节点都是一个Replica Sets，这样保证数据的安全性</li>
-<li>当一个chunk超过其限制的最大体积时，会分裂成两个小的chunk</li>
-<li>当chunk在分片节点中分布不均衡时，会引发chunk迁移操作</li>
-</ul>
+<pre><code>Model.create(doc, callback);
+</code></pre>
 
+<p>通常我们的 doc 都是单条记录，直接插入即可，callback 回调函数有两个参数，分别为 err 和 创建的 doc 记录，但对 update 或 remove 的回调函数来说，第二个参数并不一样，以后会介绍。</p>
 
-<h3>服务器角色</h3>
+<p>doc 也支持批量插入，即传入数组文档，比如做数据导入时，循环插入单条记录与批量插入相比，消耗时间差别还是很大的，因为单条插入每次需要发送请求头给 MongoDB 数据库服务器，这与前端减少请求数提升应用性能的原理是一样的。</p>
 
-<p><a href="/assets/files/2012-10/RArrX.png"><img src="/assets/files/2012-10/RArrX.png" alt="" /></a></p>
+<h2>更新文档</h2>
 
-<p>上面讲了分片的标准，下面是具体在分片时的几种节点角色</p>
+<p>更新文档细节其实挺多的，语法如下：</p>
 
-<ul>
-<li>客户端访问路由节点mongos来进行数据读写</li>
-<li>config服务器保存了两个映射关系，一个是key值的区间对应哪一个chunk的映射关系，另一个是chunk存在哪一个分片节点的映射关系</li>
-<li>路由节点通过config服务器获取数据信息，通过这些信息，找到真正存放数据的分片节点进行对应操作</li>
-<li>路由节点还会在写操作时判断当前chunk是否超出限定大小，如果超出，就分列成两个chunk</li>
-<li>对于按分片key进行的查询和update操作来说，路由节点会查到具体的chunk然后再进行相关的工作</li>
-<li>对于不按分片key进行的查询和update操作来说，mongos会对所有下属节点发送请求然后再对返回结果进行合并</li>
-</ul>
+<pre><code>Model.update(conditions, update, options, callback);
+</code></pre>
 
+<p><em>参数解释</em></p>
 
-<p>更多详细内容请看原文：<a href="http://horicky.blogspot.jp/2012/04/mongodb-architecture.html">MongoDB
-Architecture</a></p>
+<p>conditions 即查找条件，与 MongoDB shell 条件一样的。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2011-10-15" datetime="2011-10-15" pubdate>
-							<span class="year">2011-10-15</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
+<p>update 指定要更新的数据，Mongoose 会自动转换为原子级更新。</p>
 
+<p>options 选项，有 safe 和 multi 等，前者可以指定是否采用安全插入，如果不需要安全插入，设置为 {safe: false} 则不需要等待数据库服务器返回结果，响应速度会变快。multi 指定是否更新符合条件的所有文档，默认 false。</p>
 
-  
-     
-    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
-    
-  
+<p>callback 回调函数，有俩参数，err 和 num，其中 num 为本次更新影响的记录数，此处与创建文档回调函数第二个参数不同，需要注意。</p>
 
+<p><em>代码样例</em></p>
 
+<pre><code>UserModel.update({}, {
+    $set: {favorite_num: 0},
+    $inc: {credit: 10},
+    $addToSet: {fans: adminId},
+    $unset: {articles: 1}
 
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://blog.nosqlfan.com/html/3887.html" target="_blank">http://blog.nosqlfan.com/html/3887.html</a></li>
+}, {safe: false, multi: true}).run();
+</code></pre>
 
-						</ul>
-					</div><!-- meta -->
+<h2>删除文档</h2>
+
+<p>删除文档与创建文档类似，有俩参数：</p>
+
+<pre><code>Model.remove(conditions, callback);
+</code></pre>
+
+<p><em>需要注意的点：</em></p>
+
+<p>删除语句调用后，如果不指定 callback 则返回 Query 对象，这点与更新文档方法 update 以及查询方法 find 是一样的，必须指定 callback 或者调用 run 或 exec 方法才能将指令传递给 MongoDB 数据库。</p>
+
+<p><em>移除数据库中时间超过 3 天的动态：</em></p>
+
+<pre><code>var cond = {date: {$lt: +new Date() - 3*24*60*60*1000}};
+FeedModel.remove(cond).run();
+</code></pre>
+
+<h2>Mongoose 嵌入文档操作</h2>
+
+<p>使用 Mongoose 过程中首次遇到该问题，查了好久的资料没找到答案，如今碰巧解决了，即记录下来。</p>
+
+<p>嵌入文档分为两种基本形式，分别为：</p>
+
+<pre><code>user: {  // 第一种
+    email: String,
+    username: String
+}
+user: [{  // 第二种
+    email: String,
+    username: String
+}]
+</code></pre>
+
+<p>注意，这里第二种嵌入文档的形式虽是这样，但实际编码中这样写存在着问题就是不能更新指定条件的数组成员，比如下面的代码会报错：</p>
+
+<pre><code>TestModel.update({'user.email': 'xianlihua@csser.com'}, {$set: {'user.$.username': '一回'}}, {multi: true}).run();
+
+TypeError: Cannot call method 'path' of undefined
+</code></pre>
+
+<p>但在 <code>MongoDB Shell</code> 中完全执行正确。</p>
+
+<p>所以正确的写法是先定义子模式，再用 Mongoose 模式嵌套方式定义 <code>user</code> 键：</p>
+
+<pre><code>var SubSchema = {
+    email: String,
+    username: String
+};
+
+// ...
+user: [SubSchema]
+</code></pre>
+
+<h2>Mongoose 中 group、findAndModify 及 mapReduce 的使用</h2>
+
+<p><code>group</code> 是 MongoDB 中非常类似 MySQL group by 的查询指令。比较遗憾的是在 Mongoose Model 上并不存在该方法，我们需要直接操作 Mongoose 所依赖的 node-mongodb-native。</p>
+
+<pre><code>MessageModel.collection.group(keys, condition, initial, reduce, final, command, callback);
+</code></pre>
+
+<p>Model.collection 可以直接取得原生驱动的 Collection 对象，这种方法代价最小。</p>
+
+<p>同样还有一些其它指令可以采用类似的方式，比如：<code>mapreduce</code>，你可以阅读<a href="https://github.com/christkv/node-mongodb-native/blob/master/lib/mongodb/collection.js">node-mongodb-native</a>源码查看详细参数使用方法。</p>
+
+<p>源码文件路径在如下：</p>
+
+<pre><code>node_modules/mongoose/node_modules/mongodb/lib/mongodb/collection.js
+</code></pre>
+
+<p>比如，mapReduce 和 findAndModify 如下方式使用：</p>
+
+<pre><code>Model.collection.mapReduce(map, reduce, options, callback);
+
+Model.collection.findAndModify(query, sort, update, options, callback);
+</code></pre>
+
+<h2>mongoose 排序的运用</h2>
+
+<p>查询就要用到排序，使用 mongoose 的 Model 直接查询时，排序是作为第三个参数的选项来设置的，比如：</p>
+
+<pre><code>QuestionModel.find(condition, fields, {sort: [['_id', -1]]}, callback);
+</code></pre>
+
+<p>注意 <code>sort</code> 的写法，上例将查询结果按时间倒序，因为 MongoDB 的 _id 生成算法中已经包含了当前的时间，所以这样写不仅没问题，也是推荐的按时间排序的写法。</p>
+
+<pre><code>var query = QuestionModel.find(condition, fields);
+query.desc('_id');
+query.run(function (err, questions) {
+    // ....
+});
+</code></pre>
+
+<p>这也是一种写法，直接用 Query 对象的排序方法进行排序。</p>
+
+<h2>避免对一个键进行多种操作</h2>
+
+<p>这句话的意思是说，如果希望对文档的同一个键进行多种操作，比如现在有一个 tags 键（数组结构），希望既对其 pull 又 希望同时 addToSet 新元素，下面的写法是不对的：</p>
+
+<pre><code>... {$pullAll: {tags: minus}, $addToSet: {tags: {$each: plus}}} ...
+</code></pre>
+
+<p>这一点，MongoDB 权威指南上也有提到。</p>
+
+<p>所以为了满足这样的需求，建议事先对新 tags 进行处理得到一个 newTags 数组，通过 \$set 修改器更新这个键。</p>
+
 				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
-
-					</div>
-				</div><!-- misc-content -->
 			</div><!-- bd -->
-
 		</div><!-- content -->
 	</div><!-- unit-inner -->
 </article>
+
 
 				</div>
 			</div><!-- unit-inner -->

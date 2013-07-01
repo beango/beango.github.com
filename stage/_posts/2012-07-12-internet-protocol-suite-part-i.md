@@ -5,7 +5,7 @@ category: web开发
 date: 2012-07-12
 title: "互联网协议入门（一）"
 description: "互联网协议入门（一）"
-tags: [internet]
+tags: [互联网协议]
 redirecturl: http://www.ruanyifeng.com/blog/2012/05/internet_protocol_suite_part_i.html
 ---
 
