@@ -24,6 +24,8 @@ http://www.yif1.com/sitemap.txt
 http://www.yif1.com/tags.html
 
 http://www.yif1.com/archives/2013/07/01/javascript-common-traps-and-special-usage.html
+http://www.yif1.com/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html
+http://www.yif1.com/archives/2013/06/20/speed-your-web-site-varnish.html
 http://www.yif1.com/archives/2013/06/14/understanding-expressjs.html
 http://www.yif1.com/archives/2013/06/01/reducing-memory-consumption-by-20x.html
 http://www.yif1.com/archives/2013/05/31/javascript-module-pattern-in-depth.html

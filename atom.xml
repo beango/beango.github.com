@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-07-01T15:12:21+08:00</updated>
+ <updated>2013-07-08T10:13:02+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -1427,6 +1427,1195 @@ setTimeout(function() {
 &lt;p&gt;绝对不要使用字符串作为 &lt;code&gt;setTimeout&lt;/code&gt; 或者 &lt;code&gt;setInterval&lt;/code&gt; 的第一个参数，这么写的代码明显质量很差。当需要向回调函数传递参数时，可以创建一个匿名函数，在函数内执行真实的回调函数。&lt;/p&gt;
 
 &lt;p&gt;另外，应该避免使用 &lt;code&gt;setInterval&lt;/code&gt;，因为它的定时执行不会被 JavaScript 阻塞。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>使用面向对象技术创建高级Web应用程序</title>
+   <link href="http://beango.github.com/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html"/>
+   <updated>2013-06-22T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;英文原文：&lt;a href=&quot;http://msdn.microsoft.com/en-us/magazine/cc163419.aspx&quot;&gt;Create Advanced Web Applications With Object-Oriented Techniques&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;最近，我面试了一位具有5年Web应用开发经验的软件开发人员。她有4年半的JavaScript编程经验，自认为自己具有非常优秀的JavaScript技能，可是，随后我很快发现，实际上她对JavaScript却知之甚少。然而，我并不是要为此而责怪她。JavaScript就是这么不可思议。有很多人（也包括我自己，这种情况直到最近才有所改观）都自以为是，觉得因为他们懂C/C++/C#或者具有编程经验，便以为他们非常擅长JavaScript这门语言。&lt;/p&gt;
+
+&lt;p&gt;从某个角度讲，这种自以为是也并非毫无道理。用JavaScript做一些简单的事情是非常容易的。其入门的门槛非常低；这个语言待人宽厚，并不苛求你必须懂它很多才能开始用它编写代码。甚至对于非程序员来说，也可以仅花个把小时就能够上手用它为他的网站编写几段或多或少都有些用的脚本。&lt;/p&gt;
+
+&lt;p&gt;实际上直到最近，无论懂的JavaScript有多么少，仅仅在MSDN® DHTML参考资料以及我在C++/C#方面编程经验的帮助下，我都能够凑合过下去。直到我在工作中真正开始编写AJAX应用时，我才发现我对JavaScript的了解有多么欠缺。这种新一代的Web应用复杂的交互特性要求使用一种完全不同的方式来编写JavaScript代码。这些都是非常严肃的JavaScript应用！我们以往那种漫不经心编写脚本的方法不灵了。&lt;/p&gt;
+
+&lt;p&gt;面向对象的编程(OOP)这种方法广泛用于多种JavaScript库，采用这种方法可使代码库更加易于管理和维护。JavaScript支持OOP，但它的支持方式同流行的Microsoft®.NET框架下的C++、C#、Visual Basic®等语言完全不同，所以，大量使用这些语言的开发者起初可能会发现，JavaScript中的OOP比较怪异，同直觉不符。我写这篇文章就是要对JavaScript到底是如何支持面向对象编程的以及如何高效利用这种支进行面向对象的JavaScript开发进行深入讨论。接下来让我们开始谈谈对象（除了对象还能有别的吗？）吧。&lt;/p&gt;
+
+&lt;h2&gt;JavaScript对象是字典&lt;/h2&gt;
+
+&lt;p&gt;在C++或C#中，当谈及对象时，我们指的是类或者结构的实例。对象根据实例化出它的模版（也即，类）的不同而具有不同的属性和方法。JavaScript对象不是这样的。在JavaScript中，对象仅仅是name/value对的集合，我们可以把JavaScript对象看作字典，字典中的键为字符串。我们可以用我们熟悉的&quot;.&quot;(点)操作符或者一般用于字典的&quot;[]&quot;操作符，来获取或者设置对象的属性。下面的代码片段&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var userObject = new Object();
+userObject.lastLoginTime = new Date();
+alert(userObject.lastLoginTime);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同这段代码所做的完全是同样的事情：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var userObject = {}; // equivalent to new Object()
+userObject[&quot;lastLoginTime&quot;] = new Date();
+alert(userObject[&quot;lastLoginTime&quot;]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们还可以用这样的方式，直接在userObject的定义中定义lastLoginTime属性：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var userObject = { &quot;lastLoginTime&quot;: new Date() };
+alert(userObject.lastLoginTime);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;请注意这同C#3.0的对象初始化表达式是多么的相似。另外，熟悉Python的读者会发现，在第二段和第三段代码中，我们实例化userObject的方式就是Python中指定字典的方式。这里唯一的区别的就是，JavaScript中的对象/字典只接受字符串作为键，而Python中字典则无此限制。&lt;/p&gt;
+
+&lt;p&gt;这些例子也表明，同C++或者C#对象相比，JavaScript对象是多么地更加具有可塑性。属性lastLoginTime不必事先声明，如果在使用这个属性的时候userObject还不具有以此为名的属性，就会在userObject中把这个属性添加进来。如果记住了JavaScript对象就是字典的话，你就不会对此大惊小怪了 —— 毕竟我们随时都可以把新键（及其对应的值）添加到字典中去。&lt;/p&gt;
+
+&lt;p&gt;JavaScript对象的属性就是这个样子的。那么，JavaScript对象的方法呢？和属性一样，JavaScript仍然和C++/C#不同。为了理解对象的方法，就需要首先仔细看看JavaScript函数。&lt;/p&gt;
+
+&lt;h2&gt;JavaScript中的函数具有首要地位&lt;/h2&gt;
+
+&lt;p&gt;在许多编程语言中，函数和对象一般都认为是两种不同的东西。可在JavaScript中，它们之间的区别就没有那么明显了 —— JavaScript中的函数实际上就是对象，只不过这个对象具有同其相关联的一段可执行代码。请看下面这段再普通不过的代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function func(x) {
+    alert(x);
+}
+func(&quot;blah&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是JavaScript中定义函数最常用的方式了。但是，你还可以先创建一个匿名函数对象再将该对象赋值给变量func，也即，象下面那样，定义出完全相同的函数&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var func = function(x) {
+    alert(x);
+};
+func(&quot;blah2&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或者甚至通过使用Function构造器，向下面这样来定义它：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var func = new Function(&quot;x&quot;, &quot;alert(x);&quot;);
+func(&quot;blah3&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这表明，函数实际上就是一个支持函数调用操作的对象。最后这种使用Function构造器来定义函数的方式并不常用，但却为我们带来很多很有趣的可能，其原因可能你也已经发现了，在这种函数定义的方式中，函数体只是Function构造器的一个字符串型的参数。这就意味着，你可以在JavaScript运行的时候构造出任意的函数。&lt;/p&gt;
+
+&lt;p&gt;要进一步证明函数是对象，你可以就象为任何其它JavaScript对象一样，为函数设置或添加属性：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function sayHi(x) {
+    alert(&quot;Hi, &quot; + x + &quot;!&quot;);
+}
+
+sayHi.text = &quot;Hello World!&quot;;
+sayHi[&quot;text2&quot;] = &quot;Hello World... again.&quot;;
+
+alert(sayHi[&quot;text&quot;]); // displays &quot;Hello World!&quot;
+alert(sayHi.text2); // displays &quot;Hello World... again.&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;作为对象，函数还可以赋值给变量、作为参数传递给其它函数、作为其它函数的返回值、保存为对象的属性或数组中的一员等等。&lt;strong&gt;图1&lt;/strong&gt;所示为其中一例。&lt;/p&gt;
+
+&lt;p&gt;图1 &lt;strong&gt;函数在JavaScript具有首要地位&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// assign an anonymous function to a variable
+var greet = function(x) {
+    alert(&quot;Hello, &quot; + x);
+};
+
+greet(&quot;MSDN readers&quot;);
+
+// passing a function as an argument to another
+function square(x) {
+    return x * x;
+}
+
+function operateOn(num, func) {
+    return func(num);
+}
+
+// displays 256
+alert(operateOn(16, square));
+
+// functions as return values
+function makeIncrementer() {
+    return function(x) { return x + 1; };
+}
+
+var inc = makeIncrementer();
+// displays 8
+alert(inc(7));
+
+// functions stored as array elements
+var arr = [];
+arr[0] = function(x) { return x * x; };
+arr[1] = arr[0](2);
+arr[2] = arr[0](arr[1]);
+arr[3] = arr[0](arr[2]);
+
+// displays 256
+alert(arr[3]);
+
+// functions as object properties
+var obj = { &quot;toString&quot; : function() { return &quot;This is an object.&quot;; } };
+
+// calls obj.toString()
+alert(obj);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;记住这一点后，为对象添加方法就简单了，只要选择一个函数名并把一个函数赋值为这个函数名即可。接下来我通过将三个匿名函数分别赋值给各自相应的方法名，为一个对象定义了三个方法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var myDog = {
+    &quot;name&quot; : &quot;Spot&quot;,
+    &quot;bark&quot; : function() { alert(&quot;Woof!&quot;); },
+    &quot;displayFullName&quot; : function() {
+        alert(this.name + &quot; The Alpha Dog&quot;);
+    },
+
+    &quot;chaseMrPostman&quot; : function() { 
+        // implementation beyond the scope of this article 
+    }    
+};
+
+myDog.displayFullName(); 
+myDog.bark(); // Woof!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;函数displayFullName中&quot;this&quot;关键字的用法对C++/C#开发者来说并不陌生 —— 该方法是通过哪个对象调用的，它指的就是哪个对象（使用Visual Basic的开发者也应该熟悉这种用法 —— 只不过&quot;this&quot;在Visual Basic称作&quot;Me&quot;）。因此在上面的例子中，displayFullName中&quot;this&quot;的值指的就是myDog对象。但是，&quot;this&quot;的值不是静态的。如果通过别的对象对函数进行调用，&quot;this&quot;的值也会随之指向这个别的对象，如&lt;strong&gt;图2&lt;/strong&gt;所示。&lt;/p&gt;
+
+&lt;p&gt;图2 &lt;strong&gt;“this”随着对象的改变而改变&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function displayQuote() {
+    // the value of &quot;this&quot; will change; depends on 
+    // which object it is called through
+    alert(this.memorableQuote);    
+}
+
+var williamShakespeare = {
+    &quot;memorableQuote&quot;: &quot;It is a wise father that knows his own child.&quot;, 
+    &quot;sayIt&quot; : displayQuote
+};
+
+var markTwain = {
+    &quot;memorableQuote&quot;: &quot;Golf is a good walk spoiled.&quot;, 
+    &quot;sayIt&quot; : displayQuote
+};
+
+var oscarWilde = {
+    &quot;memorableQuote&quot;: &quot;True friends stab you in the front.&quot; 
+    // we can call the function displayQuote
+    // as a method of oscarWilde without assigning it 
+    // as oscarWilde’s method. 
+    //&quot;sayIt&quot; : displayQuote
+};
+
+williamShakespeare.sayIt(); // true, true
+markTwain.sayIt(); // he didn’t know where to play golf
+
+// watch this, each function has a method call()
+// that allows the function to be called as a 
+// method of the object passed to call() as an
+// argument. 
+// this line below is equivalent to assigning
+// displayQuote to sayIt, and calling oscarWilde.sayIt().
+
+displayQuote.call(oscarWilde); // ouch!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;图2&lt;/strong&gt;最后一行的代码是将函数作为一个对象的方法进行调用的另外一种方式。别忘了，JavaScript中的函数是对象。每个函数对象都有一个叫做call的方法，这个方法会将函数作为该方法的第一个参数的方法进行调用。也就是说，无论将哪个对象作为第一个参数传递给call方法，它都会成为此次函数调用中&quot;this&quot;的值。后面我们就会看到，这个技术在调用基类构造器时会非常有用。&lt;/p&gt;
+
+&lt;p&gt;有一点要记住，那就是永远不要调用不属于任意对象却包含有&quot;this&quot;的函数。如果调用了的话，就会搅乱全局命名空间。这是因为在这种调用中，&quot;this&quot;将指向Global对象，此举将严重损害你的应用。例如，下面的脚本将会改变JavaScript的全局函数isNaN的行为。我们不推荐这么干。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;alert(&quot;NaN is NaN: &quot; + isNaN(NaN));
+
+function x() {
+    this.isNaN = function() { 
+        return &quot;not anymore!&quot;;
+    };
+}
+
+// alert!!! trampling the Global object!!!
+x();
+
+alert(&quot;NaN is NaN: &quot; + isNaN(NaN));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;到此我们已经看过了创建对象并为其添加熟悉和方法的几种方式。但是，如果你仔细看了以上所举的所以代码片段就会发现，所有的熟悉和方法都是在对象的定义之中通过硬性编码定义的。要是你需要对对象的创建进行更加严格的控制，那该怎么办？例如，你可能会需要根据某些参数对对象属性中的值进行计算，或者你可能需要将对象的属性初始化为只有到代码运行时才会得到的值，你还有可能需要创建一个对象的多个实例，这些要求也是非常常见的。&lt;/p&gt;
+
+&lt;p&gt;在C#中，我们使用类类实例化出对象实例。但是JavaScript不一样，它并没有类的概念。相反， 在下一小节你将看到，你可以利用这一点：将函数同&quot;new&quot;操作符一起使用就可以把函数当着构造器来用。&lt;/p&gt;
+
+&lt;h2&gt;有构造函数但没有类&lt;/h2&gt;
+
+&lt;p&gt;JavaScript中的OOP最奇怪的事，如前所述，就是JavaScript没有C#和C++中所具有的类。在C#中，通过如下这样的代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Dog spot = new Dog();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;能够得到一个对象，这个对象就是Dog类的一个实例。但在JavaScript中根本就没有类。要想得到同类最近似的效果，可以象下面这样定义一个构造器函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function DogConstructor(name) {
+    this.name = name;
+    this.respondTo = function(name) {
+        if(this.name == name) {
+            alert(&quot;Woof&quot;);        
+        }
+    };
+}
+
+var spot = new DogConstructor(&quot;Spot&quot;);
+spot.respondTo(&quot;Rover&quot;); // nope
+spot.respondTo(&quot;Spot&quot;); // yeah!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好吧，这里都发生了什么？先请不要管DogConstructor函数的定义，仔细看看这行代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var spot = new DogConstructor(&quot;Spot&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&quot;new&quot;操作符所做的事情很简单。首先，它会创建出一个新的空对象。然后，紧跟其后的函数调用就会得到执行，并且会将那个新建的空对象设置为该函数中&quot;this&quot;的值。换句话说，这行带有&quot;new&quot;操作符的代码可以看作等价于下面这两行代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// create an empty object
+var spot = {}; 
+// call the function as a method of the empty object
+DogConstructor.call(spot, &quot;Spot&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在DogConstructor的函数体中可以看出，调用该函数就会对调用中关键字&quot;this&quot;所指的对象进行初始化。采用这种方式，你就可以为对象创建模版了！无论何时当你需要创建类似的对象时，你就可以用&quot;new&quot;来调用该构造器函数，然后你就能够得到一个完全初始化好的对象。这和类看上去非常相似，不是吗？实际上，JavaScript中构造器函数的名字往往就是你想模拟的类的名字，所以上面例子中的构造函数你就可以直接命名为Dog：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Think of this as class Dog
+function Dog(name) {
+    // instance variable 
+    this.name = name;
+
+    // instance method? Hmmm...
+    this.respondTo = function(name) {
+        if(this.name == name) {
+            alert(&quot;Woof&quot;);        
+        }
+    };
+}
+
+var spot = new Dog(&quot;Spot&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面在Dog的定义中，我定义了一个叫做name的实例变量。将Dog作为构造器函数使用而创建的每个对象都有自己的一份叫做name的实例变量（如前所述，name就是该对象的字典入口）。这符合我们的期望；毕竟每个对象都需属于自己的一份实例变量，只有这样才能保存它自己的状态。但是如果你再看接下来的那行代码，就会发现Dog的每个实例都有自己的一份respondTo方法，这可是个浪费；respondTo的实例你只需要一个，只有将这一个实例在所有的Dog实例间共享即可！你可以把respondTo的定义从Dog中拿出来，这样就可以克服此问题了，就向下面这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function respondTo() {
+    // respondTo definition
+}
+
+function Dog(name) {
+    this.name = name;
+    // attached this function as a method of the object
+    this.respondTo = respondTo;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样一来，Dog的所有实例（也即，用构造器函数Dog创建的所有实例）都可以共享respondTo方法的同一个实例了。但是，随着方法数量的增加，这种方式维护起来会越来越困难。最后你的代码库中会堆积大量的全局函数，而且，随着“类”的数量不断增加，特别是这些类的方法具有类似的方法名时，情况会变得更加糟糕。这里还有一个更好的办法，就是使用原型对象，这就是下一个小节要讨论的内容。&lt;/p&gt;
+
+&lt;h2&gt;原型（Prototype）&lt;/h2&gt;
+
+&lt;p&gt;原型对象是JavaScript面向对象编程中的一个核心概念。原型这个名称来自于这样一个概念：在JavaScript中，所有对象都是通过对已有的样本（也即，原型）对象进行拷贝而创建的。该原型对象的所有属性和方法都会成为通过使用该原型的构造函数生成的对象的属性和方法。你可以认为，这些对象从它们的原型中继承了相应的属性和方法。当你象这样来创建一个新的Dog对象时&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var buddy = new Dog(&quot;Buddy&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;buddy所引用的对象将从它的原型中继承到相应的属性和方法，虽然仅从上面这一行代码可能会很难看出来其原型来自哪里。buddy对象的原型来自来自构造器函数（在此例中指的就是函数Dog）的一个属性。&lt;/p&gt;
+
+&lt;p&gt;在JavaScript中，每个函数都有一个叫做“prototype”的属性，该属性指向一个原型对象。发过来，该原型对象据有一个叫做&quot;constructor&quot;的属性，该属性又指回了这个函数本身。这是一种循环引用；&lt;strong&gt;图3&lt;/strong&gt; 更好地揭示出了这种环形关系。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20151040_gQ9A.gif&quot; alt=&quot;&quot; /&gt; 图3&lt;strong&gt; 每个函数的原型都具有一个叫做Constructor的属性 &lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;好了，当一个函数（比如上例中的Dog）和&quot;new&quot;操作符一起使用，创建出一个对象时，该对象将从Dog.prototype中继承所有的属性。在图&lt;strong&gt;3&lt;/strong&gt;中，你可以看出，Dog.prototype对象具有一个指会Dog函数的construtor属性，每个Dog对象（它们继承自Dog.prototype)将同样也具有一个指会Dog函数的constructor属性。&lt;strong&gt;图4&lt;/strong&gt;中的代码证明了这一点。构造器函数、原型对象以及用它们创建出来的对象这三者之间的关系如&lt;strong&gt;图5&lt;/strong&gt;所示。&lt;/p&gt;
+
+&lt;p&gt;图4 &lt;strong&gt;对象同样也具有它们原型的属性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var spot = new Dog(&quot;Spot&quot;);
+
+// Dog.prototype is the prototype of spot
+alert(Dog.prototype.isPrototypeOf(spot));
+
+// spot inherits the constructor property
+// from Dog.prototype
+alert(spot.constructor == Dog.prototype.constructor);
+alert(spot.constructor == Dog);
+
+// But constructor property doesn’t belong
+// to spot. The line below displays &quot;false&quot;
+alert(spot.hasOwnProperty(&quot;constructor&quot;));
+
+// The constructor property belongs to Dog.prototype
+// The line below displays &quot;true&quot;
+alert(Dog.prototype.hasOwnProperty(&quot;constructor&quot;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20151041_UD0W.gif&quot; alt=&quot;&quot; /&gt; 图5&lt;strong&gt; 继承自它们的原型的实例&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有些读者可能已经注意到了&lt;strong&gt;图4&lt;/strong&gt;中对hasOwnProperty方法和isPrototypeOf方法的调用。这些方法又来自哪里呢？它们并不是来自Dog.prototype。实际上，JavaScript中还有其它一些类似于toString、toLocaleString和valueOf等等我们可以直接对Dog.prototype以及Dog的实例进行调用的方法，但它们统统都不是来自于Dog.prototype的。其实就象.NET框架具有System.Object一样，JavaScript中也有Object.prototype，它是所有类的最顶级的基类。（Object.prototype的原型为null。）&lt;/p&gt;
+
+&lt;p&gt;在这个例子中，请记住Dog.prototype也是一个对象。它也是通过对Object的构造函数进行调用后生成的，虽然这一点在代码中并不直接出现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Dog.prototype = new Object();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以，就如同Dog的实例继承自Dog.prototype一样，Dog.prototype继承自Object.prototype。这就使得Dog的所有实例也都会继承Object.prototype的方法和实例。&lt;/p&gt;
+
+&lt;p&gt;每个JavaScript对象都会继承一个原型链，该链的最末端都是Object.prototype。请注意，到此为止你在这里所见到的继承都是活生生的对象间的继承。这同你通常所认识的类在定义时形成的继承的概念不同。因此，JavaScript中的继承要来得更加的动态化。继承的算法非常简单，就是这样的：当你要访问一个对象的属性/方法时，JavaScript会首先对该属性/方法是否定义于该对象之中。如果不是，接下来就要对该对象的原型进行检查。如果还没有发现相应的定义，然后就会对该对象的原型的原型进行检查，并以此类推，直到碰到Object.prototype。&lt;strong&gt;图6&lt;/strong&gt;所示即为这个解析过程。&lt;/p&gt;
+
+&lt;p&gt;JavaScript这种动态解析属性访问和方法调用的方式将对JavaScript带来一些影响。对原型对象的修改会马上在继承它的对象中得以体现，即使这种修改是在对象创建后才进行的也无关紧要。如果你在对象中定义了一个叫做X的属性/方法，那么该对象原型中同名的属性/方法就会无法访问到。例如，你可以通过在Dog.prototype中定义一个toString方法来对Object.prototype中的toString方法进行重载。所有修改指挥在一个方向上产生作用，即慈宁宫原型到继承它的对象这个方向，相反则不然。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图7&lt;/strong&gt;所示即为这种影响。&lt;strong&gt;图7&lt;/strong&gt;还演示了如何解决前文碰到的避免不必要的方法实例问题。不用让每个对象都具有一个单独的方法对象的实例，你可以通过将方法放到其原型之中来让所有对象共享同一个方法。此例中，getBreed方法由rover和spot共享
+——
+至少直到在spot中重载了getBreed（译者注：原文为toString，应为笔误）方法之前。spot在重载之后就具有自己版本的getBreed方法，但是rover对象以及随后使用new和GreatDane创建的对象仍将继承的是定义于GreatDane.prototype对象的getBreed方法。&lt;/p&gt;
+
+&lt;p&gt;图7  &lt;strong&gt;从原型中进行继承&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function GreatDane() { }
+
+var rover = new GreatDane();
+var spot = new GreatDane();
+
+GreatDane.prototype.getBreed = function() {
+    return &quot;Great Dane&quot;;
+};
+
+// Works, even though at this point
+// rover and spot are already created.
+alert(rover.getBreed());
+
+// this hides getBreed() in GreatDane.prototype
+spot.getBreed = function() {
+    return &quot;Little Great Dane&quot;;
+};
+
+alert(spot.getBreed()); 
+
+// but of course, the change to getBreed 
+// doesn’t propagate back to GreatDane.prototype
+// and other objects inheriting from it,
+// it only happens in the spot object
+alert(rover.getBreed());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;静态属性和方法&lt;/h2&gt;
+
+&lt;p&gt;有些时候你会需要同类而不是实例捆绑到一起的属性或方法 ——
+也即，静态属性和静态方法。在JavaScript中这很容易就能做到，因为函数就是对象，所以可以随心所欲为其设置属性和方法。既然构造器函数在JavaScript代表了类这个概念，所以你可以通过在构造器函数中设置属性和昂奋来为一个类添加静态方法和属性，就象这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function DateTime() { }
+
+// set static method now()
+DateTime.now = function() {
+    return new Date();
+};
+
+alert(DateTime.now());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在JavaScript调用静态方法的语法实际上和C#完全相同。既然构造器函数就是类的名字，所以这也不应该有什么奇怪的。这样你就有了类、共有属性/方法以及静态属性/方法。你还需要什么呢？当然，还需要私有成员。但是，JavaScript并不直接支持私有成员（这方面它也不支持protected成员）。对象的所以属性和方法所有人都可以访问得到。这里有一种在类中定义出私有成员的方法，但要完成这个任务就需要首先对闭包有所了解。 &lt;/p&gt;
+
+&lt;h2&gt;闭包&lt;/h2&gt;
+
+&lt;p&gt;我学JavaScript完全是迫不得已。因为我意识到，不学习JavaScript，就无法为在工作中参加编写真正的AJAX应用做好准备。起初，我有种在程序员的级别中下降了不少等级的感觉。（我要学JavaScript了！我那些使用C++的朋友该会怎么说我啊？）但是一旦我克服了起初的抗拒心理之后，我很快发现，JavaScript实际上是一门功能强大、表达能力极强而且很小巧的语言。它甚至拥有一些其它更加流行的语言才刚刚开始支持的特性。&lt;/p&gt;
+
+&lt;p&gt;JavaScript中更加高级的一个特性便是它对闭包的支持，在C# 2.0中是通过匿名方法对闭包提供支持的。闭包是一种运行时的现象，它产生于内部函数（在C#中成为内部匿名方法）本绑定到了其外部函数的局部变量之上的时候。显然，除非内部函数可以通过某种方式在外部函数之外也可以让其可以访问得到，否则这也没有多大意义。举个例子就可以把这个现象说得更清楚了。&lt;/p&gt;
+
+&lt;p&gt;假如你需要基于一个简单评判标准对一个数字序列进行过滤，该标准就是大于100的数字可以留下，但要把其它的所以数字都过滤掉。你可以编写写一个如&lt;strong&gt;图8&lt;/strong&gt;所示的函数。&lt;/p&gt;
+
+&lt;p&gt;图8 &lt;strong&gt;基于谓词（Predicate）对元素进行过滤&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function filter(pred, arr) {
+
+    var len = arr.length;
+    var filtered = []; // shorter version of new Array();
+
+    // iterate through every element in the array...
+    for(var i = 0; i &amp;amp;lt; len; i++) {
+        var val = arr[i];
+        // if the element satisfies the predicate let it through
+        if(pred(val)) {
+            filtered.push(val);
+        }
+    }
+    return filtered;
+}
+
+var someRandomNumbers = [12, 32, 1, 3, 2, 2, 234, 236, 632,7, 8];
+var numbersGreaterThan100 = filter(
+    function(x) { return (x &amp;amp;gt; 100) ? true : false; }, 
+    someRandomNumbers);
+
+
+// displays 234, 236, 632
+alert(numbersGreaterThan100);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是现在你想新建一个不同的过滤标准，比方说，这次只有大于300的数字才能留下。你可以这么做：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var greaterThan300 = filter(
+    function(x) { return (x &amp;amp;gt; 300) ? true : false; }, 
+    someRandomNumbers);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可能还需要留下大于50、25、10、600等等的数字，然而，你是如此聪明，很快就会发现它们使用的都是“大于”这同一个谓词，所不同的只是其中的数字。所以，你可以把具体的数字拿掉，编写出这么一个函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function makeGreaterThanPredicate(lowerBound) {
+    return function(numberToCheck) {
+        return (numberToCheck &amp;amp;gt; lowerBound) ? true : false;
+    };
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有了这个函数你就可以象下面这样做了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var greaterThan10 = makeGreaterThanPredicate(10);
+var greaterThan100 = makeGreaterThanPredicate(100);
+alert(filter(greaterThan10, someRandomNumbers));
+alert(filter(greaterThan100, someRandomNumbers));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;请注意makeGreaterThanPredicate函数所返回的内部匿名函数。该匿名内部函数使用了lowerBound，它是传递给makeGreaterThanPredicate的一个参数。根据通常的变量范围规则，当makeGreater­ThanPredicate函数退出后，lowerBound就离开了它的作用范围！但是在此种情况下，内部匿名函数仍然还携带着它，即使make­GreaterThanPredicate早就退出了也还是这样。这就是我们称之为闭包的东西 ——— 因为内部函数关闭着它的定义所在的环境（也即，外部函数的参数和局部变量）。&lt;/p&gt;
+
+&lt;p&gt;乍一看，闭包也许没什么大不了的。但是如果使用得当，使用它可以在将你的点子转变为代码时，为你打开很多非常有意思的新思路。在JavaScript中闭包最值得关注的用途之一就是用它来模拟出类的私有变量。&lt;/p&gt;
+
+&lt;h2&gt;模拟私有属性&lt;/h2&gt;
+
+&lt;p&gt;好的，现在让我们来看看在闭包的帮助下怎样才能模拟出私有成员。函数中的私有变量通常在函数之外是访问不到的。在函数执行结束后，实际上局部变量就会永远消失。然而，如果内部函数捕获了局部变量的话，这样的局部变量就会继续存活下去。 这个实情就是在JavaScript中模拟出私有属性的关键所在。请看下面的Person类：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function Person(name, age) {
+    this.getName = function() { return name; };
+    this.setName = function(newName) { name = newName; };
+    this.getAge = function() { return age; };
+    this.setAge = function(newAge) { age = newAge; };
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;参数name和age对构造器函数Person来说就是局部变量。一旦Person函数返回之后，name和age就应该被认为永远消失了。然而，这两个参数被4个内部函数捕获，这些内部函数被赋值为Person实例的方法了，因此这样一来就使得name和age能够继续存活下去，但却被很严格地限制为只有通过这4个方法才能访问到它们。所以，你可以这样做：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var ray = new Person(&quot;Ray&quot;, 31);
+alert(ray.getName());
+alert(ray.getAge());
+ray.setName(&quot;Younger Ray&quot;);
+// Instant rejuvenation!
+ray.setAge(22);
+
+alert(ray.getName() + &quot; is now &quot; + ray.getAge() + 
+      &quot; years old.&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不必在构造器中进行初始化的私有成员可以声明为构造器函数的局部变量，就象这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function Person(name, age) {
+    var occupation;
+    this.getOccupation = function() { return occupation; };
+    this.setOccupation = function(newOcc) { occupation = 
+                         newOcc; };
+    // accessors for name and age    
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要注意的是，这样的私有成员同我们所认为的C#中的私有成员稍有不同。在C#中，类的公开方法可以直接访问类的私有成员。但是在JavaScript中，私有成员只有通过在闭包中包含有这些私有成员的方法来访问（这样的方法通常称为特权方法，因为它们不同于普通的公开方法）。因此，在Person的公开方法中，你依然可以通过Person的特权方法方法来访问私有成员：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Person.prototype.somePublicMethod = function() {
+    // doesn’t work!
+    // alert(this.name);
+    // this one below works
+    alert(this.getName());
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;大家广泛认为，Douglas Crockford是第一个发现（或者可能说发表更合适）使用闭包来模拟私有成员的人。他的网站，&lt;a href=&quot;http://javascript.crockford.com/&quot;&gt;javascript.crockford.com&lt;/a&gt;，包含了JavaScript方面的大量信息 —— 对JavaScript感兴趣的开发人员都应该去他的网站看看。&lt;/p&gt;
+
+&lt;h2&gt;类的继承&lt;/h2&gt;
+
+&lt;p&gt;好的，现在你已经看到了如何通过构造器函数和原型对象在JavaScript中模拟类。你也已经了解原型链可以确保所有的对象都能具有Object.prototype中的通用方法。你还看到了如何使用闭包来模拟出私有成员。但是，这里好像还是缺点什么东西。你还没看到在JavaScript中如何实现类的继承；这在C#中可是司空见惯的事情。很不幸，在JavaScript进行类的继承无法象在C#中那样键入一个冒号而实现；在JavaScript中还需要做更多的事情。但从另一方面讲，因为JavaScript非常灵活，我们有多种途径实现类的继承。&lt;/p&gt;
+
+&lt;p&gt;比方说，如&lt;strong&gt;图9&lt;/strong&gt;所示，你有一个基类叫Pet，它有一个派生类叫做Dog。怎样在JavaScript中实现这个继承关系呢？Pet类就很简单了，你已经看到过怎么实现它了：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20151043_zqob.gif&quot; alt=&quot;&quot; /&gt; 图9&lt;strong&gt; 类 &lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// class Pet
+function Pet(name) {
+    this.getName = function() { return name; };
+    this.setName = function(newName) { name = newName; };
+}
+
+Pet.prototype.toString = function() {
+    return &quot;This pet’s name is: &quot; + this.getName();
+};
+
+// end of class Pet
+var parrotty = new Pet(&quot;Parrotty the Parrot&quot;);
+alert(parrotty);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;那该如何定义派生自Pet类的Dog类呢？从&lt;strong&gt;图9&lt;/strong&gt;中可看出，Dog类具有一个额外的属性，breed,，并且它还重载了Pet的toString方法（请注意，avaScript中的方法和属性命名惯例采用的是驼峰式大小写方式，即camel case；而C#推荐使用的是Pascal大小写方式）。&lt;strong&gt;图10&lt;/strong&gt;所示即为Pet类的定义实现方法：&lt;/p&gt;
+
+&lt;p&gt;图10 &lt;strong&gt;继承Pet类&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// class Dog : Pet 
+// public Dog(string name, string breed)
+function Dog(name, breed) {
+    // think Dog : base(name) 
+    Pet.call(this, name);
+    this.getBreed = function() { return breed; };
+    // Breed doesn’t change, obviously! It’s read only.
+    // this.setBreed = function(newBreed) { name = newName; };
+}
+
+// this makes Dog.prototype inherits
+// from Pet.prototype
+Dog.prototype = new Pet();
+
+// remember that Pet.prototype.constructor
+// points to Pet. We want our Dog instances’
+// constructor to point to Dog.
+Dog.prototype.constructor = Dog;
+
+// Now we override Pet.prototype.toString
+Dog.prototype.toString = function() {
+    return &quot;This dog’s name is: &quot; + this.getName() + 
+        &quot;, and its breed is: &quot; + this.getBreed();
+
+};
+
+// end of class Dog
+
+var dog = new Dog(&quot;Buddy&quot;, &quot;Great Dane&quot;);
+
+// test the new toString()
+alert(dog);
+
+// Testing instanceof (similar to the is operator)
+
+// (dog is Dog)? yes
+alert(dog instanceof Dog);
+
+// (dog is Pet)? yes
+alert(dog instanceof Pet);
+
+// (dog is Object)? yes
+alert(dog instanceof Object);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过正确设置原型链这个小把戏，就可以同在C#中所期望的那样，使得instanceof测试在JavaScript中也能够正常进行。而且如你所愿，特权方法也能够正常得以运行。&lt;/p&gt;
+
+&lt;h2&gt;模拟命名空间&lt;/h2&gt;
+
+&lt;p&gt;在C++和C#中，命名空间用来将命名冲突的可能性减小到最小的程度。例如，在.NET框架中，命名空间可以帮助我们区分出Microsoft.Build.Task.Message和Sys­tem.Messaging.Message这两个类。JavaScript并没有明确的语言特性来支持命名空间，但使用对象可以非常容易的模拟出命名空间。比如说你想创建一个JavaScript代码库。不想在全局中定义函数和类，你就可以将你的函数和类封装到如下这样的命名空间之中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var MSDNMagNS = {};
+
+MSDNMagNS.Pet = function(name) { // code here };
+MSDNMagNS.Pet.prototype.toString = function() { // code };
+
+var pet = new MSDNMagNS.Pet(&quot;Yammer&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;只有一层命名空间可能会出现不唯一的请看，所以你可以创建嵌套的命名空间：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var MSDNMagNS = {};
+
+// nested namespace &quot;Examples&quot;
+MSDNMagNS.Examples = {}; 
+
+MSDNMagNS.Examples.Pet = function(name) { // code };
+MSDNMagNS.Examples.Pet.prototype.toString = function() { // code };
+
+var pet = new MSDNMagNS.Examples.Pet(&quot;Yammer&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不难想象，每次都键入这些很长的嵌套命名空间很快就会让人厌烦。幸运的是，你的代码库的用户可以很容易地为你的命名空间起一个比较简洁的别名：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// MSDNMagNS.Examples and Pet definition...
+// think &quot;using Eg = MSDNMagNS.Examples;&quot; 
+var Eg = MSDNMagNS.Examples;
+var pet = new Eg.Pet(&quot;Yammer&quot;);
+
+alert(pet);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;你要是看一眼Microsoft AJAX代码库的源代码的话，就会发现该库的编写者也使用了类似的技巧来实现命名空间（请看静态方法Type.registerNamespace的实现代码)。这方面更详细的信息可参见&quot;OOP and ASP.NET AJAX&quot;的侧边栏。&lt;/p&gt;
+
+&lt;h2&gt;你应该用这种方式来进行JavaScript编程吗？&lt;/h2&gt;
+
+&lt;p&gt;如你所见，JavaScript对面向对象的支持非常好。虽然设计为基于原型的语言，但是它足够灵活也足够强大，允许你拿它来进行通常是出现在其它常用语言中的基于类的编程风格。但是问题在于：你是否应该以这种方式来进行JavaScript编码吗？你是否应该采用C#或C++的编程方式，采用比较聪明的方式模拟出本来不存在的特性来进行JavaScript编程？每种编程语言都互不相同，一种语言的最佳实践对另外一种编程语言来讲可能就不实最佳的了。&lt;/p&gt;
+
+&lt;p&gt;你已经了解在JavaScript中是对象继承自对象（而非类继承自类）。所以，让大量的类使用静态的继承层次结构可能不是JavaScript之道。可能就象Douglas Crockford在他的这篇文章&quot;&lt;a href=&quot;http://javascript.crockford.com/prototypal.html&quot;&gt;Prototypal Inheritance in JavaScript&lt;/a&gt;&quot;中所说的那样，JavaScript的编程之道就是创建原型对象，并使用下面这样的简单的对象函数来创建继承自原对象的新对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function object(o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后，既然JavaScript对象可塑性很强，你就可以在对象生成之后，通过为它添加必要的新字段和新方法来增强对象。&lt;/p&gt;
+
+&lt;p&gt;这种做法都很不错，但不可否认的是，全世界大多数开发者都更加属性基于类的编程。实际上，基于类的编程还会继续流行下去。根据即将发布的ECMA-262规范（ECMA-262是JavaScript的官方规范）的第4个版本，JavaScript 2.0将具有真正的类。所以说，JavaScript正在逼近基于类的编程语言。然而，JavaScript 2.0要得到广泛使用可能还需要几年的时间。同时还有一点也很重要，就是要全面掌握当前版本的JavaScript，只有这样才能读懂和编写出基于原型和基于类的这两种风格的JavaScript代码。&lt;/p&gt;
+
+&lt;h2&gt;大局观&lt;/h2&gt;
+
+&lt;p&gt;随着交互式、重客户端AJAX应用的普及，JavaScript很快就成为了.NET开发者工具箱中最有用的工具之一。然而，对于更加适应C++、C#或者Visual Basic等语言的开发者来讲，JavaScript的原型本性一开始会让它们感到很不适应。我觉得我的JavaScript之旅收获颇丰，但一直以来也不乏挫折打击。如果这篇文章能够帮助你更加顺利地进步，那么我将倍感欣慰，因为这就是我写这篇文章的目的所在。&lt;/p&gt;
+
+&lt;h2&gt;OOP 和 ASP.NET AJAX&lt;/h2&gt;
+
+&lt;p&gt;ASP.NET AJAX中实现的OOP同我在这篇文章里讨论的规范的实现方法稍有不同。这里面主要有两个方面的原因：ASP.NET AJAX版的实现为反射（对于象xml-scrip这样的声明式语法并且为了参数验证，反射是很有必要的手段）提供了更多的可能，而且ASP.NET AJAX旨在将.NET开发者所熟悉的其它一些语法结构，比如属性、事件、枚举以及接口等翻译为JavaScript代码。&lt;/p&gt;
+
+&lt;p&gt;在当前广泛可用的版本中，JavaScript缺乏.NET开发者所熟知的大量OOP方面的概念，ASP.NET AJAX模拟出了其中的大部分概念。&lt;/p&gt;
+
+&lt;p&gt;类可用具有基于命名规范的属性访问器（下文中有例子），还可用完全按照.NET所提供的模式进行事件多播。私有变量的命名遵从以下划线打头的成员就是私有成员这样的规范。很少有必要使用真正私有的变量，这个策略使得我们可用从调试器中直接查看这种变量。引入接口也是为了进行类型检查，而不是通常的duck-typing（一种类型方案，其基于的概念是，如果有一种东西象鸭子那样走路并且象鸭子那样嘎嘎叫，我们就认为这种东西是鸭子，或者说可用把这种东西看作鸭子）。&lt;/p&gt;
+
+&lt;h3&gt;类和反射&lt;/h3&gt;
+
+&lt;p&gt;在JavaScript中，我们无法得知函数的名字。即使有可能可以得知，多数情况下这对我们来说也没有什么帮助，因为类构造器通常就是将一个匿名函数赋值为一个命名空间变量。真正的类型名的是由该变量的全限定名组成的，但却同样无法取得，构造器函数对此名也一无所知。为了克服此局限并在JavaScript类之中具有丰富的反射机制，ASP.NET AJAX要求要将类型的名字进行注册。&lt;/p&gt;
+
+&lt;p&gt;ASP.NET AJAX中的反射API可用于任何类型，无论该类型是内建的类、接口、命名空间、甚至是枚举都没有问题，而且其中还包含有和.NET框架中相同的isInstanceOfType和inheritsFrom函数，这两个函数用来在程序运行时对类的层次结构进行检视。ASP.NET AJAX在调试模式还做了类型检查，其意义在于能够帮助开发者尽早地找出程序中的bug。&lt;/p&gt;
+
+&lt;h3&gt;注册类的层次结构和基类的调用&lt;/h3&gt;
+
+&lt;p&gt;要在ASP.NET AJAX中定义一个类，你需要将该类的构造器函数赋值给一个变量（要注意构造器函数是如何调用基类的方法的）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MyNamespace.MyClass = function() {
+    MyNamespace.MyClass.initializeBase(this);
+    this._myProperty = null;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后，你需要在它的原型中定义该类的成员：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MyNamespace.MyClass.prototype = {
+    get_myProperty: function() { return this._myProperty;},
+    set_myProperty: function(value) { this._myProperty = value; },
+    doSomething: function() {
+        MyNamespace.MyClass.callBaseMethod(this, &quot;doSomething&quot;);
+        /* do something more */
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，你要对这个类进行注册：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MyNamespace.MyClass.registerClass(
+    &quot;MyNamespace.MyClass &quot;, MyNamespace.BaseClass);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;构造器和原型的继承层次结构就不需要你管了，因为registerClass函数会为你完成此项任务。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>使用 Varnish 加速你的 Web 网站</title>
+   <link href="http://beango.github.com/archives/2013/06/20/speed-your-web-site-varnish.html"/>
+   <updated>2013-06-20T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/06/20/speed-your-web-site-varnish</id>
+   <content type="html">&lt;p&gt;Varnish可以有效降低web服务器的负载，提升访问速度。根据官方的说法，Varnish是一个cache型的HTTP反向代理。&lt;/p&gt;
+
+&lt;p&gt;按照HTTP协议的处理过程，web服务器接受请求并且返回处理结果，理想情况下服务器要在不做额外处理的情况下，立即返回结果，但实际情况并非如此。本文将分析在web服务器处理请求的过程中，Varnish能起到什么作用。&lt;/p&gt;
+
+&lt;p&gt;web服务器的实现千差万别，但典型的处理过程是相同的，都要经过一系列的步骤来处理接收到的每个请求。有可能需要启动一个进程来处理请求，有可能需要从磁盘上载入文件，或者启动内部线程来编译执行一些脚本。在执行脚本的过程中，还会有进行很多别的动作，比如进行数据库查询，读取文件等等。当成百上千个请求并发访问时，服务器的负载会很快上升，出现系统资源不够的情况。一种更糟的情况是，很多请求是重复的，但web服务器无法记住曾经作出的响应，还会重复上面复杂的处理过程。&lt;/p&gt;
+
+&lt;p&gt;当把Varnish部署上之后，web请求的处理过程会有一些变化。客户端的请求将首先被Varnish接受。Varnish将分析接收的请求，并将其转发到后端的web服务器上。后端的web服务器对请求进行常规的处理，并将依次将处理结果返回给Varnish。&lt;/p&gt;
+
+&lt;p&gt;但Varnish的功能并非仅限于此。Varnish的核心功能是能能将后端web服务器返回的结果缓存起来，如果发现后续有相同的请求，Varnish将不会将这个请求转发到web服务器，而是返回缓存中的结果。这将有效的降低web服务器的负载，提升响应速度，并且每秒可以响应更多的请求。Varnish速度很快的另一个主要原因是其缓存全部都是放在内存里的，这比放在磁盘上要快的多。诸如此类的优化措施使得Varnish的相应速度超乎想象。但考虑到实际的系统中内存一般是有限的，所以需要手工配置一下缓存的空间限额，同时避免缓存重复的内容。\&lt;/p&gt;
+
+&lt;p&gt;下面来看一下Varnish的安装过程。可以从源码进行安装，也可以直接使用一些发行版中的预编译包。当期Varnish的版本是3.0.3（译者注：目前最新是2013年6月17日发布的3.0.4版），本文将基于3.0.3进行源码安装。需要注意的是，2.X版的Varnish和3.X的配置文件格式发生了变化。可以从Varnish的&lt;a href=&quot;https://www.varnish-cache.org/docs/3.0/installation/upgrade.html&quot;&gt;官方网站&lt;/a&gt;上找到2.x到3.x升级的细节。&lt;/p&gt;
+
+&lt;p&gt;从源码进行安装经常遇到的问题是系统缺少某些依赖的文件。可以从Varnish的&lt;a href=&quot;https://www.varnish-cache.org/docs/3.0/installation/install.html#compiling-varnish-from-source&quot;&gt;安装文档&lt;/a&gt;里找到编译所需的所有依赖的文件。&lt;/p&gt;
+
+&lt;p&gt;以root身份运行如下命令来下载和安装Varnish。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /var/tmp
+wget http://repo.varnish-cache.org/source/varnish-3.0.3.tar.gz
+tar xzf varnish-3.0.3.tar.gz
+cd varnish-3.0.3
+sh autogen.sh
+sh configure
+make
+make test
+make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Vanish将安装在/usr/local目录下。主程序的完整路径为：/usr/local/sbin/varnishd，默认的配置文件为：/usr/local/etc/varnish/default.vcl&lt;/p&gt;
+
+&lt;p&gt;在运行varnishd之前，需要先配置后端的web服务器，参照如下格式编辑default.vcl文件，更改为你自己web服务器配置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;backend default {
+    .host = &quot;127.0.0.1&quot;;
+    .port = &quot;80&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;用如下命令启动Varnishd：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/sbin/varnishd -f /usr/local/etc/varnish/default.vcl -a :6081 -P /var/run/varnish.pid -s malloc,256m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行完毕后，Varnish将进入后台运行，同时返回命令行状态。需要注意的是，Varnish运行时会同时启动两个进程，一个主进程，一个是子进程，如果子进程出现问题，主进程将重新生成一个子进程。&lt;/p&gt;
+
+&lt;h3&gt;Varnishd 的启动选项&lt;/h3&gt;
+
+&lt;p&gt;-f : 指定配置文件位置&lt;/p&gt;
+
+&lt;p&gt;-a : varnish监听的本地地址和端口。&lt;/p&gt;
+
+&lt;p&gt;-P :PID文件位置，用来关闭Varnish&lt;/p&gt;
+
+&lt;p&gt;-s :cache配置。默认使用256M内存&lt;/p&gt;
+
+&lt;p&gt;如果从一些包管理器来安装varnish，可能安装完毕后就会自动运行。这种情况下需要先停掉它。并使用上述命令选项来运行。否则一些配置可能和本文例子中的不同了。可以用下面的命令来检查varnish的运行情况和配置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/bin/pgrep -lf varnish
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动完毕之后，Varnish就可以处理并转发请求了。在转发过程中，varnish会尽可能的缓存结果。我们通过下面几个简单的GET请求，来看看varnish是如何工作的。首先，运行如下命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/bin/varnishlog
+/usr/local/bin/varnishstat
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面的GET命令是perl的libwww-perl中的。使用这个命令可以看到varnish返回的HTTP响应的细节。如果你的系统里没有安装libwww-perl，也可以使用Firefox中live HTTP Headers扩展，或者使用其他类似工具也可以。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET -Used http://localhost:6081/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20080236_hM8L.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在这里GET命令的选项无所谓。需要注意的是varnish返回的响应，varnish会增加三个相应头信息，分别是“X-Varnish”、“Via”和“Age”。这些头信息在Varnish的处理过程中非常有用。X-Varnish头信息的后面会有一个或两个数字，如果是一个数字，就表明varnish在缓存中没有发现这个请求，这个数字的含义是varnish为这个请求所做的标记ID。如果X-Varnish后是两个数字，就表明varnish在缓存中命中了这个请求，第一个数字是请求的标识ID，第二个数字是缓存的标识ID。“Via”头信息表明这个请求将经过一个代理。“Age”头信息标识出这个请求将被缓存多长时间（单位：秒）。首次请求的“Age”为0，后续的重复请求将会使Age值增大。如果后续的请求没有是“Age”增加，那就说明varnish没有缓存这个响应的结果。&lt;/p&gt;
+
+&lt;p&gt;现在来看看 varnishstat 命令启动执行的情况，如下图所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20080237_w5ic.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图2. varnishstat 命令&lt;/p&gt;
+
+&lt;p&gt;最重要的是 cache_hit 和 cache_miss这两行。如果没有任何命中，cache_hits不会显示。当越来越多的请求进来，计数器会不断更新以反应新的命中数和未命中数。&lt;/p&gt;
+
+&lt;p&gt;接下来看看 varnishlog 命令：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20080238_inKm.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图3. varnishlog 命令&lt;/p&gt;
+
+&lt;p&gt;上图显示varnish接受请求并作出响应的内部细节，下面是varnish官方文档中的解释：&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;第一列是一个乱数，用来标识当前请求。第一列数字相同的行属于一HTTP请求序列。第二列是日志信息的标签，所有的日志信息会分类标记，以“Rx”开头的为接收的数据，以“Tx”开头的为发送的数据。第三列表示数据在客户端，vainish和web服务器之间的传输状态。第四列是被日志记录的数据。&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;varnishlog命令有很多的选项可以在查询时使用。强烈推荐在排错或测试时使用varnishlog。可以阅读varnish的man page来查看这个命令的详细使用情况。下面是一些使用的例子。&lt;/p&gt;
+
+&lt;p&gt;显示varnish和客户端之间的通信（忽略后端web服务器）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/bin/varnishlog -b
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;显示varnish接收到的HTTP头信息（既有客户端请求的，也有web服务器响应的）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/bin/varnishlog -c -i RxHeader
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;只显示web服务器响应的头信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/local/bin/varnishlog -Dw /var/log/varnish.log
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从/var/log/varnish.log中读取所有日志信息&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kill `cat /var/run/varnish.pid`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个命令会从/var/run/varnish.pid中读取varnish的主进程的PID，并给这个进程发送TERM信号，从而关闭varnish。&lt;/p&gt;
+
+&lt;p&gt;现在通过上述命令，我们可以控制varnish的启动和关闭，可以检查缓存的命中情况，下一个问题是varnish到底缓存了什么，会存多久？&lt;/p&gt;
+
+&lt;p&gt;varnish的默认缓存策略是偏向保守的（可以通过配置改变）。它默认只缓存get请求和HEAD请求。不会缓存带有Cookie和认证信息的请求，也不会缓存带有Set-Cookie或者有变化的头信息的响应。varnish也会检查请求和响应中的Cache-Control头信息，这个头信息中会包含一些选项来控制缓存行为。当Cache-control中Max-age的控制和默认策略冲突时，varnish不会单纯的根据Cache-control信息就改变自己的缓存行为。例如：Cache-Control: max-age=n，n为数字，如果varnish收到web服务器的响应中包含max-age，varnish会以此值设定缓存的过期时间（单位：秒），否则varnish将会设置为参数配置的时间，默认为120秒。&lt;/p&gt;
+
+&lt;h3&gt;注意:&lt;/h3&gt;
+
+&lt;p&gt;varnish的默认配置可以适应多数情况。例如，默认的default_ttl缓存过期时间是120秒。配置文件的详细解释可以阅读varnishd的man page。如果你想改变某些默认设置，一种方式是通过命令行varnishd加上-p参数，这将重启varnishd，并清空缓存。另外一种方式是使用varnish的管理接口，要使用varnish的管理接口需要以-T参数启动varnish，这个参数指定了，varnish管理接口的监听端口。然后使用varnishadm命令连接到varnish的管理接口上，然后实时的查询varnish的运行参数，或者更改新的参数，这些都不需要重启varnish。&lt;/p&gt;
+
+&lt;p&gt;想要了解详细的情况，可以参阅varnishd、varnishadm和varnish-cli的man page。&lt;/p&gt;
+
+&lt;p&gt;一般情况下我们会改变varnish的缓存行为，定制自己的缓存策略。可以将配置写入默认的default.vcl文件，VCL是varnish的配置文件的格式，像一种简单的脚本语言。可以通过vcl的man page来了解详细的格式，推荐阅读。&lt;/p&gt;
+
+&lt;p&gt;在修改default.vcl配置之前，我们先来看一下varnish处理http请求的一个完整过程。我们将之成为一个请求／响应周期（request/response cycle）。这个过程始于varnish收到客户端的请求，varnish将检查这个请求，并将其标记存储，接下来varnish将根据一定的策略决定是将这个请求直接转发，还是检查缓存。如果是第一种情况，varnish会将请求直接转发到后端的服务器上，并且将服务器的响应返回给你客户端。如果是第二种情况，varnish会进行一个缓存查询的过程，如果缓存命中，varnish会将缓存中结果返回给客户端，如果缓存中没有，varnish会将此请求转发给后端的服务器，并将服务器的响应先进行缓存，然后再转发给客户端。&lt;/p&gt;
+
+&lt;p&gt;了解完varnish对请求和响应处理的过程之后，我们来讨论一下如何改变varnish的缓存策略。varnish有一系列的子功能来完成上述处理过程，每一个子功能完成处理过程的一个部分。每一个子功能的执行结果传递给下一个子功能。所以我们可以通过改变子功能的返回值来改变varnish的处理动作。每一个子功能都在default.vcl中有一个默认定义，可以通过改变这些值来定制varnish的功能。&lt;/p&gt;
+
+&lt;h3&gt;Varnish 子程序&lt;/h3&gt;
+
+&lt;p&gt;varnish的子程序在default.vcl中有默认的配置，如果你重新配置了某一个功能，并不意味着默认的动作一定不会执行。一般情况下，如果你重新配置了某一个功能，但是没有返回值，varnish将会执行默认的动，因为所有的varnish子程序都会有一个返回值。这可以看作varnish的一种容错机制。&lt;/p&gt;
+
+&lt;p&gt;第一个子程序是“vcl_recv”，在姐收到完整的客户端请求后开始执行这个子程序，可以通过修改req对象来改变默认的请求处理，varnish根据返回值决定处理方式。比如，返回：pass，将使varnish直接转发请求到web服务器，返回：lookup，将使varnish检查缓存。&lt;/p&gt;
+
+&lt;p&gt;下一个子程序是vcl_pass。如果在vcl_recv中返回了“pass”，将执行vcl_pass。vcl_pass有两种返回值，pass：继续转发请求到后端web服务器。restart:将请求重新返回给vcl_recv。&lt;/p&gt;
+
+&lt;p&gt;vcl_miss和vcl_hit将会根据varnish的缓存命中情况来执行。vcl_miss的执行有两种情况,一是从后端服务器获取响应结果，并且在本地缓存（fetch），二是从后端获取到响应，但本地不缓存（pass）。如果varnish缓存命中，将会执行vcl_hit，会有两个选择，一个直接将缓存的结果返回给客户端（deliver），二是丢弃缓存，重新从后端服务器获取数据（pass）。&lt;/p&gt;
+
+&lt;p&gt;当从后端服务器获取到数据之后，将会执行vcl_fetch过程，在这里可以通过beresp对象来访问响应数据，返回两种处理结果；deliver:按计划将数据发送给客户端，restart，退回这个请求。&lt;/p&gt;
+
+&lt;p&gt;在vcl_deliver子程序中，可以将响应结果发送给客户端（deliver），结束这个请求，同时根据不同情况决定是否缓存结果。也可以返回“restart”值，来重新开始这个请求。&lt;/p&gt;
+
+&lt;p&gt;如前所述，通过default.vcl来控制varnish的缓存策略，通过子程序的返回值来控制varnish的动作。子程序的返回值可以基于req和resp对象，也可以基于客户端对象，服务端对象或者后端服务器对象。但在子程序处理过程中，上述数据对象并非一直都可用。另外要注意子程序的返回值会有一定的限制范围，一个难点就是记住在什么时候，哪个子程序中什么数据对象是可用的，合法的返回值有哪些。为了让这个问题更清晰一些，下面是一张表格，可以在修改配置的时候快速参考：&lt;/p&gt;
+
+&lt;h3&gt;表1. 各子程序中各数据对象的可用情况.&lt;/h3&gt;
+
+&lt;table border=&quot;1&quot;&gt; 
+ &lt;tbody&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; client &lt;/td&gt; 
+   &lt;td&gt; server &lt;/td&gt; 
+   &lt;td&gt; req &lt;/td&gt; 
+   &lt;td&gt; bereq &lt;/td&gt; 
+   &lt;td&gt; beresp &lt;/td&gt; 
+   &lt;td&gt; resp &lt;/td&gt; 
+   &lt;td&gt; obj &lt;/td&gt; 
+  &lt;/tr&gt; 
+ &lt;/tbody&gt; 
+ &lt;tbody&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_recv&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_pass&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_miss&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_hit&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_fetch&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_deliver&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+ &lt;/tbody&gt; 
+&lt;/table&gt;
+
+
+&lt;h3&gt;表2. 各子程序的合法返回值.&lt;/h3&gt;
+
+&lt;table border=&quot;1&quot;&gt; 
+ &lt;tbody&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; pass &lt;/td&gt; 
+   &lt;td&gt; lookup &lt;/td&gt; 
+   &lt;td&gt; error &lt;/td&gt; 
+   &lt;td&gt; restart &lt;/td&gt; 
+   &lt;td&gt; deliver &lt;/td&gt; 
+   &lt;td&gt; fetch &lt;/td&gt; 
+   &lt;td&gt; pipe &lt;/td&gt; 
+   &lt;td&gt; hit_for_pass &lt;/td&gt; 
+  &lt;/tr&gt; 
+ &lt;/tbody&gt; 
+ &lt;tbody&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_recv&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_pass&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_lookup&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_miss&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_hit&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_fetch&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+  &lt;/tr&gt; 
+  &lt;tr&gt; 
+   &lt;td&gt; &lt;em&gt;vcl_deliver&lt;/em&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; X &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+   &lt;td&gt; &lt;br&gt; &lt;/td&gt; 
+  &lt;/tr&gt; 
+ &lt;/tbody&gt; 
+&lt;/table&gt;
+
+
+&lt;h3&gt;注意:&lt;/h3&gt;
+
+&lt;p&gt;请仔细阅读vcl的文档来了解相关子程序，返回值以及可用的数据对象。&lt;/p&gt;
+
+&lt;p&gt;下面是一些实际的例子：&lt;/p&gt;
+
+&lt;p&gt;修改HTTP请求的 Host 头信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_recv {
+    if (req.http.host ~ &quot;^www.example.com&quot;) {
+        set req.http.host = &quot;example.com&quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;你可以通过 req.http.host来访问请求的HTTP host头信息，类似的，你可以通过req.http访问所有的HTTP头信息。“\~”符表示相等的意思，后面是一个正则表达式. 如果匹配上，会通过set关键字和“=”赋值操作，将hostname改为&quot;example.com&quot;.修改hostname的一个作用是防止重复的缓存。 因为varnish会通过hostname和URL来判断缓存匹配情况，所以hostname应该被修改为统一的形式。&lt;/p&gt;
+
+&lt;p&gt;下面是默认 vcl_recv 子程序的一个片段:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_recv {
+    if (req.request != &quot;GET&quot; &amp;amp;&amp;amp; req.request != &quot;HEAD&quot;) {
+        return (pass);
+    }
+    return (lookup);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是默认的vcl_recv配置文件的片段，在这个配置中如果发现请求不是GET或者HEAD，varnish将会直接pass这个请求，并且不会缓存这个请求的响应，如果是GET或HEAD，将会到缓存中进行查找。&lt;/p&gt;
+
+&lt;p&gt;匹配特定的URL，移除请求中的Cookie信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_recv {
+    if (req.url ~ &quot;^/images&quot;) {
+        unset req.http.cookie;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个是varnish网站上的例子，如果发现请求的URL以&quot;/images&quot;开始，varnish会将其中的Cookie信息移除。当在cookie中设置不缓存当前响应时，varnish可以通过移除Cookie，来缓存这个响应。&lt;/p&gt;
+
+&lt;p&gt;在对图片文件的响应头中中移除set-Cookie：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_fetch {
+    if (req.url ~ &quot;\.(png|gif|jpg)$&quot;) {
+        unset beresp.http.set-cookie;
+        set beresp.ttl = 1h;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个是varnish网站上的另一个例子。接收到web服务器的返回结果后会触发vcl_fetch处理过程。当从web服务器接收到新的数据后，beresp中保存web服务器返回的响应信息，req中是本次请求的信息。如果本次请求的文件是图像文件，varnish会将响应头信息中的“Set-Cookie”移除，并且将缓存的时间设置为1小时（带有Set-Cookie的响应，varnish不会缓存）。&lt;/p&gt;
+
+&lt;p&gt;现在我们想朝响应信息中增加一个&quot;X-Hit&quot;的头信息，当缓存命中的时候，这个值为1，未命中的时候为0。根据上文，判断缓存命中的最简单的办法是在vcl_hit中。当缓存命中是会调用vcl_hit，因此可以考虑在vcl_hit中设置这个头信息，但从上文表1中我们看到，vcl_hit里beresp和resp都是不可用的。一个可行的办法就是在请求中设置里一个临时头信息，然后在后续的处理过程中真正进行设置。下面我们看一下这个问题是如何解决的：&lt;/p&gt;
+
+&lt;p&gt;在响应头信息中增加“x-hit”：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_hit {
+    set req.http.tempheader = &quot;1&quot;;
+}
+
+sub vcl_miss {
+    set req.http.tempheader = &quot;0&quot;;
+}
+
+sub vcl_deliver {
+    set resp.http.X-Hit = &quot;0&quot;;
+    if (req.http.tempheader) {
+        set resp.http.X-Hit = req.http.tempheader;
+        unset req.http.tempheader;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述vcl_hit和vcl_miss中设置了一个临时的请求头信息，来标识出缓存的命中情况。真正的处理过程在vcl_deliver里，首先默认设置x-hit为0，然后根据请求里的临时头信息判断缓存的命中情况，并且依此更新刚才设置的x-hit默认值，最后删除此临时头信息。之所以选择在vcl_deliver里来进行处理，是因为在响应信息返回给客户端之前，只有在vcl_deliver中才可以访问resp对象。&lt;/p&gt;
+
+&lt;p&gt;下面我们看一个针对此问题错误的解决办法：&lt;/p&gt;
+
+&lt;p&gt;增加“x-hit”头信息（错误的方法）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_hit {
+    set req.http.tempheader = &quot;1&quot;;
+}
+
+sub vcl_miss {
+    set req.http.tempheader = &quot;0&quot;;
+}
+
+sub vcl_fetch {
+    set beresp.http.X-Hit = &quot;0&quot;;
+    if (req.http.tempheader) {
+        set beresp.http.X-Hit = req.http.tempheader;
+        unset req.http.tempheader;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在vcl_fetch里修改服务器返回的信息（beresp），但这并不是最终发送给客户端的数据。上述配置貌似正确，其实隐含了一个大BUG。首次请求当缓存未命中时，web服务器的响应被标上'x-hit'为0，然后送到vcl_fetch处理，并被缓存在本地。但当后续请求缓存命中时，vcl_fetch过程不会被执行，结果就导致所有的缓存命中的响应都带有x-hit=0的标记。这是在配置varnish时需要特别注意的一类问题。&lt;/p&gt;
+
+&lt;p&gt;避免这些问题的办法是熟练掌握上述的表1的内容，并且在实际工作中多做测试。&lt;/p&gt;
+
+&lt;p&gt;下面的配置可以让varnish将所有的数据缓存一个小时（不建议在真实环境中使用）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sub vcl_recv {
+    return (lookup);
+}
+
+sub vcl_fetch {
+    set beresp.ttl = 1h;
+    return (deliver);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在上述配置中重写了vcl_recv和vcl_fetch两个过程。需要注意的是：如果vcl_fetch不返回“deliver”，varnish将会继续执行默认的处理过程，就不会有想要的效果了。&lt;/p&gt;
+
+&lt;p&gt;一旦varnish运行生效之后，你可以通过一些负载测试工具来测试性能的改善。我通常使用的测试工具是apache自带的ab，可以从apache的安装包里找到，或者通过一些第三方的包管理器进行安装。可以在&lt;a href=&quot;http://httpd.apache.org/docs/2.4/programs/ab.html&quot;&gt;apache的网站&lt;/a&gt;上找到ab的使用文档。&lt;/p&gt;
+
+&lt;p&gt;在下面的测试例子中，apache2.2监听在80端口，varnish监听在6081端口。用来做测试的页面是一个非常简单的perl
+CGI脚本，只输出一个单行的HTML文件。通过访问相同的URL来测试apache和varnish的不同表现。为避免网络因素的影响，所有的测试都在本机执行。测试中使用的ab选项非常简单，也可以试着去改变这些选项，看看是什么结果。&lt;/p&gt;
+
+&lt;p&gt;首先进行一个1000次的请求（n=1000），并发数量1个（c=1）.&lt;/p&gt;
+
+&lt;p&gt;先测试apache：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ab -c 1 -n 1000 http://localhost/cgi-bin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;图 4. Apache测试结果&lt;/p&gt;
+
+&lt;p&gt;再测试varnish：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ab -c 1 -n 1000 http://localhost:6081/cgi-bin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;图 5. varnish测试结果&lt;/p&gt;
+
+&lt;p&gt;ab的测试输出里包含很多信息，最基本的性能指标有“Time per request”和“Requests per second（rps）”。&lt;/p&gt;
+
+&lt;p&gt;从上述测试结果来看，apache的每个请求在1ms以上（780rps），而varnish在0.1ms（7336rps）比apache高了10倍。&lt;/p&gt;
+
+&lt;p&gt;从这个测试结果说明varnish的速度比apache快，至少在当前环境下是这样。可以尝试改变ab的选项来进行不同的测试，例如改变并发访问数量。&lt;/p&gt;
+
+&lt;h3&gt;系统负载和磁盘IO（ %iowait）&lt;/h3&gt;
+
+&lt;p&gt;系统负载是反映CPU运行状况的指标，通常情况下系统中每个CPU核心的负载应该在1.0以下。如果你的系统中有4个CPU核心，理想的系统负载应该在4.0以下。&lt;/p&gt;
+
+&lt;p&gt;磁盘的%iowait反映每个CPU时间片内系统的输入输出（I／O）状况。%iowait指标较高表示磁盘IO成为了系统瓶颈会拖慢整体的速度。比如，如果收到的每个请求都需要读取100个文件或者更多，这将会导致%iowait迅速升高然后成为系统性能的瓶颈。&lt;/p&gt;
+
+&lt;p&gt;测试的时候除了关注系统的响应时间之外，还要看系统资源的使用情况。当测试请求持续很长时间时，我们比较一下两者的系统资源使用情况。监控的指标就是系统的负载（system
+load）和磁盘IO（%iowait）。系统负载可以从top命令里查看，%iowait可以从iostat命令看到。在测试过程中需要同时关注这两个指标，我们打开两个终端分别运行top和iostat。&lt;/p&gt;
+
+&lt;p&gt;运行iostat，2秒更新一次：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;iostat -c 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行top:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/usr/bin/top
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在就可以做测试了。因为要看长时间持续请求的状况下服务器的性能表现（至少要在1到10分钟），所以需要在ab的选项里加大请求次数和并发数量。&lt;/p&gt;
+
+&lt;p&gt;使用ab对Apache进行测试：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ab -c 50 -n 100000 http://localhost/cgi-bin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20080239_FhrH.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图 6. Apache 下系统压力测试流量记录&lt;/p&gt;
+
+&lt;p&gt;使用ab测试Varnish:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ab -c 50 -n 1000000 http://localhost:6081/cgi-bin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-06/20080239_P03y.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图 7. Varnish下系统压力测试流量记录&lt;/p&gt;
+
+&lt;p&gt;首先对比响应时间，虽然截图上没有直接显示时间，但是我们可以从ab结束的时间计算出来，apache是23ms每次请求（2097rps），varnish是4ms每次请求（12099rps）。最大的差异是平均负载，Apache使系统的负载达到了12，使用varnish时则一直保持在0～0.4。在从apache切换到varnish做测试时，甚至要等上几分钟，系统负载才能回复正常。最好在非生产环境下用比较空闲的机器做这些测试。&lt;/p&gt;
+
+&lt;p&gt;尽管真实环境中的web服务器有很多个性化的配置和需求，但是vanish一般都可以帮助你的web服务器提高性能并且降低负载。&lt;/p&gt;
 </content>
  </entry>
  
