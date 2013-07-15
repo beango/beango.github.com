@@ -16,7 +16,7 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 
 ### MongoDB数据文件内部结构
 
-[![]({{ site.JB.FILE_PATH }}/2012-10/O6EzR.png)]({{ site.JB.FILE_PATH }}/2012-10/O6EzR.png)
+![MongoDB构架图]({{ site.JB.FILE_PATH }}/2012-10/O6EzR.png)
 
 1.  MongoDB在数据存储上按命名空间来划分，一个collection是一个命名空间，一个索引也是一个命名空间
 2.  同一个命名空间的数据被分成很多个Extent，Extent之间使用双向链表连接
@@ -28,7 +28,7 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 
 ### 在MongoDB中实现事务
 
-[![]({{ site.JB.FILE_PATH }}/2012-10/qklTw.png)]({{ site.JB.FILE_PATH }}/2012-10/qklTw.png)
+![MongoDB构架图]({{ site.JB.FILE_PATH }}/2012-10/qklTw.png)
 
 众所周知，MongoDB只支持对单行记录的原子性修改，并不支持对多行数据的原子操作。但是通过上图中的变态操作，实际你也可以自己实现事务。其步骤如图所未：
 
@@ -42,7 +42,7 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 
 ### MongoDB数据同步
 
-[![]({{ site.JB.FILE_PATH }}/2012-10/8SKjb.png)]({{ site.JB.FILE_PATH }}/2012-10/8SKjb.png)
+![MongoDB构架图]({{ site.JB.FILE_PATH }}/2012-10/8SKjb.png)
 
 上图是MongoDB采用Replica Sets模式的同步流程
 
@@ -53,7 +53,7 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 
 ### 分片机制
 
-[![]({{ site.JB.FILE_PATH }}/2012-10/wlqvf.png)]({{ site.JB.FILE_PATH }}/2012-10/wlqvf.png)
+![MongoDB构架图]({{ site.JB.FILE_PATH }}/2012-10/wlqvf.png)
 
 -   MongoDB的分片是指定一个分片key来进行，数据按范围分成不同的chunk，每个chunk的大小有限制
 -   有多个分片节点保存这些chunk，每个节点保存一部分的chunk
@@ -63,7 +63,7 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 
 ### 服务器角色
 
-[![]({{ site.JB.FILE_PATH }}/2012-10/RArrX.png)]({{ site.JB.FILE_PATH }}/2012-10/RArrX.png)
+![MongoDB构架图]({{ site.JB.FILE_PATH }}/2012-10/RArrX.png)
 
 上面讲了分片的标准，下面是具体在分片时的几种节点角色
 
@@ -74,6 +74,5 @@ Architecture），这是个一听就感觉很宽泛的话题，但是作者在�
 -   对于按分片key进行的查询和update操作来说，路由节点会查到具体的chunk然后再进行相关的工作
 -   对于不按分片key进行的查询和update操作来说，mongos会对所有下属节点发送请求然后再对返回结果进行合并
 
-更多详细内容请看原文：[MongoDB
-Architecture](http://horicky.blogspot.jp/2012/04/mongodb-architecture.html)
+更多详细内容请看原文：[MongoDB Architecture](http://horicky.blogspot.jp/2012/04/mongodb-architecture.html)
 

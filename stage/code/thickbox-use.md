@@ -113,3 +113,4 @@ tags: [js,jquery,thickbox]
 -   <a href="{{site.demourl}}/fancybox/" target="_blank"><span style="font-size:26px;font-bold:bold; color:#800080;">fancybox</span></a>
 -   <a href="http://www.nickstakenburg.com/projects/lightview/" target="_blank">Lightview</a>  
     Lightview是一个基于Prototype与Script.aculo.us开发，用于创建可以覆盖整个页面的模式对话框。展示的内容不仅可以是图片、文字、网页、通过Ajax 调用的内容，还可以是Quicktime/Flash影片都能够以非常酷的效果展示。
+-   <a href="http://orangoo.com/labs/GreyBox/" target="_blank">Greybox</a>

@@ -22,7 +22,7 @@ jQuery的版本更新很快，你应该总是使用最新的版本。因为新�
 
 我们用1.4.2、1.4.4、1.6.2三个版本的jQuery[测试](http://jsperf.com/jquery-1-4-2-vs-1-6-2-comparisons)，看看浏览器在1秒内能够执行多少次。结果如下：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/bg2011080301.png)
+![jQuery最佳实践]({{ site.JB.FILE_PATH }}/2013-02/bg2011080301.png)
 
 可以看到，1.6.2版本的运行次数，远远超过两个老版本。尤其是第一条语句，性能有数倍的提高。
 
@@ -62,7 +62,7 @@ Firefox、Safari、Chrome、Opera浏览器，都有原生方法getElementByClass
 
 最后是不同选择器的[性能比较图](http://jsperf.com/dh-jquery-1-4-vs-1-6/6)。
 
-![]({{ site.JB.FILE_PATH }}/2013-02/bg2011080302.png)
+![jQuery最佳实践]({{ site.JB.FILE_PATH }}/2013-02/bg2011080302.png)
 
 可以看到，ID选择器遥遥领先，然后是标签选择器，第三是Class选择器，其他选择器都非常慢。
 

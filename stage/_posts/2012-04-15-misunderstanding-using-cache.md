@@ -5,7 +5,7 @@ categories: [软件架构]
 date: 2012-04-15
 title: "使用缓存的9大误区（上）"
 description: "使用缓存的9大误区（上）"
-tags: [缓存 , 集群与缓存 , .net]
+tags: [缓存, .net]
 redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 ---
 {% include JB/setup %}
@@ -20,7 +20,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　首先对于本地内存缓存，就是把数据缓存在本机的内存中，如下图1所示：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314085328.png)
+![缓存]({{ site.JB.FILE_PATH }}/2013-02/2012041314085328.png)
 
 　　从上图中可以很清楚的看出：
 
@@ -29,7 +29,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　对于分布式的缓存，此时因为缓存的数据是放在缓存服务器中的，或者说，此时应用程序需要跨进程的去访问分布式缓存服务器，如图2：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314090310.png)
+![缓存]({{ site.JB.FILE_PATH }}/2013-02/2012041314090310.png)
 
 　　不管缓存服务器在哪里，因为涉及到了跨进程，甚至是跨域访问缓存数据，那么缓存数据在发送到缓存服务器之前就要先被序列化，当要用缓存数据的时候，应用程序服务器接收到了序列化的数据之后，会将之反序列化。序列化与反序列化的过程是非常消耗CPU的操作，很多问题就出现在这上面。
 
@@ -90,8 +90,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　因为集合中只是包含的Person对象实例的引用而言，即，在.NET的托管堆上面，这个Person集合分配的内存大小也就是100个引用的大小而言。
 
-　　然后，对于下面的这个对象，就是大对象了: byte[] data = new
-byte[87040]（85 \* 1024 = 87040）。
+　　然后，对于下面的这个对象，就是大对象了: byte[] data = new byte[87040]（85 \* 1024 = 87040）。
 
 　　说到了这里，那就就谈谈，为什么说：产生一次大对象的代价很大。
 
@@ -133,8 +132,7 @@ byte[87040]（85 \* 1024 = 87040）。
 
 　　我们通过一个例子来讲解。
 
-　　例如，对于一个ASP.NET
-应用而言，如果我们在一个按钮的Click事件中调用了缓存API，然后在页面呈现的时候，就去读取缓存，代码如下：
+　　例如，对于一个ASP.NET应用而言，如果我们在一个按钮的Click事件中调用了缓存API，然后在页面呈现的时候，就去读取缓存，代码如下：
 
 ![]({{ site.JB.FILE_PATH }}/2013-02/2012041314095217.png)
 

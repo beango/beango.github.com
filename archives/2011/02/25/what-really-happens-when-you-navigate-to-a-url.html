@@ -17,6 +17,9 @@
 	<link href='/assets/default.css' rel="stylesheet" media="all" />
 	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+	<style type="text/css" media="all">
+	@import "/assets/thickbox.css";
+	</style>
 </head>
 <body>
 
@@ -83,8 +86,6 @@
     	<li value="1" title="windows8"><a href="/tags.html#windows8-ref">windows8</a></li>
      
     	<li value="1" title="缓存"><a href="/tags.html#缓存-ref">缓存</a></li>
-     
-    	<li value="1" title="集群与缓存"><a href="/tags.html#集群与缓存-ref">集群与缓存</a></li>
      
     	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
      
@@ -185,11 +186,11 @@
 
 <h3>1. 首先嘛，你得在浏览器里输入要网址:</h3>
 
-<p><img src="/assets/files/2011-02/image4.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image4.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <h3>2. 浏览器查找域名的IP地址</h3>
 
-<p><img src="/assets/files/2011-02/image13.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image13.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>导航的第一步是通过访问的域名找出其IP地址。DNS查找过程如下：</p>
 
@@ -230,7 +231,7 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <h3>3. 浏览器给web服务器发送一个HTTP请求</h3>
 
-<p><img src="/assets/files/2011-02/image22.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image22.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>因为像Facebook主页这样的动态页面，打开后在浏览器缓存中很快甚至马上就会过期，毫无疑问他们不能从中读取。</p>
 
@@ -251,7 +252,7 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <h3>4. facebook服务的永久重定向响应</h3>
 
-<p><img src="/assets/files/2011-02/image8.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image8.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>图中所示为Facebook服务器发回给浏览器的响应：</p>
 
@@ -268,7 +269,7 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <h3>5. 浏览器跟踪重定向地址</h3>
 
-<p><img src="/assets/files/2011-02/image23.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image23.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>现在，浏览器知道了“http://www.facebook.com/”才是要访问的正确地址，所以它会发送另一个获取请求：</p>
 
@@ -279,7 +280,7 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <h3>6. 服务器“处理”请求</h3>
 
-<p><img src="/assets/files/2011-02/image9.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image9.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>服务器接收到获取请求，然后处理并返回一个响应。</p>
 
@@ -304,7 +305,7 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <h3>7. 服务器发回一个HTML响应</h3>
 
-<p><img src="/assets/files/2011-02/image10.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image10.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>图中为服务器生成并返回的响应：</p>
 
@@ -326,28 +327,28 @@ DNS</strong>根据用户所处的地理位置，通过把域名映射到多个�
 
 <p>在浏览器没有完整接受全部HTML文档时，它就已经开始显示这个页面了：</p>
 
-<p><img src="/assets/files/2011-02/image6.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image6.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <h3>9. 浏览器发送获取嵌入在HTML中的对象</h3>
 
-<p><img src="/assets/files/2011-02/image11.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image11.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>在浏览器显示HTML时，它会注意到需要获取其他地址内容的标签。这时，浏览器会发送一个获取请求来重新获得这些文件。</p>
 
 <p>下面是几个我们访问facebook.com时需要重获取的几个URL：</p>
 
 <ul>
-<li><strong>图片
-</strong>http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif
- http://static.ak.fbcdn.net/rsrc.php/zBS5C/hash/7hwy7at6.gif
+<li><strong>图片<br/>
+</strong>http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif<br/>
+  http://static.ak.fbcdn.net/rsrc.php/zBS5C/hash/7hwy7at6.gif<br/>
  …</li>
-<li><strong>CSS 式样表
-</strong>http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css
- http://static.ak.fbcdn.net/rsrc.php/zANE1/hash/cvtutcee.css
+<li><strong>CSS 式样表<br/>
+</strong>http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css<br/>
+  http://static.ak.fbcdn.net/rsrc.php/zANE1/hash/cvtutcee.css<br/>
  …</li>
-<li><strong>JavaScript 文件</strong>
- http://static.ak.fbcdn.net/rsrc.php/zEMOA/hash/c8yzb6ub.js
- http://static.ak.fbcdn.net/rsrc.php/z6R9L/hash/cq2lgbs8.js
+<li><strong>JavaScript 文件</strong><br/>
+ http://static.ak.fbcdn.net/rsrc.php/zEMOA/hash/c8yzb6ub.js<br/>
+ http://static.ak.fbcdn.net/rsrc.php/z6R9L/hash/cq2lgbs8.js<br/>
  …</li>
 </ul>
 
@@ -366,7 +367,7 @@ ETag信息已经存在，就马上停止这个文件的传输。</p>
 
 <h3>10. 浏览器发送异步（AJAX）请求</h3>
 
-<p><img src="/assets/files/2011-02/image12.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2011-02/image12.png" title="当你输入一个网址的时候，实际会发生什么?" alt="当你输入一个网址的时候，实际会发生什么?" /></p>
 
 <p>在Web 2.0伟大精神的指引下，页面显示完成后客户端仍与服务器端保持着联系。</p>
 
@@ -408,7 +409,8 @@ ETag信息已经存在，就马上停止这个文件的传输。</p>
 
 						</ul>
 						<ul class="list-tag list-linear">
-							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html" target="_blank">http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html</a></li>
+							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html" target="_blank">http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html</a></li>
 
 						</ul>
 					</div><!-- meta -->
@@ -461,17 +463,12 @@ ETag信息已经存在，就马上停止这个文件的传输。</p>
 -->
 
 
-<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript">
-<!--
-!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
- //-->
-</script>
+<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
 <script src="/assets/modernizr.min.js"></script>
 <script src="/assets/jquery.tagcloud.min.js"></script>
 <script src='/assets/default.js'></script>
-
+<script src="/assets/thickbox-compressed.js" type="text/javascript"></script>
 </body>
 </html>
 

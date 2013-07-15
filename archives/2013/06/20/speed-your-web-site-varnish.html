@@ -17,6 +17,9 @@
 	<link href='/assets/default.css' rel="stylesheet" media="all" />
 	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
 	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+	<style type="text/css" media="all">
+	@import "/assets/thickbox.css";
+	</style>
 </head>
 <body>
 
@@ -83,8 +86,6 @@
     	<li value="1" title="windows8"><a href="/tags.html#windows8-ref">windows8</a></li>
      
     	<li value="1" title="缓存"><a href="/tags.html#缓存-ref">缓存</a></li>
-     
-    	<li value="1" title="集群与缓存"><a href="/tags.html#集群与缓存-ref">集群与缓存</a></li>
      
     	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
      
@@ -185,7 +186,7 @@
 
 <p>当把Varnish部署上之后，web请求的处理过程会有一些变化。客户端的请求将首先被Varnish接受。Varnish将分析接收的请求，并将其转发到后端的web服务器上。后端的web服务器对请求进行常规的处理，并将依次将处理结果返回给Varnish。</p>
 
-<p>但Varnish的功能并非仅限于此。Varnish的核心功能是能能将后端web服务器返回的结果缓存起来，如果发现后续有相同的请求，Varnish将不会将这个请求转发到web服务器，而是返回缓存中的结果。这将有效的降低web服务器的负载，提升响应速度，并且每秒可以响应更多的请求。Varnish速度很快的另一个主要原因是其缓存全部都是放在内存里的，这比放在磁盘上要快的多。诸如此类的优化措施使得Varnish的相应速度超乎想象。但考虑到实际的系统中内存一般是有限的，所以需要手工配置一下缓存的空间限额，同时避免缓存重复的内容。\</p>
+<p>但Varnish的功能并非仅限于此。Varnish的核心功能是能能将后端web服务器返回的结果缓存起来，如果发现后续有相同的请求，Varnish将不会将这个请求转发到web服务器，而是返回缓存中的结果。这将有效的降低web服务器的负载，提升响应速度，并且每秒可以响应更多的请求。Varnish速度很快的另一个主要原因是其缓存全部都是放在内存里的，这比放在磁盘上要快的多。诸如此类的优化措施使得Varnish的相应速度超乎想象。但考虑到实际的系统中内存一般是有限的，所以需要手工配置一下缓存的空间限额，同时避免缓存重复的内容。</p>
 
 <p>下面来看一下Varnish的安装过程。可以从源码进行安装，也可以直接使用一些发行版中的预编译包。当期Varnish的版本是3.0.3（译者注：目前最新是2013年6月17日发布的3.0.4版），本文将基于3.0.3进行源码安装。需要注意的是，2.X版的Varnish和3.X的配置文件格式发生了变化。可以从Varnish的<a href="https://www.varnish-cache.org/docs/3.0/installation/upgrade.html">官方网站</a>上找到2.x到3.x升级的细节。</p>
 
@@ -712,7 +713,8 @@ load）和磁盘IO（%iowait）。系统负载可以从top命令里查看，%iow
 
 						</ul>
 						<ul class="list-tag list-linear">
-							<li class="list-head">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li><li class="list-head">原文网址：<a href="http://www.oschina.net/translate/speed-your-web-site-varnish" target="_blank">http://www.oschina.net/translate/speed-your-web-site-varnish</a></li>
+							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head" style="display:block;">原文网址：<a href="http://www.oschina.net/translate/speed-your-web-site-varnish" target="_blank">http://www.oschina.net/translate/speed-your-web-site-varnish</a></li>
 
 						</ul>
 					</div><!-- meta -->
@@ -765,17 +767,12 @@ load）和磁盘IO（%iowait）。系统负载可以从top命令里查看，%iow
 -->
 
 
-<script src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript">
-<!--
-!window.jQuery && document.write('<script src=/assets/jquery-1.7.1.min.js><\/script>');//
- //-->
-</script>
+<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
 <script src="/assets/modernizr.min.js"></script>
 <script src="/assets/jquery.tagcloud.min.js"></script>
 <script src='/assets/default.js'></script>
-
+<script src="/assets/thickbox-compressed.js" type="text/javascript"></script>
 </body>
 </html>
 
