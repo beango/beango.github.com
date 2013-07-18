@@ -133,9 +133,9 @@ pre,
 code,
 kbd,
 samp {
-  font-family: 'Inconsolata', sans-serif;
-  _font-family: 'Inconsolata', sans-serif;
-  font-size: 1.1em;
+  font-family: 'Droid Sans Mono', sans-serif;
+  _font-family: 'Droid Sans Mono', sans-serif;
+  font-size: 10pt;
 }
 /* Improve readability of pre-formatted text in all browsers */
 pre {
