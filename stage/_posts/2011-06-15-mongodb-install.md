@@ -390,9 +390,11 @@ connecting to: test
 {% endhighlight %}
 
 *   其他：
-{% highlight python %}
-> show dbs;
-> use MyTest;
-> show collections;
-> db.charpter.count({$where: "this.content.length>0"})
-{% endhighlight %}
+
+<label/>
+    > show dbs;  
+    > use MyTest;  
+    > show collections;  
+    > db.charpter.count({$where: "this.content.length>0"})  
+    > use test;  
+    > db.dropDatabase();//删除数据库

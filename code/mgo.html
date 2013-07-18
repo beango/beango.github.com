@@ -7,9 +7,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Code</title>
+	<title>mgo操作</title>
 	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Code'/>
+	<meta property='og:title' content='mgo操作'/>
 	<meta property='og:url' content='http://www.yif1.com'/>
 	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
 	<meta property='og:type' content='article'/>
@@ -170,58 +170,111 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Code</h1>
+						<h1 class="h2 entry-title">mgo操作</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					<h3>Demos</h3>
+					<pre><code>package main
 
-<ul>
-<li><p><a href="/code/thickbox-use.html">thickbox</a></p>
+import (
+  "fmt"
+  "labix.org/v2/mgo"
+  "labix.org/v2/mgo/bson"
+  "time"
+)
 
-<p>ThickBox是一个基于JQuery类库的扩展，它能在浏览器界面上显示非常棒的UI框，它可以显示单图片，多图片，ajax请求内容或链接内容.</p></li>
-<li><p><a href="/code/python-crawl-pages.html">python爬虫</a></p></li>
-<li><p>Jquery.ajaxForm</p>
+type Person struct {
+  ID        bson.ObjectId `bson:"_id,omitempty"`
+  Name      string
+  Phone     string
+  Timestamp time.Time
+}
 
-<p>自动提交表单</p></li>
-</ul>
+var (
+  IsDrop = true
+)
 
+func main() {
+  session, err := mgo.Dial("127.0.0.1")
+  if err != nil {
+    panic(err)
+  }
 
-<h3>Favorite</h3>
+  defer session.Close()
 
-<ul>
-<li><p><a href="/code/dotnet.html">dotnet拾遗</a></p></li>
-<li><p><a href="/code/sql-collection.html">SQL收集</a></p></li>
-<li><p><a href="/code/js-method-collection.html">js方法收集</a><br/>
-收集的JavaScript常用代码.</p></li>
-<li><p><a href="/code/css-collection.html">CSS收集</a></p></li>
-<li><p><a href="/code/linux-command.html">linux常用命令</a></p></li>
-<li><p><a href="/code/preg.html">正则大全</a></p></li>
-<li><p><a href="/code/mgo.html">mgo操作</a></p></li>
-</ul>
+  session.SetMode(mgo.Monotonic, true)
 
+  // Drop Database
+  if IsDrop {
+    err = session.DB("test").DropDatabase()
+    if err != nil {
+      panic(err)
+    }
+  }
 
-<h3>Posts</h3>
+  // Collection People
+  c := session.DB("test").C("people")
 
-<ul>
-<li><p><a href="/code/memcached-memory-analysis-tuning-clustering.html">Memcached内存分析、调优、集群</a></p></li>
-<li><p><a href="/code/memcached-principle-and-use-detailed.html">Memcached原理和使用详解</a></p></li>
-<li><p><a href="/code/csharp-office.html">C#读取Excel</a></p></li>
-<li><p><a href="/code/csharp-NAT-file.html">C#读写局域网文件</a></p></li>
-<li><p><a href="/code/tools.html">常用工具</a></p></li>
-</ul>
+  // Index
+  index := mgo.Index{
+    Key:        []string{"name", "phone"},
+    Unique:     true,
+    DropDups:   true,
+    Background: true,
+    Sparse:     true,
+  }
 
+  err = c.EnsureIndex(index)
+  if err != nil {
+    panic(err)
+  }
 
-<h3>教程</h3>
+  // Insert Datas
+  err = c.Insert(&amp;Person{Name: "Ale", Phone: "+55 53 1234 4321", Timestamp: time.Now()},
+    &amp;Person{Name: "Cla", Phone: "+66 33 1234 5678", Timestamp: time.Now()})
 
-<ul>
-<li><p><a href="/code/nodejs-and-socketio-tutorial.html">NodeJS 和 Socket.io 中文入门教程</a></p></li>
-<li><p><a href="/code/mongoose-tutorial.html">Mongoose 基本功能使用</a></p></li>
-</ul>
+  if err != nil {
+    panic(err)
+  }
 
+  // Query One
+  result := Person{}
+  err = c.Find(bson.M{"name": "Ale"}).Select(bson.M{"phone": 0}).One(&amp;result)
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Phone", result)
+
+  // Query All
+  var results []Person
+  err = c.Find(bson.M{"name": "Ale"}).Sort("-timestamp").All(&amp;results)
+
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Results All: ", results)
+
+  // Update
+  colQuerier := bson.M{"name": "Ale"}
+  change := bson.M{"$set": bson.M{"phone": "+86 99 8888 7777", "timestamp": time.Now()}}
+  err = c.Update(colQuerier, change)
+  if err != nil {
+    panic(err)
+  }
+
+  // Query All
+  err = c.Find(bson.M{"name": "Ale"}).Sort("-timestamp").All(&amp;results)
+
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Results All: ", results)
+
+}
+</code></pre>
 
 				</div><!-- entry-content -->
 			</div><!-- bd -->

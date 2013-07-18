@@ -31,6 +31,8 @@ description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux
 
 -   [正则大全](/code/preg.html)
 
+-   [mgo操作](/code/mgo.html)
+
 ###Posts
 - [Memcached内存分析、调优、集群](/code/memcached-memory-analysis-tuning-clustering.html)
 

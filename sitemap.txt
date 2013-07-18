@@ -10,6 +10,7 @@ http://www.yif1.com/code/js-method-collection.html
 http://www.yif1.com/code/linux-command.html
 http://www.yif1.com/code/memcached-memory-analysis-tuning-clustering.html
 http://www.yif1.com/code/memcached-principle-and-use-detailed.html
+http://www.yif1.com/code/mgo.html
 http://www.yif1.com/code/mongoose-tutorial.html
 http://www.yif1.com/code/nodejs-and-socketio-tutorial.html
 http://www.yif1.com/code/preg.html
