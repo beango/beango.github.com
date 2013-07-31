@@ -24,6 +24,7 @@ http://www.yif1.com/info.html
 http://www.yif1.com/sitemap.txt
 http://www.yif1.com/tags.html
 
+http://www.yif1.com/archives/2013/08/01/reliable-file-updates-with-python.html
 http://www.yif1.com/archives/2013/07/23/distributed-algorithms-in-nosql-databases.html
 http://www.yif1.com/archives/2013/07/01/javascript-common-traps-and-special-usage.html
 http://www.yif1.com/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html

@@ -1,0 +1,610 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>使用 Python 进行稳定可靠的文件操作</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='使用 Python 进行稳定可靠的文件操作'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+	<style type="text/css" media="all">
+	@import "/assets/thickbox.css";
+	</style>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+				
+				<nav id="nav-tags">
+					<ul id="wordcloud-left" style="list-style: square outside none; margin: 16px 0px; padding: 0px; position: static; width: 248px; ">
+					    
+					  
+
+
+  
+     
+    	<li value="2" title="浏览器"><a href="/tags.html#浏览器-ref">浏览器</a></li>
+     
+    	<li value="1" title="stackOverflow"><a href="/tags.html#stackOverflow-ref">stackOverflow</a></li>
+     
+    	<li value="2" title="架构分析"><a href="/tags.html#架构分析-ref">架构分析</a></li>
+     
+    	<li value="1" title="职场"><a href="/tags.html#职场-ref">职场</a></li>
+     
+    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
+     
+    	<li value="2" title="jquery"><a href="/tags.html#jquery-ref">jquery</a></li>
+     
+    	<li value="10" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
+     
+    	<li value="8" title="nginx"><a href="/tags.html#nginx-ref">nginx</a></li>
+     
+    	<li value="3" title="linux"><a href="/tags.html#linux-ref">linux</a></li>
+     
+    	<li value="4" title="memcached"><a href="/tags.html#memcached-ref">memcached</a></li>
+     
+    	<li value="1" title="markdown"><a href="/tags.html#markdown-ref">markdown</a></li>
+     
+    	<li value="6" title="redis"><a href="/tags.html#redis-ref">redis</a></li>
+     
+    	<li value="2" title="tokyo tyrant"><a href="/tags.html#tokyo tyrant-ref">tokyo tyrant</a></li>
+     
+    	<li value="8" title="java"><a href="/tags.html#java-ref">java</a></li>
+     
+    	<li value="1" title="tcrmgr"><a href="/tags.html#tcrmgr-ref">tcrmgr</a></li>
+     
+    	<li value="1" title="windows8"><a href="/tags.html#windows8-ref">windows8</a></li>
+     
+    	<li value="1" title="缓存"><a href="/tags.html#缓存-ref">缓存</a></li>
+     
+    	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
+     
+    	<li value="1" title="json"><a href="/tags.html#json-ref">json</a></li>
+     
+    	<li value="1" title="jsonp"><a href="/tags.html#jsonp-ref">jsonp</a></li>
+     
+    	<li value="1" title="内存泄露"><a href="/tags.html#内存泄露-ref">内存泄露</a></li>
+     
+    	<li value="4" title="cache"><a href="/tags.html#cache-ref">cache</a></li>
+     
+    	<li value="2" title="集群"><a href="/tags.html#集群-ref">集群</a></li>
+     
+    	<li value="2" title="uml"><a href="/tags.html#uml-ref">uml</a></li>
+     
+    	<li value="6" title="python"><a href="/tags.html#python-ref">python</a></li>
+     
+    	<li value="1" title="站着编程"><a href="/tags.html#站着编程-ref">站着编程</a></li>
+     
+    	<li value="2" title="互联网协议"><a href="/tags.html#互联网协议-ref">互联网协议</a></li>
+     
+    	<li value="1" title="jekyll"><a href="/tags.html#jekyll-ref">jekyll</a></li>
+     
+    	<li value="3" title="nosql"><a href="/tags.html#nosql-ref">nosql</a></li>
+     
+    	<li value="2" title="node.js"><a href="/tags.html#node.js-ref">node.js</a></li>
+     
+    	<li value="2" title="rabbitmq"><a href="/tags.html#rabbitmq-ref">rabbitmq</a></li>
+     
+    	<li value="1" title="centos"><a href="/tags.html#centos-ref">centos</a></li>
+     
+    	<li value="1" title="php"><a href="/tags.html#php-ref">php</a></li>
+     
+    	<li value="1" title="mysql"><a href="/tags.html#mysql-ref">mysql</a></li>
+     
+    	<li value="1" title="框架"><a href="/tags.html#框架-ref">框架</a></li>
+     
+    	<li value="1" title="http状态码"><a href="/tags.html#http状态码-ref">http状态码</a></li>
+     
+    	<li value="1" title="bson"><a href="/tags.html#bson-ref">bson</a></li>
+     
+    	<li value="1" title="优化"><a href="/tags.html#优化-ref">优化</a></li>
+     
+    	<li value="1" title="计算机"><a href="/tags.html#计算机-ref">计算机</a></li>
+     
+    	<li value="5" title="程序员"><a href="/tags.html#程序员-ref">程序员</a></li>
+     
+    	<li value="1" title="css"><a href="/tags.html#css-ref">css</a></li>
+     
+    	<li value="2" title="spring"><a href="/tags.html#spring-ref">spring</a></li>
+     
+    	<li value="1" title="Web架构"><a href="/tags.html#Web架构-ref">Web架构</a></li>
+     
+    	<li value="1" title="分布式系统"><a href="/tags.html#分布式系统-ref">分布式系统</a></li>
+     
+    	<li value="1" title="Iperf"><a href="/tags.html#Iperf-ref">Iperf</a></li>
+     
+    	<li value="1" title="Siege"><a href="/tags.html#Siege-ref">Siege</a></li>
+     
+    	<li value="1" title="SQL"><a href="/tags.html#SQL-ref">SQL</a></li>
+     
+    	<li value="1" title="jvm"><a href="/tags.html#jvm-ref">jvm</a></li>
+     
+    	<li value="1" title="varnish"><a href="/tags.html#varnish-ref">varnish</a></li>
+    
+  
+
+
+
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">使用 Python 进行稳定可靠的文件操作</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>原文出处：<a href="http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/">ckauhaus</a>   
+译文出处：<a href="http://www.oschina.net/translate/reliable-file-updates-with-python">oschina</a></p>
+
+<p>程序需要更新文件。虽然大部分程序员知道在执行I/O的时候会发生不可预期的事情，但是我经常看到一些异常幼稚的代码。在本文中，我想要分享一些如何在Python代码中改善I/O可靠性的见解。</p>
+
+<p>考虑下述Python代码片段。对文件中的数据进行某些操作，然后将结果保存回文件中：</p>
+
+<pre><code>with open(filename) as f:
+    input = f.read()
+output = do_something(input)
+with open(filename, 'w') as f:
+    f.write(output)
+</code></pre>
+
+<p>看起来很简单吧？可能看起来并不像乍一看这么简单。我在产品服务器中调试应用，经常会出现奇怪的行为。</p>
+
+<p>这是我看过的失效模式的例子：</p>
+
+<ul>
+<li>失控的服务器进程溢出大量日志，磁盘被填满。write()在截断文件之后抛出异常，文件将会变成空的。</li>
+<li>应用的几个实例并行执行。在各个实例结束之后，因为混合了多个实例的输出，文件内容最终变成了天书。</li>
+<li>在完成了写操作之后，应用会触发一些后续操作。几秒钟后断电。在我们重启了服务器之后，我们再一次看到了旧的文件内容。已经传递给其它应用的数据与我们在文件中看到的不再一致。</li>
+</ul>
+
+
+<p>下面没有什么新的内容。本文的目的是为在系统编程方面缺少经验的Python开发者提供常见的方法和技术。我将会提供代码例子，使得开发者可以很容易的将这些方法应用到自己的代码中。</p>
+
+<h2>“可靠性”意味着什么？</h2>
+
+<p>广义的讲，可靠性意味着在所有规定的条件下操作都能执行它所需的函数。至于文件的操作，这个函数就是创建，替换或者追加文件的内容的问题。这里可以从数据库理论上获得灵感。经典的事务模型的ACID性质作为指导来提高可靠性。</p>
+
+<p>开始之前，让我们先看看我们的例子怎样和ACID4个性质扯上关系：</p>
+
+<ul>
+<li><strong>原子性(Atomicity)</strong>要求这个事务要么完全成功，要么完全失败。在上面的实例中，磁盘满了可能导致部分内容写入文件。另外，如果正当在写入内容时其它程序又在读取文件，它们可能获得是部分完成的版本，甚至会导致写错误</li>
+<li><strong>一致性(Consistency)</strong>?表示操作必须从系统的一个状态到另一个状态。一致性可以分为两部分：内部和外部一致性。内部一致性是指文件的数据结构是一致的。外部一致性是指文件的内容与它相关的数据是相符合的。在这个例子中，因为我们不了解这个应用，所以很难推断是否符合一致性。但是因为一致性需要原子性，我们至少可以说没有保证内部一致性。</li>
+<li><strong>隔离性(Isolation)</strong>如果在并发的执行事务中，多个相同的事务导致了不同的结果，就违反了隔离性。很明显上面的代码对操作失败或者其它<a href="http://drtom.ch/posts/2011/11/12/The_Lost_Update_Problem_-_Part_1/">隔离性失败</a>都没有保护。</li>
+<li><strong>持久性(Durability)</strong>意味着改变是持久不变的。在我们告诉用户成功之前，我们必须确保我们的数据存储是可靠的并且不只是一个写缓存。上面的代码已经成功写入数据的前提是假设我们调用write()函数，磁盘I/O就立即执行。但是POSIX标准是不保证这个假设的。</li>
+</ul>
+
+
+<h2>尽可能使用数据库系统</h2>
+
+<p>如果我们能够获得ACID
+四个性质，那么我们增加可靠性方面取得了长远发展。但是这需要很大的编码功劳。为什么重复发明轮子？大多数数据库系统已经有ACID事务了。</p>
+
+<p>可靠性数据存储已经是一个已解决的问题。如果你需要可靠性存储，请使用数据库。很可能，没有几十年的功夫，你自己解决这方面的能力没有那些已经专注这方面好些年的人好。如果你不想安装一个大数据库服务器，那么你可以使用<a href="http://www.sqlite.org/">sqlite</a>,它具有ACID事务，很小，免费的，而且它包含在Python的<a href="http://docs.python.org/3/library/sqlite3.html">标准库</a>中。</p>
+
+<p>文章本该在这里就结束的，但是还有一些有根有据的原因，就是不使用数据。它们通常是文件格式或者文件位置约束。这两个在数据库系统中都不好控制。理由如下：</p>
+
+<ul>
+<li>我们必须处理其它应用产生的固定格式或者在固定位置的文件，</li>
+<li>我们必须为了其它应用的消耗而写文件（和应用了同样的限制条件）</li>
+<li>我们的文件必须方便人阅读或者修改。</li>
+</ul>
+
+
+<p>…等等。你懂的。</p>
+
+<p>如果我们自己动手实现可靠的文件更新，那么这里有一些编程技术供参考。下面我将展示四种常见的操作文件更新模式。在那之后，我会讨论采取哪些步骤在每个文件更新模式下满足ACID性质。</p>
+
+<h2>文件更新模式</h2>
+
+<p>文件可以以多种方式更新，但是我认为至少有四种常见的模式。这四种模式将做为本文剩余部分的基础。</p>
+
+<p><strong>截断-写</strong></p>
+
+<p>这可能是最基本的模式。在下述例子中，假设的域模型代码读数据，执行一些计算，然后以写模式重新打开存在的文件：</p>
+
+<pre><code>with open(filename, 'r') as f:
+   model.read(f)
+model.process()
+with open(filename, 'w') as f:
+   model.write(f)
+</code></pre>
+
+<p>此模式的一个变种以读写模式打开文件（Python中的“加”模式），寻找到开始的位置，显式调用truncate()，重写文件内容。</p>
+
+<pre><code>with open(filename, 'a+') as f:
+   f.seek(0)
+   model.input(f.read())
+   model.compute()
+   f.seek(0)
+   f.truncate()
+   f.write(model.output())
+</code></pre>
+
+<p>该变种的优势是只打开文件一次，始终保持文件打开。举例来说，这样可以简化加锁。</p>
+
+<p><strong>写-替换</strong></p>
+
+<p>另外一种广泛使用的模式是将新内容写到临时文件，之后替换原始文件：</p>
+
+<pre><code>with tempfile.NamedTemporaryFile(
+      'w', dir=os.path.dirname(filename), delete=False) as tf:
+   tf.write(model.output())
+   tempname = tf.name
+os.rename(tempname, filename)
+</code></pre>
+
+<p>该方法与截断-写方法相比对错误更具有鲁棒性。请看下面对原子性和一致性的讨论。很多应用使用该方法。</p>
+
+<p>这两个模式很常见，以至于linux内核中的ext4文件系统甚至可以自动检测到这些模式，自动修复一些可靠性缺陷。但是不要依赖这一特性：你并不是总是使用ext4，而且管理员可能会关掉这一特性。</p>
+
+<p><strong>追加</strong></p>
+
+<p>第三种模式就是追加新数据到已存在的文件：</p>
+
+<pre><code>with open(filename, 'a') as f:
+   f.write(model.output())
+</code></pre>
+
+<p>这个模式用来写日志文件和其它累积处理数据的任务。从技术上讲，它的显著特点就是极其简单。一个有趣的扩展应用就是常规操作中只通过追加操作更新，然后定期重新整理文件，使之更紧凑。</p>
+
+<p><strong>spooldir</strong></p>
+
+<p>这里我们将目录做为逻辑数据存储，为每条记录创建新的唯一命名的文件：</p>
+
+<pre><code>with open(unique_filename(), 'w') as f:
+   f.write(model.output())
+</code></pre>
+
+<p>该模式与附加模式一样具有累积的特点。一个巨大的优势是我们可以在文件名中放入少量元数据。举例来说，这可以用于传达处理状态的信息。spooldir模式的一个特别巧妙的实现是maildir格式。maildirs使用附加子目录的命名方案，以可靠的、无锁的方式执行更新操作。md和gocept.filestore库为maildir操作提供了方便的封装。</p>
+
+<p>如果你的文件名生成不能保证唯一的结果，甚至有可能要求文件必须实际上是新的。那么调用具有合适标志的低等级os.open()：</p>
+
+<pre><code>fd = os.open(filename, os.O_WRONLY | os.O_CREAT| os.O_EXCL, 0o666)
+with os.fdopen(fd, 'w') as f:
+   f.write(...)
+</code></pre>
+
+<p>在以O_EXCL方式打开文件后，我们用os.fdopen将原始的文件描述符转化为普通的Python文件对象。</p>
+
+<h2>应用ACID属性到文件更新</h2>
+
+<p>下面，我将尝试加强文件更新模式。反过来让我们看看可以做些什么来满足ACID属性。我将会尽可能保持简单，因为我们并不是要写一个完整的数据库系统。请注意本节的材料并不彻底，但是可以为你自己的实验提供一个好的起点.</p>
+
+<p><strong>原子性</strong></p>
+
+<p><strong>写-替换</strong>模式提供了原子性，因为底层的<em>os.rename()</em><a href="http://rcrowley.org/2010/01/06/things-unix-can-do-atomically.html">是原子性的</a>。这意味着在任意给定时间点，进程或者看到旧的文件，或者看到新的文件。该模式对写错误具有天然的鲁棒性：如果写操作触发异常，重命名操作就不会被执行，所有就没有用损坏的新文件覆盖正确的旧文件的风险。</p>
+
+<p><strong>附加</strong>模式并不是原子性的，因为有附加不完整记录的风险。但是有个技巧可以使更新具有原子性：为每个写操作标注校验和。之后读日志的时候，忽略所有没有有效校验和的记录。以这种方式，只有完整的记录才会被处理。在下面的例子中，应用做周期性的测量，每次在日志中附加一行JSON记录。我们计算记录的字节表示形式的CRC32校验和，然后附加到同一行：</p>
+
+<pre><code>with open(logfile, 'ab') as f:
+    for i in range(3):
+        measure = {'timestamp': time.time(), 'value': random.random()}
+        record = json.dumps(measure).encode()
+        checksum = '{:8x}'.format(zlib.crc32(record)).encode()
+        f.write(record + b' ' + checksum + b'\n')
+</code></pre>
+
+<p>该例子代码通过每次创建随机值模拟测量。</p>
+
+<pre><code>$ cat log
+{"timestamp": 1373396987.258189, "value": 0.9360123151217828} 9495b87a
+{"timestamp": 1373396987.25825, "value": 0.40429005476999424} 149afc22
+{"timestamp": 1373396987.258291, "value": 0.232021160265939} d229d937
+</code></pre>
+
+<p>想要处理这个日志文件，我们每次读一行记录，分离校验和，与读到的记录比较。</p>
+
+<pre><code>with open(logfile, 'rb') as f:
+    for line in f:
+        record, checksum = line.strip().rsplit(b' ', 1)
+        if checksum.decode() == '{:8x}'.format(zlib.crc32(record)):
+            print('read measure: {}'.format(json.loads(record.decode())))
+        else:
+            print('checksum error for record {}'.format(record))
+</code></pre>
+
+<p>现在我们通过截断最后一行模拟被截断的写操作：</p>
+
+<pre><code>$ cat log
+{"timestamp": 1373396987.258189, "value": 0.9360123151217828} 9495b87a
+{"timestamp": 1373396987.25825, "value": 0.40429005476999424} 149afc22
+{"timestamp": 1373396987.258291, "value": 0.23202
+</code></pre>
+
+<p>当读日志的时候，最后不完整的一行被拒绝：</p>
+
+<pre><code>$ read_checksummed_log.py log
+read measure: {'timestamp': 1373396987.258189, 'value': 0.9360123151217828}
+read measure: {'timestamp': 1373396987.25825, 'value': 0.40429005476999424}
+checksum error for record b'{"timestamp": 1373396987.258291, "value":'
+</code></pre>
+
+<p>添加校验和到日志记录的方法被用于大量应用，包括很多数据库系统。</p>
+
+<p><strong>spooldir</strong>中的单个文件也可以在每个文件中添加校验和。另外一个可能更简单的方法是借用写-替换模式：首先将文件写到一边，然后移到最终的位置。设计一个保护正在被消费者处理的文件的命名方案。在下面的例子中，所有以.tmp结尾的文件都会被读取程序忽略，因此在写操作的时候可以安全的使用。</p>
+
+<pre><code>newfile = generate_id()
+with open(newfile + '.tmp', 'w') as f:
+   f.write(model.output())
+os.rename(newfile + '.tmp', newfile)
+</code></pre>
+
+<p>最后，<strong>截断-写</strong>是非原子性的。很遗憾我不能提供满足原子性的变种。在执行完截取操作后，文件是空的，还没有新内容写入。如果并发的程序现在读文件或者有异常发生，程序中止，我们既看不久的版本也看不到新的版本。</p>
+
+<p><strong>一致性</strong></p>
+
+<p>我谈论的关于原子性的大部分内容也可以应用到一致性。实际上，原子性更新是内部一致性的前提条件。外部一致性意味着同步更新几个文件。这不容易做到，锁文件可以用来确保读写访问互不干涉。考虑某目录下的文件需要互相保持一致。常用的模式是指定锁文件，用来控制对整个目录的访问。</p>
+
+<p>写程序的例子:</p>
+
+<pre><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
+   fcntl.flock(lockfile, fcntl.LOCK_EX)
+   model.update(dirname)
+</code></pre>
+
+<p>读程序的例子:</p>
+
+<pre><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
+   fcntl.flock(lockfile, fcntl.LOCK_SH)
+   model.readall(dirname)
+</code></pre>
+
+<p>该方法只有控制所有读程序才生效。因为每次只有一个写程序活动（独占锁阻塞所有共享锁），所有该方法的可扩展性有限。</p>
+
+<p>更进一步，我们可以对整个目录应用<strong>写-替换</strong>模式。这涉及为每次更新创建新的目录，更新完成后改变符合链接。举例来说，镜像应用维护一个包含压缩包和列出了文件名、文件大小和校验和的索引文件的目录。当上流的镜像更新，仅仅隔离地对压缩包和索引文件进项原子性更新是不够的。相反，我们需要同时提供压缩包和索引文件以免校验和不匹配。为了解决这个问题，我们为每次生成维护一个子目录，然后改变符号链接激活该次生成。</p>
+
+<pre><code>mirror
+|-- 483
+|   |-- a.tgz
+|   |-- b.tgz
+|   `-- index.json
+|-- 484
+|   |-- a.tgz
+|   |-- b.tgz
+|   |-- c.tgz
+|   `-- index.json
+`-- current -&gt; 483
+</code></pre>
+
+<p>新的生成484正在被更新的过程中。当所有压缩包准备好，索引文件更新后，我们可以用一次原子调用os.symlink()来切换current符号链接。其它应用总是或者看到完全旧的或者完全新的生成。读程序需要使用os.chdir()进入current目录，很重要的是不要用完整路径名指定文件。否在当读程序打开current/index.json，然后打开current/a.tgz，但是同时符号链接已经改变时就会出现竞争条件。</p>
+
+<p><strong>隔离性</strong></p>
+
+<p>隔离性意味着对同一文件的并发更新是<em>可串行化</em>的——存在一个串行调度使得实际执行的并行调度返回相同的结果。“真实的”数据库系统使用像<a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">MVCC</a>这种高级技术维护可串行性，同时允许高等级的可并行性。回到我们的场景，我们最后使用加锁来串行文件更新。</p>
+
+<p>对<strong>截断-写</strong>更新进行加锁是容易的。仅仅在所有文件操作前获取一个独占锁就可以。下面的例子代码从文件中读取一个整数，然后递增，最后更新文件：</p>
+
+<pre><code>def update():
+ with open(filename, 'r+') as f:
+ fcntl.flock(f, fcntl.LOCK_EX)
+ n = int(f.read())
+ n += 1
+ f.seek(0)
+ f.truncate()
+f.write('{}\n'.format(n))
+</code></pre>
+
+<p>使用<strong>写-替换</strong>模式加锁更新就有点儿麻烦啦。像?<em>截断-写</em>那样使用锁可能导致更新冲突。某个幼稚的实现可能看起来像这样：</p>
+
+<pre><code>def update():
+   with open(filename) as f:
+      fcntl.flock(f, fcntl.LOCK_EX)
+      n = int(f.read())
+      n += 1
+      with tempfile.NamedTemporaryFile(
+            'w', dir=os.path.dirname(filename), delete=False) as tf:
+         tf.write('{}\n'.format(n))
+         tempname = tf.name
+      os.rename(tempname, filename)
+</code></pre>
+
+<p>这段代码有什么问题呢？设想两个进程竞争更新某个文件。第一个进程运行在前面，但是第二个进程阻塞在fcntl.flock()调用。当第一个进程替换了文件，释放了锁，现在在第二个进程中打开的文件描述符指向了一个包含旧内容的“幽灵”文件（任意路径名都不可达）。想要避免这个冲突，我们必须检查打开的文件是否与fcntl.flock()返回的相同。所以我写了一个新的LockedOpen上下文管理器来替换内建的open上下文。来确保我们实际打开了正确的文件：</p>
+
+<pre><code>class LockedOpen(object):
+
+    def __init__(self, filename, *args, **kwargs):
+        self.filename = filename
+        self.open_args = args
+        self.open_kwargs = kwargs
+        self.fileobj = None
+
+    def __enter__(self):
+        f = open(self.filename, *self.open_args, **self.open_kwargs)
+        while True:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            fnew = open(self.filename, *self.open_args, **self.open_kwargs)
+            if os.path.sameopenfile(f.fileno(), fnew.fileno()):
+                fnew.close()
+                break
+            else:
+                f.close()
+                f = fnew
+        self.fileobj = f
+        return f
+
+    def __exit__(self, _exc_type, _exc_value, _traceback):
+        self.fileobj.close()
+</code></pre>
+
+<br>
+
+
+<pre><code>def update(self):
+    with LockedOpen(filename, 'r+') as f:
+        n = int(f.read())
+        n += 1
+        with tempfile.NamedTemporaryFile(
+                'w', dir=os.path.dirname(filename), delete=False) as tf:
+            tf.write('{}\n'.format(n))
+            tempname = tf.name
+        os.rename(tempname, filename)
+</code></pre>
+
+<p>给<strong>追加</strong>更新上锁如同给截断-写更新上锁一样简单：需要一个排他锁，然后追加就完成了。需要长期运行的会将文件长久的打开的进程，可以在更新时释放锁，让其它进入。</p>
+
+<p><strong>spooldir模式</strong>有个很优美的性质就是它不需要任何锁。此外，你建立在使用灵活的命名模式和一个健壮的文件名分代。<a href="http://cr.yp.to/proto/maildir.html">邮件目录规范</a>就是一个spooldir模式的好例子。它可以很容易的适应其它情况，不仅仅是处理邮件。</p>
+
+<p><strong>持久性</strong></p>
+
+<p>持久性有点特殊，因为它不仅依赖于应用，也与OS和硬件配置有关。理论上来说，我们可以假定，如果数据没有到达持久存储，os.fsync()或os.fdatasync()调用就没有返回结果。在实际情况中，我们有可能会遇到几个问题：我们可能会面对不完整的fsync实现，或者糟糕的磁盘控制器配置，它们都无法提供任何持久化的保证。有一个来自?<a href="http://www.oscon.com/oscon2008/public/schedule/detail/3172">MySQL 开发者</a>?的讨论对哪里会发生错误进行了详尽的讨论。有些像PostgreSQL之类的数据库系统，甚至提供了<a href="http://www.postgresql.org/docs/9.2/static/runtime-config-wal.html">持久化机制的选择</a>?，以便管理员在运行时刻选择最佳的一个。然而不走运的人只能使用os.fsync()，并期待它可以被正确的实现。</p>
+
+<p>通过<strong>截断-写</strong>模式，在结束写操作以后关闭文件以前，我们需要发送一个同步信号。注意通常这还牵涉到另一个层次的写缓存。<em>glibc</em>?<em>缓存</em>?甚至会在写操作传递到内核以前，在进程内部拦住它。同样为了得到空的glibc缓存，我们需要在同步以前对它flush()：</p>
+
+<pre><code>with open(filename, 'w') as f:
+   model.write(f)
+   f.flush()
+   os.fdatasync(f)
+</code></pre>
+
+<p>要不，你也可以带参数<strong>-u</strong>调用Python，以此为所有的文件I/O获得未缓冲的写。</p>
+
+<p>大多数时候相较os.fsync()我更喜欢os.fdatasync()，以此避免同步元数据的更新（所有权、大小、mtime…）。元数据的更新可最终导致磁盘I/O搜索操作，这会使整个过程慢不少。</p>
+
+<p>对<strong>写-替换</strong>风格更新使用同样的技巧只是成功了一半。我们得确保在代替旧文件之前，新写入文件的内容已经写入了非易失性存储器上了，但是替换操作怎么办？我们不能保证那个目录更新是否执行的刚刚好。在网络上有很多关于<a href="http://stackoverflow.com/questions/3764822/how-to-durably-rename-a-file-in-posix/5809073#5809073">怎么让同步目录更新</a>的长篇大论。但是在我们这种情况，旧文件和新文件都在同一个目录下，我们可以使用简单的解决方案来逃避这个这题。</p>
+
+<pre><code>os.rename(tempname, filename)
+dirfd = os.open(os.path.dirname(filename), os.O_DIRECTORY)
+os.fsync(dirfd)
+os.close(dirfd)
+</code></pre>
+
+<p>我们调用底层的os.open()来打开目录(Python自带的open()方法不支持打开目录)，然后在目录文件描述符上执行os.fsync()。</p>
+
+<p>对待<strong>追加</strong>更新和我以及说过的<strong>截断-写</strong>是相似的。</p>
+
+<p><strong>spooldir</strong>模式与写-替换模式同样的目录同步问题。幸运地是，可以使用同样的解决方案：第一步同步文件，然后同步目录。</p>
+
+<h2>总结</h2>
+
+<p>这使可靠的更新文件成为可能。我已经演示了满足ACID的四大性质。这些展示的实例代码充当一个工具箱。掌握这编程技术最大的满足你的需求。有时，你并不需要满足所有的ACID性质，可能仅仅需要一到两个。我希望这篇文章可以帮助你去做已充分了解的决定，什么该去实现以及什么该舍弃。</p>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2013-08-01" datetime="2013-08-01" pubdate>
+							<span class="year">2013-08-01</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li value="6" title="python"><a href="/tags.html#python-ref">python</a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head" style="display:block;">原文网址：<a href="http://www.oschina.net/translate/reliable-file-updates-with-python" target="_blank">http://www.oschina.net/translate/reliable-file-updates-with-python</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+<!--
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+-->
+
+
+<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+<script src="/assets/jquery.tagcloud.min.js"></script>
+<script src='/assets/default.js'></script>
+<script src="/assets/thickbox-compressed.js" type="text/javascript"></script>
+</body>
+</html>
+
