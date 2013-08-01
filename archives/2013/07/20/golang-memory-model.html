@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Go语言内存模型</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='Go语言内存模型'/>
+	<meta property='og:url' content='http://www.yif1.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+	<style type="text/css" media="all">
+	@import "/assets/thickbox.css";
+	</style>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://www.yif1.com">
+					</form>
+				</nav>
+				
+				<nav id="nav-tags">
+					<ul id="wordcloud-left" style="list-style: square outside none; margin: 16px 0px; padding: 0px; position: static; width: 248px; ">
+					    
+					  
+
+
+  
+     
+    	<li value="2" title="浏览器"><a href="/tags.html#浏览器-ref">浏览器</a></li>
+     
+    	<li value="1" title="stackOverflow"><a href="/tags.html#stackOverflow-ref">stackOverflow</a></li>
+     
+    	<li value="2" title="架构分析"><a href="/tags.html#架构分析-ref">架构分析</a></li>
+     
+    	<li value="1" title="职场"><a href="/tags.html#职场-ref">职场</a></li>
+     
+    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
+     
+    	<li value="2" title="jquery"><a href="/tags.html#jquery-ref">jquery</a></li>
+     
+    	<li value="10" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
+     
+    	<li value="8" title="nginx"><a href="/tags.html#nginx-ref">nginx</a></li>
+     
+    	<li value="3" title="linux"><a href="/tags.html#linux-ref">linux</a></li>
+     
+    	<li value="4" title="memcached"><a href="/tags.html#memcached-ref">memcached</a></li>
+     
+    	<li value="1" title="markdown"><a href="/tags.html#markdown-ref">markdown</a></li>
+     
+    	<li value="6" title="redis"><a href="/tags.html#redis-ref">redis</a></li>
+     
+    	<li value="2" title="tokyo tyrant"><a href="/tags.html#tokyo tyrant-ref">tokyo tyrant</a></li>
+     
+    	<li value="8" title="java"><a href="/tags.html#java-ref">java</a></li>
+     
+    	<li value="1" title="tcrmgr"><a href="/tags.html#tcrmgr-ref">tcrmgr</a></li>
+     
+    	<li value="1" title="windows8"><a href="/tags.html#windows8-ref">windows8</a></li>
+     
+    	<li value="1" title="缓存"><a href="/tags.html#缓存-ref">缓存</a></li>
+     
+    	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
+     
+    	<li value="1" title="json"><a href="/tags.html#json-ref">json</a></li>
+     
+    	<li value="1" title="jsonp"><a href="/tags.html#jsonp-ref">jsonp</a></li>
+     
+    	<li value="1" title="内存泄露"><a href="/tags.html#内存泄露-ref">内存泄露</a></li>
+     
+    	<li value="4" title="cache"><a href="/tags.html#cache-ref">cache</a></li>
+     
+    	<li value="2" title="集群"><a href="/tags.html#集群-ref">集群</a></li>
+     
+    	<li value="2" title="uml"><a href="/tags.html#uml-ref">uml</a></li>
+     
+    	<li value="6" title="python"><a href="/tags.html#python-ref">python</a></li>
+     
+    	<li value="1" title="站着编程"><a href="/tags.html#站着编程-ref">站着编程</a></li>
+     
+    	<li value="2" title="互联网协议"><a href="/tags.html#互联网协议-ref">互联网协议</a></li>
+     
+    	<li value="1" title="jekyll"><a href="/tags.html#jekyll-ref">jekyll</a></li>
+     
+    	<li value="3" title="nosql"><a href="/tags.html#nosql-ref">nosql</a></li>
+     
+    	<li value="2" title="node.js"><a href="/tags.html#node.js-ref">node.js</a></li>
+     
+    	<li value="2" title="rabbitmq"><a href="/tags.html#rabbitmq-ref">rabbitmq</a></li>
+     
+    	<li value="1" title="centos"><a href="/tags.html#centos-ref">centos</a></li>
+     
+    	<li value="1" title="php"><a href="/tags.html#php-ref">php</a></li>
+     
+    	<li value="1" title="mysql"><a href="/tags.html#mysql-ref">mysql</a></li>
+     
+    	<li value="1" title="框架"><a href="/tags.html#框架-ref">框架</a></li>
+     
+    	<li value="1" title="http状态码"><a href="/tags.html#http状态码-ref">http状态码</a></li>
+     
+    	<li value="1" title="bson"><a href="/tags.html#bson-ref">bson</a></li>
+     
+    	<li value="1" title="优化"><a href="/tags.html#优化-ref">优化</a></li>
+     
+    	<li value="1" title="计算机"><a href="/tags.html#计算机-ref">计算机</a></li>
+     
+    	<li value="5" title="程序员"><a href="/tags.html#程序员-ref">程序员</a></li>
+     
+    	<li value="1" title="css"><a href="/tags.html#css-ref">css</a></li>
+     
+    	<li value="2" title="spring"><a href="/tags.html#spring-ref">spring</a></li>
+     
+    	<li value="1" title="Web架构"><a href="/tags.html#Web架构-ref">Web架构</a></li>
+     
+    	<li value="1" title="分布式系统"><a href="/tags.html#分布式系统-ref">分布式系统</a></li>
+     
+    	<li value="1" title="Iperf"><a href="/tags.html#Iperf-ref">Iperf</a></li>
+     
+    	<li value="1" title="Siege"><a href="/tags.html#Siege-ref">Siege</a></li>
+     
+    	<li value="1" title="SQL"><a href="/tags.html#SQL-ref">SQL</a></li>
+     
+    	<li value="1" title="jvm"><a href="/tags.html#jvm-ref">jvm</a></li>
+     
+    	<li value="1" title="varnish"><a href="/tags.html#varnish-ref">varnish</a></li>
+     
+    	<li value="1" title="go"><a href="/tags.html#go-ref">go</a></li>
+    
+  
+
+
+
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Go语言内存模型</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h1>目录：</h1>
+
+<ul>
+<li><a href="#toc_0">名词定义</a></li>
+<li><a href="#toc_1">背景介绍</a></li>
+<li><p><a href="#toc_2">Happens Before</a></p>
+
+<ul>
+<li><a href="#toc_3">Happens-before 定义</a></li>
+</ul>
+</li>
+<li><p><a href="#toc_4">同步方法</a></p>
+
+<ul>
+<li><a href="#toc_5">初始化</a></li>
+<li><a href="#toc_6">创建Goroutine</a></li>
+<li><a href="#toc_7">销毁Goroutine</a></li>
+<li><a href="#toc_8">Channel通信</a></li>
+<li><a href="#toc_9">锁</a></li>
+<li><a href="#toc_10">Once</a></li>
+</ul>
+</li>
+<li><p><a href="#toc_11">参考链接</a></p></li>
+</ul>
+
+
+<h1 id="toc_0">名词定义</h1>
+
+
+<p>执行体 - Go里的Goroutine或Java中的Thread</p>
+
+<h1 id="toc_1">背景介绍</h1>
+
+
+<p>内存模型的目的是为了定义清楚变量的读写在不同执行体里的可见性。理解内存模型在并发编程中非常重要，因为代码的执行顺序和书写的逻辑顺序并不会完全一致，甚至在编译期间编译器也有可能重排代码以最优化CPU执行,另外还因为有CPU缓存的存在，内存的数据不一定会及时更新，这样对内存中的同一个变量读和写也不一定和期望一样。</p>
+
+<p>和<a href="http://ifeve.com/java-memory-model-1/">Java的内存模型规范</a>类似，Go语言也有一个内存模型，相对JMM来说，Go的内存模型比较简单，Go的并发模型是基于CSP（<a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">Communicating Sequential Process</a>）的，不同的Goroutine通过一种叫Channel的数据结构来通信；Java的并发模型则基于多线程和共享内存，有较多的概念（violatie, lock, final, construct, thread, atomic等）和场景，当然java.util.concurrent并发工具包大大简化了Java并发编程。</p>
+
+<p>Go内存模型规范了在什么条件下一个Goroutine对某个变量的修改一定对其它Goroutine可见。</p>
+
+<h1 id="toc_2">Happens Before</h1>
+
+
+<p>在一个单独的Goroutine里，对变量的读写和代码的书写顺序一致。比如以下的代码:</p>
+
+<pre><code>package main
+import (
+    "log"
+)
+var a, b, c int
+func main() {
+    a = 1
+    b = 2
+    c = a + 2
+    log.Println(a, b, c)
+}
+</code></pre>
+
+<p>尽管在编译期和执行期，编译器和CPU都有可能重排代码，比如，先执行b=2，再执行a=1，但c=a+2是保证在a=1后执行的。这样最后的执行结果一定是<code>1 2 3</code>，不会是<code>1 2 2</code>。但下面的代码则可能会输出<code>0 0 0</code>，<code>1 2 2</code>, <code>0 2 3</code> (b=2比a=1先执行), <code>1 2 3</code>等各种可能。</p>
+
+<pre><code>package main
+import (
+    "log"
+)
+var a, b, c int
+func main() {
+    go func() {
+        a = 1
+        b = 2
+    }()
+    go func() {
+        c = a + 2
+    }()
+    log.Println(a, b, c)
+}
+</code></pre>
+
+<h2 id="toc_3">Happens-before 定义</h2>
+
+
+<p>Happens-before用来指明Go程序里的内存操作的局部顺序。如果一个内存操作事件e1 happens-before e2，则e2 happens-after e1也成立；如果e1不是happens-before e2,也不是happens-after e2，则e1和e2是并发的。</p>
+
+<p>在这个定义之下，如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说<strong>允许</strong>可见的：</p>
+
+<ol>
+<li>r不在w开始之前发生（可以是之后或并发）；</li>
+<li>w和r之间没有另一个写操作(w’)发生；</li>
+</ol>
+
+
+<p>为了保证对变量（v）的一个特定写操作（w）对一个读操作（r）可见，就需要确保w是r<strong>唯一</strong><strong>允许</strong>的写操作，于是如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说<strong>保证</strong>可见的：</p>
+
+<ol>
+<li>w在r开始之前发生；</li>
+<li>所有其它对v的写操作只在w之前或r之后发生；</li>
+</ol>
+
+
+<p>可以看出后一种约定情况比前一种更严格，这种情况要求没有w或r没有其他的并发写操作。</p>
+
+<p>在单个Goroutine里，因为肯定没有并发，上面两种情况是等价的。对变量v的读操作可以读到最近一次写操作的值（这个应该很容易理解）。但在多个Goroutine里如果要访问一个共享变量，我们就必须使用同步工具来建立happens-before条件，来保证对该变量的读操作能读到期望的修改值。</p>
+
+<p><strong>要保证并行执行体对共享变量的顺序访问方法就是用锁</strong>。Java和Go在这点上是一致的。</p>
+
+<p>以下是具体的可被利用的Go语言的happens-before规则，从本质上来讲，happens-before规则确定了CPU缓冲和主存的同步时间点（通过<a href="http://hugozhu.myalert.info/2013/03/28/22-memory-barriers-or-fences.html">内存屏障</a>等指令），从而使得对变量的读写顺序可被确定–也就是我们通常说的“同步”。</p>
+
+<h1 id="toc_4">同步方法</h1>
+
+
+
+
+<h2 id="toc_5">初始化</h2>
+
+
+<ol>
+<li><strong>如果package p 引用了package q，q的init()方法 happens-before p</strong>（Java工程师可以对比一下<a href="http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">final变量的happens-before规则</a>）</li>
+<li><strong>main.main()方法 happens-after所有package的init()方法结束。</strong></li>
+</ol>
+
+
+<h2 id="toc_6">创建Goroutine</h2>
+
+
+<ol>
+<li><strong>go语句创建新的goroutine happens-before 该goroutine执行</strong>（这个应该很容易理解）</li>
+</ol>
+
+
+<br>
+
+
+<pre><code>package main
+import (
+    "log"
+    "time"
+)
+var a, b, c int
+func main() {
+    a = 1
+    b = 2
+    go func() {
+        c = a + 2
+        log.Println(a, b, c)
+    }()
+    time.Sleep(1 * time.Second)
+}
+</code></pre>
+
+<p>利用这条happens-before，我们可以确定<code>c=a+2</code>是happens-after<code>a=1和b=2</code>，所以结果输出是可以确定的<code>1 2 3</code>，但如果是下面这样的代码，输出就不确定了，有可能是<code>1 2 3</code>或<code>0 0 2</code></p>
+
+<pre><code>func main() {
+    go func() {
+        c = a + 2
+        log.Println(a, b, c)
+    }()
+    a = 1
+    b = 2
+    time.Sleep(1 * time.Second)
+}
+</code></pre>
+
+<h2 id="toc_7">销毁Goroutine</h2>
+
+
+<ol>
+<li><strong>Goroutine的退出并不保证happens-before任何事件</strong>。</li>
+</ol>
+
+
+<br>
+
+
+<pre><code>var a string
+func hello() {
+    go func() { a = "hello" }()
+    print(a)
+}
+</code></pre>
+
+<p>上面代码因为<code>a="hello"</code>没有使用同步事件，并不能保证这个赋值被主goroutine可见。事实上，极度优化的Go编译器甚至可以完全删除这行代码<code>go func() { a = "hello" }()</code>。</p>
+
+<p>Goroutine对变量的修改需要让对其它Goroutine可见，除了使用锁来同步外还可以用Channel。</p>
+
+<h2 id="toc_8">Channel通信</h2>
+
+
+<p>在Go编程中，Channel是被推荐的执行体间通信的方法，Go的编译器和运行态都会尽力对其优化。</p>
+
+<ol>
+<li><strong>对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成</strong></li>
+<li><strong>关闭一个Channel happens-before 从该Channel接收到最后的返回值0</strong></li>
+<li><strong>不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成</strong></li>
+</ol>
+
+
+<br>
+
+
+<pre><code>var c = make(chan int, 10)
+var a string
+func f() {
+    a = "hello, world"
+    c &lt;- 0
+}
+func main() {
+    go f()
+    &lt;-c
+    print(a)
+}
+</code></pre>
+
+<p>上述代码可以确保输出<code>hello, world</code>，因为<code>a = "hello, world"</code> happens-before <code>c &lt;- 0</code>，<code>print(a)</code> happens-after <code>&lt;-c</code>， 根据上面的规则1）以及happens-before的可传递性，<code>a = "hello, world"</code> happens-before<code>print(a)</code>。</p>
+
+<p>根据规则2）把<code>c&lt;-0</code>替换成<code>close(c)</code>也能保证输出<code>hello,world</code>，因为关闭操作在<code>&lt;-c</code>接收到0之前发送。</p>
+
+<pre><code>var c = make(chan int)
+var a string
+func f() {
+    a = "hello, world"
+    &lt;-c
+}
+func main() {
+    go f()
+    c &lt;- 0
+    print(a)
+}
+</code></pre>
+
+<p>根据规则3），因为c是不带缓冲的Channel，<code>a = "hello, world"</code> happens-before <code>&lt;-c</code> happens-before <code>c &lt;- 0</code> happens-before <code>print(a)</code>，但如果c是缓冲队列，如定义<code>c = make(chan int, 1)</code>, 那结果就不确定了。</p>
+
+<h2 id="toc_9">锁</h2>
+
+
+<p><code>sync</code> 包实现了两种锁数据结构:</p>
+
+<ol>
+<li>sync.Mutex -> java.util.concurrent.ReentrantLock</li>
+<li>sync.RWMutex -> java.util.concurrent.locks.ReadWriteLock</li>
+</ol>
+
+
+<p>其happens-before规则和Java的也类似：</p>
+
+<ol>
+<li><strong>任何sync.Mutex或sync.RWMutex 变量（l），定义 n &lt; m， 第n次<code>l.Unlock()</code> happens-before 第m次<code>l.lock()</code>调用返回。</strong></li>
+</ol>
+
+
+<br>
+
+
+<pre><code>var l sync.Mutex
+var a string
+func f() {
+    a = "hello, world"
+    l.Unlock()
+}
+func main() {
+    l.Lock()
+    go f()
+    l.Lock()
+    print(a)
+}
+</code></pre>
+
+<p><code>a = "hello, world"</code> happens-before <code>l.Unlock()</code> happens-before 第二个 <code>l.Lock()</code> happens-before <code>print(a)</code></p>
+
+<h2 id="toc_10">Once</h2>
+
+
+<p><code>sync</code>包还提供了一个安全的初始化工具Once。还记得Java的Singleton设计模式，double-check，甚至triple-check的各种单例初始化方法吗？Go则提供了一个标准的方法。</p>
+
+<ol>
+<li><strong><code>once.Do(f)</code>中的<code>f()</code> happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。</strong></li>
+</ol>
+
+
+<br>
+
+
+<pre><code>var a string
+var once sync.Once
+func setup() {
+    a = "hello, world"
+}
+func doprint() {
+    once.Do(setup)
+    print(a)
+}
+func twoprint() {
+    go doprint()
+    go doprint()
+}
+</code></pre>
+
+<p>上面的代码虽然调用两次<code>doprint()</code>，但实际上<code>setup</code>只会执行一次，并且并发的<code>once.Do(setup)</code>都会等待<code>setup</code>返回后再继续执行。</p>
+
+<h1 id="toc_11">参考链接</h1>
+
+
+<ol>
+<li><a href="http://golang.org/ref/mem">http://golang.org/ref/mem</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Java_Memory_Model">http://en.wikipedia.org/wiki/Java_Memory_Model</a></li>
+<li><a href="http://ifeve.com/java-memory-model-1/">http://ifeve.com/java-memory-model-1/</a></li>
+<li><a href="http://code.google.com/p/golang-china/wiki/go_mem">http://code.google.com/p/golang-china/wiki/go_mem</a></li>
+</ol>
+
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2013-07-20" datetime="2013-07-20" pubdate>
+							<span class="year">2013-07-20</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li value="1" title="go"><a href="/tags.html#go-ref">go</a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head" style="display:block;">原文网址：<a href="http://hugozhu.myalert.info/2013/04/20/31-golang-memory-model.html" target="_blank">http://hugozhu.myalert.info/2013/04/20/31-golang-memory-model.html</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+<!--
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+-->
+
+
+<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+<script src="/assets/jquery.tagcloud.min.js"></script>
+<script src='/assets/default.js'></script>
+<script src="/assets/thickbox-compressed.js" type="text/javascript"></script>
+</body>
+</html>
+

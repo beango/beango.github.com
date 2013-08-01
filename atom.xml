@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-07-31T12:37:30+08:00</updated>
+ <updated>2013-08-01T17:49:45+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -707,6 +707,321 @@ Clusters&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.cs.duke.edu/courses/fall07/cps212/consensus.pdf&quot;&gt;J. Chase. Distributed Systems, Failures, and Consensus&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.allthingsdistributed.com/2008/12/eventually_consistent.html&quot;&gt;W. Vogels. Eventualy Consistent – Revisited&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://static.googleusercontent.com/external_content/untrusted_dlcp/research.google.com/en/archive/spanner-osdi2012.pdf&quot;&gt;J. C. Corbett et al. Spanner: Google’s Globally-Distributed Database&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Go语言内存模型</title>
+   <link href="http://beango.github.com/archives/2013/07/20/golang-memory-model.html"/>
+   <updated>2013-07-20T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/07/20/golang-memory-model</id>
+   <content type="html">&lt;h1&gt;目录：&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_0&quot;&gt;名词定义&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_1&quot;&gt;背景介绍&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;#toc_2&quot;&gt;Happens Before&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_3&quot;&gt;Happens-before 定义&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;#toc_4&quot;&gt;同步方法&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_5&quot;&gt;初始化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_6&quot;&gt;创建Goroutine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_7&quot;&gt;销毁Goroutine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_8&quot;&gt;Channel通信&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_9&quot;&gt;锁&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#toc_10&quot;&gt;Once&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;#toc_11&quot;&gt;参考链接&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h1 id=&quot;toc_0&quot;&gt;名词定义&lt;/h1&gt;
+
+
+&lt;p&gt;执行体 - Go里的Goroutine或Java中的Thread&lt;/p&gt;
+
+&lt;h1 id=&quot;toc_1&quot;&gt;背景介绍&lt;/h1&gt;
+
+
+&lt;p&gt;内存模型的目的是为了定义清楚变量的读写在不同执行体里的可见性。理解内存模型在并发编程中非常重要，因为代码的执行顺序和书写的逻辑顺序并不会完全一致，甚至在编译期间编译器也有可能重排代码以最优化CPU执行,另外还因为有CPU缓存的存在，内存的数据不一定会及时更新，这样对内存中的同一个变量读和写也不一定和期望一样。&lt;/p&gt;
+
+&lt;p&gt;和&lt;a href=&quot;http://ifeve.com/java-memory-model-1/&quot;&gt;Java的内存模型规范&lt;/a&gt;类似，Go语言也有一个内存模型，相对JMM来说，Go的内存模型比较简单，Go的并发模型是基于CSP（&lt;a href=&quot;http://en.wikipedia.org/wiki/Communicating_sequential_processes&quot;&gt;Communicating Sequential Process&lt;/a&gt;）的，不同的Goroutine通过一种叫Channel的数据结构来通信；Java的并发模型则基于多线程和共享内存，有较多的概念（violatie, lock, final, construct, thread, atomic等）和场景，当然java.util.concurrent并发工具包大大简化了Java并发编程。&lt;/p&gt;
+
+&lt;p&gt;Go内存模型规范了在什么条件下一个Goroutine对某个变量的修改一定对其它Goroutine可见。&lt;/p&gt;
+
+&lt;h1 id=&quot;toc_2&quot;&gt;Happens Before&lt;/h1&gt;
+
+
+&lt;p&gt;在一个单独的Goroutine里，对变量的读写和代码的书写顺序一致。比如以下的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+import (
+    &quot;log&quot;
+)
+var a, b, c int
+func main() {
+    a = 1
+    b = 2
+    c = a + 2
+    log.Println(a, b, c)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;尽管在编译期和执行期，编译器和CPU都有可能重排代码，比如，先执行b=2，再执行a=1，但c=a+2是保证在a=1后执行的。这样最后的执行结果一定是&lt;code&gt;1 2 3&lt;/code&gt;，不会是&lt;code&gt;1 2 2&lt;/code&gt;。但下面的代码则可能会输出&lt;code&gt;0 0 0&lt;/code&gt;，&lt;code&gt;1 2 2&lt;/code&gt;, &lt;code&gt;0 2 3&lt;/code&gt; (b=2比a=1先执行), &lt;code&gt;1 2 3&lt;/code&gt;等各种可能。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+import (
+    &quot;log&quot;
+)
+var a, b, c int
+func main() {
+    go func() {
+        a = 1
+        b = 2
+    }()
+    go func() {
+        c = a + 2
+    }()
+    log.Println(a, b, c)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;toc_3&quot;&gt;Happens-before 定义&lt;/h2&gt;
+
+
+&lt;p&gt;Happens-before用来指明Go程序里的内存操作的局部顺序。如果一个内存操作事件e1 happens-before e2，则e2 happens-after e1也成立；如果e1不是happens-before e2,也不是happens-after e2，则e1和e2是并发的。&lt;/p&gt;
+
+&lt;p&gt;在这个定义之下，如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说&lt;strong&gt;允许&lt;/strong&gt;可见的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;r不在w开始之前发生（可以是之后或并发）；&lt;/li&gt;
+&lt;li&gt;w和r之间没有另一个写操作(w’)发生；&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;为了保证对变量（v）的一个特定写操作（w）对一个读操作（r）可见，就需要确保w是r&lt;strong&gt;唯一&lt;/strong&gt;&lt;strong&gt;允许&lt;/strong&gt;的写操作，于是如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说&lt;strong&gt;保证&lt;/strong&gt;可见的：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;w在r开始之前发生；&lt;/li&gt;
+&lt;li&gt;所有其它对v的写操作只在w之前或r之后发生；&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;可以看出后一种约定情况比前一种更严格，这种情况要求没有w或r没有其他的并发写操作。&lt;/p&gt;
+
+&lt;p&gt;在单个Goroutine里，因为肯定没有并发，上面两种情况是等价的。对变量v的读操作可以读到最近一次写操作的值（这个应该很容易理解）。但在多个Goroutine里如果要访问一个共享变量，我们就必须使用同步工具来建立happens-before条件，来保证对该变量的读操作能读到期望的修改值。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;要保证并行执行体对共享变量的顺序访问方法就是用锁&lt;/strong&gt;。Java和Go在这点上是一致的。&lt;/p&gt;
+
+&lt;p&gt;以下是具体的可被利用的Go语言的happens-before规则，从本质上来讲，happens-before规则确定了CPU缓冲和主存的同步时间点（通过&lt;a href=&quot;http://hugozhu.myalert.info/2013/03/28/22-memory-barriers-or-fences.html&quot;&gt;内存屏障&lt;/a&gt;等指令），从而使得对变量的读写顺序可被确定–也就是我们通常说的“同步”。&lt;/p&gt;
+
+&lt;h1 id=&quot;toc_4&quot;&gt;同步方法&lt;/h1&gt;
+
+
+
+
+&lt;h2 id=&quot;toc_5&quot;&gt;初始化&lt;/h2&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;如果package p 引用了package q，q的init()方法 happens-before p&lt;/strong&gt;（Java工程师可以对比一下&lt;a href=&quot;http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&amp;amp;utm_medium=related_content_link&amp;amp;utm_campaign=relatedContent_articles_clk&quot;&gt;final变量的happens-before规则&lt;/a&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;main.main()方法 happens-after所有package的init()方法结束。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2 id=&quot;toc_6&quot;&gt;创建Goroutine&lt;/h2&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;go语句创建新的goroutine happens-before 该goroutine执行&lt;/strong&gt;（这个应该很容易理解）&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;br&gt;
+
+
+&lt;pre&gt;&lt;code&gt;package main
+import (
+    &quot;log&quot;
+    &quot;time&quot;
+)
+var a, b, c int
+func main() {
+    a = 1
+    b = 2
+    go func() {
+        c = a + 2
+        log.Println(a, b, c)
+    }()
+    time.Sleep(1 * time.Second)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;利用这条happens-before，我们可以确定&lt;code&gt;c=a+2&lt;/code&gt;是happens-after&lt;code&gt;a=1和b=2&lt;/code&gt;，所以结果输出是可以确定的&lt;code&gt;1 2 3&lt;/code&gt;，但如果是下面这样的代码，输出就不确定了，有可能是&lt;code&gt;1 2 3&lt;/code&gt;或&lt;code&gt;0 0 2&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    go func() {
+        c = a + 2
+        log.Println(a, b, c)
+    }()
+    a = 1
+    b = 2
+    time.Sleep(1 * time.Second)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;toc_7&quot;&gt;销毁Goroutine&lt;/h2&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Goroutine的退出并不保证happens-before任何事件&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;br&gt;
+
+
+&lt;pre&gt;&lt;code&gt;var a string
+func hello() {
+    go func() { a = &quot;hello&quot; }()
+    print(a)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面代码因为&lt;code&gt;a=&quot;hello&quot;&lt;/code&gt;没有使用同步事件，并不能保证这个赋值被主goroutine可见。事实上，极度优化的Go编译器甚至可以完全删除这行代码&lt;code&gt;go func() { a = &quot;hello&quot; }()&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;Goroutine对变量的修改需要让对其它Goroutine可见，除了使用锁来同步外还可以用Channel。&lt;/p&gt;
+
+&lt;h2 id=&quot;toc_8&quot;&gt;Channel通信&lt;/h2&gt;
+
+
+&lt;p&gt;在Go编程中，Channel是被推荐的执行体间通信的方法，Go的编译器和运行态都会尽力对其优化。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;关闭一个Channel happens-before 从该Channel接收到最后的返回值0&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;br&gt;
+
+
+&lt;pre&gt;&lt;code&gt;var c = make(chan int, 10)
+var a string
+func f() {
+    a = &quot;hello, world&quot;
+    c &amp;lt;- 0
+}
+func main() {
+    go f()
+    &amp;lt;-c
+    print(a)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述代码可以确保输出&lt;code&gt;hello, world&lt;/code&gt;，因为&lt;code&gt;a = &quot;hello, world&quot;&lt;/code&gt; happens-before &lt;code&gt;c &amp;lt;- 0&lt;/code&gt;，&lt;code&gt;print(a)&lt;/code&gt; happens-after &lt;code&gt;&amp;lt;-c&lt;/code&gt;， 根据上面的规则1）以及happens-before的可传递性，&lt;code&gt;a = &quot;hello, world&quot;&lt;/code&gt; happens-before&lt;code&gt;print(a)&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;根据规则2）把&lt;code&gt;c&amp;lt;-0&lt;/code&gt;替换成&lt;code&gt;close(c)&lt;/code&gt;也能保证输出&lt;code&gt;hello,world&lt;/code&gt;，因为关闭操作在&lt;code&gt;&amp;lt;-c&lt;/code&gt;接收到0之前发送。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var c = make(chan int)
+var a string
+func f() {
+    a = &quot;hello, world&quot;
+    &amp;lt;-c
+}
+func main() {
+    go f()
+    c &amp;lt;- 0
+    print(a)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;根据规则3），因为c是不带缓冲的Channel，&lt;code&gt;a = &quot;hello, world&quot;&lt;/code&gt; happens-before &lt;code&gt;&amp;lt;-c&lt;/code&gt; happens-before &lt;code&gt;c &amp;lt;- 0&lt;/code&gt; happens-before &lt;code&gt;print(a)&lt;/code&gt;，但如果c是缓冲队列，如定义&lt;code&gt;c = make(chan int, 1)&lt;/code&gt;, 那结果就不确定了。&lt;/p&gt;
+
+&lt;h2 id=&quot;toc_9&quot;&gt;锁&lt;/h2&gt;
+
+
+&lt;p&gt;&lt;code&gt;sync&lt;/code&gt; 包实现了两种锁数据结构:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;sync.Mutex -&gt; java.util.concurrent.ReentrantLock&lt;/li&gt;
+&lt;li&gt;sync.RWMutex -&gt; java.util.concurrent.locks.ReadWriteLock&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;其happens-before规则和Java的也类似：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;任何sync.Mutex或sync.RWMutex 变量（l），定义 n &amp;lt; m， 第n次&lt;code&gt;l.Unlock()&lt;/code&gt; happens-before 第m次&lt;code&gt;l.lock()&lt;/code&gt;调用返回。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;br&gt;
+
+
+&lt;pre&gt;&lt;code&gt;var l sync.Mutex
+var a string
+func f() {
+    a = &quot;hello, world&quot;
+    l.Unlock()
+}
+func main() {
+    l.Lock()
+    go f()
+    l.Lock()
+    print(a)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;a = &quot;hello, world&quot;&lt;/code&gt; happens-before &lt;code&gt;l.Unlock()&lt;/code&gt; happens-before 第二个 &lt;code&gt;l.Lock()&lt;/code&gt; happens-before &lt;code&gt;print(a)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;toc_10&quot;&gt;Once&lt;/h2&gt;
+
+
+&lt;p&gt;&lt;code&gt;sync&lt;/code&gt;包还提供了一个安全的初始化工具Once。还记得Java的Singleton设计模式，double-check，甚至triple-check的各种单例初始化方法吗？Go则提供了一个标准的方法。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;once.Do(f)&lt;/code&gt;中的&lt;code&gt;f()&lt;/code&gt; happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;br&gt;
+
+
+&lt;pre&gt;&lt;code&gt;var a string
+var once sync.Once
+func setup() {
+    a = &quot;hello, world&quot;
+}
+func doprint() {
+    once.Do(setup)
+    print(a)
+}
+func twoprint() {
+    go doprint()
+    go doprint()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的代码虽然调用两次&lt;code&gt;doprint()&lt;/code&gt;，但实际上&lt;code&gt;setup&lt;/code&gt;只会执行一次，并且并发的&lt;code&gt;once.Do(setup)&lt;/code&gt;都会等待&lt;code&gt;setup&lt;/code&gt;返回后再继续执行。&lt;/p&gt;
+
+&lt;h1 id=&quot;toc_11&quot;&gt;参考链接&lt;/h1&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://golang.org/ref/mem&quot;&gt;http://golang.org/ref/mem&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Java_Memory_Model&quot;&gt;http://en.wikipedia.org/wiki/Java_Memory_Model&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://ifeve.com/java-memory-model-1/&quot;&gt;http://ifeve.com/java-memory-model-1/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://code.google.com/p/golang-china/wiki/go_mem&quot;&gt;http://code.google.com/p/golang-china/wiki/go_mem&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 </content>
