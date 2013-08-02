@@ -4,13 +4,690 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-08-01T17:49:45+08:00</updated>
+ <updated>2013-08-02T09:57:21+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
    <email>6588617@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Go 语言 12 条最佳实践</title>
+   <link href="http://beango.github.com/archives/2013/08/02/twelve-go-best-practices.html"/>
+   <updated>2013-08-02T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/08/02/twelve-go-best-practices</id>
+   <content type="html">&lt;p&gt;本文来自 Google 工程师 Francesc Campoy Flores 分享的幻灯片。内容包括：代码组织、API、并发最佳实践和一些推荐的相关资源。&lt;/p&gt;
+
+&lt;h3&gt;最佳实践&lt;/h3&gt;
+
+&lt;p&gt;维基百科的定义是：“最佳实践是一种方法或技术，其结果始终优于其他方式。”&lt;/p&gt;
+
+&lt;p&gt;写Go代码的目标就是：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;简洁&lt;/li&gt;
+&lt;li&gt;可读性强&lt;/li&gt;
+&lt;li&gt;可维护性好&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;样例代码&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Gopher struct {
+    Name     string
+    Age      int32
+    FurColor color.Color
+}
+
+func (g *Gopher) DumpBinary(w io.Writer) error {
+    err := binary.Write(w, binary.LittleEndian, int32(len(g.Name)))
+    if err == nil {
+        _, err := w.Write([]byte(g.Name))
+        if err == nil {
+            err := binary.Write(w, binary.LittleEndian, g.Age)
+            if err == nil {
+                return binary.Write(w, binary.LittleEndian, g.FurColor)
+            }
+            return err
+        }
+        return err
+    }
+    return err
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;避免嵌套的处理错误&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (g *Gopher) DumpBinary(w io.Writer) error {
+    err := binary.Write(w, binary.LittleEndian, int32(len(g.Name)))
+    if err != nil {
+        return err
+    }
+    _, err = w.Write([]byte(g.Name))
+    if err != nil {
+        return err
+    }
+    err = binary.Write(w, binary.LittleEndian, g.Age)
+    if err != nil {
+        return err
+    }
+    return binary.Write(w, binary.LittleEndian, g.FurColor)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;减少嵌套意味着提高代码的可读性&lt;/p&gt;
+
+&lt;h3&gt;尽可能避免重复&lt;/h3&gt;
+
+&lt;p&gt;功能单一，代码更简洁&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type binWriter struct {
+    w   io.Writer
+    err error
+}
+
+// Write writes a value into its writer using little endian.
+func (w *binWriter) Write(v interface{}) {
+    if w.err != nil {
+        return
+    }
+    w.err = binary.Write(w.w, binary.LittleEndian, v)
+}
+
+func (g *Gopher) DumpBinary(w io.Writer) error {
+    bw := &amp;amp;binWriter{w: w}
+    bw.Write(int32(len(g.Name)))
+    bw.Write([]byte(g.Name))
+    bw.Write(g.Age)
+    bw.Write(g.FurColor)
+    return bw.err
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;使用类型推断来处理特殊情况&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Write writes a value into its writer using little endian.
+func (w *binWriter) Write(v interface{}) {
+    if w.err != nil {
+        return
+    }
+    switch v.(type) {
+    case string:
+        s := v.(string)
+        w.Write(int32(len(s)))
+        w.Write([]byte(s))
+    default:
+        w.err = binary.Write(w.w, binary.LittleEndian, v)
+    }
+}
+
+func (g *Gopher) DumpBinary(w io.Writer) error {
+    bw := &amp;amp;binWriter{w: w}
+    bw.Write(g.Name)
+    bw.Write(g.Age)
+    bw.Write(g.FurColor)
+    return bw.err
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;类型推断的变量声明要短&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Write write the given value into the writer using little endian.
+func (w *binWriter) Write(v interface{}) {
+    if w.err != nil {
+        return
+    }
+    switch v := v.(type) {
+    case string:
+        w.Write(int32(len(v)))
+        w.Write([]byte(v))
+    default:
+        w.err = binary.Write(w.w, binary.LittleEndian, v)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;函数适配器&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func init() {
+    http.HandleFunc(&quot;/&quot;, handler)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+    err := doThis()
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        log.Printf(&quot;handling %q: %v&quot;, r.RequestURI, err)
+        return
+    }
+
+    err = doThat()
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        log.Printf(&quot;handling %q: %v&quot;, r.RequestURI, err)
+        return
+    }
+}
+
+func init() {
+    http.HandleFunc(&quot;/&quot;, errorHandler(betterHandler))
+}
+
+func errorHandler(f func(http.ResponseWriter, *http.Request) error) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        err := f(w, r)
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            log.Printf(&quot;handling %q: %v&quot;, r.RequestURI, err)
+        }
+    }
+}
+
+func betterHandler(w http.ResponseWriter, r *http.Request) error {
+    if err := doThis(); err != nil {
+        return fmt.Errorf(&quot;doing this: %v&quot;, err)
+    }
+
+    if err := doThat(); err != nil {
+        return fmt.Errorf(&quot;doing that: %v&quot;, err)
+    }
+    return nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;如何组织代码&lt;/h2&gt;
+
+&lt;h3&gt;将重要的代码放前面&lt;/h3&gt;
+
+&lt;p&gt;版权信息，构建信息，包说明文档&lt;/p&gt;
+
+&lt;p&gt;Import 声明，相关的包连起来构成组，组与组之间用空行隔开。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &quot;fmt&quot;
+    &quot;io&quot;
+    &quot;log&quot;
+
+    &quot;code.google.com/p/go.net/websocket&quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;接下来代码以最重要的类型开始，以工具函数和类型结束。&lt;/p&gt;
+
+&lt;h3&gt;如何编写文档&lt;/h3&gt;
+
+&lt;p&gt;包名之前要写相关文档&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Package playground registers an HTTP handler at &quot;/compile&quot; that
+// proxies requests to the golang.org playground service.
+package playground
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;导出的标识符（译者按：大写的标识符为导出标识符）会出现在 &lt;code&gt;godoc&lt;/code&gt;中，所以要正确的编写文档。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Author represents the person who wrote and/or is presenting the document.
+type Author struct {
+    Elem []Elem
+}
+
+// TextElem returns the first text elements of the author details.
+// This is used to display the author' name, job title, and company
+// without the contact details.
+func (p *Author) TextElem() (elems []Elem) {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://godoc.org/code.google.com/p/go.talks/pkg/present#Author&quot;&gt;生成的文档示例&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.golang.org/godoc-documenting-go-code&quot;&gt;Gocode: 文档化Go代码&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;h3&gt;越简洁越好&lt;/h3&gt;
+
+&lt;p&gt;长代码往往不是最好的.试着使用能自解释的最短的变量名.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用 &lt;code&gt;MarshalIndent&lt;/code&gt; ，别用 &lt;code&gt;MarshalWithIndentation&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;别忘了包名会出现在你选择的标识符前面&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In package &lt;code&gt;encoding/json&lt;/code&gt; we find the type &lt;code&gt;Encoder&lt;/code&gt;, not &lt;code&gt;JSONEncoder&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;It is referred as &lt;code&gt;json.Encoder&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;有多个文件的包&lt;/p&gt;
+
+&lt;p&gt;需要将一个包分散到多个文件中吗?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;避免行数非常多的文件&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;标准库中 &lt;code&gt;net/http&lt;/code&gt; 包有47个文件，共计 15734 行.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;拆分代码并测试&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;code&gt;net/http/cookie.go&lt;/code&gt; 和 &lt;code&gt;net/http/cookie_test.go&lt;/code&gt;  都是 &lt;code&gt;http &lt;/code&gt;包的一部分.&lt;/p&gt;
+
+&lt;p&gt;测试代码 只有 在测试时才会编译.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;多文件包的文档编写&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;如果一个包中有多个文件, 可以很方便的创建一个 &lt;code&gt;doc.go &lt;/code&gt;文件，包含包文档信息.&lt;/p&gt;
+
+&lt;h3&gt;让包可以”go get”到&lt;/h3&gt;
+
+&lt;p&gt;一些包将来可能会被复用，另外一些不会.&lt;/p&gt;
+
+&lt;p&gt;定义了一些网络协议的包可能会在开发一个可执行命令时复用.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/bradfitz/camlistore&quot;&gt;github.com/bradfitz/camlistore&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;接口&lt;/h2&gt;
+
+&lt;h3&gt;你需要什么&lt;/h3&gt;
+
+&lt;p&gt;让我们以之前的Gopher类型为例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Gopher struct {
+    Name     string
+    Age      int32
+    FurColor color.Color
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们可以定义这个方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (g *Gopher) DumpToFile(f *os.File) error {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是使用一个具体的类型会让代码难以测试，因此我们使用接口.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (g *Gopher) DumpToReadWriter(rw io.ReadWriter) error {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;进而，由于使用的是接口，我们可以只请求我们需要的.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (g *Gopher) DumpToWriter(f io.Writer) error {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;让独立的包彼此独立&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &quot;code.google.com/p/go.talks/2013/bestpractices/funcdraw/drawer&quot;
+    &quot;code.google.com/p/go.talks/2013/bestpractices/funcdraw/parser&quot;
+)
+
+ // Parse the text into an executable function.
+    f, err := parser.Parse(text)
+    if err != nil {
+        log.Fatalf(&quot;parse %q: %v&quot;, text, err)
+    }
+
+    // Create an image plotting the function.
+    m := drawer.Draw(f, *width, *height, *xmin, *xmax)
+
+    // Encode the image into the standard output.
+    err = png.Encode(os.Stdout, m)
+    if err != nil {
+        log.Fatalf(&quot;encode image: %v&quot;, err)
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;解析&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type ParsedFunc struct {
+    text string
+    eval func(float64) float64
+}
+
+func Parse(text string) (*ParsedFunc, error) {
+    f, err := parse(text)
+    if err != nil {
+        return nil, err
+    }
+    return &amp;amp;ParsedFunc{text: text, eval: f}, nil
+}
+
+func (f *ParsedFunc) Eval(x float64) float64 { return f.eval(x) }
+func (f *ParsedFunc) String() string         { return f.text }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;描绘&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &quot;image&quot;
+
+    &quot;code.google.com/p/go.talks/2013/bestpractices/funcdraw/parser&quot;
+)
+
+// Draw draws an image showing a rendering of the passed ParsedFunc.
+func DrawParsedFunc(f parser.ParsedFunc) image.Image {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用接口来避免依赖.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import &quot;image&quot;
+
+// Function represent a drawable mathematical function.
+type Function interface {
+    Eval(float64) float64
+}
+
+// Draw draws an image showing a rendering of the passed Function.
+func Draw(f Function) image.Image {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;测试&lt;/h3&gt;
+
+&lt;p&gt;使用接口而不是具体类型让测试更简洁.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package drawer
+
+import (
+    &quot;math&quot;
+    &quot;testing&quot;
+)
+
+type TestFunc func(float64) float64
+
+func (f TestFunc) Eval(x float64) float64 { return f(x) }
+
+var (
+    ident = TestFunc(func(x float64) float64 { return x })
+    sin   = TestFunc(math.Sin)
+)
+
+func TestDraw_Ident(t *testing.T) {
+    m := Draw(ident)
+    // Verify obtained image.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;在接口中避免并发&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func doConcurrently(job string, err chan error) {
+    go func() {
+        fmt.Println(&quot;doing job&quot;, job)
+        time.Sleep(1 * time.Second)
+        err &amp;lt;- errors.New(&quot;something went wrong!&quot;)
+    }()
+}
+
+func main() {
+    jobs := []string{&quot;one&quot;, &quot;two&quot;, &quot;three&quot;}
+
+    errc := make(chan error)
+    for _, job := range jobs {
+        doConcurrently(job, errc)
+    }
+    for _ = range jobs {
+        if err := &amp;lt;-errc; err != nil {
+            fmt.Println(err)
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果我们想串行的使用它会怎样?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func do(job string) error {
+    fmt.Println(&quot;doing job&quot;, job)
+    time.Sleep(1 * time.Second)
+    return errors.New(&quot;something went wrong!&quot;)
+}
+
+func main() {
+    jobs := []string{&quot;one&quot;, &quot;two&quot;, &quot;three&quot;}
+
+    errc := make(chan error)
+    for _, job := range jobs {
+        go func(job string) {
+            errc &amp;lt;- do(job)
+        }(job)
+    }
+    for _ = range jobs {
+        if err := &amp;lt;-errc; err != nil {
+            fmt.Println(err)
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;暴露同步的接口，这样异步调用这些接口会简单.&lt;/p&gt;
+
+&lt;h2&gt;并发的最佳实践&lt;/h2&gt;
+
+&lt;h3&gt;使用goroutines管理状态&lt;/h3&gt;
+
+&lt;p&gt;使用chan或者有chan的结构体和goroutine通信&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Server struct{ quit chan bool }
+
+func NewServer() *Server {
+    s := &amp;amp;Server{make(chan bool)}
+    go s.run()
+    return s
+}
+
+func (s *Server) run() {
+    for {
+        select {
+        case &amp;lt;-s.quit:
+            fmt.Println(&quot;finishing task&quot;)
+            time.Sleep(time.Second)
+            fmt.Println(&quot;task done&quot;)
+            s.quit &amp;lt;- true
+            return
+        case &amp;lt;-time.After(time.Second):
+            fmt.Println(&quot;running task&quot;)
+        }
+    }
+}
+
+func (s *Server) Stop() {
+    fmt.Println(&quot;server stopping&quot;)
+    s.quit &amp;lt;- true
+    &amp;lt;-s.quit
+    fmt.Println(&quot;server stopped&quot;)
+}
+
+func main() {
+    s := NewServer()
+    time.Sleep(2 * time.Second)
+    s.Stop()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;使用带缓存的chan，来避免goroutine内存泄漏&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func sendMsg(msg, addr string) error {
+    conn, err := net.Dial(&quot;tcp&quot;, addr)
+    if err != nil {
+        return err
+    }
+    defer conn.Close()
+    _, err = fmt.Fprint(conn, msg)
+    return err
+}
+
+func main() {
+    addr := []string{&quot;localhost:8080&quot;, &quot;http://google.com&quot;}
+    err := broadcastMsg(&quot;hi&quot;, addr)
+
+    time.Sleep(time.Second)
+
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(&quot;everything went fine&quot;)
+}
+
+func broadcastMsg(msg string, addrs []string) error {
+    errc := make(chan error)
+    for _, addr := range addrs {
+        go func(addr string) {
+            errc &amp;lt;- sendMsg(msg, addr)
+            fmt.Println(&quot;done&quot;)
+        }(addr)
+    }
+
+    for _ = range addrs {
+        if err := &amp;lt;-errc; err != nil {
+            return err
+        }
+    }
+    return nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;goroutine阻塞在chan写操作&lt;/li&gt;
+&lt;li&gt;goroutine保存了一个chan的引用&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;chan永远不会垃圾回收&lt;/p&gt;
+
+&lt;p&gt;func broadcastMsg(msg string, addrs []string) error {&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;errc := make(chan error, len(addrs))
+for _, addr := range addrs {
+    go func(addr string) {
+        errc &amp;lt;- sendMsg(msg, addr)
+        fmt.Println(&quot;done&quot;)
+    }(addr)
+}
+
+for _ = range addrs {
+    if err := &amp;lt;-errc; err != nil {
+        return err
+    }
+}
+return nil
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;如果我们不能预测channel的容量呢?&lt;/p&gt;
+
+&lt;h3&gt;使用quit chan避免goroutine内存泄漏&lt;/h3&gt;
+
+&lt;p&gt;&lt;label /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func broadcastMsg(msg string, addrs []string) error {
+    errc := make(chan error)
+    quit := make(chan struct{})
+
+    defer close(quit)
+
+    for _, addr := range addrs {
+        go func(addr string) {
+            select {
+            case errc &amp;lt;- sendMsg(msg, addr):
+                fmt.Println(&quot;done&quot;)
+            case &amp;lt;-quit:
+                fmt.Println(&quot;quit&quot;)
+            }
+        }(addr)
+    }
+
+    for _ = range addrs {
+        if err := &amp;lt;-errc; err != nil {
+            return err
+        }
+    }
+    return nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;12条最佳实践&lt;/h3&gt;
+
+&lt;p&gt; ​1. 避免嵌套的处理错误&lt;br/&gt;
+ 2. 尽可能避免重复&lt;br/&gt;
+ 3. 将重要的代码放前面&lt;br/&gt;
+ 4. 为代码编写文档&lt;br/&gt;
+ 5. 越简洁越好&lt;br/&gt;
+ 6. 讲包拆分到多个文件中&lt;br/&gt;
+ 7. 让包”go get”到&lt;br/&gt;
+ 8. 按需请求&lt;br/&gt;
+ 9. 让独立的包彼此独立&lt;br/&gt;
+ 10. 在接口中避免并发&lt;br/&gt;
+ 11. 使用goroutine管理状态&lt;br/&gt;
+ 12. 避免goroutine内存泄漏&lt;/p&gt;
+
+&lt;h3&gt;&lt;/h3&gt;
+
+&lt;h3&gt;一些链接&lt;/h3&gt;
+
+&lt;p&gt;资源&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go 首页 &lt;a href=&quot;http://golang.org/&quot;&gt;golang.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go 交互式体验 &lt;a href=&quot;http://tour.golang.org/&quot;&gt;tour.golang.org&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;其他演讲&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;用go做词法扫描 &lt;a href=&quot;http://www.youtube.com/watch?v=HxaD_trXwRE&quot;&gt;video&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;并发不是并行 &lt;a href=&quot;http://vimeo.com/49718712&quot;&gt;video&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go并发模式 &lt;a href=&quot;http://www.youtube.com/watch?v=f6kdp27TYZs&quot;&gt;video&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go高级并发模式 &lt;a href=&quot;http://www.youtube.com/watch?v=QDDwwePbDtw&quot;&gt;video&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;&lt;/h3&gt;
+
+&lt;h3&gt;谢谢&lt;/h3&gt;
+
+&lt;p&gt;Francesc Campoy Flores&lt;/p&gt;
+
+&lt;p&gt;Gopher at Google&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://twitter.com/campoy83&quot;&gt;@campoy83&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://campoy.cat/+&quot;&gt;http://campoy.cat/+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://golang.org/&quot;&gt;http://golang.org&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;原文链接： &lt;a href=&quot;http://t.cn/zQ6eR2E&quot;&gt;Francesc Campoy Flores&lt;/a&gt;   
+翻译：&lt;a href=&quot;http://blog.jobbole.com&quot;&gt;伯乐在线&lt;/a&gt; - &lt;a href=&quot;http://blog.jobbole.com/author/codefor/&quot;&gt;Codefor&lt;/a&gt;&lt;br/&gt;
+译文链接：&lt;a href=&quot;http://blog.jobbole.com/44608/&quot;&gt;http://blog.jobbole.com/44608/&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>使用 Python 进行稳定可靠的文件操作</title>
