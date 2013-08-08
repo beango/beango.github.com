@@ -6,6 +6,12 @@ group: navigation
 ---
 {% include JB/setup %}
 
+<ul id="wordcloud" style="list-style: square outside none; margin: 16px 0px; padding: 0px;">
+	{% assign tags_list = site.tags %}  
+	{% include JB/tags_list %}
+</ul>
+
+
 {% for tag in site.tags %} 
   <h2 id="{{ tag[0] }}-ref">{{ tag[0] }}</h2>
   <ul>
@@ -14,3 +20,10 @@ group: navigation
   </ul>
 {% endfor %}
 
+<script src="/assets/jquery.tagcloud.min.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    $("#wordcloud").tagcloud({type:"list",sizemin:18});//,colormin:"d88",colormax:"0a0"
+});
+</script>

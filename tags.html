@@ -13,12 +13,10 @@
 	<meta property='og:url' content='http://www.yif1.com'/>
 	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
 	<meta property='og:type' content='article'/>
+	<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
 	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
 	<link href='/assets/default.css' rel="stylesheet" media="all" />
 	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
-	<style type="text/css" media="all">
-	@import "/assets/thickbox.css";
-	</style>
 </head>
 <body>
 
@@ -43,11 +41,32 @@
 						<input type="hidden" name="q" value="site:http://www.yif1.com">
 					</form>
 				</nav>
-				
-				<nav id="nav-tags">
-					<ul id="wordcloud-left" style="list-style: square outside none; margin: 16px 0px; padding: 0px; position: static; width: 248px; ">
-					    
-					  
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Tags</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+
+<ul id="wordcloud" style="list-style: square outside none; margin: 16px 0px; padding: 0px;">
+	  
+	
 
 
   
@@ -78,7 +97,7 @@
      
     	<li value="2" title="tokyo tyrant"><a href="/tags.html#tokyo tyrant-ref">tokyo tyrant</a></li>
      
-    	<li value="8" title="java"><a href="/tags.html#java-ref">java</a></li>
+    	<li value="9" title="java"><a href="/tags.html#java-ref">java</a></li>
      
     	<li value="1" title="tcrmgr"><a href="/tags.html#tcrmgr-ref">tcrmgr</a></li>
      
@@ -151,35 +170,15 @@
     	<li value="1" title="varnish"><a href="/tags.html#varnish-ref">varnish</a></li>
      
     	<li value="2" title="go"><a href="/tags.html#go-ref">go</a></li>
+     
+    	<li value="1" title="ngnix"><a href="/tags.html#ngnix-ref">ngnix</a></li>
     
   
 
 
 
-					</ul>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-page">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Tags</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+</ul>
 
-			<div class="bd">
-				<div class="entry-content">
-					
 
  
   <h2 id="浏览器-ref">浏览器</h2>
@@ -768,6 +767,14 @@
     
 
 
+  
+    
+      
+      	
+      	<li style="list-style:none;"><a href="/archives/2013/08/08/java-lo-logbuffer.html">Java 日志缓存机制的实现</a></li>
+      	
+      
+    
   
     
       
@@ -1765,9 +1772,35 @@
 
 
   </ul>
+ 
+  <h2 id="ngnix-ref">ngnix</h2>
+  <ul>
+      
+    
+
+
+  
+    
+      
+      	
+      	<li style="list-style:none;"><a href="/archives/2013/08/08/nginx-performance-tuning-for-ssl.html">Nginx SSL性能调优</a></li>
+      	
+      
+    
+  
 
 
 
+  </ul>
+
+
+<script src="/assets/jquery.tagcloud.min.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    $("#wordcloud").tagcloud({type:"list",sizemin:18});//,colormin:"d88",colormax:"0a0"
+});
+</script>
 				</div><!-- entry-content -->
 			</div><!-- bd -->
 		</div><!-- content -->
@@ -1792,12 +1825,9 @@
 -->
 
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
 <script src="/assets/modernizr.min.js"></script>
-<script src="/assets/jquery.tagcloud.min.js"></script>
 <script src='/assets/default.js'></script>
-<script src="/assets/thickbox-compressed.js" type="text/javascript"></script>
 </body>
 </html>
 

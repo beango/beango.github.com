@@ -4,13 +4,656 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-08-02T10:22:34+08:00</updated>
+ <updated>2013-08-08T16:07:25+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
    <email>6588617@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Nginx SSL性能调优</title>
+   <link href="http://beango.github.com/archives/2013/08/08/nginx-performance-tuning-for-ssl.html"/>
+   <updated>2013-08-08T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/08/08/nginx-performance-tuning-for-ssl</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;本文由 &lt;a href=&quot;http://blog.jobbole.com&quot;&gt;伯乐在线&lt;/a&gt; - &lt;a href=&quot;http://blog.jobbole.com/author/%e8%b7%af%e5%a1%94%e7%9f%b3/&quot;&gt;路塔石&lt;/a&gt;
+翻译自 &lt;a href=&quot;http://techsamurais.com/?p=1384&quot;&gt;prashant&lt;/a&gt;。转载请参见文章末尾处的要求。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这篇文章的目的是要谈谈我的 Nginx 调优经验，就不涉及数据库调优的内容了。&lt;/p&gt;
+
+&lt;h3&gt;初始服务器设置&lt;/h3&gt;
+
+&lt;p&gt;我的服务器运行在亚马逊 EC2 t1 micro 上，选择 Nginx + PHP5-fpm 作为后端，因为一些安全因素还打开了SSL。&lt;/p&gt;
+
+&lt;h3&gt;性能测试&lt;/h3&gt;
+
+&lt;p&gt;我使用了Blitz.io 来进行压力测试。下面是我使用的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-p 1-250:60 https://mydomian.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是一个用户线性递增的测试，每个测试用户跑60秒。Blitz.io为每个请求每秒增加4个( = rise / run = 260 / 60)测试用户。&lt;/p&gt;
+
+&lt;h3&gt;结论&lt;/h3&gt;
+
+&lt;p&gt;我把结论提前写在这里，如果你不想读完整篇文章也没有问题。&lt;/p&gt;
+
+&lt;p&gt;​1. Nginx默认设置的DH算法（译注：Diffie-Hellman key exchange algorithm）是影响SSL性能的最大因素，因此采用如下设置能增加SSL性能：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!eNULL:!NULL:!DH:!EDH:!AESGCM;
+ssl_prefer_server_ciphers on;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;升级硬件 Upgrade your EC2 from t1.micro to c1.medium&lt;/li&gt;
+&lt;li&gt;正确配置 Nginx的worker进程数量 Set Nginx to have 2 worker processes as a c1.medium gives you 2 CPUs&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;细节解释&lt;/h3&gt;
+
+&lt;p&gt;以下是我进行测试的详细过程。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;尝试1：升级硬件&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;直觉告诉我，想解决性能问题的直接途径就是升级硬件，我把EC2实例从t1.micro升级到了为高流量而优化过的 c1.medium 升级后的测试结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/63918611gw1e7ayxtue5mj20rb0o5gog.jpg&quot; alt=&quot;Nginx SSL性能调优&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;巅峰时服务器的hits达到50/sec，压力增加时，time-out增加，hits减少。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt; 尝试2：测试CPU性能&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;我打开top然后重启了测试，注意到2个CPU的使用率不到13%，内存使用了300Mb，很明显硬件没有充分利用。所以我更改了nginx的设置 worker_processes 2;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;尝试3，4，5：调整Nginx和PHP5-fpm&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;以下尝试得到的结果都和尝试1相同&lt;/p&gt;
+
+&lt;p&gt;尝试3：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;nginx.conf&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;worker_processes 2;
+events {
+worker_connections 19000;
+multi_accept on;
+}
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;尝试4：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;nginx.conf&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;worker_processes 2;
+events {
+  worker_connections 19000;
+  multi_accept on;
+}
+http { 
+  gzip on;
+  gzip_disable &quot;msie6&quot;;
+
+  gzip_min_length  1000;
+  gzip_proxied     expired no-cache no-store private auth;
+  gzip_types       text/plain application/xml application/javascript text/css application/x-javascript;
+…
+}
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;尝试5：&lt;/p&gt;
+
+&lt;p&gt;在尝试4未变的情况下我更改了php5-fpm的设置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pm.max_children = 160
+pm.start_servers = 24
+pm.min_spare_servers = 20
+pm.max_spare_servers = 35
+pm.max_requests = 1500
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;&lt;strong&gt;尝试6&lt;/strong&gt;&lt;strong&gt;：在另一个服务器部署&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;我有一个1.5GbRAM和8CPU的&lt;a href=&quot;http://blog.jobbole.com/go/linode/&quot; title=&quot;Linode&quot;&gt;Linode&lt;/a&gt;服务器，采用刚才的设置，这是我的测试结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/63918611gw1e7azsiccppj20r40oqtbc.jpg&quot; alt=&quot;Nginx SSL性能调优&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.jobbole.com/go/linode/&quot; title=&quot;Linode&quot;&gt;Linode&lt;/a&gt;的服务器的结果棒极了！我的第一个直觉是难道Linode比EC2好吗。在我把我的服务迁移到Linode之前我想确保两者仅有的对性能有可能产生影响的不同被排除掉。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;尝试7：大惊喜&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;我Google到Nginx在SSL上有些问题。Nginx默认使用DHE算法来产生密匙，改变这个设置应该能使它快一些。&lt;/p&gt;
+
+&lt;p&gt;这里是我参考的一些文章：&lt;/p&gt;
+
+&lt;p&gt;http://matt.io/entry/ur&lt;/p&gt;
+
+&lt;p&gt;http://auxbuss.com/blog/posts/2011_06_28_ssl_session_caching_on_nginx/&lt;/p&gt;
+
+&lt;p&gt;所以我更改了nginx.conf，删掉了kEDH算法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;worker_processes 2;
+events {
+  worker_connections 1024;
+}
+http { 
+  gzip on;
+  gzip_disable &quot;msie6&quot;;
+
+  gzip_min_length  1000;
+  gzip_proxied     expired no-cache no-store private auth;
+  gzip_types       text/plain application/xml application/javascript text/css application/x-javascript;
+  ssl_ciphers ALL:!kEDH!ADH:RC4+RSA:+HIGH:+EXP; 
+…
+}
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下图是测试结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/63918611gw1e7b06kcqxfj20rk0o50vg.jpg&quot; alt=&quot;Nginx SSL性能调优&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;效果很显著！&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;尝试8： 硬件提升是必要的吗&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;现在我的EC2和Linode表现差不多了。但是我真的需要升级到c1.medium实例才能实现这个性能的提升吗？或许不是这样……所以我把我改回了t1.micro。因为t1.micro实例只有一个CPU，所以我把worder_processes设置改回1。下面是测试的结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/63918611gw1e7b0b1e68dj20re0ordim.jpg&quot; alt=&quot;Nginx SSL性能调优&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;所以答案是肯定的，硬件上的提升是必要的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;尝试9：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;有人在 Hacker News 上反馈说我的SSL密匙不能满足Perfect Forward Secrecy，我采用了他们的建议，对我的SSL设置做了如下更改：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!eNULL:!NULL:!DH:!EDH:!AESGCM;
+ssl_prefer_server_ciphers on;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在这个设置应该满足Perfect Forward Secrecy协议了。我重新跑了测试：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/attempt10-300x263.png&quot; alt=&quot;Nginx SSL性能调优&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;太棒了，性能也没有下降。很棒的学习经验！&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Java 日志缓存机制的实现</title>
+   <link href="http://beango.github.com/archives/2013/08/08/java-lo-logbuffer.html"/>
+   <updated>2013-08-08T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/08/08/java-lo-logbuffer</id>
+   <content type="html">&lt;h2&gt;概述&lt;/h2&gt;
+
+&lt;p&gt;日志技术为产品的质量和服务提供了重要的支撑。JDK 在 1.4 版本以后加入了日志机制，为 Java 开发人员提供了便利。但这种日志机制是基于静态日志级别的，也就是在程序运行前就需设定下来要打印的日志级别，这样就会带来一些不便。&lt;/p&gt;
+
+&lt;p&gt;在 JDK 提供的日志功能中，日志级别被细化为 9 级，用以区分不同日志的用途，用来记录一个错误，或者记录正常运行的信息，又或是记录详细的调试信息。由于日志级别是静态的，如果日志级别设定过高，低级别的日志难以打印出来，从而导致在错误发生时候，难以去追踪错误的发生原因，目前常常采用的方式是在错误发生的时候，不得不先调整日志级别到相对低的程度，然后再去触发错误，使得问题根源得到显现。但是这种发生问题需要改动产品配置，然后重新触发问题进行调试的方式使得产品用户体验变差，而且有些问题会因为偶发性，环境很复杂等原因很难重新触发。&lt;/p&gt;
+
+&lt;p&gt;相反，如果起初就把日志级别调整到比较低，那么日志中间会有大量无用信息，而且当产品比较复杂的时候，会导致产生的日志文件很大，刷新很快，无法及时的记录有效的信息，甚至成为性能瓶颈，从而降低了日志功能对产品的帮助。&lt;/p&gt;
+
+&lt;p&gt;本文借助 Java Logging 中的 MemoryHandler 类将所有级别日志缓存起来，在适当时刻输出，来解决这个问题。主要围绕 MemoryHandler 的定义和logging.properties 文件的处理而展开。&lt;/p&gt;
+
+&lt;p&gt;实例依附的场景如下，设想用户需要在产品发生严重错误时，查看先前发生的包含 Exception 的错误信息，以此作为诊断问题缘由的依据。使用 Java 缓冲机制作出的一个解决方案是，将所有产品运行过程中产生的包含 Exception 的日志条目保存在一个可设定大小的循环缓冲队列中，当严重错误（SEVERE）发生时，将缓冲队列中的日志输出到指定平台，供用户查阅。&lt;/p&gt;
+
+&lt;h2&gt;Java 日志机制的介绍&lt;/h2&gt;
+
+&lt;p&gt;Java 日志机制在很多文章中都有介绍，为了便于后面文章部分的理解，在这里再简单介绍一下本文用到的一些关键字。&lt;/p&gt;
+
+&lt;p&gt;Level：JDK 中定义了 Off、Severe、Warning、Info、Config、Fine、Finer、Finest、All 九个日志级别，定义 Off 为日志最高等级，All 为最低等级。每条日志必须对应一个级别。级别的定义主要用来对日志的严重程度进行分类，同时可以用于控制日志是否输出。&lt;/p&gt;
+
+&lt;p&gt;LogRecord：每一条日志会被记录为一条 LogRecord, 其中存储了类名、方法名、线程 ID、打印的消息等等一些信息。&lt;/p&gt;
+
+&lt;p&gt;Logger：日志结构的基本单元。Logger 是以树形结构存储在内存中的，根节点为 root。com.test（如果存在）一定是 com.test.demo（如果存在）的父节点，即前缀匹配的已存在的 logger 一定是这个 logger 的父节点。这种父子关系的定义，可以为用户提供更为自由的控制粒度。因为子节点中如果没有定义处理规则，如级别 handler、formatter 等，那么默认就会使用父节点中的这些处理规则。&lt;/p&gt;
+
+&lt;p&gt;Handler：用来处理 LogRecord，默认 Handler 是可以连接成一个链状，依次对 LogRecord 进行处理。&lt;/p&gt;
+
+&lt;p&gt;Filter：日志过滤器。在 JDK 中，没有实现。&lt;/p&gt;
+
+&lt;p&gt;Formatter：它主要用于定义一个 LogRecord 的输出格式。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 1. Java 日志处理流程&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/javarz01.png&quot; title=&quot;javarz01&quot; alt=&quot;javarz01&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图 1 展示了一个 LogRecord 的处理流程。一条日志进入处理流程首先是 Logger，其中定义了可通过的 Level，如果 LogRecord 的 Level 高于Logger 的等级，则进入 Filter（如果有）过滤。如果没有定义 Level，则使用父 Logger 的 Level。Handler 中过程类似，其中 Handler 也定义了可通过 Level，然后进行 Filter 过滤，通过如果后面还有其他 Handler，则直接交由后面的 Handler 进行处理，否则会直接绑定到 formatter 上面输出到指定位置。&lt;/p&gt;
+
+&lt;p&gt;在实现日志缓存之前，先对 Filter 和 Formatter 两个辅助类进行介绍。&lt;/p&gt;
+
+&lt;h3&gt;Filter&lt;/h3&gt;
+
+&lt;p&gt;Filter 是一个接口，主要是对 LogRecord 进行过滤，控制是否对 LogRecord 进行进一步处理，其可以绑定在 Logger 下或 Handler 下。&lt;/p&gt;
+
+&lt;p&gt;只要在 boolean isLoggable（LogRecord）方法中加上过滤逻辑就可以实现对 logrecord 进行控制，如果只想对发生了 Exception 的那些 log 记录进行记录，那么可以通过清单 1 来实现，当然首先需要将该 Filter 通过调用 setFilter（Filter）方法或者配置文件方式绑定到对应的 Logger 或 Handler。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 1. 一个 Filter 实例的实现&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Override
+ public boolean isLoggable(LogRecord record){ 
+     if(record.getThrown()!=null){ 
+            return true; 
+     }else{ 
+             return false;  
+     } 
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Formatter&lt;/h3&gt;
+
+&lt;p&gt;Formatter 主要是对 Handler 在输出 log 记录的格式进行控制，比如输出日期的格式，输出为 HTML 还是 XML 格式，文本参数替换等。Formatter 可以绑定到 Handler 上，Handler 会自动调用 Formatter 的 String format（LogRecord r） 方法对日志记录进行格式化，该方法具有默认的实现，如果想实现自定义格式可以继承 Formater 类并重写该方法，默认情况下例如清单 2 在经过 Formatter 格式化后，会将 {0} 和 {1} 替换成对应的参数。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 2. 记录一条 log&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;logger.log(Level.WARNING,&quot;this log is for test1: {0} and test2:{1}&quot;, 
+    new Object[]{newTest1(), 
+    new Test2()});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;MemoryHandler&lt;/h2&gt;
+
+&lt;p&gt;MemoryHandler 是 Java Logging 中两大类 Handler 之一，另一类是 StreamHandler，二者直接继承于 Handler，代表了两种不同的设计思路。Java Logging Handler 是一个抽象类，需要根据使用场景创建具体 Handler，实现各自的 publish、flush 以及 close 等方法。&lt;/p&gt;
+
+&lt;p&gt;MemoryHandler 使用了典型的“注册 – 通知”的观察者模式。MemoryHandler 先注册到对自己感兴趣的 Logger 中（logger.addHandler(handler)），在这些 Logger 调用发布日志的 API：log()、logp()、logrb() 等，遍历这些 Logger 下绑定的所有 Handlers 时，通知触发自身 publish（LogRecord）方法的调用，将日志写入 buffer，当转储到下一个日志发布平台的条件成立，转储日志并清空 buffer。&lt;/p&gt;
+
+&lt;p&gt;这里的 buffer 是 MemoryHandler 自身维护一个可自定义大小的循环缓冲队列，来保存所有运行时触发的 Exception 日志条目。同时在构造函数中要求指定一个 Target Handler，用于承接输出；在满足特定 flush buffer 的条件下，如日志条目等级高于 MemoryHandler 设定的 push level 等级（实例中定义为SEVERE）等，将日志移交至下一步输出平台。从而形成如下日志转储输出链：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 2. Log 转储链&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/javarz02.jpg&quot; title=&quot;javarz02&quot; alt=&quot;javarz02&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在实例中，通过对 MemoryHandler 配置项 .push 的 Level 进行判断，决定是否将日志推向下一个 Handler，通常在 publish() 方法内实现。代码清单如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 3&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 只纪录有异常并且高于 pushLevel 的 logRecord 
+final Level level = record.getLevel();        
+final Throwable thrown = record.getThrown(); 
+If(level &amp;gt;= pushLevel){ 
+   push(); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;MemoryHandler.push 方法的触发条件&lt;/h3&gt;
+
+&lt;p&gt;Push 方法会导致 MemoryHandler 转储日志到下一 handler，清空buffer。触发条件可以是但不局限于以下几种，实例中使用的是默认的第一种：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;日志条目的 Level 大于或等于当前 MemoryHandler 中默认定义或用户配置的 pushLevel；&lt;/li&gt;
+&lt;li&gt;外部程序调用 MemoryHandler 的 push 方法；&lt;/li&gt;
+&lt;li&gt;MemoryHandler 子类可以重载 log 方法或自定义触发方法，在方法中逐一扫描日志条目，满足自定义规则则触发转储日志和清空 buffer 的操作。MemoryHanadler 的可配置属性&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;strong&gt;表 1.MemoryHandler 可配置属性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table summary=&quot;&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;属性名&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;th&gt;缺省值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td rowspan=&quot;4&quot;&gt;继承属性&lt;/td&gt;
+&lt;td&gt;MemoryHandler.level&lt;/td&gt;
+&lt;td&gt;MemoryHandler 接受的输入到 buffer 的日志等级&lt;/td&gt;
+&lt;td&gt;Level.INFO&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MemoryHandler.filter&lt;/td&gt;
+&lt;td&gt;在输入到 buffer 之前，可在 filter 中自定义除日志等级外的其他过滤条件&lt;/td&gt;
+&lt;td&gt;(Undefined)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MemoryHandler.formatter&lt;/td&gt;
+&lt;td&gt;指定输入至 buffer 的日志格式&lt;/td&gt;
+&lt;td&gt;(Undefined)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MemoryHandler.encoding&lt;/td&gt;
+&lt;td&gt;指定输入至 buffer 的日志编码，在 MemoryHandler 中应用甚少&lt;/td&gt;
+&lt;td&gt;(Undefined)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td rowspan=&quot;3&quot;&gt;私有属性&lt;/td&gt;
+&lt;td&gt;MemoryHandler.size&lt;/td&gt;
+&lt;td&gt;以日志条目为单位定义循环 buffer 的大小&lt;/td&gt;
+&lt;td&gt;1,000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MemoryHandler.push&lt;/td&gt;
+&lt;td&gt;定义将 buffer 中的日志条目发送至下一个 Handler 的最低 Level（包含）&lt;/td&gt;
+&lt;td&gt;Level.SEVERE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MemoryHandler.target&lt;/td&gt;
+&lt;td&gt;在构造函数中指定下一步承接日志的 Handler&lt;/td&gt;
+&lt;td&gt;(Undefined)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;p&gt;&lt;strong&gt;使用方式：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;以上是记录产品 Exception 错误日志，以及如何转储的 MemoryHandler 处理的内部细节；接下来给出 MemoryHandler 的一些使用方式。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 直接使用 java.util.logging 中的 MemoryHandler&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单4&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 在 buffer 中维护 5 条日志信息
+// 仅记录 Level 大于等于 Warning 的日志条目并
+// 刷新 buffer 中的日志条目到 fileHandler 中处理
+int bufferSize = 5; 
+f = new FileHandler(&quot;testMemoryHandler.log&quot;); 
+m = new MemoryHandler(f, bufferSize, Level.WARNING); 
+…
+myLogger = Logger.getLogger(&quot;com.ibm.test&quot;); 
+myLogger.addHandler(m); 
+myLogger.log(Level.WARNING, “this is a WARNING log”);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 自定义&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1）反射&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;思考自定义 MyHandler 继承自 MemoryHandler 的场景，由于无法直接使用作为父类私有属性的 size、buffer 及 buffer 中的 cursor，如果在 MyHandler 中有获取和改变这些属性的需求，一个途径是使用反射。清单 5 展示了使用反射读取用户配置并设置私有属性。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单5&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int m_size; 
+String sizeString = manager.getProperty(loggerName + &quot;.size&quot;); 
+if (null != sizeString) { 
+     try { 
+      m_size = Integer.parseInt(sizeString); 
+      if (m_size &amp;lt;= 0) { 
+         m_size = BUFFER_SIZE; // default 1000 
+      } 
+      // 通过 java 反射机制获取私有属性
+      Field f; 
+      f = getClass().getSuperclass().getDeclaredField(&quot;size&quot;); 
+      f.setAccessible(true); 
+      f.setInt(this, m_size); 
+      f = getClass().getSuperclass().getDeclaredField(&quot;buffer&quot;); 
+      f.setAccessible(true); 
+      f.set(this, new LogRecord[m_size]); 
+     } catch (Exception e) { 
+     } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;2）重写&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;直接使用反射方便快捷，适用于对父类私有属性无频繁访问的场景。思考这样一种场景，默认环形队列无法满足我们存储需求，此时不妨令自定义的 MyMemoryHandler 直接继承 Handler，直接对存储结构进行操作，可以通过清单 6 实现。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 6&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class MyMemoryHandler extends Handler{ 
+  // 默认存储 LogRecord 的缓冲区容量
+  private static final int DEFAULT_SIZE = 1000; 
+  // 设置缓冲区大小
+  private int size = DEFAULT_SIZE; 
+  // 设置缓冲区
+  private LogRecord[] buffer; 
+  // 参考 java.util.logging.MemoryHandler 实现其它部分
+  ... 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;使用 MemoryHandler 时需关注的几个问题&lt;/h2&gt;
+
+&lt;p&gt;了解了使用 MemoryHandler 实现的 Java 日志缓冲机制的内部细节和外部应用之后，来着眼于两处具体实现过程中遇到的问题：Logger/Handler/LogRecord Level 的传递影响，以及如何在开发 MemoryHandler 过程中处理错误日志。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. Level 的传递影响&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Java.util.logging 中有三种类型的 Level，分别是 Logger 的 Level，Handler 的 Level 和 LogRecord 的 Level. 前两者可以通过配置文件设置。之后将日志的 Level 分别与 Logger 和 Handler 的 Level 进行比较，过滤无须记录的日志。在使用 Java Log 时需关注 Level 之间相互影响的问题，尤其在遍历 Logger 绑定了多个 Handlers 时。如图 3 所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 3. Java Log 中 Level 的传递影响&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/javarz03.jpg&quot; title=&quot;javarz03&quot; alt=&quot;javarz03&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Java.util.logging.Logger 提供的 setUseParentHandlers 方法，也可能会影响到最终输出终端的日志显示。这个方法允许用户将自身的日志条目打印一份到 Parent Logger 的输出终端中。缺省会打印到 Parent Logger 终端。此时，如果 Parent Logger Level 相关的设置与自身 Logger 不同，则打印到 Parent Logger 和自身中的日志条目也会有所不同。如图 4 所示：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 4. 子类日志需打印到父类输出终端&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-08/javarz04.jpg&quot; title=&quot;javarz04&quot; alt=&quot;&amp;quot;javarz04&amp;quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 开发 log 接口过程中处理错误日志&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在开发 log 相关接口中调用自身接口打印 log，可能会陷入无限循环。Java.util.logging 中考虑到这类问题，提供了一个 ErrorManager 接口，供 Handler 在记录日志期间报告任何错误，而非直接抛出异常或调用自身的 log 相关接口记录错误或异常。Handler 需实现 setErrorManager() 方法，该方法为此应用程序构造 java.util.logging.ErrorManager 对象，并在错误发生时，通过 reportError 方法调用 ErrorManager 的 error 方法，缺省将错误输出到标准错误流，或依据 Handler 中自定义的实现处理错误流。关闭错误流时，使用 Logger.removeHandler 移除此 Handler 实例。&lt;/p&gt;
+
+&lt;p&gt;两种经典使用场景，一种是自定义 MyErrorManager，实现父类相关接口，在记录日志的程序中调用 MyHandler.setErrorManager(new MyEroorManager()); 另一种是在 Handler 中自定义 ErrorManager 相关方法，示例如清单 7：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 7&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class MyHandler extends Handler{ 
+// 在构造方法中实现 setErrorManager 方法
+public MyHandler(){ 
+   ......
+    setErrorManager (new ErrorManager() { 
+        public void  error (String msg, Exception ex, int code) { 
+            System.err.println(&quot;Error reported by MyHandler &quot;
+                             + msg + ex.getMessage()); 
+        } 
+    }); 
+} 
+public void publish(LogRecord record){ 
+    if (!isLoggable(record)) return; 
+    try { 
+        // 一些可能会抛出异常的操作
+    } catch(Exception e) { 
+        reportError (&quot;Error occurs in publish &quot;, e, ErrorManager.WRITE_FAILURE); 
+    } 
+} 
+......
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;logging.properties&lt;/h2&gt;
+
+&lt;p&gt;logging.properties 文件是 Java 日志的配置文件，每一行以“key=value”的形式描述，可以配置日志的全局信息和特定日志配置信息，清单 8 是我们为测试代码配置的 logging.properties。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 8. logging.properties 文件示例&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#Level 等级 OFF &amp;gt; SEVERE &amp;gt; WARNING &amp;gt; INFO &amp;gt; CONFIG &amp;gt; FINE &amp;gt; FINER &amp;gt; FINEST &amp;gt; ALL 
+# 为 FileHandler 指定日志级别
+java.util.logging.FileHandler.level=WARNING 
+# 为 FileHandler 指定 formatter 
+java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter 
+# 为自定义的 TestMemoryHandler 指定日志级别
+com.ibm.test.MemoryHandler.level=INFO 
+# 设置 TestMemoryHandler 最多记录日志条数
+com.ibm.test.TestMemoryHandler.size=1000
+# 设置 TestMemoryHandler 的自定义域 useParentLevel 
+com.ibm.test.TestMemoryHandler.useParentLevel=WARNING 
+# 设置特定 log 的 handler 为 TestMemoryHandler 
+com.ibm.test.handlers=com.ibm.test.TestMemoryHandler 
+# 指定全局的 Handler 为 FileHandler 
+handlers=java.util.logging.FileHandler
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从 清单 8 中可以看出 logging.properties 文件主要是用来给 logger 指定等级（level），配置 handler 和 formatter 信息。&lt;/p&gt;
+
+&lt;h3&gt;如何监听 logging.properties&lt;/h3&gt;
+
+&lt;p&gt;如果一个系统对安全性要求比较高，例如系统需要对更改 logging.properties 文件进行日志记录，记录何时何人更改了哪些记录，那么应该怎么做呢？&lt;/p&gt;
+
+&lt;p&gt;这里可以利用 JDK 提供的 PropertyChangeListener 来监听 logging.properties 文件属性的改变。&lt;/p&gt;
+
+&lt;p&gt;例如创建一个 LogPropertyListener 类，其实现了 java.benas.PropertyChangeListener 接口，PropertyChangeListener 接口中只包含一个 propertyChange（PropertyChangeEvent）方法，该方法的实现如清 9 所示。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 9. propertyChange 方法的实现&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Override 
+public void propertyChange(PropertyChangeEvent event) { 
+   if (event.getSource() instanceof LogManager){ 
+       LogManager manager=(LogManager)event.getSource(); 
+       update(manager); 
+       execute(); 
+       reset(); 
+   } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;propertyChange（PropertyChangeEvent）方法中首先调用 update（LogManager）方法来找出 logging.properties 文件中更改的，增加的以及删除的项，这部分代码如清单 10 所示；然后调用 execute() 方法来执行具体逻辑，参见 清单 11；最后调用 reset() 方法对相关属性保存以及清空，如 清单 12 所示。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 10. 监听改变的条目&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public void update(LogManager manager){ 
+ Properties logProps = null ; 
+  // 使用 Java 反射机制获取私有属性
+   try { 
+     Field f = manager.getClass().getDeclaredField(&quot;props&quot;); 
+     f.setAccessible(true ); 
+     logProps=(Properties)f.get(manager); 
+    }catch (Exception e){ 
+       logger.log(Level.SEVERE,&quot;Get private field error.&quot;, e); 
+        return ; 
+   } 
+   Set&amp;lt;String&amp;gt; logPropsName=logProps.stringPropertyNames(); 
+    for (String logPropName:logPropsName){ 
+        String newVal=logProps.getProperty(logPropName).trim(); 
+       // 记录当前的属性
+       newProps.put(logPropName, newVal);   
+       // 如果给属性上次已经记录过
+       if (oldProps.containsKey(logPropName)){ 
+            String oldVal = oldProps.get(logPropName); 
+            if (newVal== null ?oldVal== null :newVal.equals(oldVal)){ 
+           // 属性值没有改变，不做任何操作
+        }else { 
+            changedProps.put(logPropName, newVal); 
+       } 
+       oldProps.remove(logPropName); 
+   }else {// 如果上次没有记录过该属性，则其应为新加的属性，记录之
+        changedProps.put(logPropName, newVal);               
+       } 
+    } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中 oldProps、newProps 以及 changedProps 都是 HashMap类型，oldProps 存储修改前 logging.properties 文件内容，newProps 存储修改后 logging.properties 内容，changedProps 主要用来存储增加的或者是修改的部分。&lt;/p&gt;
+
+&lt;p&gt;方法首先通过 Java 的反射机制获得 LogManager 中的私有属性 props（存储了 logging.properties 文件中的属性信息），然后通过与 oldProps 比较可以得到增加的以及修改的属性信息，最后 oldProps 中剩下的就是删除的信息了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 11. 具体处理逻辑方法&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private void execute(){ 
+ // 处理删除的属性
+ for (String prop:oldProps.keySet()){ 
+   // 这里可以加入其它处理步骤
+   logger.info(&quot;'&quot;+prop+&quot;=&quot;+oldProps.get(prop)+&quot;'has been removed&quot;);           
+ } 
+ // 处理改变或者新加的属性
+ for (String prop:changedProps.keySet()){ 
+     // 这里可以加入其它处理步骤
+     logger.info(&quot;'&quot;+prop+&quot;=&quot;+oldProps.get(prop)+&quot;'has been changed or added&quot;); 
+ } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该方法是主要的处理逻辑，对修改或者删除的属性进行相应的处理，比如记录属性更改日志等。这里也可以获取当前系统的登录者，和当前时间，这样便可以详细记录何人何时更改过哪个日志条目。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 12. 重置所有数据结构&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private void reset(){ 
+    oldProps = newProps; 
+    newProps= new HashMap&amp;lt; String,String&amp;gt;(); 
+    changedProps.clear(); 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;reset() 方法主要是用来重置各个属性，以便下一次使用。&lt;/p&gt;
+
+&lt;p&gt;当然如果只写一个 PropertyChangeListener 还不能发挥应有的功能，还需要将这个 PropertyChangeListener 实例注册到 LogManager 中，可以通过清单 13 实现。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 13. 注册 PropertyChangeListener&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 为'logging.properties'文件注册监听器
+LogPropertyListener listener= new LogPropertyListener(); 
+LogManager.getLogManager().addPropertyChangeListener(listener);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;如何实现自定义标签&lt;/h3&gt;
+
+&lt;p&gt;在 清单 8中有一些自定义的条目，比如 com.ibm.test.TestMemoryHandler。&lt;/p&gt;
+
+&lt;p&gt;useParentLever=WARNING”，表示如果日志等级超过 useParentLever 所定义的等级 WARNING 时，该条日志在 TestMemoryHandler 处理后需要传递到对应 Log 的父 Log 的 Handler 进行处理（例如将发生了 WARNING 及以上等级的日志上下文缓存信息打印到文件中），否则不传递到父 Log 的 Handler 进行处理，这种情况下如果不做任何处理，Java 原有的 Log 机制是不支持这种定义的。那么如何使得 Java Log 支持这种自定义标签呢？这里可以使用 PropertyListener 对自定义标签进行处理来使得 Java Log 支持这种自定义标签，例如对“useParentLever”进行处理可以通过清单 14 实现。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 14&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private void execute(){ 
+    // 处理删除的属性
+    for (String prop:oldProps.keySet()){ 
+        if (prop.endsWith(&quot;.useParentLevel&quot;)){ 
+           String logName=prop.substring(0, prop.lastIndexOf(&quot;.&quot;)); 
+           Logger log=Logger.getLogger(logName); 
+            for (Handler handler:log.getHandlers()){ 
+                if (handler  instanceof TestMemoryHandler){ 
+                   ((TestMemoryHandler)handler) 
+                       .setUseParentLevel(oldProps.get(prop)); 
+                    break ; 
+               } 
+           } 
+       } 
+   } 
+   // 处理改变或者新加的属性
+   for (String prop:changedProps.keySet()){ 
+       if (prop.endsWith(&quot;.useParentLevel&quot;)){ 
+           // 在这里添加逻辑处理步骤
+       } 
+   } 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在清单 14 处理之后，就可以在自定义的 TestMemoryHandler 中进行判断了，对 log 的等级与其域 useParentLevel 进行比较，决定是否传递到父 Log 的 Handler 进行处理。在自定义 TestMemoryHandler 中保存对应的 Log 信息可以很容易的实现将信息传递到父 Log 的 Handler，而保存对应 Log 信息又可以通过 PropertyListener 来实现，例如清单 15 更改了 清单 13中相应代码实现这一功能。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;清单 15&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (handler  instanceof TestMemoryHandler){ 
+    ((TestMemoryHandler)handler).setUseParentLevel(oldProps.get(prop)); 
+    ((TestMemoryHandler)handler).addLogger(log); 
+      break ; 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体如何处理自定义标签的值那就看程序的需要了，通过这种方法就可以很容易在 logging.properties 添加自定义的标签了。&lt;/p&gt;
+
+&lt;h3&gt;自定义读取配置文件&lt;/h3&gt;
+
+&lt;p&gt;如果 logging.properties 文件更改了，需要通过调用 readConfiguration（InputStream）方法使更改生效，但是从 JDK 的源码中可以看到 readConfiguration（InputStream）方法会重置整个 Log 系统，也就是说会把所有的 log 的等级恢复为默认值，将所有 log 的 handler 置为 null 等，这样所有存储的信息就会丢失。&lt;/p&gt;
+
+&lt;p&gt;比如，TestMemoryHandler 缓存了 1000 条 logRecord，现在用户更改了 logging.properties 文件，并且调用了 readConfiguration（InputStream） 方法来使之生效，那么由于 JDK 本身的 Log 机制，更改后对应 log 的 TestMemoryHandler 就是新创建的，那么原来存储的 1000 条 logRecord 的 TestMemoryHandler 实例就会丢失。&lt;/p&gt;
+
+&lt;p&gt;那么这个问题应该如何解决呢？这里给出三种思路：&lt;/p&gt;
+
+&lt;p&gt;1). 由于每个 Handler 都有一个 close() 方法（任何继承于 Handler 的类都需要实现该方法），Java Log 机制在将 handler 置为 null 之前会调用对应 handler 的 close() 方法，那么就可以在 handler（例如 TestMemoryHandler）的 close() 方法中保存下相应的信息。&lt;/p&gt;
+
+&lt;p&gt;2). 研究 readConfiguration（InputStream）方法，写一个替代的方法，然后每次调用替代的方法。&lt;/p&gt;
+
+&lt;p&gt;3). 继承 LogManager 类，覆盖 readConfiguration（InputStream）方法。&lt;/p&gt;
+
+&lt;p&gt;这里第一种方法是保存原有的信息，然后进行恢复，但是这种方法不是很实用和高效；第二和第三种方法其实是一样的，都是写一个替代的方法，例如可以在替代的方法中对 Handler 为 TestMemoryHandler 的不置为 null，然后在读取 logging.properties 文件时发现为 TestMemoryHandler 属性时，找到对应 TestMemoryHandler 的实例，并更改相应的属性值（这个在清单 14 中有所体现），其他不属于 TestMemoryHandler 属性值的可以按照 JDK 原有的处理逻辑进行处理，比如设置 log 的 level 等。&lt;/p&gt;
+
+&lt;p&gt;另一方面，由于 JDK1.6 及之前版本不支持文件修改监听功能，每次修改了 logging.properties 文件后需要显式调用 readConfiguration（InputStream）才能使得修改生效，但是自 JDK1.7 开始已经支持对文件修改监听功能了，主要是在 java.nio.file.* 包中提供了相关的 API，这里不再详述。&lt;/p&gt;
+
+&lt;p&gt;那么在 JDK1.7 之前，可以使用 apache 的 commons-io 库中的 FileMonitor 类，在此也不再详述。&lt;/p&gt;
+
+&lt;h2&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;通过对 MemoryHandler 和 logging.properties 进行定义，可以通过 Java 日志实现自定义日志缓存，从而提高 Java 日志的可用性，为产品质量提供更强有力的支持。&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Go 语言 12 条最佳实践</title>
@@ -12599,79 +13242,79 @@ else:
 
 &lt;p&gt;当你往产品环境中加入一些东西时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20baw7cfwg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20baw7cfwg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你没有Google就发现问题的解决方法时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bbu4wreg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bbu4wreg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你没保存代码就关闭了IDE接口时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bfj6lbfg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bfj6lbfg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;凌晨3点还在修Bug时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bcm50yrg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bcm50yrg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当表达式返回值正如你所料时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bh0yazlg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bh0yazlg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当老板告诉你，你开发的模型压根就没在用时 ：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bjaaxsmg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bjaaxsmg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你告诉老板你已经修复了Bug时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bj9u8e2g.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bj9u8e2g.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你没测试代码就上传，结果完美运行时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bkbbc4vg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bkbbc4vg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;营销部那群“贱人”向程序猿展示销售业绩时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bkwqwy7g.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bkwqwy7g.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;还记得你初次将美丽的CSS加到网页中的样子吗：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20blhebulg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20blhebulg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当系统管理员开放root权限时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bp9pocng.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bp9pocng.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;你熬了一整夜、耗了一整天，开始调试代码时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bmq6uf4g.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bmq6uf4g.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;周末，所有人都在加班就你一个人在休息时的感觉：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bqhgmzfg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bqhgmzfg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当老板在找人修复严重Bug时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bsc5yy9g.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20bsc5yy9g.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;项目提前完成，收获意外奖励时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bw1j53yg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20bw1j53yg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;尼玛，上周五还行的东西周一就挂了时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bt3vjubg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bt3vjubg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你漫无目的、无规格地开发时：&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bzt8qaeg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74eed94jw1e20bzt8qaeg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;老板告诉我，“调试就是专门给不会编程的人准备的”时，你真想……&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20c2cvts6g.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74ecc4cjw1e20c2cvts6g.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;当你更新完数据库脚本，上传后发现整个数据库都被清除了……&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20c0wj1dbg.gif&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-02/a74e55b4jw1e20c0wj1dbg.gif&quot; alt=&quot;程序猿的真实生活&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;来源：&lt;a href=&quot;http://www.javacodegeeks.com/2013/02/the-reality-of-developers-life.html&quot;&gt;javacodegeeks&lt;/a&gt;&lt;/p&gt;
 </content>
