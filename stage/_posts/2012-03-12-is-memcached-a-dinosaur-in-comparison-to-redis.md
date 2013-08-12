@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [NoSql,高性能web]
+categories: [nosql,高性能web]
 date: 2012-03-12
 title: "Memcached真的过时了吗？"
 description: "Memcached真的过时了吗？"
