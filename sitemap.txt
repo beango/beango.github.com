@@ -31,6 +31,7 @@ http://beango.github.com/archives/2013/10/08/recycling-memory-buffers-in-go.html
 http://beango.github.com/archives/2013/09/21/first-few-milliseconds-of-https.html
 http://beango.github.com/archives/2013/09/11/python-performance-analysis.html
 http://beango.github.com/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html
+http://beango.github.com/archives/2013/08/16/unique-index-optimization-practice.html
 http://beango.github.com/archives/2013/08/08/nginx-performance-tuning-for-ssl.html
 http://beango.github.com/archives/2013/08/08/java-lo-logbuffer.html
 http://beango.github.com/archives/2013/08/02/twelve-go-best-practices.html
