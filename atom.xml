@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-09-11T13:50:32+08:00</updated>
+ <updated>2013-09-04T14:05:19+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -1936,6 +1936,298 @@ import pdb; pdb.set_trace()
 &lt;p&gt;跟很多其他的主题一样，进行一个性能分析意味着平衡和取舍。在不确定的时候，实现最简单的方案将是适合你目前需要的。&lt;/p&gt;
 
 &lt;p&gt;原文链接： &lt;a href=&quot;http://www.huyng.com/posts/python-performance-analysis/&quot;&gt;Huy Nguyen&lt;/a&gt; 翻译：&lt;a href=&quot;http://blog.jobbole.com&quot;&gt;伯乐在线&lt;/a&gt; - &lt;a href=&quot;http://blog.jobbole.com/author/fwg1989/&quot;&gt;贱圣OMG&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>JavaScript的性能优化：加载和执行</title>
+   <link href="http://beango.github.com/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html"/>
+   <updated>2013-09-04T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/09/04/JavaScript-performance-optimization-load-execute</id>
+   <content type="html">&lt;p&gt;原文出处：&lt;a href=&quot;http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html&quot;&gt;蔡愉晟&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;简介：&lt;/strong&gt; 随着 Web2.0 技术的不断推广，越来越多的应用使用 JavaScript 技术在客户端进行处理，从而使 JavaScript 在浏览器中的性能成为开发者所面临的最重要的可用性问题。而这个问题又因 JavaScript 的阻塞特性变的复杂，也就是说当浏览器在执行 JavaScript
+代码时，不能同时做其他任何事情。本文详细介绍了如何正确的加载和执行 JavaScript 代码，从而提高其在浏览器中的性能。&lt;/p&gt;
+
+&lt;p&gt;无论当前 JavaScript 代码是内嵌还是在外链文件中，页面的下载和渲染都必须停下来等待脚本执行完成。JavaScript 执行过程耗时越久，浏览器等待响应用户输入的时间就越长。浏览器在下载和执行脚本时出现阻塞的原因在于，脚本可能会改变页面或 JavaScript
+的命名空间，它们对后面页面内容造成影响。一个典型的例子就是在页面中使用&lt;code&gt;document.write()&lt;/code&gt;。例如清单&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Source Example&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;p&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+        document.write(&quot;Today is &quot; + (new Date()).toDateString());
+    &amp;lt;/script&amp;gt;
+    &amp;lt;/p&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当浏览器遇到&amp;lt;script&gt;标签时，当前 HTML 页面无从获知 JavaScript 是否会向&amp;lt;p&gt;标签添加内容，或引入其他元素，或甚至移除该标签。因此，这时浏览器会停止处理页面，先执行JavaScript代码，然后再继续解析和渲染页面。同样的情况也发生在使用 src 属性加载JavaScript的过程中，浏览器必须先花时间下载外链文件中的代码，然后解析并执行它。在这个过程中，页面渲染和用户交互完全被阻塞了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;脚本位置&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;HTML 4 规范指出 &amp;lt;script&gt; 标签可以放在 HTML 文档的&amp;lt;head&gt;或&amp;lt;body&gt;中，并允许出现多次。Web 开发人员一般习惯在 &amp;lt;head&gt; 中加载外链的 JavaScript，接着用 &amp;lt;link&gt; 标签用来加载外链的 CSS 文件或者其他页面信息。例如清单 2&lt;/p&gt;
+
+&lt;p&gt;清单 2 低效率脚本位置示例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Source Example&amp;lt;/title&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script1.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script2.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script3.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;styles.css&quot;&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;p&amp;gt;Hello world!&amp;lt;/p&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然而这种常规的做法却隐藏着严重的性能问题。在清单 2 的示例中，当浏览器解析到 &amp;lt;script&gt; 标签（第 4 行）时，浏览器会停止解析其后的内容，而优先下载脚本文件，并执行其中的代码，这意味着，其后的 styles.css 样式文件和&amp;lt;body&gt;标签都无法被加载，由于&amp;lt;body&gt;标签无法被加载，那么页面自然就无法渲染了。因此在该 JavaScript 代码完全执行完之前，页面都是一片空白。图 1 描述了页面加载过程中脚本和样式文件的下载过程。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;图 1 JavaScript 文件的加载和执行阻塞其他文件的下载&lt;/strong&gt;\&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-09/image003.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们可以发现一个有趣的现象：第一个 JavaScript 文件开始下载，与此同时阻塞了页面其他文件的下载。此外，从 script1.js 下载完成到 script2.js 开始下载前存在一个延时，这段时间正好是 script1.js 文件的执行过程。每个文件必须等到前一个文件下载并执行完成才会开始下载。在这些文件逐个下载过程中，用户看到的是一片空白的页面。&lt;/p&gt;
+
+&lt;p&gt;从 IE 8、Firefox 3.5、Safari 4 和 Chrome 2 开始都允许并行下载 JavaScript 文件。这是个好消息，因为&amp;lt;script&gt;标签在下载外部资源时不会阻塞其他&amp;lt;script&gt;标签。遗憾的是，JavaScript 下载过程仍然会阻塞其他资源的下载，比如样式文件和图片。尽管脚本的下载过程不会互相影响，但页面仍然必须等待所有 JavaScript 代码下载并执行完成才能继续。因此，尽管最新的浏览器通过允许并行下载提高了性能，但问题尚未完全解决，脚本阻塞仍然是一个问题。&lt;/p&gt;
+
+&lt;p&gt;由于脚本会阻塞页面其他资源的下载，因此推荐将所有&amp;lt;script&gt;标签尽可能放到&amp;lt;body&gt;标签的底部，以尽量减少对整个页面下载的影响。例如清单 3&lt;/p&gt;
+
+&lt;p&gt;清单 3 推荐的代码放置位置示例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Source Example&amp;lt;/title&amp;gt;
+    &amp;lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;styles.css&quot;&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;p&amp;gt;Hello world!&amp;lt;/p&amp;gt;
+    &amp;lt;!-- Example of efficient script positioning --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script1.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script2.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;script3.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这段代码展示了在 HTML 文档中放置&amp;lt;script&gt;标签的推荐位置。尽管脚本下载会阻塞另一个脚本，但是页面的大部分内容都已经下载完成并显示给了用户，因此页面下载不会显得太慢。这是优化 JavaScript 的首要规则：将脚本放在底部。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;　　组织脚本&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;由于每个&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签初始下载时都会阻塞页面渲染，所以减少页面包含的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签数量有助于改善这一情况。这不仅针对外链脚本，内嵌脚本的数量同样也要限制。浏览器在解析 HTML 页面的过程中每遇到一个&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签，都会因执行脚本而导致一定的延时，因此最小化延迟时间将会明显改善页面的总体性能。&lt;/p&gt;
+
+&lt;p&gt;这个问题在处理外链 JavaScript 文件时略有不同。考虑到 HTTP 请求会带来额外的性能开销，因此下载单个 100Kb 的文件将比下载 5 个 20Kb的文件更快。也就是说，减少页面中外链脚本的数量将会改善性能。&lt;/p&gt;
+
+&lt;p&gt;通常一个大型网站或应用需要依赖数个 JavaScript 文件。您可以把多个文件合并成一个，这样只需要引用一个&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签，就可以减少性能消耗。文件合并的工作可通过离线的打包工具或者一些实时的在线服务来实现。&lt;/p&gt;
+
+&lt;p&gt;需要特别提醒的是，把一段内嵌脚本放在引用外链样式表的&lt;code&gt;&amp;lt;link&amp;gt;&lt;/code&gt;之后会导致页面阻塞去等待样式表的下载。这样做是为了确保内嵌脚本在执行时能获得最精确的样式信息。因此，建议不要把内嵌脚本紧跟在&lt;code&gt;&amp;lt;link&amp;gt;&lt;/code&gt;标签后面。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;无阻塞的脚本&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;减少 JavaScript 文件大小并限制 HTTP 请求数在功能丰富的 Web 应用或大型网站上并不总是可行。Web 应用的功能越丰富，所需要的 JavaScript 代码就越多，尽管下载单个较大的 JavaScript 文件只产生一次 HTTP 请求，却会锁死浏览器的一大段时间。为避免这种情况，需要通过一些特定的技术向页面中逐步加载 JavaScript 文件，这样做在某种程度上来说不会阻塞浏览器。&lt;/p&gt;
+
+&lt;p&gt;无阻塞脚本的秘诀在于，在页面加载完成后才加载 JavaScript 代码。这就意味着在 &lt;code&gt;window&lt;/code&gt; 对象的&lt;code&gt;onload&lt;/code&gt;事件触发后再下载脚本。有多种方式可以实现这一效果。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;延迟加载脚本&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;HTML 4 为&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签定义了一个扩展属性：&lt;code&gt;defer&lt;/code&gt;。&lt;code&gt;Defer&lt;/code&gt; 属性指明本元素所含的脚本不会修改DOM，因此代码能安全地延迟执行。&lt;code&gt;defer&lt;/code&gt; 属性只被 IE 4 和 Firefox 3.5 更高版本的浏览器所支持，所以它不是一个理想的跨浏览器解决方案。在其他浏览器中，&lt;code&gt;defer&lt;/code&gt; 属性会被直接忽略，因此&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签会以默认的方式处理，也就是说会造成阻塞。然而，如果您的目标浏览器支持的话，这仍然是个有用的解决方案。清单 4 是一个例子&lt;/p&gt;
+
+&lt;p&gt;清单 4 defer 属性使用方法示例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script type=&quot;text/javascript&quot; src=&quot;script1.js&quot; defer&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;带有 &lt;code&gt;defer&lt;/code&gt; 属性的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签可以放置在文档的任何位置。对应的 JavaScript 文件将在页面解析到&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签时开始下载，但不会执行，直到 DOM 加载完成，即&lt;code&gt;onload&lt;/code&gt;事件触发前才会被执行。当一个带有 &lt;code&gt;defer&lt;/code&gt; 属性的 JavaScript 文件下载时，它不会阻塞浏览器的其他进程，因此这类文件可以与其他资源文件一起并行下载。&lt;/p&gt;
+
+&lt;p&gt;任何带有 &lt;code&gt;defer&lt;/code&gt; 属性的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素在 DOM 完成加载之前都不会被执行，无论内嵌或者是外链脚本都是如此。清单 5 的例子展示了&lt;code&gt;defer&lt;/code&gt;属性如何影响脚本行为：&lt;/p&gt;
+
+&lt;p&gt;清单 5 defer 属性对脚本行为的影响&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;title&amp;gt;Script Defer Example&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; defer&amp;gt;
+        alert(&quot;defer&quot;);
+    &amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+        alert(&quot;script&quot;);
+    &amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+        window.onload = function(){
+            alert(&quot;load&quot;);
+        };
+    &amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这段代码在页面处理过程中弹出三次对话框。不支持 &lt;code&gt;defer&lt;/code&gt; 属性的浏览器的弹出顺序是：“defer”、“script”、“load”。而在支持 &lt;code&gt;defer&lt;/code&gt; 属性的浏览器上，弹出的顺序则是：“script”、“defer”、“load”。请注意，带有 &lt;code&gt;defer&lt;/code&gt; 属性的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素不是跟在第二个后面执行，而是在 &lt;code&gt;onload&lt;/code&gt; 事件被触发前被调用。&lt;/p&gt;
+
+&lt;p&gt;如果您的目标浏览器只包括 Internet Explorer 和 Firefox 3.5，那么 &lt;code&gt;defer&lt;/code&gt; 脚本确实有用。如果您需要支持跨领域的多种浏览器，那么还有更一致的实现方式。&lt;/p&gt;
+
+&lt;p&gt;HTML 5 为&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签定义了一个新的扩展属性：&lt;code&gt;async&lt;/code&gt;。它的作用和 &lt;code&gt;defer&lt;/code&gt; 一样，能够异步地加载和执行脚本，不因为加载脚本而阻塞页面的加载。但是有一点需要注意，在有 &lt;code&gt;async&lt;/code&gt; 的情况下，JavaScript 脚本一旦下载好了就会执行，所以很有可能不是按照原本的顺序来执行的。如果 JavaScript 脚本前后有依赖性，使用 &lt;code&gt;async&lt;/code&gt; 就很有可能出现错误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;动态脚本元素&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;文档对象模型（DOM）允许您使用 JavaScript 动态创建 HTML 的几乎全部文档内容。&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素与页面其他元素一样，可以非常容易地通过标准 DOM 函数创建：&lt;/p&gt;
+
+&lt;p&gt;清单 6 通过标准 DOM 函数创建&amp;lt;script&gt;元素&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var script = document.createElement(&quot;script&quot;);
+script.type = &quot;text/javascript&quot;;
+script.src = &quot;script1.js&quot;;
+document.getElementsByTagName(&quot;head&quot;)[0].appendChild(script);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;新的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素加载 script1.js 源文件。此文件当元素添加到页面之后立刻开始下载。此技术的重点在于：无论在何处启动下载，文件的下载和运行都不会阻塞其他页面处理过程。您甚至可以将这些代码放在&lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt;部分而不会对其余部分的页面代码造成影响（除了用于下载文件的 HTTP 连接）。&lt;/p&gt;
+
+&lt;p&gt;当文件使用动态脚本节点下载时，返回的代码通常立即执行（除了 Firefox 和 Opera，他们将等待此前的所有动态脚本节点执行完毕）。当脚本是“自运行”类型时，这一机制运行正常，但是如果脚本只包含供页面其他脚本调用调用的接口，则会带来问题。这种情况下，您需要跟踪脚本下载完成并是否准备妥善。可以使用动态 &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt; 节点发出事件得到相关信息。&lt;/p&gt;
+
+&lt;p&gt;Firefox、Opera, Chorme 和 Safari 3+会在&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;节点接收完成之后发出一个 &lt;code&gt;onload&lt;/code&gt; 事件。您可以监听这一事件，以得到脚本准备好的通知：&lt;/p&gt;
+
+&lt;p&gt;清单 7 通过监听 onload 事件加载 JavaScript 脚本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var script = document.createElement (&quot;script&quot;)
+script.type = &quot;text/javascript&quot;;
+//Firefox, Opera, Chrome, Safari 3+
+script.onload = function(){
+    alert(&quot;Script loaded!&quot;);
+};
+script.src = &quot;script1.js&quot;;
+document.getElementsByTagName(&quot;head&quot;)[0].appendChild(script);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Internet Explorer支持另一种实现方式，它发出一个 &lt;code&gt;readystatechange&lt;/code&gt; 事件。&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素有一个&lt;code&gt;readyState&lt;/code&gt; 属性，它的值随着下载外部文件的过程而改变。&lt;code&gt;readyState&lt;/code&gt; 有五种取值：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;“uninitialized”：默认状态&lt;/li&gt;
+&lt;li&gt;“loading”：下载开始&lt;/li&gt;
+&lt;li&gt;“loaded”：下载完成&lt;/li&gt;
+&lt;li&gt;“interactive”：下载完成但尚不可用&lt;/li&gt;
+&lt;li&gt;“complete”：所有数据已经准备好&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;微软文档上说，在&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素的生命周期中，&lt;code&gt;readyState&lt;/code&gt; 的这些取值不一定全部出现，但并没有指出哪些取值总会被用到。实践中，我们最感兴趣的是“loaded”和“complete”状态。Internet Explorer 对这两个 &lt;code&gt;readyState&lt;/code&gt; 值所表示的最终状态并不一致，有时&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素会得到“loader”却从不出现“complete”，但另外一些情况下出现“complete”而用不到“loaded”。最安全的办法就是在&lt;code&gt;readystatechange&lt;/code&gt; 事件中检查这两种状态，并且当其中一种状态出现时，删除 &lt;code&gt;readystatechange&lt;/code&gt; 事件句柄（保证事件不会被处理两次）：&lt;/p&gt;
+
+&lt;p&gt;清单 8 通过检查 readyState 状态加载 JavaScript 脚本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var script = document.createElement(&quot;script&quot;)
+script.type = &quot;text/javascript&quot;;
+//Internet Explorer
+script.onreadystatechange = function(){
+     if (script.readyState == &quot;loaded&quot; || script.readyState == &quot;complete&quot;){
+           script.onreadystatechange = null;
+           alert(&quot;Script loaded.&quot;);
+     }
+};
+script.src = &quot;script1.js&quot;;
+document.getElementsByTagName(&quot;head&quot;)[0].appendChild(script);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;大多数情况下，您希望调用一个函数就可以实现 JavaScript 文件的动态加载。下面的函数封装了标准实现和 IE 实现所需的功能：&lt;/p&gt;
+
+&lt;p&gt;清单 9 通过函数进行封装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function loadScript(url, callback){
+    var script = document.createElement (&quot;script&quot;)
+    script.type = &quot;text/javascript&quot;;
+    if (script.readyState){ //IE
+        script.onreadystatechange = function(){
+            if (script.readyState == &quot;loaded&quot; || script.readyState == &quot;complete&quot;){
+                script.onreadystatechange = null;
+                callback();
+            }
+        };
+    } else { //Others
+        script.onload = function(){
+            callback();
+        };
+    }
+    script.src = url;
+    document.getElementsByTagName(&quot;head&quot;)[0].appendChild(script);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此函数接收两个参数：JavaScript 文件的 URL，和一个当 JavaScript 接收完成时触发的回调函数。属性检查用于决定监视哪种事件。最后一步，设置 &lt;code&gt;src&lt;/code&gt; 属性，并将&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素添加至页面。此&lt;code&gt;loadScript()&lt;/code&gt; 函数使用方法如下：&lt;/p&gt;
+
+&lt;p&gt;清单 10 loadScript()函数使用方法&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;loadScript(&quot;script1.js&quot;, function(){
+    alert(&quot;File is loaded!&quot;);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;您可以在页面中动态加载很多 JavaScript 文件，但要注意，浏览器不保证文件加载的顺序。所有主流浏览器之中，只有 Firefox 和 Opera 保证脚本按照您指定的顺序执行。其他浏览器将按照服务器返回它们的次序下载并运行不同的代码文件。您可以将下载操作串联在一起以保证他们的次序，如下：&lt;/p&gt;
+
+&lt;p&gt;清单 11 通过 loadScript()函数加载多个 JavaScript 脚本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;loadScript(&quot;script1.js&quot;, function(){
+    loadScript(&quot;script2.js&quot;, function(){
+        loadScript(&quot;script3.js&quot;, function(){
+            alert(&quot;All files are loaded!&quot;);
+        });
+    });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此代码等待 script1.js 可用之后才开始加载 script2.js，等 script2.js 可用之后才开始加载 script3.js。虽然此方法可行，但如果要下载和执行的文件很多，还是有些麻烦。如果多个文件的次序十分重要，更好的办法是将这些文件按照正确的次序连接成一个文件。独立文件可以一次性下载所有代码（由于这是异步进行的，使用一个大文件并没有什么损失）。&lt;/p&gt;
+
+&lt;p&gt;动态脚本加载是非阻塞 JavaScript 下载中最常用的模式，因为它可以跨浏览器，而且简单易用。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;使用 XMLHttpRequest(XHR)对象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;此技术首先创建一个 XHR 对象，然后下载 JavaScript 文件，接着用一个动态 &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt; 元素将 JavaScript 代码注入页面。清单 12
+是一个简单的例子：&lt;/p&gt;
+
+&lt;p&gt;清单 12 通过 XHR 对象加载 JavaScript 脚本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var xhr = new XMLHttpRequest();
+xhr.open(&quot;get&quot;, &quot;script1.js&quot;, true);
+xhr.onreadystatechange = function(){
+    if (xhr.readyState == 4){
+        if (xhr.status &amp;gt;= 200 &amp;amp;&amp;amp; xhr.status &amp;lt; 300 || xhr.status == 304){
+            var script = document.createElement (&quot;script&quot;);
+            script.type = &quot;text/javascript&quot;;
+            script.text = xhr.responseText;
+            document.body.appendChild(script);
+        }
+    }
+};
+xhr.send(null);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此代码向服务器发送一个获取 script1.js 文件的 GET 请求。&lt;code&gt;onreadystatechange&lt;/code&gt; 事件处理函数检查&lt;code&gt;readyState&lt;/code&gt; 是不是4，然后检查 HTTP 状态码是不是有效（2XX 表示有效的回应，304 表示一个缓存响应）。如果收到了一个有效的响应，那么就创建一个新的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素，将它的文本属性设置为从服务器接收到的 &lt;code&gt;responseText&lt;/code&gt; 字符串。这样做实际上会创建一个带有内联代码的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素。一旦新&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素被添加到文档，代码将被执行，并准备使用。&lt;/p&gt;
+
+&lt;p&gt;这种方法的主要优点是，您可以下载不立即执行的 JavaScript 代码。由于代码返回在&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签之外（换句话说不受&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签约束），它下载后不会自动执行，这使得您可以推迟执行，直到一切都准备好了。另一个优点是，同样的代码在所有现代浏览器中都不会引发异常。&lt;/p&gt;
+
+&lt;p&gt;此方法最主要的限制是：JavaScript 文件必须与页面放置在同一个域内，不能从 CDN 下载（CDN 指”内容投递网络（Content Delivery Network）”，所以大型网页通常不采用 XHR 脚本注入技术。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;减少 JavaScript 对性能的影响有以下几种方法：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;将所有的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签放到页面底部，也就是&lt;code&gt;&amp;lt;/body&amp;gt;&lt;/code&gt;闭合标签之前，这能确保在脚本执行前页面已经完成了渲染。&lt;/li&gt;
+&lt;li&gt;尽可能地合并脚本。页面中的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签越少，加载也就越快，响应也越迅速。无论是外链脚本还是内嵌脚本都是如此。&lt;/li&gt;
+&lt;li&gt;采用无阻塞下载 JavaScript 脚本的方法：&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;标签的 defer 属性（仅适用于 IE 和 Firefox 3.5
+以上版本）；&lt;/li&gt;
+&lt;li&gt;使用动态创建的&lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;元素来下载并执行代码；&lt;/li&gt;
+&lt;li&gt;使用 XHR 对象下载 JavaScript 代码并注入页面中。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;通过以上策略，可以在很大程度上提高那些需要使用大量 JavaScript 的 Web 网站和应用的实际性能。&lt;/p&gt;
 </content>
  </entry>
  
