@@ -4,13 +4,277 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-08-25T15:47:53+08:00</updated>
+ <updated>2013-09-06T13:04:18+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
    <email>6588617@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>理解 Python 中的线程</title>
+   <link href="http://beango.github.com/archives/2013/11/25/understanding-threads-in-python.html"/>
+   <updated>2013-11-25T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/11/25/understanding-threads-in-python</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;我们将会看到一些在Python中使用线程的实例和如何避免线程之间的竞争。&lt;/p&gt;
+
+&lt;p&gt;你应当将下边的例子运行多次，以便可以注意到线程是不可预测的和线程每次运行出的不同结果。&lt;/p&gt;
+
+&lt;p&gt;声明：从这里开始忘掉你听到过的关于GIL的东西，因为GIL不会影响到我想要展示的东西。&lt;/p&gt;
+
+&lt;h4&gt;示例1:&lt;/h4&gt;
+
+&lt;p&gt;我们将要请求五个不同的url：&lt;/p&gt;
+
+&lt;h5&gt;单线程&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code&gt;import time
+import urllib2
+
+def get_responses():
+    urls = [
+        'http://www.google.com',
+        'http://www.amazon.com',
+        'http://www.ebay.com',
+        'http://www.alibaba.com',
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    for url in urls:
+        print url
+        resp = urllib2.urlopen(url)
+        print resp.getcode()
+    print &quot;Elapsed time: %s&quot; % (time.time()-start)
+
+get_responses()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://www.google.com 200
+http://www.amazon.com 200
+http://www.ebay.com 200
+http://www.alibaba.com 200
+http://www.reddit.com 200
+Elapsed time: 3.0814409256
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;解释：&lt;br/&gt;
+*   url顺序的被请求&lt;br/&gt;
+*   除非cpu从一个url获得了回应，否则不会去请求下一个url&lt;br/&gt;
+*   网络请求会花费较长的时间，所以cpu在等待网络请求的返回时间内一直处于闲置状态。&lt;/p&gt;
+
+&lt;h5&gt;多线程&lt;/h5&gt;
+
+&lt;pre&gt;&lt;code&gt;import urllib2
+import time
+from threading import Thread
+
+class GetUrlThread(Thread):
+    def __init__(self, url):
+        self.url = url 
+        super(GetUrlThread, self).__init__()
+
+    def run(self):
+        resp = urllib2.urlopen(self.url)
+        print self.url, resp.getcode()
+
+def get_responses():
+    urls = [
+        'http://www.google.com', 
+        'http://www.amazon.com', 
+        'http://www.ebay.com', 
+        'http://www.alibaba.com', 
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    threads = []
+    for url in urls:
+        t = GetUrlThread(url)
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print &quot;Elapsed time: %s&quot; % (time.time()-start)
+
+get_responses()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://www.reddit.com 200
+http://www.google.com 200
+http://www.amazon.com 200
+http://www.alibaba.com 200
+http://www.ebay.com 200
+Elapsed time: 0.689890861511
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;解释：
+*   意识到了程序在执行时间上的提升
+*   我们写了一个多线程程序来减少cpu的等待时间，当我们在等待一个线程内的网络请求返回时，这时cpu可以切换到其他线程去进行其他线程内的网络请求。
+*   我们期望一个线程处理一个url，所以实例化线程类的时候我们传了一个url。
+*   线程运行意味着执行类里的&lt;code&gt;run()&lt;/code&gt;方法。
+*   无论如何我们想每个线程必须执行&lt;code&gt;run()&lt;/code&gt;。
+*   为每个url创建一个线程并且调用&lt;code&gt;start()&lt;/code&gt;方法，这告诉了cpu可以执行线程中的&lt;code&gt;run()&lt;/code&gt;方法了。
+*   我们希望所有的线程执行完毕的时候再计算花费的时间，所以调用了&lt;code&gt;join()&lt;/code&gt;方法。
+*   &lt;code&gt;join()&lt;/code&gt;可以通知主线程等待这个线程结束后，才可以执行下一条指令。
+*   每个线程我们都调用了&lt;code&gt;join()&lt;/code&gt;方法，所以我们是在所有线程执行完毕后计算的运行时间。&lt;/p&gt;
+
+&lt;p&gt;关于线程：&lt;br/&gt;
+*   cpu可能不会在调用&lt;code&gt;start()&lt;/code&gt;后马上执行&lt;code&gt;run()&lt;/code&gt;方法。
+*   你不能确定&lt;code&gt;run()&lt;/code&gt;在不同线程建间的执行顺序。
+*   对于单独的一个线程，可以保证&lt;code&gt;run()&lt;/code&gt;方法里的语句是按照顺序执行的。
+*   这就是因为线程内的url会首先被请求，然后打印出返回的结果。&lt;/p&gt;
+
+&lt;h4&gt;实例2&lt;/h4&gt;
+
+&lt;p&gt;我们将会用一个程序演示一下多线程间的资源竞争，并修复这个问题。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from threading import Thread
+
+
+#define a global variable
+some_var = 0 
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        read_value = some_var
+        print &quot;some_var in %s is %d&quot; % (self.name, read_value)
+        some_var = read_value + 1 
+        print &quot;some_var in %s after increment is %d&quot; % (self.name, some_var)
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print &quot;After 50 modifications, some_var should have become 50&quot;
+    print &quot;After 50 modifications, some_var is %d&quot; % (some_var,)
+
+use_increment_thread()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;多次运行这个程序，你会看到多种不同的结果。&lt;/p&gt;
+
+&lt;p&gt;解释：
+*   有一个全局变量，所有的线程都想修改它。
+*   所有的线程应该在这个全局变量上加 1 。
+*   有50个线程，最后这个数值应该变成50，但是它却没有。&lt;/p&gt;
+
+&lt;p&gt;为什么没有达到50？&lt;br/&gt;
+*   在&lt;code&gt;some_var&lt;/code&gt;是&lt;code&gt;15&lt;/code&gt;的时候，线程&lt;code&gt;t1&lt;/code&gt;读取了&lt;code&gt;some_var&lt;/code&gt;，这个时刻cpu将控制权给了另一个线程&lt;code&gt;t2&lt;/code&gt;。
+*   &lt;code&gt;t2&lt;/code&gt;线程读到的&lt;code&gt;some_var&lt;/code&gt;也是&lt;code&gt;15&lt;/code&gt;
+*   &lt;code&gt;t1&lt;/code&gt;和&lt;code&gt;t2&lt;/code&gt;都把&lt;code&gt;some_var&lt;/code&gt;加到&lt;code&gt;16&lt;/code&gt;
+*   当时我们期望的是&lt;code&gt;t1&lt;/code&gt; &lt;code&gt;t2&lt;/code&gt;两个线程使&lt;code&gt;some_var + 2&lt;/code&gt;变成&lt;code&gt;17&lt;/code&gt;
+*   在这里就有了资源竞争。
+*   相同的情况也可能发生在其它的线程间，所以出现了最后的结果小于&lt;code&gt;50&lt;/code&gt;的情况。&lt;/p&gt;
+
+&lt;p&gt;解决资源竞争&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from threading import Lock, Thread
+lock = Lock()
+some_var = 0 
+
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        lock.acquire()
+        read_value = some_var
+        print &quot;some_var in %s is %d&quot; % (self.name, read_value)
+        some_var = read_value + 1 
+        print &quot;some_var in %s after increment is %d&quot; % (self.name, some_var)
+        lock.release()
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print &quot;After 50 modifications, some_var should have become 50&quot;
+    print &quot;After 50 modifications, some_var is %d&quot; % (some_var,)
+
+use_increment_thread()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再次运行这个程序，达到了我们预期的结果。&lt;/p&gt;
+
+&lt;p&gt;解释：&lt;br/&gt;
+*   Lock 用来防止竞争条件
+*   如果在执行一些操作之前，线程&lt;code&gt;t1&lt;/code&gt;获得了锁。其他的线程在&lt;code&gt;t1&lt;/code&gt;释放Lock之前，不会执行相同的操作
+*   我们想要确定的是一旦线程&lt;code&gt;t1&lt;/code&gt;已经读取了&lt;code&gt;some_var&lt;/code&gt;，直到&lt;code&gt;t1&lt;/code&gt;完成了修改&lt;code&gt;some_var&lt;/code&gt;，其他的线程才可以读取&lt;code&gt;some_var&lt;/code&gt;
+*   这样读取和修改&lt;code&gt;some_var&lt;/code&gt;成了逻辑上的原子操作。&lt;/p&gt;
+
+&lt;h4&gt;实例3&lt;/h4&gt;
+
+&lt;p&gt;让我们用一个例子来证明一个线程不能影响其他线程内的变量（非全局变量）。&lt;/p&gt;
+
+&lt;p&gt;time.sleep()可以使一个线程挂起，强制线程切换发生。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from threading import Thread
+import time
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        print self.entries
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行几次后发现并没有打印出争取的结果。当一个线程正在打印的时候，cpu切换到了另一个线程，所以产生了不正确的结果。我们需要确保&lt;code&gt;print self.entries&lt;/code&gt;是个逻辑上的原子操作，以防打印时被其他线程打断。&lt;/p&gt;
+
+&lt;p&gt;我们使用了Lock()，来看下边的例子。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from threading import Thread, Lock
+import time
+
+lock = Lock()
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        lock.acquire()
+        print self.entries
+        lock.release()
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这次我们看到了正确的结果。证明了一个线程不可以修改其他线程内部的变量（非全局变量）&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Nginx 战斗准备 —— 优化指南</title>

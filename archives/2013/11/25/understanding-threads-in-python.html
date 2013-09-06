@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>理解 Python 中的线程</title>
+	<meta property='og:locale' content='zh_CN'/>
+	<meta property='og:title' content='理解 Python 中的线程'/>
+	<meta property='og:url' content='http://beango.github.com'/>
+	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
+	<meta property='og:type' content='article'/>
+	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
+	<link href='/assets/default.css' rel="stylesheet" media="all" />
+	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<nav class="nav-global">
+					<ul>
+						<li class="logo"><a href="/">HuangDing</a></li>
+						<li class="code"><a href="/code.html">code</a></li>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="archive"><a href="/category.html">category</a></li>
+						<li class="about"><a href="/info.html">about</a></li>
+					</ul>
+				</nav>
+				<nav id="sub-nav" class="alignright">
+					<div class="social">
+					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+					</div>
+					<form class="search" action="http://google.com/search" method="get">
+						<input class="" type="text" name="q">
+						<input type="hidden" name="q" value="site:http://beango.github.com">
+					</form>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">理解 Python 中的线程</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p><em>郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/</em></p>
+
+<p>我们将会看到一些在Python中使用线程的实例和如何避免线程之间的竞争。</p>
+
+<p>你应当将下边的例子运行多次，以便可以注意到线程是不可预测的和线程每次运行出的不同结果。</p>
+
+<p>声明：从这里开始忘掉你听到过的关于GIL的东西，因为GIL不会影响到我想要展示的东西。</p>
+
+<h4>示例1:</h4>
+
+<p>我们将要请求五个不同的url：</p>
+
+<h5>单线程</h5>
+
+<pre><code>import time
+import urllib2
+
+def get_responses():
+    urls = [
+        'http://www.google.com',
+        'http://www.amazon.com',
+        'http://www.ebay.com',
+        'http://www.alibaba.com',
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    for url in urls:
+        print url
+        resp = urllib2.urlopen(url)
+        print resp.getcode()
+    print "Elapsed time: %s" % (time.time()-start)
+
+get_responses()
+</code></pre>
+
+<p>输出是：</p>
+
+<pre><code>http://www.google.com 200
+http://www.amazon.com 200
+http://www.ebay.com 200
+http://www.alibaba.com 200
+http://www.reddit.com 200
+Elapsed time: 3.0814409256
+</code></pre>
+
+<p>解释：<br/>
+*   url顺序的被请求<br/>
+*   除非cpu从一个url获得了回应，否则不会去请求下一个url<br/>
+*   网络请求会花费较长的时间，所以cpu在等待网络请求的返回时间内一直处于闲置状态。</p>
+
+<h5>多线程</h5>
+
+<pre><code>import urllib2
+import time
+from threading import Thread
+
+class GetUrlThread(Thread):
+    def __init__(self, url):
+        self.url = url 
+        super(GetUrlThread, self).__init__()
+
+    def run(self):
+        resp = urllib2.urlopen(self.url)
+        print self.url, resp.getcode()
+
+def get_responses():
+    urls = [
+        'http://www.google.com', 
+        'http://www.amazon.com', 
+        'http://www.ebay.com', 
+        'http://www.alibaba.com', 
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    threads = []
+    for url in urls:
+        t = GetUrlThread(url)
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "Elapsed time: %s" % (time.time()-start)
+
+get_responses()
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code>http://www.reddit.com 200
+http://www.google.com 200
+http://www.amazon.com 200
+http://www.alibaba.com 200
+http://www.ebay.com 200
+Elapsed time: 0.689890861511
+</code></pre>
+
+<p>解释：
+*   意识到了程序在执行时间上的提升
+*   我们写了一个多线程程序来减少cpu的等待时间，当我们在等待一个线程内的网络请求返回时，这时cpu可以切换到其他线程去进行其他线程内的网络请求。
+*   我们期望一个线程处理一个url，所以实例化线程类的时候我们传了一个url。
+*   线程运行意味着执行类里的<code>run()</code>方法。
+*   无论如何我们想每个线程必须执行<code>run()</code>。
+*   为每个url创建一个线程并且调用<code>start()</code>方法，这告诉了cpu可以执行线程中的<code>run()</code>方法了。
+*   我们希望所有的线程执行完毕的时候再计算花费的时间，所以调用了<code>join()</code>方法。
+*   <code>join()</code>可以通知主线程等待这个线程结束后，才可以执行下一条指令。
+*   每个线程我们都调用了<code>join()</code>方法，所以我们是在所有线程执行完毕后计算的运行时间。</p>
+
+<p>关于线程：<br/>
+*   cpu可能不会在调用<code>start()</code>后马上执行<code>run()</code>方法。
+*   你不能确定<code>run()</code>在不同线程建间的执行顺序。
+*   对于单独的一个线程，可以保证<code>run()</code>方法里的语句是按照顺序执行的。
+*   这就是因为线程内的url会首先被请求，然后打印出返回的结果。</p>
+
+<h4>实例2</h4>
+
+<p>我们将会用一个程序演示一下多线程间的资源竞争，并修复这个问题。</p>
+
+<pre><code>from threading import Thread
+
+
+#define a global variable
+some_var = 0 
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        read_value = some_var
+        print "some_var in %s is %d" % (self.name, read_value)
+        some_var = read_value + 1 
+        print "some_var in %s after increment is %d" % (self.name, some_var)
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "After 50 modifications, some_var should have become 50"
+    print "After 50 modifications, some_var is %d" % (some_var,)
+
+use_increment_thread()
+</code></pre>
+
+<p>多次运行这个程序，你会看到多种不同的结果。</p>
+
+<p>解释：
+*   有一个全局变量，所有的线程都想修改它。
+*   所有的线程应该在这个全局变量上加 1 。
+*   有50个线程，最后这个数值应该变成50，但是它却没有。</p>
+
+<p>为什么没有达到50？<br/>
+*   在<code>some_var</code>是<code>15</code>的时候，线程<code>t1</code>读取了<code>some_var</code>，这个时刻cpu将控制权给了另一个线程<code>t2</code>。
+*   <code>t2</code>线程读到的<code>some_var</code>也是<code>15</code>
+*   <code>t1</code>和<code>t2</code>都把<code>some_var</code>加到<code>16</code>
+*   当时我们期望的是<code>t1</code> <code>t2</code>两个线程使<code>some_var + 2</code>变成<code>17</code>
+*   在这里就有了资源竞争。
+*   相同的情况也可能发生在其它的线程间，所以出现了最后的结果小于<code>50</code>的情况。</p>
+
+<p>解决资源竞争</p>
+
+<pre><code>from threading import Lock, Thread
+lock = Lock()
+some_var = 0 
+
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        lock.acquire()
+        read_value = some_var
+        print "some_var in %s is %d" % (self.name, read_value)
+        some_var = read_value + 1 
+        print "some_var in %s after increment is %d" % (self.name, some_var)
+        lock.release()
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "After 50 modifications, some_var should have become 50"
+    print "After 50 modifications, some_var is %d" % (some_var,)
+
+use_increment_thread()
+</code></pre>
+
+<p>再次运行这个程序，达到了我们预期的结果。</p>
+
+<p>解释：<br/>
+*   Lock 用来防止竞争条件
+*   如果在执行一些操作之前，线程<code>t1</code>获得了锁。其他的线程在<code>t1</code>释放Lock之前，不会执行相同的操作
+*   我们想要确定的是一旦线程<code>t1</code>已经读取了<code>some_var</code>，直到<code>t1</code>完成了修改<code>some_var</code>，其他的线程才可以读取<code>some_var</code>
+*   这样读取和修改<code>some_var</code>成了逻辑上的原子操作。</p>
+
+<h4>实例3</h4>
+
+<p>让我们用一个例子来证明一个线程不能影响其他线程内的变量（非全局变量）。</p>
+
+<p>time.sleep()可以使一个线程挂起，强制线程切换发生。</p>
+
+<pre><code>from threading import Thread
+import time
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        print self.entries
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+</code></pre>
+
+<p>运行几次后发现并没有打印出争取的结果。当一个线程正在打印的时候，cpu切换到了另一个线程，所以产生了不正确的结果。我们需要确保<code>print self.entries</code>是个逻辑上的原子操作，以防打印时被其他线程打断。</p>
+
+<p>我们使用了Lock()，来看下边的例子。</p>
+
+<pre><code>from threading import Thread, Lock
+import time
+
+lock = Lock()
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        lock.acquire()
+        print self.entries
+        lock.release()
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+</code></pre>
+
+<p>这次我们看到了正确的结果。证明了一个线程不可以修改其他线程内部的变量（非全局变量）</p>
+
+					<div class="meta asset-footer">
+						<ul class="date-publish list-linear">
+							<li>Published: </li>
+							<li><date class="date-pub" title="2013-11-25" datetime="2013-11-25" pubdate>
+							<span class="year">2013-11-25</span>
+							</date></li>
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li value="9" title="python"><a href="/tags.html#python-ref">python</a></li>
+    
+  
+
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
+							<li class="list-head" style="display:block;">原文网址：<a href="https://github.com/acmerfight/insight_python/blob/master/understand_thread.md" target="_blank">https://github.com/acmerfight/insight_python/blob/master/understand_thread.md</a></li>
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="comment">
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+					</div>
+				</div><!-- misc-content -->
+			</div><!-- bd -->
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+		<p class="licence">
+			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+		</p>
+	</div><!-- body -->
+</div><!-- page -->
+<!--
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+-->
+
+<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
+<script src="/assets/modernizr.min.js"></script>
+<script src='/assets/default.js'></script>
+</body>
+</html>
+
