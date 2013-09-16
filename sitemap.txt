@@ -34,6 +34,7 @@ http://beango.github.com/archives/2013/09/25/python-encodings-and-unicode.html
 http://beango.github.com/archives/2013/09/21/first-few-milliseconds-of-https.html
 http://beango.github.com/archives/2013/09/11/python-performance-analysis.html
 http://beango.github.com/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html
+http://beango.github.com/archives/2013/08/24/python-list-implementation.html
 http://beango.github.com/archives/2013/08/16/unique-index-optimization-practice.html
 http://beango.github.com/archives/2013/08/08/nginx-performance-tuning-for-ssl.html
 http://beango.github.com/archives/2013/08/08/java-lo-logbuffer.html
