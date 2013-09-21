@@ -397,3 +397,5 @@ TLS RFC的文档包含了更多的信息，有需要的朋友们可以自己查�
 正是因为如此，我们故事的主人公才能在Amazon上买到他想要的牛奶！
 
 （译者注：作者所有相关的程序已经提交到Github上，地址：[https://github.com/moserware/TLS-1.0-Analyzer/tree/master](https://github.com/moserware/TLS-1.0-Analyzer/tree/master)）
+
+**本文由 [伯乐在线](http://blog.jobbole.com) - [水果泡腾片](http://blog.jobbole.com/author/ripenc/) 翻译自 [JEFF MOSER](http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html)。**
