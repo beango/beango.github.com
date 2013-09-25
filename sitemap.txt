@@ -29,6 +29,7 @@ http://beango.github.com/archives/2013/11/12/five-great-NET-framework-4-5-featur
 http://beango.github.com/archives/2013/10/25/absolute-centering-in-CSS.html
 http://beango.github.com/archives/2013/10/11/why-registers-are-fast-and-ram-is-slow.html
 http://beango.github.com/archives/2013/10/08/recycling-memory-buffers-in-go.html
+http://beango.github.com/archives/2013/09/25/python-encodings-and-unicode.html
 http://beango.github.com/archives/2013/09/21/first-few-milliseconds-of-https.html
 http://beango.github.com/archives/2013/09/11/python-performance-analysis.html
 http://beango.github.com/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html
