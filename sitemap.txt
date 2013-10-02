@@ -25,6 +25,7 @@ http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
 
 http://beango.github.com/archives/2013/11/25/understanding-threads-in-python.html
+http://beango.github.com/archives/2013/11/25/javascript-the-core.html
 http://beango.github.com/archives/2013/11/22/nginx-setup.html
 http://beango.github.com/archives/2013/11/12/five-great-NET-framework-4-5-features.html
 http://beango.github.com/archives/2013/10/25/absolute-centering-in-CSS.html
