@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-10-11T10:49:17+08:00</updated>
+ <updated>2013-10-11T11:15:42+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -225,6 +225,649 @@ CultureInfo.DefaultThreadCurrentCulture = culture;
 &lt;p&gt;当你有空的时候，一定来看看我的网站 www.questpond.com关于.NET4.5面试问和答，我已经在这方面有了不少努力。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/files/2013-11/astrhhjync.jpg&quot; alt=&quot;astrhhjync&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>如何只用CSS做到完全居中</title>
+   <link href="http://beango.github.com/archives/2013/10/25/absolute-centering-in-CSS.html"/>
+   <updated>2013-10-25T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/10/25/absolute-centering-in-CSS</id>
+   <content type="html">&lt;p&gt;我们都知道 &lt;code&gt;margin:0 auto;&lt;/code&gt; 的样式能让元素水平居中，而 &lt;code&gt;margin: auto;&lt;/code&gt;
+却不能做到垂直居中……直到现在。但是，请注意！想让元素绝对居中，只需要声明元素高度，并且附加以下样式，就可以做到：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我并不是第一个发现这种方法的人（不过我还是敢把它叫做“完全居中”），它有可能是种非常普遍的技巧。但大多数介绍垂直居中的文章中并没有提到过这种方法。如果不是浏览&lt;a href=&quot;http://designshack.net/articles/css/how-to-center-anything-with-css&quot;&gt;这篇文章&lt;/a&gt;的评论，我甚至根本就不会发现这个办法。&lt;/p&gt;
+
+&lt;p&gt;上面那篇文章的评论栏中，Simon提供了一个&lt;a href=&quot;http://jsfiddle.net/mBBJM/1/&quot;&gt;jsFiddle&lt;/a&gt;的链接，其他的方法相比之下就相形见绌了。（Priit也在评论栏中提到了同样的方法）。深入研究了一番之后，我又用某些关键词找到了记载这种方法的三个网站：&lt;a href=&quot;http://www.vanseodesign.com/css/vertical-centering/&quot;&gt;站点一&lt;/a&gt;、&lt;a href=&quot;http://www.student.oulu.fi/~laurirai/www/css/middle/&quot;&gt;站点二&lt;/a&gt;、&lt;a href=&quot;http://blog.themeforest.net/tutorials/vertical-centering-with-css/&quot;&gt;站点三&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;以前从未用过这种方法的我想试试，看看这种”完全居中”的方法到底有多么神奇。
+好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;跨浏览器，兼容性好（无需hack，可兼顾IE8\~IE10）&lt;/li&gt;
+&lt;li&gt;无特殊标记，样式更精简&lt;/li&gt;
+&lt;li&gt;自适应布局，可以使用百分比和最大最小高宽等样式&lt;/li&gt;
+&lt;li&gt;居中时不考虑元素的padding值（也不需要使用box-sizing样式）&lt;/li&gt;
+&lt;li&gt;布局块可以自由调节大小&lt;/li&gt;
+&lt;li&gt;img的图像也可以使用&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;必须声明元素高度&lt;/li&gt;
+&lt;li&gt;推荐设置overflow:auto;样式避免元素溢出，显示不正常的问题&lt;/li&gt;
+&lt;li&gt;这种方法在Windows Phone上不起作用&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。
+“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile
+Safari中，甚至也可以运行在IE8\~IE10上&lt;/p&gt;
+
+&lt;h2&gt;对照表&lt;/h2&gt;
+
+&lt;p&gt;“完全居中”并不是本篇文章中唯一的选项。要做到垂直居中，还存在着其他方法，各有各的长处。采取什么样的方法，取决于你所支持的浏览器，以及现有标签的结构。下面这张对照表能够帮你选出最符合你需要的方法。&lt;/p&gt;
+
+&lt;table border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;所用样式&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;支持的浏览器&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是否 响应式&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;内容溢出后的样式&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;resize:both&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;高度可变&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;主要缺陷&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;Absolute&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;现代浏览器&amp;amp;IE8+&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;会导致容器溢出&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是*&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;‘可变高度’的特性不能跨浏览器&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;负margin值&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;所有&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;否&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;带滚动条&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;大小改变后不再居中&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;否&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;不具有响应式特性，margin值必须经过手工计算&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;Transform&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;现代浏览器&amp;amp;IE9+&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;会导致容器溢出&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;妨碍渲染&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;Table-Cell&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;现代浏览器&amp;amp;IE8+&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;撑开容器&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;否&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;会加上多余的标记&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;Inline-Block&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;现代浏览器&amp;amp;IE8+&amp;amp;IE7*&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;撑开容器&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;否&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;需要使用容器包裹和hack式的样式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td width=&quot;73&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;Flexbox&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;现代浏览器&amp;amp;IE10+&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;57&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;会导致容器溢出&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;85&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;47&quot;&gt;
+&lt;p align=&quot;center&quot;&gt;是&lt;/p&gt;
+&lt;/td&gt;
+&lt;td width=&quot;202&quot;&gt;需要使用容器包裹和厂商前缀（vendor prefix）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;h2&gt;说明&lt;/h2&gt;
+
+&lt;p&gt;在研究了规范和文档后，我总结出了“完全居中”的工作原理：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;在普通文档流里，margin: auto; 的意思是设置元素的margin-top和margin-bottom为0。&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;a href=&quot;http://www.w3.org/TR/CSS2/visudet.html#normal-block&quot;&gt;W3.org&lt;/a&gt;: &lt;em&gt;If ‘margin-top’, or ‘margin-bottom’ are ‘auto’, their used value is 0.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;​2. 设置了 position: absolute; 的元素会变成块元素，并脱离普通文档流。而文档的其余部分照常渲染，元素像是不在原来的位置一样。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/position#Absolute_positioning&quot;&gt;Developer.mozilla.org&lt;/a&gt;:&lt;em&gt;…an element that is positioned absolutely is taken out of the flow and thus takes up no space&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;​3. 设置了top: 0; left: 0; bottom: 0; right: 0;样式的块元素会让浏览器为它包裹一层新的盒子，因此这个元素会填满它相对父元素的内部空间，这个相对父元素可以是是body标签，或者是一个设置了position:relative; 样式的容器。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/position#Notes&quot;&gt;Developer.mozilla.org&lt;/a&gt;:&lt;em&gt;For absolutely positioned elements, the top, right, bottom, and left properties specify offsets from the edge of the element’s containing block (what the element is positioned relative to).&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;​4. 给元素设置了宽高以后，浏览器会阻止元素填满所有的空间，根据margin: auto; 的要求，重新计算，并包裹一层新的盒子。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/CSS/position#Notes&quot;&gt;Developer.mozilla.org&lt;/a&gt;: &lt;em&gt;The margin of the [absolutely positioned] element is then positioned inside these offsets.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;​5.既然块元素是绝对定位的，又脱离了普通文档流，因此浏览器在包裹盒子之前会给margin-top和margin-bottom设置一个相等的值。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-height&quot;&gt;W3.org&lt;/a&gt;: &lt;em&gt;If none of the three [top, bottom, height] are ‘auto’: If both‘margin-top’ and ‘margin-bottom’ are ‘auto’, solve the equation under the extra constraint that the two margins get equal values.?AKA: center the block vertically&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;使用“完全居中”，有意遵照了标准margin: auto;样式渲染的规定，所以应当在与标准兼容的各种浏览器中起作用。&lt;/p&gt;
+
+&lt;h2&gt;对齐&lt;/h2&gt;
+
+&lt;h3&gt;容器内对齐&lt;/h3&gt;
+
+&lt;p&gt;使用“完全居中”，就可以在一个设置了position: relative的容器中做到完全居中元素了！&lt;a href=&quot;http://codepen.io/shshaw/full/gEiDt&quot;&gt;（居中例子，请前往英文原文查看）&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Center-Container {
+  position: relative;
+}
+
+.Absolute-Center {
+  width: 50%;
+  height: 50%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-10/7cc829d3gw1e8dtm5q14rj20gu0b4jrr.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来的示例会假设已经包含了以下样式，并且以逐步添加样式的方式提供不同的特性。&lt;/p&gt;
+
+&lt;h3&gt;在可视区域内居中&lt;/h3&gt;
+
+&lt;p&gt;想要使内容区在可视区域内居中么？设置position: fixed样式，并设置一个较高的z-index值，就可以做到。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Fixed {
+  position: fixed;
+  z-index: 999;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-10/7cc829d3gw1e8dtm67yllj20ad082dg4.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;移动版Safari&lt;/strong&gt;&lt;strong&gt;的说明&lt;/strong&gt;：如果外面没有一层设置position: relative的容器，内容区会以整个文档的高度的中心点为基准居中，而不是以可视区域的高度中心点为基准居中。&lt;/p&gt;
+
+&lt;h3&gt;偏移值&lt;/h3&gt;
+
+&lt;p&gt;如果需要添加固定的标题，或者其他带偏移样式的元素，可以直接把类似top: 70px;的样式写进内容区域的样式中。一旦声明了margin: auto;的样式，内容块的&lt;code&gt;top ``left ``bottom ``right&lt;/code&gt;的属性值也会同时计算进去。&lt;/p&gt;
+
+&lt;p&gt;如果想让内容块在贴近侧边的过程中保持水平居中，可以使用right: 0; left: auto; 让内容贴在右侧，或者使用left: 0; right: auto; 使内容贴在左侧。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Fixed {
+  position: fixed;
+  z-index: 999;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/files/2013-10/7cc829d3gw1e8dtm8nu2ej20gw0b50t1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;带响应式&lt;/h3&gt;
+
+&lt;p&gt;使用absolute的最大好处就是可以完美地使用带百分比的宽高样式！就算是min-width/max-width或者min-height/max-height也能够有如预期般的表现。&lt;/p&gt;
+
+&lt;p&gt;再进一步加上padding样式的话，absolute式的完全居中也丝毫不会破坏！&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Responsive {
+  width: 60%; 
+  height: 60%;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 40px;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;带溢出内容&lt;/h3&gt;
+
+&lt;p&gt;内容区高度大于可视区域或者一个position: relative的容器，其内容可能会溢出容器，或被容器截断。只要内容区域没有超出容器（没有给内容容器预留padding的话，可以设置max-height: 100%;的样式），那么容器内就会产生滚动条。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Overflow {
+  overflow: auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;大小可调整&lt;/h3&gt;
+
+&lt;p&gt;使用其他样式，或者使用JavaScript调整内容区的大小，也是不用手动重新计算的！如果设置了resize的样式，甚至可以让用户自行调节内容区域的大小。“完全居中”法，无论内容区怎么改变大小，都会保持居中。&lt;/p&gt;
+
+&lt;p&gt;设置了min-/max- 开头的属性可以限制区块的大小而不用担心撑开容器。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Resizable {
+  min-width: 20%;
+  max-width: 80%;
+  min-height: 20%;
+  max-height: 80%;
+  resize: both;
+  overflow: auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果不设置resize: both的样式，可以设置transition样式平滑地在大小间切换。一定要记得设置overflow: auto样式，因为改变大小后的容器高宽很有可能会小于内容的高宽。“完全居中”法是唯一一种能支持使用resize: both样式的方法。&lt;/p&gt;
+
+&lt;p&gt;使用注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;需要设置max-width/max-height给内容区域留足够的空间，不然就有可能使容器溢出。&lt;/li&gt;
+&lt;li&gt;resize属性不支持移动版浏览器和IE8-10，如果用户体验很重要的话，请确保用户可以有其他替代方法来改变大小。&lt;/li&gt;
+&lt;li&gt;同时使用resize样式和transition会使用户在开始改变大小时产生等于transition效果时间等长的延时。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;图像&lt;/h3&gt;
+
+&lt;p&gt;图像也同样有效！提供相应的class，并指定样式 height: auto;，就得到了一张随着容器改变大小的响应式图片。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww3.sinaimg.cn/large/7cc829d3gw1e8dtmekxnpj20gv0b5t8x.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;请注意，height: auto;样式虽然对图片有效，如果没有用到了后面介绍的‘可变高技巧’，则会导致普通内容区域伸长以适应容器长度。&lt;/p&gt;
+
+&lt;p&gt;浏览器很有可能是根据渲染结果填充了图像高度值，所以在测试过的浏览器中，margin: auto; 样式就像是声明了固定的高度值一般正常工作。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;HTML:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;img src=&quot;http://placekitten.com/g/500/200&quot; alt=&quot;&quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;CSS:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Absolute-Center.is-Image {
+  height: auto;
+}
+
+.Absolute-Center.is-Image img { 
+  width: 100%;
+  height: auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;可变高度&lt;/h3&gt;
+
+&lt;p&gt;“完全居中”法的确需要声明容器高度，但是高度受max-height样式的影响，也可以是百分比。这非常适合响应式的方案，只需要设置好带溢出内容就行。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww3.sinaimg.cn/large/7cc829d3gw1e8du1cpkopj20gt0b4jro.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;另一种替代方案是设置display: table样式居中，，不管内容的长度。这种方法会在一些浏览器中产生问题（主要是IE和Firefox）。我在ELL Creative的朋友Kalley写了一个基于Modernizr的测试，可以用来检查浏览器是否支持这种居中方案。现在这种方法可以做到渐进增强。&lt;/p&gt;
+
+&lt;p&gt;注意要点：这种方法会破坏浏览器兼容性，如果Modernizr测试不能满足你的需求，你可能需要考虑其他的实现方案。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;与大小可调整技术是不兼容的&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Firefox/IE8&lt;/strong&gt;中使用display: table，内容区在垂直方向靠上，水平方向仍然居中。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IE9/10&lt;/strong&gt;中使用display: table，内容区会跑到左上角。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;移动版&lt;/strong&gt;&lt;strong&gt;Safari&lt;/strong&gt;中内容区是水平对齐的，但是如果使用了百分比的宽度，水平方向上会稍稍偏离中心。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Javascript:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/* Modernizr Test for Variable Height Content */
+Modernizr.testStyles('#modernizr { display: table; height: 50px; width: 50px; margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; }', function(elem, rule) {
+  Modernizr.addTest('absolutecentercontent', Math.round(window.innerHeight / 2 - 25) === elem.offsetTop);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;CSS:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.absolutecentercontent .Absolute-Center.is-Variable {
+  display: table;
+  height: auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;其他方法&lt;/h2&gt;
+
+&lt;p&gt;“完全居中”法是解决居中问题的好方法，同时也有许多可以满足不同需求的其他方法。最常见的，推荐的方法有负margin值、transform法、table-cell法、inline-block法、以及现在出现的Flexbox法，这些方法其他文章都有深入介绍，所以这里只会稍稍提及。&lt;/p&gt;
+
+&lt;h3&gt;负margin值&lt;/h3&gt;
+
+&lt;p&gt;这或许是最常用的方法。如果知道了各个元素的大小，设置等于宽高一半大小的负margin值（如果没有使用box-sizing:
+border-box样式，还需要加上padding值），再配合top: 50%; left:
+50%;样式就会使块元素居中。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww4.sinaimg.cn/large/7cc829d3gw1e8du1d8ll3j20gv0b3glt.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;需要注意的是，这是按照预想情况也能在工作在IE6-7下的唯一方法。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.is-Negative {
+        width: 300px;
+        height: 200px;
+        padding: 20px;
+        position: absolute;
+        top: 50%; left: 50%;
+        margin-left: -170px; /* (width + padding)/2 */
+        margin-top: -120px; /* (height + padding)/2 */
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;浏览器兼容性非常好，甚至支持IE6-7&lt;/li&gt;
+&lt;li&gt;需要的编码量很少&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;这是个非响应式的方法，不能使用百分比的大小，也不能设置min-/max-的最大值最小值。&lt;/li&gt;
+&lt;li&gt;内容可能会超出容器&lt;/li&gt;
+&lt;li&gt;需要为padding预留空间，或者需要使用box-sizing: border-box样式。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;transform法&lt;/h3&gt;
+
+&lt;p&gt;和“完全居中”法的好处一样，简单有效，同时支持可变高度。为内容指定带有厂商前缀的transform: translate(-50%,-50%)和top: 50%; left: 50%;样式就可以让内容块居中。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.is-Transformed { 
+  width: 50%;
+  margin: auto;
+  position: absolute;
+  top: 50%; left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内容高度可变&lt;/li&gt;
+&lt;li&gt;代码量小&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不支持IE8&lt;/li&gt;
+&lt;li&gt;需要写厂商前缀&lt;/li&gt;
+&lt;li&gt;会和其他transform样式有冲突&lt;/li&gt;
+&lt;li&gt;某些情况下的边缘和字体渲染会有问题&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;table-cell法&lt;/h3&gt;
+
+&lt;p&gt;这种可能是最好的方法，因为高度可以随内容改变，浏览器支持也不差。主要缺陷是会产生额外的标签，每一个需要居中的元素需要三个额外的HTML标签。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1eg5cgj20gw0b53yx.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;HTML:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;Center-Container is-Table&quot;&amp;gt;
+  &amp;lt;div class=&quot;Table-Cell&quot;&amp;gt;
+    &amp;lt;div class=&quot;Center-Block&quot;&amp;gt;
+    &amp;lt;!-- CONTENT --&amp;gt;
+    &amp;lt;/div&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;CSS:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Center-Container.is-Table { display: table; }
+.is-Table .Table-Cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+.is-Table .Center-Block {
+  width: 50%;
+  margin: 0 auto;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内容高度可变&lt;/li&gt;
+&lt;li&gt;内容溢出则能自动撑开父元素高度&lt;/li&gt;
+&lt;li&gt;浏览器兼容性好&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;需要额外的HTML标签&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;inline-block法&lt;/h3&gt;
+
+&lt;p&gt;迫切需要的方法：inline-block法居中。基本方法是使用 &lt;code&gt;display: inline-block&lt;/code&gt;, &lt;code&gt;vertical-align: middle&lt;/code&gt;样式和伪元素让内容块在容器中居中。我的实现用到了几个在其他地方见不到的新技巧解决了一些问题。&lt;/p&gt;
+
+&lt;p&gt;内容区声明的宽度不能大于容器的100%减去0.25em的宽度。就像一段带有长文本的区域。不然，内容区域会被推到顶端，这就是使用:after伪类的原因。使用:before伪类则会让元素有100%的大小！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1f7o33j20gv0b5glz.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果内容块需要尽可能大地占用水平空间，可以为大容器加上max-width:99%;样式，或者考虑浏览器和容器宽度的情况下使用max-width: calc(100% – 0.25em) 样式。&lt;/p&gt;
+
+&lt;p&gt;这种方法和table-cell的大多数好处相同，不过最初我放弃了这个方法，因为它更像是hack。不管这一点的话，浏览器支持很不错，而且也被证实是很流行的方法。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;HTML:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;Center-Container is-Inline&quot;&amp;gt;
+  &amp;lt;div class=&quot;Center-Block&quot;&amp;gt;
+    &amp;lt;!-- CONTENT --&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;CSS:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Center-Container.is-Inline { 
+  text-align: center;
+  overflow: auto;
+}
+
+.Center-Container.is-Inline:after,
+.is-Inline .Center-Block {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.Center-Container.is-Inline:after {
+  content: '';
+  height: 100%;
+  margin-left: -0.25em; /* To offset spacing. May vary by font */
+}
+
+.is-Inline .Center-Block {
+  max-width: 99%; /* Prevents issues with long content causes the content block to be pushed to the top */
+  /* max-width: calc(100% - 0.25em) /* Only for IE9+ */
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内容高度可变&lt;/li&gt;
+&lt;li&gt;内容溢出则能自动撑开父元素高度&lt;/li&gt;
+&lt;li&gt;浏览器兼容性好，甚至可以调整支持IE7&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;需要额外容器&lt;/li&gt;
+&lt;li&gt;依赖于margin-left:
+-0.25em的样式，做到水平居中，需要为不同的字体大小作调整&lt;/li&gt;
+&lt;li&gt;内容区声明的宽度不能大于容器的100% 减去0.25em的宽度&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Flexbox法&lt;/h3&gt;
+
+&lt;p&gt;CSS未来发展的方向就是采用Flexbox这种设计，解决像垂直居中这种共同的问题。请注意，Flexbox有不止一种办法居中，他也可以用来分栏，并解决奇奇怪怪的布局问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://ww2.sinaimg.cn/large/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.Center-Container.is-Flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+     -moz-box-align: center;
+     -ms-flex-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+     -moz-box-pack: center;
+     -ms-flex-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;好处：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内容可以是任意高宽，溢出也能表现良好&lt;/li&gt;
+&lt;li&gt;可以用于各种高级布局技巧&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;同时注意： 不支持IE8-9&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;需要在body上写样式，或者需要额外容器&lt;/li&gt;
+&lt;li&gt;需要各种厂商前缀兼容现代浏览器&lt;/li&gt;
+&lt;li&gt;可能有潜在的性能问题&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;最后的建议&lt;/h2&gt;
+
+&lt;p&gt;各项技术都有各自的好处，采取什么样的方法，取决于你所支持的浏览器，以及现有标签的结构。请使用上面提供对照表帮你选出最符合你需要的方法。&lt;/p&gt;
+
+&lt;p&gt;“完全居中”法简单方便，迅速及时。以前使用负Margin值的地方，都可以使用Absolute居中。无需繁琐的数学计算，无需额外标签，而且可以随时改变大小。&lt;/p&gt;
+
+&lt;p&gt;如果网站需要可变高度的内容，而且同时照顾到浏览器兼容性的话，可以尝试table-cell和inline-block技术，如果想尝试新鲜事物的话，可以使用Flexbox，并享受这种高级技术带来的好处。&lt;/p&gt;
 </content>
  </entry>
  
