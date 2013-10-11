@@ -14,7 +14,7 @@ markdown: rdiscount
 # so be sure to set them if your theme uses them.
 #
 title : 程序员 - 博客 - HuangDing
-url : http://www.yif1.com
+url : http://beango.github.com
 type : website
 tagline: Site Tagline
 author :

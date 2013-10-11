@@ -1,10 +1,10 @@
 ---
 layout: post
-categories: [dotnet]
+categories: [.net]
 date: 2013-11-12
 title: ".NET Framework 4.5 五个很棒的特性"
 description: ".NET Framework 4.5 五个很棒的特性"
-tags: [dotnet]
+tags: [dotnet,.net 4.5]
 redirecturl: http://blog.jobbole.com/51271/
 ---
 {% include JB/setup %}
