@@ -22,8 +22,7 @@ redirecturl: http://blog.jobbole.com/46574/
 
 上面那篇文章的评论栏中，Simon提供了一个[jsFiddle](http://jsfiddle.net/mBBJM/1/)的链接，其他的方法相比之下就相形见绌了。（Priit也在评论栏中提到了同样的方法）。深入研究了一番之后，我又用某些关键词找到了记载这种方法的三个网站：[站点一](http://www.vanseodesign.com/css/vertical-centering/)、[站点二](http://www.student.oulu.fi/~laurirai/www/css/middle/)、[站点三](http://blog.themeforest.net/tutorials/vertical-centering-with-css/)。
 
-以前从未用过这种方法的我想试试，看看这种”完全居中”的方法到底有多么神奇。
-好处：
+以前从未用过这种方法的我想试试，看看这种”完全居中”的方法到底有多么神奇。好处：
 
 -   跨浏览器，兼容性好（无需hack，可兼顾IE8\~IE10）
 -   无特殊标记，样式更精简
@@ -38,9 +37,7 @@ redirecturl: http://blog.jobbole.com/46574/
 -   推荐设置overflow:auto;样式避免元素溢出，显示不正常的问题
 -   这种方法在Windows Phone上不起作用
 
-浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。
-“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile
-Safari中，甚至也可以运行在IE8\~IE10上
+浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile Safari中，甚至也可以运行在IE8\~IE10上
 
 对照表
 ------
@@ -292,7 +289,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
       padding: 40px;
     }
 
-![](http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg)
 
 ### 带溢出内容
 
@@ -302,7 +299,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
       overflow: auto;
     }
 
-![](http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg)
 
 ### 大小可调整
 
@@ -319,7 +316,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
       overflow: auto;
     }
 
-![](http://ww4.sinaimg.cn/large/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg)
 
 如果不设置resize: both的样式，可以设置transition样式平滑地在大小间切换。一定要记得设置overflow: auto样式，因为改变大小后的容器高宽很有可能会小于内容的高宽。“完全居中”法是唯一一种能支持使用resize: both样式的方法。
 
@@ -333,7 +330,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
 
 图像也同样有效！提供相应的class，并指定样式 height: auto;，就得到了一张随着容器改变大小的响应式图片。
 
-![](http://ww3.sinaimg.cn/large/7cc829d3gw1e8dtmekxnpj20gv0b5t8x.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmekxnpj20gv0b5t8x.jpg)
 
 请注意，height: auto;样式虽然对图片有效，如果没有用到了后面介绍的‘可变高技巧’，则会导致普通内容区域伸长以适应容器长度。
 
@@ -358,7 +355,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
 
 “完全居中”法的确需要声明容器高度，但是高度受max-height样式的影响，也可以是百分比。这非常适合响应式的方案，只需要设置好带溢出内容就行。
 
-![](http://ww3.sinaimg.cn/large/7cc829d3gw1e8du1cpkopj20gt0b4jro.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1cpkopj20gt0b4jro.jpg)
 
 另一种替代方案是设置display: table样式居中，，不管内容的长度。这种方法会在一些浏览器中产生问题（主要是IE和Firefox）。我在ELL Creative的朋友Kalley写了一个基于Modernizr的测试，可以用来检查浏览器是否支持这种居中方案。现在这种方法可以做到渐进增强。
 
@@ -394,7 +391,7 @@ Safari中，甚至也可以运行在IE8\~IE10上
 border-box样式，还需要加上padding值），再配合top: 50%; left:
 50%;样式就会使块元素居中。
 
-![](http://ww4.sinaimg.cn/large/7cc829d3gw1e8du1d8ll3j20gv0b3glt.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1d8ll3j20gv0b3glt.jpg)
 
 需要注意的是，这是按照预想情况也能在工作在IE6-7下的唯一方法。
 
@@ -433,7 +430,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
               transform: translate(-50%,-50%);
     }
 
-![](http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg)
 
 好处：
 
@@ -451,7 +448,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 这种可能是最好的方法，因为高度可以随内容改变，浏览器支持也不差。主要缺陷是会产生额外的标签，每一个需要居中的元素需要三个额外的HTML标签。
 
-![](http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1eg5cgj20gw0b53yx.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1eg5cgj20gw0b53yx.jpg)
 
 **HTML:**
 
@@ -491,7 +488,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 内容区声明的宽度不能大于容器的100%减去0.25em的宽度。就像一段带有长文本的区域。不然，内容区域会被推到顶端，这就是使用:after伪类的原因。使用:before伪类则会让元素有100%的大小！
 
-![](http://ww2.sinaimg.cn/large/7cc829d3gw1e8du1f7o33j20gv0b5glz.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1f7o33j20gv0b5glz.jpg)
 
 如果内容块需要尽可能大地占用水平空间，可以为大容器加上max-width:99%;样式，或者考虑浏览器和容器宽度的情况下使用max-width: calc(100% – 0.25em) 样式。
 
@@ -546,7 +543,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 CSS未来发展的方向就是采用Flexbox这种设计，解决像垂直居中这种共同的问题。请注意，Flexbox有不止一种办法居中，他也可以用来分栏，并解决奇奇怪怪的布局问题。
 
-![](http://ww2.sinaimg.cn/large/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg)
+![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg)
 
     .Center-Container.is-Flexbox {
       display: -webkit-box;
