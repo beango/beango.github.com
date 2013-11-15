@@ -1,7 +1,7 @@
 ---
 layout: post
 categories: [ngnix]
-date: 2013-11-25
+date: 2013-11-22
 title: "Nginx 战斗准备 —— 优化指南"
 description: "Nginx 战斗准备 —— 优化指南"
 tags: [ngnix]

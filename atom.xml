@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2013-11-25T15:25:55+08:00</updated>
+ <updated>2013-11-25T15:29:31+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Nginx 战斗准备 —— 优化指南</title>
-   <link href="http://beango.github.com/archives/2013/11/25/nginx-setup.html"/>
-   <updated>2013-11-25T00:00:00+08:00</updated>
-   <id>http://beango.github.com/archives/2013/11/25/nginx-setup</id>
+   <link href="http://beango.github.com/archives/2013/11/22/nginx-setup.html"/>
+   <updated>2013-11-22T00:00:00+08:00</updated>
+   <id>http://beango.github.com/archives/2013/11/22/nginx-setup</id>
    <content type="html">&lt;p&gt;原文出处：&lt;a href=&quot;http://blog.zachorr.com/nginx-setup/&quot;&gt;zachorr&lt;/a&gt; 译文出处：&lt;a href=&quot;http://www.oschina.net/translate/nginx-setup?print&quot;&gt;oschina -Garfielt, yale8848, tnjin&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;大多数的Nginx安装指南告诉你如下基础知识——通过apt-get安装，修改这里或那里的几行配置，好了，你已经有了一个Web服务器了！而且，在大多数情况下，一个常规安装的nginx对你的网站来说已经能很好地工作了。然而，如果你真的想挤压出nginx的性能，你必须更深入一些。在本指南中，我将解释Nginx的那些设置可以微调，以优化处理大量客户端时的性能。需要注意一点，这不是一个全面的微调指南。这是一个简单的预览——那些可以通过微调来提高性能设置的概述。你的情况可能不同。&lt;/p&gt;
