@@ -1,7 +1,7 @@
 ---
 layout: post
 categories: [javascript]
-date: 2013-11-25
+date: 2013-11-26
 title: "JavaScript核心"
 description: "JavaScript核心"
 tags: [javascript]
