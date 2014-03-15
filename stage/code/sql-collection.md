@@ -186,6 +186,20 @@ CTE批量插入
       drop function [dbo].[函数名] 
     GO 
 
+查询表引用到的外键
+---------------
+    SELECT 主键列ID=b.rkey ,主键列名=(SELECT name FROM syscolumns WHERE colid=b.rkey AND id=b.rkeyid) ,
+    外键表ID=b.fkeyid ,外键表名称=object_name(b.fkeyid) ,外键列ID=b.fkey ,a.name 外键名,
+    外键列名=(SELECT name FROM syscolumns WHERE colid=b.fkey AND id=b.fkeyid) 
+    FROM sysobjects a join sysforeignkeys b on a.id=b.constid 
+    join sysobjects c on a.parent_obj=c.id 
+    where a.xtype='f' AND c.xtype='U' and object_name(b.rkeyid)='表名'
+
+获取表的主外键
+---------------
+
+     exec sp_helpconstraint '表名' 
+
 跨服务器查询
 ----------
 
