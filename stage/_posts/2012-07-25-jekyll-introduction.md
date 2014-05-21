@@ -60,6 +60,36 @@ Jekyll是一个静态网站生成器，用ruby编写而成，结合了markdown�
 
 -   [更多介绍](http://jekyllbootstrap.com/lessons/jekyll-introduction.html)
 
+### 创建git ssh
+
+-   查看是否已经有了ssh密钥：
+
+<label/>
+    cd ~/.ssh
+
+-   生存密钥： 
+
+<label/>
+    $ ssh-keygen -t rsa -C "...@gmail.com"
+
+按3个回车，密码为空。
+
+<label/>
+    Your identification has been saved in /home/tekkub/.ssh/id_rsa.
+    Your public key has been saved in /home/tekkub/.ssh/id_rsa.pub.
+    The key fingerprint is:
+    ………………
+
+最后得到了两个文件：id_rsa和id_rsa.pub
+
+-   添加密钥到ssh：ssh-add 文件名
+
+如果出错（Could not open a connection to your authentication agent），执行：
+
+    ssh-agent bash
+
+-   将“id_rsa.pub”里面的公钥添加到github.com
+
 ### 快速开始 
 
 -   本地运行Jekyll 
