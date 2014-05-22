@@ -90,6 +90,8 @@ Jekyll是一个静态网站生成器，用ruby编写而成，结合了markdown�
 
 -   将“id_rsa.pub”里面的公钥添加到github.com
 
+-   注意要将项目的连接地址改为ＳＳＨ连接
+
 ### 快速开始 
 
 -   本地运行Jekyll 
