@@ -141,6 +141,56 @@ $ jekyll --server
 </ul>
 
 
+<h3>创建git ssh</h3>
+
+<ul>
+<li>查看是否已经有了ssh密钥：</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>cd ~/.ssh
+</code></pre>
+
+<ul>
+<li>生存密钥：</li>
+</ul>
+
+
+<p><label/></p>
+
+<pre><code>$ ssh-keygen -t rsa -C "...@gmail.com"
+</code></pre>
+
+<p>按3个回车，密码为空。</p>
+
+<p><label/></p>
+
+<pre><code>Your identification has been saved in /home/tekkub/.ssh/id_rsa.
+Your public key has been saved in /home/tekkub/.ssh/id_rsa.pub.
+The key fingerprint is:
+………………
+</code></pre>
+
+<p>最后得到了两个文件：id_rsa和id_rsa.pub</p>
+
+<ul>
+<li>添加密钥到ssh：ssh-add 文件名</li>
+</ul>
+
+
+<p>如果出错（Could not open a connection to your authentication agent），执行：</p>
+
+<pre><code>ssh-agent bash
+</code></pre>
+
+<ul>
+<li><p>将“id_rsa.pub”里面的公钥添加到github.com</p></li>
+<li><p>注意要将项目的连接地址改为ＳＳＨ连接</p></li>
+</ul>
+
+
 <h3>快速开始</h3>
 
 <ul>

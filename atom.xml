@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2014-07-18T11:04:03+08:00</updated>
+ <updated>2014-05-21T10:51:38+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -23179,6 +23179,56 @@ $ jekyll --server
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://jekyllbootstrap.com/lessons/jekyll-introduction.html&quot;&gt;更多介绍&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;创建git ssh&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;查看是否已经有了ssh密钥：&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd ~/.ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;生存密钥：&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ssh-keygen -t rsa -C &quot;...@gmail.com&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按3个回车，密码为空。&lt;/p&gt;
+
+&lt;p&gt;&lt;label/&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Your identification has been saved in /home/tekkub/.ssh/id_rsa.
+Your public key has been saved in /home/tekkub/.ssh/id_rsa.pub.
+The key fingerprint is:
+………………
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后得到了两个文件：id_rsa和id_rsa.pub&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;添加密钥到ssh：ssh-add 文件名&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;如果出错（Could not open a connection to your authentication agent），执行：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh-agent bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;将“id_rsa.pub”里面的公钥添加到github.com&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;注意要将项目的连接地址改为ＳＳＨ连接&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 
