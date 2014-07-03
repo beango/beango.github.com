@@ -67,15 +67,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">getParameterByName</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">match</span> <span class="o">=</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;[?&amp;]&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;=([^&amp;]*)&#39;</span><span class="p">)</span>
-                    <span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">search</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">match</span> <span class="o">&amp;&amp;</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\+/g</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">));</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -84,22 +76,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="kd">function</span> <span class="nx">setUrlParam</span><span class="p">(</span><span class="nx">oldurl</span><span class="p">,</span> <span class="nx">paramname</span><span class="p">,</span> <span class="nx">pvalue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">reg</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;(\\?|&amp;)&quot;</span> <span class="o">+</span> <span class="nx">paramname</span> <span class="o">+</span> <span class="s2">&quot;=([^&amp;]*)(&amp;|$)&quot;</span><span class="p">,</span> <span class="s2">&quot;gi&quot;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">pst</span> <span class="o">=</span> <span class="nx">oldurl</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">reg</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">((</span><span class="nx">pst</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="o">||</span> <span class="nx">pst</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">oldurl</span> <span class="o">+</span> <span class="p">((</span><span class="nx">oldurl</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="s2">&quot;?&quot;</span> <span class="o">:</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="nx">paramname</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="nx">pvalue</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">pst</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-    <span class="kd">var</span> <span class="nx">retxt</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">pvalue</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
-        <span class="nx">retxt</span> <span class="o">+=</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nx">oldurl</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">reg</span><span class="p">,</span> <span class="nx">retxt</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -108,12 +85,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">myUrl</span> <span class="o">=</span> <span class="s2">&quot;http://example.com/index.html?param=1&amp;anotherParam=2&quot;</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">myOtherUrl</span> <span class="o">=</span> <span class="s2">&quot;http://example.com/index.html?url=&quot;</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">myUrl</span><span class="p">);</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -122,30 +94,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="kd">var</span> <span class="nx">myArray</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">];</span>
-<span class="k">delete</span> <span class="nx">myArray</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nx">j</span><span class="o">=</span><span class="nx">myArray</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">j</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myArray</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-    <span class="cm">/*</span>
-<span class="cm">    undefined</span>
-<span class="cm">    b</span>
-<span class="cm">    c</span>
-<span class="cm">    */</span>
-<span class="p">}</span>
-
-<span class="kd">var</span> <span class="nx">myArray2</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">];</span>
-<span class="nx">myArray2</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nx">j</span><span class="o">=</span><span class="nx">myArray2</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">j</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">){</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myArray2</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-    <span class="cm">/*</span>
-<span class="cm">    b</span>
-<span class="cm">    c</span>
-<span class="cm">    */</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -154,28 +103,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[@name=&quot;testradio&quot;][checked]&#39;</span><span class="p">);</span>
-
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]&#39;</span><span class="p">).</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;:checked&#39;</span><span class="p">);</span>
-
-<span class="c1">//遍历name为testradio的所有radio</span>
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-  <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
-<span class="p">});</span>
-
-<span class="c1">//取第二个radio的值</span>
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;testradio&quot;]:eq(1)&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-
-<span class="c1">//设置radio</span>
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex]:nth(0)&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex][value=&quot;1&quot;]&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
-<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;input:radio[name=sex]:nth(0)&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">checked</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -184,22 +112,7 @@
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
-    <span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-    <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;Handler/Handler.ashx&quot;</span><span class="p">,</span>
-    <span class="nx">contentType</span><span class="o">:</span> <span class="s2">&quot;application/x-www-form-urlencoded; charset=UTF-8&quot;</span><span class="p">,</span>
-    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span> 
-        <span class="nx">action</span><span class="o">:</span> <span class="s2">&quot;TodoItemAdd&quot;</span><span class="p">,</span>
-        <span class="nx">receiveUserID</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#tdreceiveuser&quot;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-    <span class="p">},</span>
-    <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">alert</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -208,16 +121,9 @@
 <p>　　这两个事件在 IE9 中都有个小BUG，那就是通过右键菜单菜单中的剪切和删除命令删除内容的时候不会触发，而 IE 其他版本都是正常的</p>
 
 <p>　　<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-　　<div style="display:none;"></p>
-
-<div class="highlight"><pre><code class="javascript"><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;textarea&#39;</span><span class="p">).</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;input propertychange&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.msg&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">length</span> <span class="o">+</span> <span class="s1">&#39; characters&#39;</span><span class="p">);</span>
-<span class="p">});</span>
-</code></pre>
-</div>
-
-
-<p>　　</div></p>
+　　<div style="display:none;">
+Liquid error: No such file or directory - pygmentize
+　　</div></p>
 
 				</div><!-- entry-content -->
 			</div><!-- bd -->

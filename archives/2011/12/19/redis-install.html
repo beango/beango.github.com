@@ -251,39 +251,7 @@ vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好
 <p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
 
 <div style="display:none;">
-
-<div class="highlight"><pre><code class="perl"><span class="n">wget</span> <span class="n">http:</span><span class="sr">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">python</span><span class="o">.</span><span class="n">org</span><span class="sr">/packages/so</span><span class="n">urce</span><span class="sr">/r/</span><span class="n">redis</span><span class="o">/</span><span class="n">redis</span><span class="o">-</span><span class="mf">2.7.2</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
-<span class="c1">#tar xvzf redis-py-2.7.2.tar.gz</span>
-<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
-
-<span class="c1">#打开Python解释器：</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">import</span> <span class="n">redis</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="s">&#39;bar&#39;</span><span class="p">)</span>   <span class="c1">#或者写成 r[&#39;foo&#39;] = &#39;bar&#39;</span>
-<span class="n">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">)</span>   
-<span class="s">&#39;bar&#39;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="nb">delete</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">)</span>
-<span class="n">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">dbsize</span><span class="p">()</span>   <span class="c1">#库里有多少key，多少条数据</span>
-<span class="mi">0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="p">[</span><span class="s">&#39;test&#39;</span><span class="p">]</span><span class="o">=</span><span class="s">&#39;OK!&#39;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>   <span class="c1">#强行把数据库保存到硬盘。保存时阻塞</span>
-<span class="n">True</span>
-<span class="o">--------------------------------</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">flushdb</span><span class="p">()</span>   <span class="c1">#删除当前数据库的所有数据</span>
-<span class="n">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;chang&#39;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>    <span class="c1"># 因为是Noen对象，什么也不显示！</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">dir</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>   
-<span class="p">[</span><span class="s">&#39;__class__&#39;</span><span class="p">,</span> <span class="s">&#39;__delattr__&#39;</span><span class="p">,</span> <span class="s">&#39;__doc__&#39;</span><span class="p">,</span> <span class="s">&#39;__format__&#39;</span><span class="p">,</span> <span class="s">&#39;__getattribute__&#39;</span><span class="p">,</span> <span class="s">&#39;__hash__&#39;</span><span class="p">,</span> <span class="s">&#39;__init__&#39;</span><span class="p">,</span> <span class="s">&#39;__new__&#39;</span><span class="p">,</span> <span class="s">&#39;__reduce__&#39;</span><span class="p">,</span> <span class="s">&#39;__reduce_ex__&#39;</span><span class="p">,</span> <span class="s">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s">&#39;__setattr__&#39;</span><span class="p">,</span> <span class="s">&#39;__sizeof__&#39;</span><span class="p">,</span> <span class="s">&#39;__str__&#39;</span><span class="p">,</span> <span class="s">&#39;__subclasshook__&#39;</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="nb">exists</span><span class="p">(</span><span class="s">&#39;chang&#39;</span><span class="p">)</span>  <span class="c1">#看是否存在这个键值</span>
-<span class="n">False</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="nb">keys</span><span class="p">()</span>   <span class="c1"># 列出所有键值。（这时候已经存了4个了）</span>
-<span class="p">[</span><span class="s">&#39;aaa&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;bbb&#39;</span><span class="p">,</span> <span class="s">&#39;key1&#39;</span><span class="p">]</span>
-</code></pre>
-</div>
-
+Liquid error: No such file or directory - pygmentize
 </div>
 
 
@@ -318,26 +286,6 @@ vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好
 				<div class="misc-content">
 					<div class="comment">
 					
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
-
 					</div>
 				</div><!-- misc-content -->
 			</div><!-- bd -->

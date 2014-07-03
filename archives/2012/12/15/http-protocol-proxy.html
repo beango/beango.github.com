@@ -168,32 +168,8 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
 
 <p>当浏览器访问网络的时候，会根据PAC文件中的JavaScript函数来选择恰当的代理服务器。</p>
 
-<p>sample_pac.dat文件的内容</p>
-
-<div class="highlight"><pre><code class="perl"><span class="n">function</span> <span class="n">FindProxyForURL</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;http:&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="sr">//</span> <span class="err">应该使用指定的代理</span>
-        <span class="k">return</span> <span class="s">&quot;PROXY proxy:80&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;ftp:&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s">&quot;PROXY fproxy:80&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;gopher:&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s">&quot;PROXY gproxy&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;https:&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s">&quot;PROXY secproxy:8080&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span>
-        <span class="sr">//</span> <span class="err">直连，不经过任何代理</span>
-        <span class="k">return</span> <span class="s">&quot;DIRECT&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
-
-
+<p>sample_pac.dat文件的内容
+Liquid error: No such file or directory - pygmentize</p>
 
 <h3 id="chapter10">IE代理设置：自动探测设置（WPAD）</h3>
 
@@ -253,26 +229,6 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
 				<div class="misc-content">
 					<div class="comment">
 					
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
-
 					</div>
 				</div><!-- misc-content -->
 			</div><!-- bd -->

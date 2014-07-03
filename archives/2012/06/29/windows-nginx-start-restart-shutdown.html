@@ -62,64 +62,7 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					
-
-<div class="highlight"><pre><code class="perl"><span class="n">cls</span>   
-<span class="nv">@ECHO</span> <span class="n">OFF</span>   
-<span class="n">SET</span> <span class="n">NGINX_PATH</span><span class="o">=</span><span class="n">E:</span>   
-<span class="n">SET</span> <span class="n">NGINX_DIR</span><span class="o">=</span><span class="n">E:</span><span class="o">\</span><span class="n">nginx</span><span class="o">-</span><span class="mf">0.8.40</span><span class="o">\</span>  
-<span class="n">color</span> <span class="mi">0</span><span class="n">a</span>   
-<span class="n">TITLE</span> <span class="n">Nginx</span> <span class="err">管理程序</span> <span class="n">Power</span> <span class="n">By</span> <span class="n">Ants</span> <span class="p">(</span><span class="n">http:</span><span class="sr">//</span><span class="n">leleroyn</span><span class="o">.</span><span class="n">cnblogs</span><span class="o">.</span><span class="n">com</span><span class="p">)</span>  
-<span class="n">GOTO</span> <span class="n">MENU</span>   
-<span class="p">:</span><span class="n">MENU</span>   
-<span class="n">CLS</span>   
-<span class="n">ECHO</span><span class="o">.</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>  <span class="n">Nginx</span> <span class="err">管理程序</span> <span class="n">Power</span> <span class="n">By</span> <span class="n">Ants</span> <span class="p">(</span><span class="n">http:</span><span class="sr">//</span><span class="n">leleroyn</span><span class="o">.</span><span class="n">cnblogs</span><span class="o">.</span><span class="n">com</span><span class="p">)</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>    
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="mi">1</span> <span class="err">启动</span><span class="n">Nginx</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="mi">2</span> <span class="err">关闭</span><span class="n">Nginx</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="mi">3</span> <span class="err">重启</span><span class="n">Nginx</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="mi">4</span> <span class="err">退</span> <span class="err">出</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>   
-<span class="n">ECHO</span><span class="o">.</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="err">请输入选择项目的序号：</span>   
-<span class="n">set</span> <span class="o">/</span><span class="n">p</span> <span class="n">ID</span><span class="o">=</span>   
-<span class="n">IF</span> <span class="s">&quot;%id%&quot;</span><span class="o">==</span><span class="s">&quot;1&quot;</span> <span class="n">GOTO</span> <span class="n">cmd1</span>   
-<span class="n">IF</span> <span class="s">&quot;%id%&quot;</span><span class="o">==</span><span class="s">&quot;2&quot;</span> <span class="n">GOTO</span> <span class="n">cmd2</span>   
-<span class="n">IF</span> <span class="s">&quot;%id%&quot;</span><span class="o">==</span><span class="s">&quot;3&quot;</span> <span class="n">GOTO</span> <span class="n">cmd3</span>   
-<span class="n">IF</span> <span class="s">&quot;%id%&quot;</span><span class="o">==</span><span class="s">&quot;4&quot;</span> <span class="n">EXIT</span>   
-<span class="n">PAUSE</span>   
-<span class="p">:</span><span class="n">cmd1</span>   
-<span class="n">ECHO</span><span class="o">.</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="err">启动</span><span class="n">Nginx</span><span class="o">......</span>   
-<span class="n">IF</span> <span class="n">NOT</span> <span class="n">EXIST</span> <span class="nv">%NGINX_DIR%nginx</span><span class="o">.</span><span class="n">exe</span> <span class="n">ECHO</span> <span class="nv">%NGINX_DIR%nginx</span><span class="o">.</span><span class="n">exe</span><span class="err">不存在</span>   
-<span class="nv">%NGINX_PATH%</span>   
-<span class="nv">cd</span> <span class="nv">%NGINX_DIR%</span>   
-<span class="nv">IF</span> <span class="n">EXIST</span> <span class="nv">%NGINX_DIR%nginx</span><span class="o">.</span><span class="n">exe</span> <span class="n">start</span> <span class="nv">%NGINX_DIR%nginx</span><span class="o">.</span><span class="n">exe</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="n">OK</span>   
-<span class="n">PAUSE</span>   
-<span class="n">GOTO</span> <span class="n">MENU</span>   
-<span class="p">:</span><span class="n">cmd2</span>   
-<span class="n">ECHO</span><span class="o">.</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="err">关闭</span><span class="n">Nginx</span><span class="o">......</span>   
-<span class="n">taskkill</span> <span class="sr">/F /</span><span class="n">IM</span> <span class="n">nginx</span><span class="o">.</span><span class="n">exe</span> <span class="o">&gt;</span> <span class="n">nul</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="n">OK</span>   
-<span class="n">PAUSE</span>   
-<span class="n">GOTO</span> <span class="n">MENU</span>   
-<span class="p">:</span><span class="n">cmd3</span>   
-<span class="n">ECHO</span><span class="o">.</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="err">关闭</span><span class="n">Nginx</span><span class="o">......</span>   
-<span class="n">taskkill</span> <span class="sr">/F /</span><span class="n">IM</span> <span class="n">nginx</span><span class="o">.</span><span class="n">exe</span> <span class="o">&gt;</span> <span class="n">nul</span>   
-<span class="n">ECHO</span><span class="o">.</span><span class="n">OK</span>   
-<span class="n">GOTO</span> <span class="n">cmd1</span>   
-<span class="n">GOTO</span> <span class="n">MENU</span>   
-</code></pre>
-</div>
-
+					<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p><a href="/assets/files/2012-06/nginx.bat">猛击这里下载</a></p>
 
@@ -154,26 +97,6 @@
 				<div class="misc-content">
 					<div class="comment">
 					
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
-
 					</div>
 				</div><!-- misc-content -->
 			</div><!-- bd -->

@@ -350,43 +350,13 @@ one顺着链接到了那个网站，接着阅读。</p>
 
 <p><strong>看看缓存元素（缓存实体）</strong></p>
 
-<div class="highlight"><pre><code class="java"> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CacheElement</span>
- <span class="o">{</span>
-     <span class="kd">private</span> <span class="n">Object</span> <span class="n">objectValue</span><span class="o">;</span>
-     <span class="kd">private</span> <span class="n">Object</span> <span class="n">objectKey</span><span class="o">;</span>
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
-     <span class="kd">private</span> <span class="kt">int</span> <span class="n">hitCount</span><span class="o">;</span><span class="err">　</span><span class="c1">// getters and setters</span>
- <span class="o">}</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p>这个缓存实体拥有缓存的key和value，这个实体的数据结构会被以下所有缓存算法用到。</p>
 
 <p><strong>缓存算法的公用代码</strong></p>
 
-<div class="highlight"><pre><code class="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">addElement</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
-    <span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="c1">// get the entry from the table</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="c1">// If we have the entry already in our table</span>
-    <span class="c1">// then get it and replace only its value.</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
- 
-    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span><span class="o">;</span>
-        <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span><span class="o">;</span>
-    <span class="o">}</span>
-<span class="err">｝</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p>上面的代码会被所有的缓存算法实现用到。这段代码是用来检查缓存元素是否在缓存中了，如果是，我们就替换它，但是如果我们找不到这个
 key 对应的缓存，我们会怎么做呢？那我们就来深入的看看会发生什么吧！</p>
@@ -398,143 +368,15 @@ Cache，FIFO Cache。让我们从 Random Cache开始。</p>
 
 <p><strong>看看随机缓存的实现</strong></p>
 
-<div class="highlight"><pre><code class="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">addElement</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
-    <span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span><span class="o">;</span><span class="c1">// Just replace the value.</span>
-        <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span><span class="o">;</span>
-    <span class="o">}</span><span class="c1">// If we haven&#39;t filled the cache yet, put it at the end.</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">isFull</span><span class="o">())</span>
-    <span class="o">{</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">numEntries</span><span class="o">;</span>
-        <span class="o">++</span><span class="n">numEntries</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="k">else</span> <span class="o">{</span> <span class="c1">// Otherwise, replace a random entry.</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="o">(</span><span class="n">cache</span><span class="o">.</span><span class="na">length</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="na">nextFloat</span><span class="o">());</span>
-        <span class="n">table</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">getObjectKey</span><span class="o">());</span>
-    <span class="o">}</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">]);</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p><strong>看看FIFO缓存算法的实现</strong></p>
 
-<div class="highlight"><pre><code class="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">addElement</span><span class="o">(</span><span class="n">Objectkey</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
-    <span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span><span class="o">;</span> <span class="c1">// Just replace the value.</span>
-        <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="c1">// If we haven&#39;t filled the cache yet, put it at the end.</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">isFull</span><span class="o">())</span>
-    <span class="o">{</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">numEntries</span><span class="o">;</span>
-        <span class="o">++</span><span class="n">numEntries</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="k">else</span> <span class="o">{</span> <span class="c1">// Otherwise, replace the current pointer,</span>
-           <span class="c1">// entry with the new one.</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">current</span><span class="o">;</span>
-        <span class="c1">// in order to make Circular FIFO</span>
-        <span class="k">if</span> <span class="o">(++</span><span class="n">current</span> <span class="o">&gt;=</span> <span class="n">cache</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="n">table</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">getObjectKey</span><span class="o">());</span>
-    <span class="o">}</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">]);</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p><strong>看看LFU缓存算法的实现</strong></p>
 
-<div class="highlight"><pre><code class="java"><span class="kd">public</span> <span class="kd">synchronized</span> <span class="n">Object</span> <span class="nf">getElement</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setHitCount</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">getHitCount</span><span class="o">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">element</span><span class="o">.</span><span class="na">getObjectValue</span><span class="o">();</span>
-    <span class="o">}</span>
-    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-<span class="o">}</span>
-<span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">addElement</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span><span class="o">;</span> <span class="c1">// Just replace the value.</span>
-        <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span> <span class="n">obj</span><span class="o">;</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-        <span class="n">element</span><span class="o">.</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="k">if</span> <span class="o">(!</span><span class="n">isFull</span><span class="o">())</span>
-    <span class="o">{</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">numEntries</span><span class="o">;</span>
-        <span class="o">++</span><span class="n">numEntries</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="k">else</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span> <span class="o">=</span> <span class="n">removeLfuElement</span><span class="o">();</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">getIndex</span><span class="o">();</span>
-        <span class="n">table</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">getObjectKey</span><span class="o">());</span>
-    <span class="o">}</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">setIndex</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
-    <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">index</span><span class="o">]);</span>
-<span class="o">}</span>
-<span class="kd">public</span> <span class="n">CacheElement</span> <span class="nf">removeLfuElement</span><span class="o">()</span>
-<span class="o">{</span>
-    <span class="n">CacheElement</span><span class="o">[]</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">getElementsFromTable</span><span class="o">();</span>
-    <span class="n">CacheElement</span> <span class="n">leastElement</span> <span class="o">=</span> <span class="n">leastHit</span><span class="o">(</span><span class="n">elements</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">leastElement</span><span class="o">;</span>
-<span class="o">}</span>
-<span class="kd">public</span> <span class="kd">static</span> <span class="n">CacheElement</span> <span class="nf">leastHit</span><span class="o">(</span><span class="n">CacheElement</span><span class="o">[]</span> <span class="n">elements</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="n">CacheElement</span> <span class="n">lowestElement</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">elements</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">lowestElement</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
-        <span class="o">{</span>
-            <span class="n">lowestElement</span> <span class="o">=</span> <span class="n">element</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">else</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="na">getHitCount</span><span class="o">()</span> <span class="o">&lt;</span> <span class="n">lowestElement</span><span class="o">.</span><span class="na">getHitCount</span><span class="o">())</span>
-            <span class="o">{</span>
-                <span class="n">lowestElement</span> <span class="o">=</span> <span class="n">element</span><span class="o">;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="k">return</span> <span class="n">lowestElement</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p>今天的专题很特殊，因为我们有特殊的客人，事实上他们是我们想要听的与会者，但是首先，先介绍一下我们的客人：Random
 Cache, FIFO Cache。让我们从 Random Cache开始。</p>
@@ -544,65 +386,7 @@ Cache, FIFO Cache。让我们从 Random Cache开始。</p>
 
 <p><strong>看看LRU缓存算法实现</strong></p>
 
-<div class="highlight"><pre><code class="java"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">moveToFront</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">nextIndex</span><span class="o">,</span> <span class="n">prevIndex</span><span class="o">;</span>
-    <span class="k">if</span><span class="o">(</span><span class="n">head</span> <span class="o">!=</span> <span class="n">index</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">nextIndex</span> <span class="o">=</span> <span class="n">next</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
-        <span class="n">prevIndex</span> <span class="o">=</span> <span class="n">prev</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
-        <span class="c1">// Only the head has a prev entry that is an invalid index</span>
-        <span class="c1">// so we don&#39;t check.</span>
-        <span class="n">next</span><span class="o">[</span><span class="n">prevIndex</span><span class="o">]</span> <span class="o">=</span> <span class="n">nextIndex</span><span class="o">;</span>
-        <span class="c1">// Make sure index is valid. If it isn&#39;t, we&#39;re at the tail</span>
-        <span class="c1">// and don&#39;t set prev[next].</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">nextIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">)</span>
-            <span class="n">prev</span><span class="o">[</span><span class="n">nextIndex</span><span class="o">]</span> <span class="o">=</span> <span class="n">prevIndex</span><span class="o">;</span>
-        <span class="k">else</span>
-            <span class="n">tail</span> <span class="o">=</span> <span class="n">prevIndex</span><span class="o">;</span>
-        <span class="n">prev</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-        <span class="n">next</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
-        <span class="n">prev</span><span class="o">[</span><span class="n">head</span><span class="o">]</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
-        <span class="n">head</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-<span class="kd">public</span> <span class="kd">final</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">addElement</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">index</span><span class="o">;</span><span class="n">Object</span> <span class="n">obj</span><span class="o">;</span>
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-    <span class="o">{</span>
-        <span class="n">CacheElement</span> <span class="n">entry</span><span class="o">;</span>
-        <span class="c1">// Just replace the value, but move it to the front.</span>
-        <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">CacheElement</span><span class="o">)</span><span class="n">obj</span><span class="o">;</span>
-        <span class="n">entry</span><span class="o">.</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-        <span class="n">entry</span><span class="o">.</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="n">moveToFront</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getIndex</span><span class="o">());</span>
-        <span class="k">return</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="c1">// If we haven&#39;t filled the cache yet, place in next available</span>
-    <span class="c1">// spot and move to front.</span>
-    <span class="k">if</span><span class="o">(!</span><span class="n">isFull</span><span class="o">())</span>
-    <span class="o">{</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">_numEntries</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
-        <span class="o">{</span>
-            <span class="n">prev</span><span class="o">[</span><span class="n">_numEntries</span><span class="o">]</span> <span class="o">=</span> <span class="n">tail</span><span class="o">;</span>
-            <span class="n">next</span><span class="o">[</span><span class="n">_numEntries</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
-            <span class="n">moveToFront</span><span class="o">(</span><span class="n">numEntries</span><span class="o">);</span>
-        <span class="o">}</span>
-        <span class="o">++</span><span class="n">numEntries</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="k">else</span> <span class="o">{</span> <span class="c1">// We replace the tail of the list.</span>
-        <span class="n">table</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">cache</span><span class="o">[</span><span class="n">tail</span><span class="o">].</span><span class="na">getObjectKey</span><span class="o">());</span>
-        <span class="n">moveToFront</span><span class="o">(</span><span class="n">tail</span><span class="o">);</span>
-    <span class="o">}</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">head</span><span class="o">].</span><span class="na">setObjectValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-    <span class="n">cache</span><span class="o">[</span><span class="n">head</span><span class="o">].</span><span class="na">setObjectKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-    <span class="n">table</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">cache</span><span class="o">[</span><span class="n">head</span><span class="o">]);</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-
+<p>Liquid error: No such file or directory - pygmentize</p>
 
 <p>这段代码的逻辑如 LRU算法
 的描述一样，把再次用到的缓存提取到最前面，而每次删除的都是最后面的元素。</p>
@@ -654,26 +438,6 @@ LinkedHashMap。</p>
 				<div class="misc-content">
 					<div class="comment">
 					
-
-
-  <div id="disqus_thread"></div>
-<script type="text/javascript">
-    var disqus_developer = 1;
-    var disqus_shortname = 'beango'; // required: replace example with your forum shortname
-    
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-
-
 					</div>
 				</div><!-- misc-content -->
 			</div><!-- bd -->

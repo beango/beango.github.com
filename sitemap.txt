@@ -25,6 +25,7 @@ http://beango.github.com/info.html
 http://beango.github.com/sitemap.txt
 http://beango.github.com/tags.html
 
+http://beango.github.com/archives/2014/07/13/python-performance-tips.html
 http://beango.github.com/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html
 http://beango.github.com/archives/2013/12/06/writing-better-jquery-code.html
 http://beango.github.com/archives/2013/11/26/javascript-the-core.html
