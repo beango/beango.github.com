@@ -4,7 +4,7 @@
  <title>程序员 - 博客 - HuangDing</title>
  <link href="http://beango.github.com/atom.xml" rel="self"/>
  <link href="http://beango.github.com"/>
- <updated>2014-09-02T13:25:15+08:00</updated>
+ <updated>2014-09-02T13:31:54+08:00</updated>
  <id>http://beango.github.com</id>
  <author>
    <name>HuangDing</name>
@@ -361,17 +361,13 @@ def process_request(request):
 
 &lt;p&gt;不幸的是，无状态的Comet服务器是不可能实现。为了保持逻辑连接，需要一些会话状态来确保数据在客户端之间数据不会丢失。&lt;/p&gt;
 
-&lt;p&gt;根据任务，可以将有状态的网络层（Comet）和无状态的业务层（实际应用）分离开来。
-在这种情况下，业务层完全不需要异步 -
-接收到的任务，对其进行处理，并发送回响应。
-因为worker是无状态的，就可以并行地启动大量的workers来增加应用程序整体的吞吐量的。&lt;/p&gt;
+&lt;p&gt;根据任务，可以将有状态的网络层（Comet）和无状态的业务层（实际应用）分离开来。在这种情况下，业务层完全不需要异步 - 接收到的任务，对其进行处理，并发送回响应。因为worker是无状态的，就可以并行地启动大量的workers来增加应用程序整体的吞吐量的。&lt;/p&gt;
 
 &lt;p&gt;下面看他是如何工作的，架构图：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images\frontend-worker.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;在这个例子中，使用Redis做同步传输，但是这会有单点故障，从可靠性角度来看不是太好。
-此外，Redis的队列被用来向workers推送请求，并接收他们的响应。&lt;/p&gt;
+&lt;p&gt;在这个例子中，使用Redis做同步传输，但是这会有单点故障，从可靠性角度来看不是太好。此外，Redis的队列被用来向workers推送请求，并接收他们的响应。&lt;/p&gt;
 
 &lt;p&gt;由于网络层是有状态的，运行在应用程序前面负载均衡程序为了满足实时连接将使用粘性sessions（客户端应该每次去到相同的服务器）。&lt;/p&gt;
 
@@ -383,20 +379,15 @@ def process_request(request):
 
 &lt;blockquote&gt;&lt;p&gt;1， 在同一进程 2， 不在同一进程&lt;/p&gt;&lt;/blockquote&gt;
 
-&lt;p&gt;如果使用GEVENT，它是可以使WSGI应用与实时部分共存于相同的进程。
-如果使用tornado和其他基于回调的框架，尽管实时部分有可能运行在相同的进程中单独的线程，但是不被推荐这样做，
-这有性能方面的问题（由于GIL ）。&lt;/p&gt;
+&lt;p&gt;如果使用GEVENT，它是可以使WSGI应用与实时部分共存于相同的进程。如果使用tornado和其他基于回调的框架，尽管实时部分有可能运行在相同的进程中单独的线程，但是不被推荐这样做，这有性能方面的问题（由于GIL ）。&lt;/p&gt;
 
-&lt;p&gt;另外，我更喜欢独立进程的方法，其中单独设置进程/服务负责实时部分。
-他们可能共存在一个项目/代码库，但他们总是同时但是单独进程运行的。&lt;/p&gt;
+&lt;p&gt;另外，我更喜欢独立进程的方法，其中单独设置进程/服务负责实时部分。他们可能共存在一个项目/代码库，但他们总是同时但是单独进程运行的。&lt;/p&gt;
 
 &lt;p&gt;让我们假设你有一个社交网络，并希望实时推动状态更新。&lt;/p&gt;
 
 &lt;p&gt;最直接的方式来完成这个事情将是：建立单独的服务器来处理实时连接和监听从主站应用发来通知。&lt;/p&gt;
 
-&lt;p&gt;通知的实现可以通过实时服务提供的定制的REST API（适用于小型部署），
-通过Redis的发布/订阅功能（很有可能你的项目已经使用Redis的东西了），
-以及在ZeroMQ的帮助下，使用AMQP的消息总线（如RabbitMQ ）等。&lt;/p&gt;
+&lt;p&gt;通知的实现可以通过实时服务提供的定制的REST API（适用于小型部署），通过Redis的发布/订阅功能（很有可能你的项目已经使用Redis的东西了），以及在ZeroMQ的帮助下，使用AMQP的消息总线（如RabbitMQ ）等。&lt;/p&gt;
 
 &lt;p&gt;在这篇文章中我们将分析简单的推送broker架构。&lt;/p&gt;
 
@@ -404,11 +395,9 @@ def process_request(request):
 
 &lt;p&gt;我会用Flask作为一个例子，但同样可以应用到任何其他的框架（Django，Pyramid等）。&lt;/p&gt;
 
-&lt;p&gt;我更喜欢一个代码仓库包含Flask应用和基于Tornado的实时部分。
-在这种情况下，可以在这两个项目之间复用一些代码。&lt;/p&gt;
+&lt;p&gt;我更喜欢一个代码仓库包含Flask应用和基于Tornado的实时部分。在这种情况下，可以在这两个项目之间复用一些代码。&lt;/p&gt;
 
-&lt;p&gt;对于Flask，我使用普通的Python库：SQLAlchem??y，redis-PY等，对应Tornado，
-我必须使用异步的替代库或者使用线程池来执行长时间运行的同步函数，以防止阻塞ioloop。&lt;/p&gt;
+&lt;p&gt;对于Flask，我使用普通的Python库：SQLAlchem??y，redis-PY等，对应Tornado，我必须使用异步的替代库或者使用线程池来执行长时间运行的同步函数，以防止阻塞ioloop。&lt;/p&gt;
 
 &lt;p&gt;我manage.py有两个命令：启动Web应用程序和启动基于tornado的实时部分。&lt;/p&gt;
 
@@ -416,10 +405,7 @@ def process_request(request):
 
 &lt;h2&gt;推送broker&lt;/h2&gt;
 
-&lt;p&gt;Broker接受从Flask应用发来的消息，并将其转发到已连接的客户端。
-有很多现成可以使用的broker服务（ PubNub ，
-Pusher及一些其他的或自托管解决方案，如Hookbox ），
-但由于某种原因你可能要搭建自己的。&lt;/p&gt;
+&lt;p&gt;Broker接受从Flask应用发来的消息，并将其转发到已连接的客户端。有很多现成可以使用的broker服务（ PubNub ，Pusher及一些其他的或自托管解决方案，如Hookbox ），但由于某种原因你可能要搭建自己的。&lt;/p&gt;
 
 &lt;p&gt;这最简单的推送broker：&lt;/p&gt;
 
@@ -451,8 +437,7 @@ if __name__ == '__main__':
 
 &lt;p&gt;完整的 &lt;a href=&quot;https://gist.github.com/mrjoes/3284402&quot;&gt;例子在这里&lt;/a&gt; 。&lt;/p&gt;
 
-&lt;p&gt;broker是无状态的 - 他们真的不存储任何特定于应用程序的状态，
-这样你就可根据不断增加的负载启动你需要数量的broker，只要负载正确配置好了。&lt;/p&gt;
+&lt;p&gt;broker是无状态的 - 他们真的不存储任何特定于应用程序的状态，这样你就可根据不断增加的负载启动你需要数量的broker，只要负载正确配置好了。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images\push-servers.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
@@ -460,12 +445,9 @@ if __name__ == '__main__':
 
 &lt;p&gt;让我们为一个&quot;典型&quot;的纸牌游戏做个架构草案。&lt;/p&gt;
 
-&lt;p&gt;假设，有一桌子，一组玩家在玩同一个游戏。
-桌子可能包含可见牌和桌面的信息。 每个玩家有其内部状态 -
-手上牌的列表，以及一些身份验证数据。&lt;/p&gt;
+&lt;p&gt;假设，有一桌子，一组玩家在玩同一个游戏。桌子可能包含可见牌和桌面的信息。 每个玩家有其内部状态 - 手上牌的列表，以及一些身份验证数据。&lt;/p&gt;
 
-&lt;p&gt;此外，对于游戏，客户端应该比较智能点，因为有可能需要有基于原始连接的自定义协议的。
-为了简单起见，我们将使用定制的基于JSON协议。&lt;/p&gt;
+&lt;p&gt;此外，对于游戏，客户端应该比较智能点，因为有可能需要有基于原始连接的自定义协议的。为了简单起见，我们将使用定制的基于JSON协议。&lt;/p&gt;
 
 &lt;p&gt;让我们弄清楚我们需要什么样的消息：&lt;/p&gt;
 
@@ -485,9 +467,7 @@ if __name__ == '__main__':
 &lt;pre&gt;&lt;code&gt;{&quot;msg&quot;: &quot;auth&quot;, &quot;token&quot;: &quot;[encrypted-token-in-base64]&quot;}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;有效载荷是加密过的令牌，由Flask应用所产生。
-有一种方法来生成令牌：获得当前用户ID，用时间戳和一些使用共享密钥加密对称算法（如3DES或AES）随机添加一些东西。
-Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询得到任何有关用户的必要的信息。&lt;/p&gt;
+&lt;p&gt;有效载荷是加密过的令牌，由Flask应用所产生。有一种方法来生成令牌：获得当前用户ID，用时间戳和一些使用共享密钥加密对称算法（如3DES或AES）随机添加一些东西。Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询得到任何有关用户的必要的信息。&lt;/p&gt;
 
 &lt;p&gt;房间列表可以类似表示为：&lt;/p&gt;
 
@@ -535,33 +515,24 @@ Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询�
 
 &lt;p&gt;通过在客户端上实现不同的的消息处理程序和适当的业务逻辑，我们就可以让游戏工作，这作为一个练习留给读者。&lt;/p&gt;
 
-&lt;p&gt;游戏是有状态的 -
-服务器必须跟踪在比赛中发生了什么。这也意味着它是有点难以伸缩。&lt;/p&gt;
+&lt;p&gt;游戏是有状态的 - 服务器必须跟踪在比赛中发生了什么。这也意味着它是有点难以伸缩。&lt;/p&gt;
 
-&lt;p&gt;在上面的例子中，一台服务器处理所有连接的玩家的所有游戏。
-但是，如果我们希望有两台服务器并且让玩家分布于它们之间呢？
-由于他们不知道对方的状态，连接到第一台服务器的玩家将不能和第二台服务器上的玩家游戏。&lt;/p&gt;
+&lt;p&gt;在上面的例子中，一台服务器处理所有连接的玩家的所有游戏。但是，如果我们希望有两台服务器并且让玩家分布于它们之间呢？由于他们不知道对方的状态，连接到第一台服务器的玩家将不能和第二台服务器上的玩家游戏。&lt;/p&gt;
 
-&lt;p&gt;根据游戏规则的复杂性，它是可以使用全连接的拓扑结构 -
-每一个服务器连接到每一个其他的服务器：&lt;/p&gt;
+&lt;p&gt;根据游戏规则的复杂性，它是可以使用全连接的拓扑结构 - 每一个服务器连接到每一个其他的服务器：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images\game-interconnect.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;在这种情况下，游戏状态应该需要信息以确定玩家身份，管理他的游戏状态，
-并且把游戏相关的信息发送到相应的服务器，这样状态就可以转发给实际客户端。&lt;/p&gt;
+&lt;p&gt;在这种情况下，游戏状态应该需要信息以确定玩家身份，管理他的游戏状态，并且把游戏相关的信息发送到相应的服务器，这样状态就可以转发给实际客户端。&lt;/p&gt;
 
-&lt;p&gt;虽然这种方法有用，但异步应用程序是单线程的，更好的方式是将游戏逻辑和相关状态分离成单独的服务器应用程序，
-把实时部分作为游戏服务器和客户端之间的智能适配器。&lt;/p&gt;
+&lt;p&gt;虽然这种方法有用，但异步应用程序是单线程的，更好的方式是将游戏逻辑和相关状态分离成单独的服务器应用程序，把实时部分作为游戏服务器和客户端之间的智能适配器。&lt;/p&gt;
 
 &lt;p&gt;因此，它可以是这样的：&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images\realtime-game-servers.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;客户端连接到一个实时服务器，通过验证，获取正在运行的游戏列表（通过游戏服务器和实时服务器之间的一些共享状态）。
-当客户端选择特定的游戏玩时，它会发送请求到实时服务器，然后在和真正部署该游戏服务器通信。
-虽然这看起来和完全互连解决方案非常相似，但是在同一柜的服务器不需要与对方直接交互，这提供了有效的隔离状态。
-伸缩也很简单 -
-增加更多的的实时服务器或游戏服务器，由他们的状态是孤立的就易于管理。&lt;/p&gt;
+&lt;p&gt;客户端连接到一个实时服务器，通过验证，获取正在运行的游戏列表（通过游戏服务器和实时服务器之间的一些共享状态）。当客户端选择特定的游戏玩时，它会发送请求到实时服务器，然后在和真正部署该游戏服务器通信。虽然这看起来和完全互连解决方案非常相似，但是在同一柜的服务器不需要与对方直接交互，这提供了有效的隔离状态。
+伸缩也很简单 - 增加更多的的实时服务器或游戏服务器，由他们的状态是孤立的就易于管理。&lt;/p&gt;
 
 &lt;p&gt;另外，对于这个任务，我会使用ZeroMQ（AMQP总线）而不是Redis的，因为Redis会成为单点故障。&lt;/p&gt;
 
@@ -571,9 +542,7 @@ Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询�
 
 &lt;h2&gt;部署&lt;/h2&gt;
 
-&lt;p&gt;把Flask和Tornado放到负载均衡的后面（如haproxy ）
-或反向代理服务器（即nginx
-是个不错的想法，但要使用最新有WebSocket协议的支持的版本）。&lt;/p&gt;
+&lt;p&gt;把Flask和Tornado放到负载均衡的后面（如haproxy）或反向代理服务器（即nginx是个不错的想法，但要使用最新有WebSocket协议的支持的版本）。&lt;/p&gt;
 
 &lt;p&gt;有三种部署选项：&lt;/p&gt;
 
@@ -610,77 +579,45 @@ Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询�
 
 &lt;h2&gt;现实生活中的经验&lt;/h2&gt;&lt;/blockquote&gt;
 
-&lt;p&gt;我看到过一些使用sockjs-tornado的成功案例：
-&lt;a href=&quot;http://blog.playbuildy.com/&quot;&gt;PlayBuildy&lt;/a&gt;
-&lt;a href=&quot;http://blog.pythonanywhere.com/27/&quot;&gt;PythonAnywhere&lt;/a&gt; 和其他的。&lt;/p&gt;
+&lt;p&gt;我看到过一些使用sockjs-tornado的成功案例：&lt;a href=&quot;http://blog.playbuildy.com/&quot;&gt;PlayBuildy&lt;/a&gt; &lt;a href=&quot;http://blog.pythonanywhere.com/27/&quot;&gt;PythonAnywhere&lt;/a&gt; 和其他的。&lt;/p&gt;
 
 &lt;p&gt;但不幸的是，我自己没有在大型项目中使用过。&lt;/p&gt;
 
-&lt;p&gt;不过，我有相当有趣的sockjs-node(为nodejs做的SockJS的服务器实现)经验。
-我实现了一个比较大的广播电台的实时部分。
-在同一时间平均有3500左右连接的客户端。&lt;/p&gt;
+&lt;p&gt;不过，我有相当有趣的sockjs-node(为nodejs做的SockJS的服务器实现)经验。我实现了一个比较大的广播电台的实时部分。在同一时间平均有3500左右连接的客户端。&lt;/p&gt;
 
-&lt;p&gt;大多数连接是短时的，服务器就仅仅是一个简单的broker：
-管理有层次的频道订阅（例如广播站事件推送或广播员的新闻推送）和频道日志。
-客户订阅频道，应该可以获得所有为子频道推送的更新。
-客户也可以申请频道日志 - 按日期排序的最新N个频道和其子频道的消息。
-这就是一部分在服务器上的逻辑。&lt;/p&gt;
+&lt;p&gt;大多数连接是短时的，服务器就仅仅是一个简单的broker：管理有层次的频道订阅（例如广播站事件推送或广播员的新闻推送）和频道日志。客户订阅频道，应该可以获得所有为子频道推送的更新。客户也可以申请频道日志 - 按日期排序的最新N个频道和其子频道的消息。这就是一部分在服务器上的逻辑。&lt;/p&gt;
 
-&lt;p&gt;总体而言，nodejs的表现是很不错的 -
-在一台物理服务器上的3个服务器进程就能够毫无压力处理所有这些客户端的链接，
-而且还有很多的提升空间。&lt;/p&gt;
+&lt;p&gt;总体而言，nodejs的表现是很不错的 - 在一台物理服务器上的3个服务器进程就能够毫无压力处理所有这些客户端的链接，而且还有很多的提升空间。&lt;/p&gt;
 
 &lt;p&gt;但就我看来，nodejs和其库有太多的问题了。&lt;/p&gt;
 
-&lt;p&gt;部署到生产环境后，服务器开始没有明显原因的内存泄漏。
-所有的工具表明，堆大小是恒定的，但服务器进程的RSS不断增长，直到进程被操作系统杀掉。
-作为一个快速的解决方案，nodejs服务器必须每天晚上重新启动。
-这个问题问题和这个这个比较相似，但这个SSL没有关系，因为没有使用SSL。&lt;/p&gt;
+&lt;p&gt;部署到生产环境后，服务器开始没有明显原因的内存泄漏。所有的工具表明，堆大小是恒定的，但服务器进程的RSS不断增长，直到进程被操作系统杀掉。作为一个快速的解决方案，nodejs服务器必须每天晚上重新启动。这个问题问题和这个这个比较相似，但这个SSL没有关系，因为没有使用SSL。&lt;/p&gt;
 
 &lt;p&gt;如果没有明显的原因的崩溃而且没有产生coredump，那么升级到较新的nodejs版本有帮助。&lt;/p&gt;
 
-&lt;p&gt;如果V8垃圾收集器开始在某些情况下死锁了而且是一天一次的频率发生。
-那么升级到较新的nodejs版本会有帮助，它是发生在V8中的死锁，我在Chrominu的bug跟踪服务里面发现了完全相同的堆栈信息。&lt;/p&gt;
+&lt;p&gt;如果V8垃圾收集器开始在某些情况下死锁了而且是一天一次的频率发生。那么升级到较新的nodejs版本会有帮助，它是发生在V8中的死锁，我在Chrominu的bug跟踪服务里面发现了完全相同的堆栈信息。&lt;/p&gt;
 
 &lt;p&gt;新的nodejs版本解决了垃圾收集的问题，应用又可以工作。&lt;/p&gt;
 
 &lt;p&gt;此外，基于回调的编程风格使得代码不是我希望中的那么干净和可读。&lt;/p&gt;
 
-&lt;p&gt;概括起来 - 尽管nodejs能工作，我有一种强烈的感觉是它没有Python那样成熟。
-在以后这样的项目中我宁愿使用Python，
-因为我可以肯定，如果出现错误，它发生了是因为我出了错，而且问题可以追溯到，这样就相对容易。&lt;/p&gt;
+&lt;p&gt;概括起来 - 尽管nodejs能工作，我有一种强烈的感觉是它没有Python那样成熟。在以后这样的项目中我宁愿使用Python，因为我可以肯定，如果出现错误，它发生了是因为我出了错，而且问题可以追溯到，这样就相对容易。&lt;/p&gt;
 
-&lt;p&gt;性能方面，使用WebSocket传输，CPython和nodejs 是差不多的而
-PYPY比两者都快得多。
-对于长轮询，PYPY环境的Tornado在使用适当的异步库的情况下，约1.5-2倍慢于nodejs，因此，
-考虑目前的WebSocket兼容状态，我会说他们是可比的。&lt;/p&gt;
+&lt;p&gt;性能方面，使用WebSocket传输，CPython和nodejs 是差不多的而PYPY比两者都快得多。对于长轮询，PYPY环境的Tornado在使用适当的异步库的情况下，约1.5-2倍慢于nodejs，因此，考虑目前的WebSocket兼容状态，我会说他们是可比的。&lt;/p&gt;
 
 &lt;p&gt;我没有理由放弃的Python而用nodejs来做实时部分。&lt;/p&gt;
 
-&lt;p&gt;更新（2013年7月2日）： &lt;a href=&quot;http://www.techempower.com/&quot;&gt;TechEmpower&lt;/a&gt;
-发布了他们的
-&lt;a href=&quot;http://www.techempower.com/benchmarks/#section=data-r6&amp;amp;hw=ec2&amp;amp;test=json&quot;&gt;第6轮&lt;/a&gt;
-的框架基准测试，新版本的Tornado更快了，或与node.js有的一比。&lt;/p&gt;
+&lt;p&gt;更新（2013年7月2日）： &lt;a href=&quot;http://www.techempower.com/&quot;&gt;TechEmpower&lt;/a&gt;发布了他们的&lt;a href=&quot;http://www.techempower.com/benchmarks/#section=data-r6&amp;amp;hw=ec2&amp;amp;test=json&quot;&gt;第6轮&lt;/a&gt;的框架基准测试，新版本的Tornado更快了，或与node.js有的一比。&lt;/p&gt;
 
 &lt;h2&gt;备注：&lt;/h2&gt;
 
-&lt;p&gt;虽然有人可能会争辩说，要编写出可伸缩的服务器，Python并不是最好的语言。
-当然， Erlang的已经有内建的工具来写高效和可扩展的应用程序（而且也有
-&lt;a href=&quot;https://github.com/sockjs/sockjs-erlang&quot;&gt;sockjs-erlang&lt;/a&gt; ），
-但是要找到erlang的开发人员是比较困难的。
-Clojure和Scala也是不错的选项，但Java是完全不同的世界，有自己的类库，方法论和约定。
-找到不错的Clojure开发者仍然比找到好的Python开发者很难很多。
-&lt;a href=&quot;http://golang.org/&quot;&gt;Go&lt;/a&gt; 也不错，但他是相当年轻的语言接受程度还不高。&lt;/p&gt;
+&lt;p&gt;虽然有人可能会争辩说，要编写出可伸缩的服务器，Python并不是最好的语言。当然， Erlang的已经有内建的工具来写高效和可扩展的应用程序（而且也有&lt;a href=&quot;https://github.com/sockjs/sockjs-erlang&quot;&gt;sockjs-erlang&lt;/a&gt; ），但是要找到erlang的开发人员是比较困难的。Clojure和Scala也是不错的选项，但Java是完全不同的世界，有自己的类库，方法论和约定。找到不错的Clojure开发者仍然比找到好的Python开发者很难很多。&lt;a href=&quot;http://golang.org/&quot;&gt;Go&lt;/a&gt; 也不错，但他是相当年轻的语言接受程度还不高。&lt;/p&gt;
 
-&lt;p&gt;如果你已经有了Python的经验，你可以继续使用Python达到不错的结果。
-在大多数情况下，软件开发就是开发成本和性能之间的一个权衡。
-我认为Python所处的位置还比较有利，特别是借助于
-&lt;a href=&quot;http://www.pypy.org/&quot;&gt;PYPY&lt;/a&gt; 。&lt;/p&gt;
+&lt;p&gt;如果你已经有了Python的经验，你可以继续使用Python达到不错的结果。在大多数情况下，软件开发就是开发成本和性能之间的一个权衡。我认为Python所处的位置还比较有利，特别是借助于&lt;a href=&quot;http://www.pypy.org/&quot;&gt;PYPY&lt;/a&gt; 。&lt;/p&gt;
 
 &lt;p&gt;无论如何，如果你有任何意见，问题或更新 - 随时与我联系。&lt;/p&gt;
 
-&lt;p&gt;P.S. 图表是在 &lt;a href=&quot;http://draw.io/&quot;&gt;draw.io&lt;/a&gt; 上完成的
--我不得不提一下这个优秀且免费的服务。&lt;/p&gt;
+&lt;p&gt;P.S. 图表是在 &lt;a href=&quot;http://draw.io/&quot;&gt;draw.io&lt;/a&gt; 上完成的-我不得不提一下这个优秀且免费的服务。&lt;/p&gt;
 </content>
  </entry>
  
