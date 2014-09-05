@@ -120,3 +120,5 @@ description: "Linux常用命令"
     #默认的 run level 设置中,可以看到第一行书写如:id:5:initdefault:(默认的 run level 等级为 5,即图形界面)  
     #将第一行的 5 修改为 3 即可。  
     vim /etc/inittab  
+
+
