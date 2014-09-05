@@ -109,12 +109,12 @@
 
 <p>让我们来看看这些方法的利弊：</p>
 
-<blockquote><ul>
+<ul>
 <li>长轮询（Long-polling）是昂贵的，但兼容性很好。</li>
 <li>块传输协议效率更高，但有可能不是所有客户端都能正常工作，并且如果没有某种形式的探测你都无法发现这个问题的存在。</li>
 <li>SSE也不错，但不是所有的浏览器都支持。比较好的是有办法在建立连接前就知道它是否支持。</li>
 </ul>
-</blockquote>
+
 
 <p>但是，所有这些方法都有一个问题：他们都只提供一种方式将数据从服务器推送到客户端，而不是在建立双向通信，客户端每次想发送一些数据的时候，将不得不使用AJAX请求到服务器。这样会增加延迟，并在服务器也会产生额外的负载。</p>
 
@@ -164,12 +164,12 @@
 
 <p>让我们再次回顾长轮询（long-polling）传输：</p>
 
-<blockquote><ul>
+<ul>
 <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
 <li>无可用数据，服务器保持连接打开并等待数据发送</li>
 <li>因为服务器无法处理任何其他请求，一切都被阻塞</li>
 </ul>
-</blockquote>
+
 
 <p>用伪代码，它会看起来像这样：</p>
 
@@ -188,22 +188,22 @@
 
 <p>在这种情况下，长轮询（long-polling）传输将看起来像这样：</p>
 
-<blockquote><ul>
+<ul>
 <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
 <li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西</li>
 <li>当有数据要发送时，服务器发送数据然后关闭连接</li>
 </ul>
-</blockquote>
+
 
 <h2>Greenlets</h2>
 
 <p>在Python中有两种方法编写异步代码：</p>
 
-<blockquote><ul>
+<ul>
 <li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets）</li>
 <li>使用<a href="http://en.wikipedia.org/wiki/Callback_(computer_programming">回调</a></li>
 </ul>
-</blockquote>
+
 
 <p>简而言之，greenlets让你写出能在执行过程中暂停的功能，然后还可以继续执行。</p>
 
@@ -211,13 +211,13 @@
 
 <p>让我们再次看看长轮询（long-polling）的例子，这次基于greenlets：</p>
 
-<blockquote><ul>
+<ul>
 <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
 <li>服务器启动新的greenlet用来处理长轮询逻辑</li>
 <li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能</li>
 <li>当有数据要发生的时候，greenlet唤醒，发送数据然后关闭连接</li>
 </ul>
-</blockquote>
+
 
 <p>用伪代码，它看起来和同步版本完全一样：</p>
 
@@ -246,13 +246,13 @@
 
 <p>做上下文切换的另一种方法是使用回调。以长轮询（long-polling）为例：</p>
 
-<blockquote><ul>
+<ul>
 <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
 <li>服务器发现有没有数据发送</li>
 <li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数</li>
 <li>服务器发送响应的回调函数，并关闭连接</li>
 </ul>
-</blockquote>
+
 
 <p>在伪代码：</p>
 
@@ -271,17 +271,20 @@ def on_data(request):
 
 <p>有不同的方法来完善使用回调的情况：</p>
 
-<blockquote><ul>
+<ul>
 <li>使用futures</li>
 <li>使用generators</li>
 </ul>
-</blockquote>
+
 
 <p>什么是Futures？首先，Futures是一个函数的返回值，它是一个对象，它有以下几个属性：</p>
 
-<blockquote><p>1, 函数执行的状态（idling, running，停止等）<br/>
-2, 返回值（如果函数尚未执行，可能是空的）<br/>
-3, 各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</p></blockquote>
+<ul>
+<li>函数执行的状态（idling, running，停止等）</li>
+<li>返回值（如果函数尚未执行，可能是空的）</li>
+<li>各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</li>
+</ul>
+
 
 <p>您可以看看这篇优秀的<a href="http://blog.jcoglan.com/2013/03/30/callbacks-are-imperative-promises-are-functional-nodes-biggest-missed-opportunity/">博客文章</a>，其中比较了promises和回调，以及为什么对于写更好的异步代码来说promises优于纯写回调。</p>
 
@@ -335,9 +338,9 @@ def process_request(request):
 
 <p>2,Twisted是最古老的异步框架，即使是现在也有积极维护，。我个人的感受相当复杂：复杂，非PEP8，不容易学习。</p>
 
-<p>3, Tornado是的我最终选择的框架。有几个原因：</p>
+<p>3,Tornado是的我最终选择的框架。有几个原因：</p>
 
-<blockquote><ul>
+<ul>
 <li>快</li>
 <li>可预测的</li>
 <li>更符合Python的风格</li>
@@ -345,7 +348,7 @@ def process_request(request):
 <li>开发活跃</li>
 <li>源代码很容易阅读和理解</li>
 </ul>
-</blockquote>
+
 
 <p>Tornado没有Twisted大，并且没有一些同步调用库的异步移植（主要是DB方面），但附带了Twisted reactor，所以它是可以在Tornado的基础上使用为Twisted编写的模块。</p>
 
@@ -390,10 +393,13 @@ def process_request(request):
 
 <p>逻辑是非常简单的：</p>
 
-<blockquote><p>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open
-在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。
-如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者
-如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</p></blockquote>
+<ul>
+<li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open</li>
+<li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。</li>
+<li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者</li>
+<li>如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</li>
+</ul>
+
 
 <p>客户端的完整的例子可以在<a href="https://github.com/mrjoes/sockjs-tornado/blob/master/examples/chat/chat.py">这里找到</a>
 。</p>
@@ -410,7 +416,7 @@ def process_request(request):
 
 <p>下面看他是如何工作的，架构图：</p>
 
-<p><img src="images\frontend-worker.png" alt="" /></p>
+<p><img src="/assets/files/2014-08/frontend-worker.png" alt="" /></p>
 
 <p>在这个例子中，使用Redis做同步传输，但是这会有单点故障，从可靠性角度来看不是太好。此外，Redis的队列被用来向workers推送请求，并接收他们的响应。</p>
 
@@ -422,7 +428,11 @@ def process_request(request):
 
 <p>有两种方法来整合实时部分：</p>
 
-<blockquote><p>1， 在同一进程 2， 不在同一进程</p></blockquote>
+<ul>
+<li>在同一进程</li>
+<li>不在同一进程</li>
+</ul>
+
 
 <p>如果使用GEVENT，它是可以使WSGI应用与实时部分共存于相同的进程。如果使用tornado和其他基于回调的框架，尽管实时部分有可能运行在相同的进程中单独的线程，但是不被推荐这样做，这有性能方面的问题（由于GIL ）。</p>
 
@@ -484,7 +494,7 @@ if __name__ == '__main__':
 
 <p>broker是无状态的 - 他们真的不存储任何特定于应用程序的状态，这样你就可根据不断增加的负载启动你需要数量的broker，只要负载正确配置好了。</p>
 
-<p><img src="images\push-servers.png" alt="" /></p>
+<p><img src="/assets/files/2014-08/push-servers.png" alt="" /></p>
 
 <h2>游戏</h2>
 
@@ -496,7 +506,7 @@ if __name__ == '__main__':
 
 <p>让我们弄清楚我们需要什么样的消息：</p>
 
-<blockquote><ul>
+<ul>
 <li>验证</li>
 <li>错误处理</li>
 <li>房间列表</li>
@@ -505,7 +515,7 @@ if __name__ == '__main__':
 <li>出牌</li>
 <li>离开房间</li>
 </ul>
-</blockquote>
+
 
 <p>认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：</p>
 
@@ -566,7 +576,7 @@ if __name__ == '__main__':
 
 <p>根据游戏规则的复杂性，它是可以使用全连接的拓扑结构 - 每一个服务器连接到每一个其他的服务器：</p>
 
-<p><img src="images\game-interconnect.png" alt="" /></p>
+<p><img src="/assets/files/2014-08/game-interconnect.png" alt="" /></p>
 
 <p>在这种情况下，游戏状态应该需要信息以确定玩家身份，管理他的游戏状态，并且把游戏相关的信息发送到相应的服务器，这样状态就可以转发给实际客户端。</p>
 
@@ -574,7 +584,7 @@ if __name__ == '__main__':
 
 <p>因此，它可以是这样的：</p>
 
-<p><img src="images\realtime-game-servers.png" alt="" /></p>
+<p><img src="/assets/files/2014-08/realtime-game-servers.png" alt="" /></p>
 
 <p>客户端连接到一个实时服务器，通过验证，获取正在运行的游戏列表（通过游戏服务器和实时服务器之间的一些共享状态）。当客户端选择特定的游戏玩时，它会发送请求到实时服务器，然后在和真正部署该游戏服务器通信。虽然这看起来和完全互连解决方案非常相似，但是在同一柜的服务器不需要与对方直接交互，这提供了有效的隔离状态。
 伸缩也很简单 - 增加更多的的实时服务器或游戏服务器，由他们的状态是孤立的就易于管理。</p>
@@ -591,38 +601,47 @@ if __name__ == '__main__':
 
 <p>有三种部署选项：</p>
 
-<blockquote><p>1, 把Web和实时部分都运行在相同的主机和端口，并使用基于URL路由分发
-:   -   优点</p>
+<p>1, 把Web和实时部分都运行在相同的主机和端口，并使用基于URL路由分发</p>
 
-<pre><code>    :   -   所有的事情看起来是一致的
-        -   无需担心跨域脚本问题
-        -   一般可以工作在有防火墙限制的环境
+<ul>
+<li><p>优点</p>
 
--   缺点
-    :   -   一些透明HTTP代理服务器不兼容
-</code></pre>
+<p>所有的事情看起来是一致的<br/>
+无需担心跨域脚本问题<br/>
+一般可以工作在有防火墙限制的环境</p></li>
+<li><p>缺点</p>
 
-<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口
-:   -   优点</p>
+<p>一些透明HTTP代理服务器不兼容</p></li>
+</ul>
 
-<pre><code>    :   -   和透明代理更加兼容
 
--   缺点
-    :   -   跨域脚本问题（不是每个浏览器都支持CORS ）
-        -   很有可能被防火墙阻止
-</code></pre>
+<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口</p>
 
-<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com）
-:   -   优点</p>
+<ul>
+<li><p>优点</p>
 
-<pre><code>    :   -   可以将实时部分从主站点分离出来（无需使用相同的负载均衡）
+<p>和透明代理更加兼容</p></li>
+<li><p>缺点</p>
 
--   缺点
-    :   -   跨域脚本问题
-        -   会碰到行为古怪的透明代理
-</code></pre>
+<p>跨域脚本问题（不是每个浏览器都支持CORS ）<br/>
+很有可能被防火墙阻止</p></li>
+</ul>
 
-<h2>现实生活中的经验</h2></blockquote>
+
+<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com）</p>
+
+<ul>
+<li><p>优点</p>
+
+<p>可以将实时部分从主站点分离出来（无需使用相同的负载均衡）</p></li>
+<li><p>缺点</p>
+
+<p>跨域脚本问题<br/>
+会碰到行为古怪的透明代理</p></li>
+</ul>
+
+
+<h2>现实生活中的经验</h2>
 
 <p>我看到过一些使用sockjs-tornado的成功案例：<a href="http://blog.playbuildy.com/">PlayBuildy</a> <a href="http://blog.pythonanywhere.com/27/">PythonAnywhere</a> 和其他的。</p>
 
