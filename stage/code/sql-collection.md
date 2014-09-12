@@ -45,6 +45,24 @@ tags: [SQL]
 
 说明：FETCH_STATUS检索到数据返回0，失败返回-1，可判断是否滚动未到结尾。
 
+嵌套的事务 
+----------
+    BEGIN TRANSACTION tran1
+    SAVE TRANSACTION tran_point1
+        EXEC t1 @err=0
+        EXEC t1 @err=1
+        IF GETDATE()='2014-10-10' BEGIN
+            ROLLBACK TRANSACTION tran_point1
+            COMMIT TRANSACTION tran1
+            RAISERROR('errmsg',16,1)
+            RETURN;
+        END
+        PRINT @@ERROR
+        IF @@error>0 BEGIN
+            ROLLBACK TRANSACTION tran_point1
+        END
+    COMMIT TRANSACTION tran1
+
 临时过程/表  
 ----------
 
