@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, 高性能web]
+category: default
 date: 2012-08-21
 title: "rabbitmq集群-1 介绍"
 description: "rabbitmq集群-1 介绍"

@@ -1,6 +1,6 @@
----
+﻿---
 layout: post
-categories: [javascript]
+category: default
 date: 2012-04-19
 title: "说说JSON和JSONP"
 description: "说说JSON和JSONP"

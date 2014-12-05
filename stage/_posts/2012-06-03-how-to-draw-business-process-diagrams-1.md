@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [项目管理]
+category: default
 date: 2012-06-03
 title: "如何绘制业务流程图(一)"
 description: "如何绘制业务流程图(一)"

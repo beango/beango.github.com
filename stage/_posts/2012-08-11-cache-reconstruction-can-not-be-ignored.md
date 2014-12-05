@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [nosql]
+category: default
 date: 2012-08-11
 title: "不可忽略的缓存重建"
 description: "不可忽略的缓存重建"

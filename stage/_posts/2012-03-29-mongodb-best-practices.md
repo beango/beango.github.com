@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2012-03-29
 title: "MongoDB最佳实践"
 description: "MongoDB最佳实践"

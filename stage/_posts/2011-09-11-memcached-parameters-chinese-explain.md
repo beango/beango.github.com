@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-category: 高性能web
+category: default
 date: 2011-09-11
 title: "memcached参数中文解释"
 description: "memcached参数中文解释"

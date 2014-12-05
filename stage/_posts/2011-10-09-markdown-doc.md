@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [jekyll]
+category: default
 date: 2011-10-09
 title: "Markdown语法说明 (简体中文版)"
 description: "Markdown语法说明 (简体中文版)"

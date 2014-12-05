@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2013-09-11
 title: "Python程序的性能分析指南"
 description: "Python程序的性能分析指南"

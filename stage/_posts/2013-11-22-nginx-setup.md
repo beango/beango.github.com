@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [ngnix]
+category: default
 date: 2013-11-22
 title: "Nginx 战斗准备 —— 优化指南"
 description: "Nginx 战斗准备 —— 优化指南"

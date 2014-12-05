@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [linux]
+category: default
 date: 2011-09-08
 title: "nginx upstream 的几种分配方式"
 description: "nginx upstream 的几种分配方式"
@@ -9,13 +9,7 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
 ---
 {% include JB/setup %}
 
-作者：[Mike.Xu](http://www.dbasky.net) 发表于: December 11, 2009 12:11 PM
-
-[](http://creativecommons.org/licenses/by/2.5/cn/)转载时请务必以超链接形式标明文章[原始出处](http://www.dbasky.net/archives/2009/12/nginx-upstream.html)和作者信息及[本版权声明](http://www.dbasky.net/archives/2009/12/nginx-upstream.html)。
-
-链接：[http://www.dbasky.net/archives/2009/12/nginx-upstream.html](http://www.dbasky.net/archives/2009/12/nginx-upstream.html)
-
- 1、轮询（默认）
+1、轮询（默认）
 
 每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。
 
@@ -54,7 +48,6 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
 
 例：在upstream中加入hash语句，server语句中不能写入weight等其他的参数，hash_method是使用的hash算法
 
-
     upstream resinserver{
       server squid1:3128;
       server squid2:3128;
@@ -62,11 +55,9 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
       hash_method crc32;
     }
 
-    tips:
-
 <label></label>
 
-    upstream resinserver{#定义负载均衡设备的Ip及设备状态
+    upstream resinserver{ #定义负载均衡设备的Ip及设备状态
       ip_hash;
       server 127.0.0.1:8000 down;
       server 127.0.0.1:8080 weight=2;
@@ -79,15 +70,12 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
     proxy_pass http://resinserver/;
 
 
-每个设备的状态设置为:
-1.down 表示单前的server暂时不参与负载
-2.weight 默认为1.weight越大，负载的权重就越大。
-3.max_fails：允许请求失败的次数默认为1.当超过最大次数时，返回proxy_next_upstream模块定义的错误
-4.fail_timeout:max_fails次失败后，暂停的时间。
-5.backup：其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
+每个设备的状态设置为:  
+1.down 表示单前的server暂时不参与负载  
+2.weight 默认为1.weight越大，负载的权重就越大。  
+3.max_fails：允许请求失败的次数默认为1.当超过最大次数时，返回proxy_next_upstream模块定义的错误  
+4.fail_timeout:max_fails次失败后，暂停的时间。  
+5.backup：其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。  
 nginx支持同时设置多组的负载均衡，用来给不用的server来使用。
 
-client_body_in_file_only 设置为On 可以讲client
-post过来的数据记录到文件中用来做debug
-client_body_temp_path 设置记录文件的目录 可以设置最多3层目录
-location 对URL进行匹配.可以进行重定向或者进行新的代理 负载均衡
+client_body_in_file_only 设置为On 可以讲client post过来的数据记录到文件中用来做debug client_body_temp_path 设置记录文件的目录 可以设置最多3层目录location 对URL进行匹配.可以进行重定向或者进行新的代理 负载均衡

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [go]
+category: default
 date: 2013-07-20
 title: "Go语言内存模型"
 description: "Go语言内存模型"

@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, 高性能web, nosql]
+category: default
 date: 2011-12-03
 title: "利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统"
 description: "利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统"
@@ -11,7 +11,7 @@ redirecturl: http://blog.s135.com/post/362/3/1/
 
 ###一、安装 
 
-<li>首先编译安装tokyocabinet数据库</li>
+**首先编译安装tokyocabinet数据库***
 
     wget http://www.1978th.net/tokyocabinet/tokyocabinet-1.4.45.tar.gz  
     tar zxvf tokyocabinet-1.4.45.tar.gz  
@@ -23,7 +23,7 @@ redirecturl: http://blog.s135.com/post/362/3/1/
     make install  
     cd ../
 
-<li>然后编译安装tokyotyrant</li>
+**然后编译安装tokyotyrant**
 
     wget http://www.1978th.net/tokyotyrant/tokyotyrant-1.1.40.tar.gz  
     tar zxvf tokyotyrant-1.1.40.tar.gz  
@@ -41,23 +41,24 @@ redirecturl: http://blog.s135.com/post/362/3/1/
 
 2.启动tokyotyrant的主进程（ttserver）
 
-<li>单机模式</li>  
+**单机模式** 
 
     ulimit -SHn 51200  
     ttserver -host 127.0.0.1 -port 11211 -thnum 8 -dmn -pid /ttserver/ttserver.pid -log /ttserver/ttserver.log -le -ulog /ttserver/ -ulim 128m -sid 1 -rts /ttserver/ttserver.rts /ttserver/database.tcb\#lmemb=1024\#nmemb=2048\#bnum=10000000  
 
-<li>双机互为主辅模式</li>
+**双机互为主辅模式**
 
-服务器192.168.1.91：
+1、服务器192.168.1.91：
+
     ulimit -SHn 51200  
     ttserver -host 192.168.1.91 -port 11211 -thnum 8 -dmn -pid /ttserver/ttserver.pid -log /ttserver/ttserver.log -le -ulog /ttserver/ -ulim 128m -sid 91 -mhost 192.168.1.92 -mport 11211 -rts /ttserver/ttserver.rts /ttserver/database.tcb\#lmemb=1024\#nmemb=2048\#bnum=10000000
 
-服务器192.168.1.92：
+2、服务器192.168.1.92：
     
     ulimit -SHn 51200  
     ttserver -host 192.168.1.92 -port 11211 -thnum 8 -dmn -pid /ttserver/ttserver.pid -log /ttserver/ttserver.log -le -ulog /ttserver/ -ulim 128m -sid 92 -mhost 192.168.1.91 -mport 11211 -rts /ttserver/ttserver.rts /ttserver/database.tcb\#lmemb=1024\#nmemb=2048\#bnum=10000000
 
-3.停止tokyotyrant（ttserver）
+3、停止tokyotyrant（ttserver）
 
 	ps -ef | grep ttserver
 
@@ -65,7 +66,7 @@ redirecturl: http://blog.s135.com/post/362/3/1/
 
 	kill -TERM 2159
 
-4.参数说明
+4、参数说明
 
     ttserver [-host name] [-port num] [-thnum num] [-tout num] [-dmn] [-pid path] [-log path] [-ld|-le] [-ulog path] [-ulim num] [-uas] [-sid num] [-mhost name] [-mport num] [-rts path] [dbname]  
 
@@ -90,6 +91,7 @@ redirecturl: http://blog.s135.com/post/362/3/1/
     ttserver -host 127.0.0.1 -port 11211 -thnum 8 -dmn -pid /ttserver/ttserver.pid -log /ttserver/ttserver.log -le -ulog /ttserver/ -ulim 128m -sid 1 -rts /ttserver/ttserver.rts /ttserver/database.tch\#bnum=1000000
 
 如果大量的客户端访问ttserver，请确保文件描述符够用。许多服务器的默认文件描述符为1024，可以在启动ttserver前使用ulimit命令提高这项值。例如：  
+    
     ulimit -SHn 51200
 
 ### 三、调用
@@ -98,12 +100,15 @@ redirecturl: http://blog.s135.com/post/362/3/1/
 
 2.还可以通过HTTP方式调用，下面以Linux的curl命令为例，介绍如何操作tokyotyrant：
 
-<li>写数据，将数据“value”写入到“key”中：</li>  
+**写数据，将数据“value”写入到“key”中：**
+
     curl -X PUT http://127.0.0.1:11211/key -d "value"
 	
-<li>读数据，读取“key”中数据：</li>  
+**读数据，读取“key”中数据：**
+
     curl http://127.0.0.1:11211/key
 	
-<li>删数据，删除“key”：</li>  
+**删数据，删除“key”：**
+
     curl -X DELETE http://127.0.0.1:11211/key
 

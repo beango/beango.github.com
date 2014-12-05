@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-11-26
 title: "JavaScript核心"
 description: "JavaScript核心"

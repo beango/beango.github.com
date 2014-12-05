@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: web开发
+category: default
 date: 2013-01-09
 title: "趣解HTTP状态码"
 description: "趣解HTTP状态码"

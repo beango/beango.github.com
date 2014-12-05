@@ -1,33 +1,8 @@
 ---
-layout: page
-title: Welcome
-section: Home
-description: "Huang Ding，程序员，dotnet，aspnet，mvc，memcached，linux，sql"
+layout: list
 ---
-{% include JB/setup %}
 
-<div class="unit-inner unit-foot-inner">
-	<div class="misc vcard">
-		<ul>
-			<li class="github"><a href="http://github.com/{{ site.author.github }}/" rel="me">github.com/{{ site.author.github }}</a></li>
-			<li class="twitter"><a href="http://twitter.com/{{ site.author.twitter }}/" rel="me">twitter.com/{{ site.author.twitter }}</a></li>
-			<li class="rss"><a href="{{ site.author.weibo }}">新浪微博</a></li>
-		</ul>
-	</div><!-- misc -->
-	<div class="misc vcard layout-page-footer">
-		<h3>归档</h3>
-		<ul class="tag_box inline" style="margin-left:3px">
-			{% include JB/archive_list %}
-		</ul>
-	</div><!-- misc -->
-	
-	<div class="section">
-		<h2 id="contact"><a href="mailto:6588617@qq.com">Contact</a></h2>
-
-		<div class="f12">
-			<p>QQ邮箱：<a href="mailto:6588617@qq.com">6588617@qq.com</a></p>
-			<p>GMAIL：<a href="mailto:6588617@gmail.com">6588617@gmail.com</a></p>
-			<p>QQ：6588617</p>
-		</div>
-	</div>
-</div>
+<!-- 首页即博客列表 -->
+{% assign list = site.posts %}
+{% assign preview = true %}
+{% include list.tpl %}

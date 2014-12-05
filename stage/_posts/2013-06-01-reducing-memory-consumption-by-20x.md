@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-06-01
 title: "优化技巧分享：把内存消耗降低至原来的1/20"
 description: "优化技巧分享：把内存消耗降低至原来的1/20"

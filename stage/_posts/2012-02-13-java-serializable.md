@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2012-02-13
 title: "理解Java对象序列化"
 description: "理解Java对象序列化"

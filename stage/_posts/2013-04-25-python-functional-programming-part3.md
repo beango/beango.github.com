@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [函数式编程]
+category: default
 date: 2013-04-25
 title: "Python中函数式编程，第三部分"
 description: "Python中函数式编程，第三部分"

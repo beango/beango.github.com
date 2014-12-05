@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [python]
+category: default
 date: 2013-03-25
 title: "加速你的Python代码"
 description: "加速你的Python代码"

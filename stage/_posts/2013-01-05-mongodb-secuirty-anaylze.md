@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2013-01-05
 title: "Mongodb安全性初探"
 description: "Mongodb安全性初探"

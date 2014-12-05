@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [ngnix]
+category: default
 date: 2013-08-08
 title: "Nginx SSL性能调优"
 description: "Nginx SSL性能调优"

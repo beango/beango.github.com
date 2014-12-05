@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2011-10-15
 title: "MongoDB构架图分享"
 description: "MongoDB构架图分享"

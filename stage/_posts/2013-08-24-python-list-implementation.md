@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2013-08-24
 title: "Python中list 的实现"
 description: "Python中list 的实现"

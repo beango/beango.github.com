@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [web开发]
+category: default
 date: 2013-10-25
 title: "如何只用CSS做到完全居中"
 description: "如何只用CSS做到完全居中"

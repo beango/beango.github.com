@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-06-22
 title: "使用面向对象技术创建高级Web应用程序"
 description: "使用面向对象技术创建高级Web应用程序"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-05-31
 title: "深入研究JavaScript的Module模式"
 description: "深入研究JavaScript的Module模式"

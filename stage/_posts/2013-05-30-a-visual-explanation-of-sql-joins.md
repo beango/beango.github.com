@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [SQL]
+category: default
 date: 2013-05-30
 title: "SQL联合语句的视觉解释"
 description: "SQL联合语句的视觉解释"

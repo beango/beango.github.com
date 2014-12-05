@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2012-05-19
 title: "MongoDB索引实战技巧"
 description: "MongoDB索引实战技巧"

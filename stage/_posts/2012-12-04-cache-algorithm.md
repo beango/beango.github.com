@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构,高性能web]
+category: default
 date: 2012-12-04
 title: "缓存、缓存算法和缓存框架简介"
 description: "缓存、缓存算法和缓存框架简介"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [mongodb]
+category: default
 date: 2012-12-09
 title: "MongoDB Sharding 机制分析"
 description: "MongoDB Sharding 机制分析"

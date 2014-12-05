@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [软件架构]
+category: default
 date: 2013-02-27
 title: "可伸缩系统的架构经验"
 description: "可伸缩系统的架构经验"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2014-08-05
 title: "python realtime"
 description: "python realtime"

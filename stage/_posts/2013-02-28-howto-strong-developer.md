@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [职场]
+category: default
 date: 2013-02-28
 title: "如何成为强大的程序员？"
 description: "如何成为强大的程序员？"

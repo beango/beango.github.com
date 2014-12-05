@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [OS系统]
+category: default
 date: 2013-03-01
 title: "每个程序员都应该了解的内存知识"
 description: "每个程序员都应该了解的内存知识"

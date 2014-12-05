@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2012-06-17
 title: "解密Redis持久化"
 description: "解密Redis持久化"

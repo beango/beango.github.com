@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [OS系统]
+category: default
 date: 2013-03-20
 title: "每个程序员都应该了解的CPU高速缓存"
 description: "每个程序员都应该了解的CPU高速缓存"

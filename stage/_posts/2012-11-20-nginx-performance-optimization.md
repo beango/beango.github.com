@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [linux]
+category: default
 date: 2012-11-20
 title: "nginx性能优化"
 description: "nginx性能优化"

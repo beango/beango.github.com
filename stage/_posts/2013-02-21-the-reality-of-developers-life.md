@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [职场]
+category: default
 date: 2013-02-21
 title: "程序猿的真实生活(GIF)"
 description: "程序猿的真实生活(GIF)"

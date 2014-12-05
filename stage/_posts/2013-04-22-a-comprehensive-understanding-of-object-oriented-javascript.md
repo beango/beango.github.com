@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-04-22
 title: "全面理解面向对象的 JavaScript"
 description: "全面理解面向对象的 JavaScript"

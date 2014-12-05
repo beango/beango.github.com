@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [go]
+category: default
 date: 2013-10-08
 title: "复用Go的内存buffer"
 description: "复用Go的内存buffer"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2013-09-25
 title: "Python编码和Unicode"
 description: "Python编码和Unicode"

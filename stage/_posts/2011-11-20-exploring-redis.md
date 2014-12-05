@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2011-11-20
 title: "Redis系统性介绍"
 description: "Redis系统性介绍"

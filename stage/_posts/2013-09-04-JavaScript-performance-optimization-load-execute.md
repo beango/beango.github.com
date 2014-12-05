@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-09-04
 title: "JavaScript的性能优化：加载和执行"
 description: "JavaScript的性能优化：加载和执行"

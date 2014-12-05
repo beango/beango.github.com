@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [高性能web, nosql]
+category: default
 date: 2012-03-12
 title: "TokyoTyrant的管理工具tcrmgr使用"
 description: "TokyoTyrant的管理工具tcrmgr使用"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-03-16
 title: "注释驱动的 Spring cache 缓存介绍"
 description: "注释驱动的 Spring cache 缓存介绍"

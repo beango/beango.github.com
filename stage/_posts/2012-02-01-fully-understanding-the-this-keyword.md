@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2012-02-01
 title: "完全理解关键字this"
 description: "完全理解关键字this"

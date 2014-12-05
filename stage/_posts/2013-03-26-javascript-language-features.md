@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [javascript]
+category: default
 date: 2013-03-26
 title: "浅谈JavaScript的语言特性"
 description: "浅谈JavaScript的语言特性"

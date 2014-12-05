@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [高性能web]
+category: default
 date: 2013-06-20
 title: "使用 Varnish 加速你的 Web 网站"
 description: "使用 Varnish 加速你的 Web 网站"

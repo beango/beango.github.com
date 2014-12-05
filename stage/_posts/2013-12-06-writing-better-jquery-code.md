@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [职场]
+category: default
 date: 2013-12-06
 title: "编写更好的jQuery代码的建议"
 description: "编写更好的jQuery代码的建议"

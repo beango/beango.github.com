@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-category: 职场
+category: default
 date: 2011-06-11
 title: "一点一滴培养你的气质"
 description: "一点一滴培养你的气质"

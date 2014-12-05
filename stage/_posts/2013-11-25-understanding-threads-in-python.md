@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2013-11-25
 title: "理解 Python 中的线程"
 description: "理解 Python 中的线程"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-04-27
 title: "Java 代码优化过程的实例介绍"
 description: "Java 代码优化过程的实例介绍"

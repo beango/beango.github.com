@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [javascript]
+category: default
 date: 2012-05-06
 title: "Javascript内存泄露"
 description: "Javascript内存泄露"

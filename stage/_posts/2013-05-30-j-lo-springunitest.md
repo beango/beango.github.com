@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-05-30
 title: "使用 Spring 进行单元测试"
 description: "使用 Spring 进行单元测试"

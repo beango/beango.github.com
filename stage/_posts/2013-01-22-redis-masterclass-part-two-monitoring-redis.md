@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2013-01-22
 title: "Redis监控技巧"
 description: "Redis监控技巧"

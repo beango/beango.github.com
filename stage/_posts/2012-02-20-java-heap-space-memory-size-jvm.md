@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2012-02-20
 title: "Java堆内存的10个要点"
 description: "Java堆内存的10个要点"

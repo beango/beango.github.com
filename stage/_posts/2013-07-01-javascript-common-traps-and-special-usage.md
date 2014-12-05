@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [javascript]
+category: default
 date: 2013-07-01
 title: "Javascript 常见陷阱及特殊用法"
 description: "Javascript 常见陷阱及特殊用法"

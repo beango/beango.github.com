@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [高性能web, nosql]
+category: default
 date: 2011-12-19
 title: "CentOS6.3下Redis安装"
 description: "CentOS6.3下Redis安装"
@@ -8,14 +8,12 @@ tags: [redis]
 ---
 {% include JB/setup %}
 
-*   下载最新的稳定版redis  
+**下载最新的稳定版redis**
 
-<label />
     wget http://redis.googlecode.com/files/redis-2.6.7.tar.gz
 
-*   安装
+**安装**
 
-<label />
     tar xzf  redis-2.6.7.tar.gz
     cd redis-2.6.7
     make PREFIX=/usr/local install
@@ -32,29 +30,24 @@ redis-benchmark：Redis性能测试工具，测试Redis在你的系统及你的�
 redis-check-aof：更新日志检查
 redis-check-dump：用于本地数据库检查
 
-*   编写redis配置文件
+**编写redis配置文件**
 
-<label />
     mkdir -p /etc/redis/
     cp redis.conf /etc/redis/redis.conf
 
-*   启动
+**启动**
 
-<label />
     redis-server /etc/redis/redis.conf
 
-*   测试
+**测试**
 
-<label />
     redis-cli
     redis 127.0.0.1:6379>set myKey  myValue
     OK
     redis 127.0.0.1:6379> get myKey
     "myValue"
 
-*   redis.conf 配置参数：
-
-<a href="#" onclick="javascript:toggle(this);" class="linkcodetoggle">+ 点击展开</a>
+**redis.conf 配置参数：**
 
     #是否作为守护进程运行
     daemonize yes
@@ -151,7 +144,6 @@ redis-check-dump：用于本地数据库检查
     #是否重置Hash表
     activerehashing yes
 
-
 注意：Redis官方文档对VM的使用提出了一些建议:
 
 当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.
@@ -159,42 +151,37 @@ redis-check-dump：用于本地数据库检查
 最好使用linux ext3 等对稀疏文件支持比较好的文件系统保存你的swap文件.
 vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数.如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.
 
-*   常见错误-zmalloc.h:51:31: error: jemalloc/jemalloc.h: No such file or directory  
-    检查是否安装gcc，如果已经安装，先执行make distclean再make
+> 常见错误-zmalloc.h:51:31: error: jemalloc/jemalloc.h: No such file or directory  
+> 检查是否安装gcc，如果已经安装，先执行make distclean再make
 
-*   python操作redis
+**python操作redis**
 
-<a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
-<div style="display:none;">
-{% highlight perl %}
-wget http://pypi.python.org/packages/source/r/redis/redis-2.7.2.tar.gz
-#tar xvzf redis-py-2.7.2.tar.gz
-python setup.py install
+    wget http://pypi.python.org/packages/source/r/redis/redis-2.7.2.tar.gz
+    #tar xvzf redis-py-2.7.2.tar.gz
+    python setup.py install
 
-#打开Python解释器：
->>> import redis
->>> r = redis.Redis(host='localhost', port=6379, db=0)
->>> r.set('foo', 'bar')   #或者写成 r['foo'] = 'bar'
-True
->>> r.get('foo')   
-'bar'
->>> r.delete('foo')
-True
->>> r.dbsize()   #库里有多少key，多少条数据
-0
->>> r['test']='OK!'
->>> r.save()   #强行把数据库保存到硬盘。保存时阻塞
-True
---------------------------------
->>> r.flushdb()   #删除当前数据库的所有数据
-True
->>> a = r.get('chang')
->>> a    # 因为是Noen对象，什么也不显示！
->>> dir(a)   
-['__class__', '__delattr__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
->>> r.exists('chang')  #看是否存在这个键值
-False
->>> r.keys()   # 列出所有键值。（这时候已经存了4个了）
-['aaa', 'test', 'bbb', 'key1']
-{% endhighlight %}
-</div>
+    #打开Python解释器：
+    >>> import redis
+    >>> r = redis.Redis(host='localhost', port=6379, db=0)
+    >>> r.set('foo', 'bar')   #或者写成 r['foo'] = 'bar'
+    True
+    >>> r.get('foo')   
+    'bar'
+    >>> r.delete('foo')
+    True
+    >>> r.dbsize()   #库里有多少key，多少条数据
+    0
+    >>> r['test']='OK!'
+    >>> r.save()   #强行把数据库保存到硬盘。保存时阻塞
+    True
+    --------------------------------
+    >>> r.flushdb()   #删除当前数据库的所有数据
+    True
+    >>> a = r.get('chang')
+    >>> a    # 因为是Noen对象，什么也不显示！
+    >>> dir(a)   
+    ['__class__', '__delattr__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+    >>> r.exists('chang')  #看是否存在这个键值
+    False
+    >>> r.keys()   # 列出所有键值。（这时候已经存了4个了）
+    ['aaa', 'test', 'bbb', 'key1']

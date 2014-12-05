@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql,软件架构]
+category: default
 date: 2013-02-27
 title: "NoSQL的现状"
 description: "NoSQL的现状"

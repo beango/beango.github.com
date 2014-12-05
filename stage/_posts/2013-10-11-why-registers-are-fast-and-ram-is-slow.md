@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [windows]
+category: default
 date: 2013-10-11
 title: "为什么寄存器比内存快？"
 description: "为什么寄存器比内存快？"

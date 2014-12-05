@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [web开发]
+category: default
 date: 2013-09-21
 title: "HTTPS连接的前几毫秒发生了什么"
 description: "HTTPS连接的前几毫秒发生了什么"

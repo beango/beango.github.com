@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [高性能web]
+category: default
 date: 2012-10-09
 title: "RabbitMQ安装及使用"
 description: "RabbitMQ安装及使用"

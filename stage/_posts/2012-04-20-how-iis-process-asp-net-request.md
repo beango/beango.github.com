@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [web开发, 高性能web]
+category: default
 date: 2012-04-20
 title: "IIS是如何处理ASP.NET请求的"
 description: "IIS是如何处理ASP.NET请求的"

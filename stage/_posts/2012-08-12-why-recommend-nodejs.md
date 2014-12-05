@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [node.js]
+category: default
 date: 2012-08-12
 title: "我为什么向后端工程师推荐Node.js"
 description: "我为什么向后端工程师推荐Node.js"

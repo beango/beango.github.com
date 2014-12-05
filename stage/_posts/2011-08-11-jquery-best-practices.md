@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [web开发,javascript]
+category: default
 date: 2011-08-11
 title: "jQuery最佳实践"
 description: "jQuery最佳实践"

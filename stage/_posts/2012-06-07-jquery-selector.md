@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories : [web开发,javascript]
+category: default
 date: 2012-06-07
 title: "jQuery选择器大全"
 description: "jQuery选择器大全"
@@ -15,6 +15,7 @@ tags: [jquery,javascript]
 -   id选择器（指定id元素）
 
 将id="one"的元素背景色设置为黑色。（id选择器返单个元素）  
+    
     $(document).ready(function () {  
         $('#one').css('background', '#000');  
     });
@@ -22,6 +23,7 @@ tags: [jquery,javascript]
 -   class选择器（遍历css类元素）
 
 将class="cube"的元素背景色设为黑色  
+    
     $(document).ready(function () {  
         $('.cube').css('background', '#000');  
     });
@@ -29,6 +31,7 @@ tags: [jquery,javascript]
 -   element选择器（遍历html元素）
 
 将p元素的文字大小设置为12px  
+    
     $(document).ready(function () {  
         $('p').css('font-size', '12px');  
     });
@@ -36,6 +39,7 @@ tags: [jquery,javascript]
 -   \* 选择器（遍历所有元素）
 
 遍历form下的所有元素，将字体颜色设置为红色
+    
     $(document).ready(function () {  
         $('form *').css('color', '#FF0000');  
     });
@@ -43,6 +47,7 @@ tags: [jquery,javascript]
 -   并列选择器  
 
 将p元素和div元素的margin设为0  
+
     $(document).ready(function () {  
         $('p, div').css('margin', '0');  
     });
@@ -51,12 +56,14 @@ tags: [jquery,javascript]
 
 -   parent \> child（直系子元素） 
 
-选取div下的第一代span元素，将字体颜色设为红色  
+选取div下的第一代span元素，将字体颜色设为红色
+
     $(document).ready(function () {  
         $('div > span').css('color', '#FF0000');  
     });
 
 下面的代码，只有第一个span会变色，第二个span不属于div的一代子元素，颜色保持不变。
+
     <div>  
         <span>123</span>  
         <p>  
@@ -67,6 +74,7 @@ tags: [jquery,javascript]
 -   prev + next（下一个兄弟元素，等同于next()方法）  
 
 选取class为item的下一个div兄弟元素，两种写法都可以
+    
     $(document).ready(function () {  
         $('.item + div').css('color', '#FF0000');  
         $('.item').next('div').css('color', '#FF0000');  
@@ -83,12 +91,14 @@ tags: [jquery,javascript]
 -   prev ~ siblings（prev元素的所有兄弟元素，等同于nextAll()方法） 
 
 选取class为inside之后的所有div兄弟元素，两种写法都可以
+    
     $(document).ready(function () {  
         $('.inside ~ div').css('color', '#FF0000');  
         $('.inside').nextAll('div').css('color', '#FF0000');  
     });
 
 下面的代码，G2和G4会变色  
+    
     <div class="inside">G1</div>  
     <div>G2</div>  
     <span>G3</span>  
@@ -96,31 +106,32 @@ tags: [jquery,javascript]
 
 ### 三、 过滤选择器
 
--   :first和:last（取第一个元素或最后一个元素）  
+**:first和:last（取第一个元素或最后一个元素）**
 
-<span></span>
     $(document).ready(function () {  
         $('span:first').css('color', '#FF0000');  
         $('span:last').css('color', '#FF0000');  
     });
 
-下面的代码，G1（first元素）和G3（last元素）会变色  
+下面的代码，G1（first元素）和G3（last元素）会变色
+
     <span>G1</span>  
     <span>G2</span>  
     <span>G3</span>
 
--   :not（取非元素）  
+**:not（取非元素）**
 
-<label/>
     $(document).ready(function () {  
         $('div:not(.wrap)').css('color', '#FF0000');  
     });
 
-下面的代码，G1会变色  
+下面的代码，G1会变色
+
     <div>G1</div>  
     <div class="wrap">G2</div>
 
-但是，请注意下面的代码：  
+但是，请注意下面的代码：
+
     <div>  
         G1  
         <div class="wrap">G2</div>  
@@ -128,9 +139,8 @@ tags: [jquery,javascript]
 
 当G1所在div和G2所在div是父子关系时，G1和G2都会变色。  
 
--   :even和:odd（取偶数索引或奇数索引元素，索引从0开始，even表示偶数，odd表示奇数）  
+**:even和:odd（取偶数索引或奇数索引元素，索引从0开始，even表示偶数，odd表示奇数）**
 
-<label/>
     $(document).ready(function () {  
         $('tr:even').css('background', '#EEE'); // 偶数行颜色  
         $('tr:odd').css('background', '#DADADA'); // 奇数行颜色  
@@ -159,9 +169,8 @@ A、C行颜色\#EEE（第一行的索引为0），B、D行颜色\#DADADA
 
 更改第三行的背景色，在上面的代码中C的背景会变色。
 
--   :gt(x)和:lt(x)（取大于x索引或小于x索引的元素）  
+**:gt(x)和:lt(x)（取大于x索引或小于x索引的元素）**
 
-<label/>
     $(document).ready(function () {  
         $('ul li:gt(2)').css('color', '#FF0000');  
         $('ul li:lt(2)').css('color', '#0000FF');  
@@ -179,9 +188,8 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
         <li>L5</li>  
     </ul>
 
--   :header（取H1~H6标题元素）  
+**:header（取H1~H6标题元素）**
 
-<label/>
     $(document).ready(function () {  
         $(':header').css('background', '#EFEFEF');  
     });
@@ -197,9 +205,8 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
     <h5>H5</h5>  
     <h6>H6</h6>
 
--   :contains(text)（取包含text文本的元素）  
+**:contains(text)（取包含text文本的元素）**
 
-<label/>
     $(document).ready(function () {  
         //dd元素中包含"jQuery"文本的会变色  
         $('dd:contains("jQuery")').css('color', '#FF0000');  
@@ -216,16 +223,14 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
         <dd></dd>  
     </dl>
 
--   :empty（取不包含子元素或文本为空的元素）  
+**:empty（取不包含子元素或文本为空的元素）**
 
-<label/>
     $(document).ready(function () {  
         $('dd:empty').html('没有内容');  
     });
 
--   :has(selector)（取选择器匹配的元素）  
+**:has(selector)（取选择器匹配的元素）**
 
-<label/>
     $(document).ready(function () {  
         //为包含span元素的div添加边框  
         $('div:has(span)').css('border', '1px solid #000');  
@@ -242,9 +247,8 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
         </h2>  
     </div> 
 
--   :parent（取包含子元素或文本的元素）  
+**:parent（取包含子元素或文本的元素）**
 
-<label/>
     $(document).ready(function () {  
         $('ol li:parent').css('border', '1px solid #000');  
     });
@@ -479,42 +483,41 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 [![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030482123.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030467894.png)
 
-<html xmlns="http://www.w3.org/1999/xhtml" >
-<head runat="server">
-    <title></title>
-    <style type="text/css">
-        td {
-            width: 200px;
-            height: 32px;
-            line-height: 32px;
-        }
-    </style>
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            //偶数行背景红色
-            $('tr:nth-child(even)').css('background', '#FF0000');
-            //奇数行背景蓝色
-            $('tr:nth-child(odd)').css('background', '#0000FF');
-        });
-    </script>
-</head>
-<body>
-    <table>
-        <tr><td>1. NBA 2012季后赛</td></tr>
-        <tr><td>2. NBA 2011季后赛</td></tr>
-        <tr><td>3. NBA 2010季后赛</td></tr>
-        <tr><td>4. NBA 2009季后赛</td></tr>
-        <tr><td>5. NBA 2008季后赛</td></tr>
-        <tr><td>6. NBA 2007季后赛</td></tr>
-    </table>
-</body>
-</html>
+    <html xmlns="http://www.w3.org/1999/xhtml" >
+    <head runat="server">
+        <title></title>
+        <style type="text/css">
+            td {
+                width: 200px;
+                height: 32px;
+                line-height: 32px;
+            }
+        </style>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                //偶数行背景红色
+                $('tr:nth-child(even)').css('background', '#FF0000');
+                //奇数行背景蓝色
+                $('tr:nth-child(odd)').css('background', '#0000FF');
+            });
+        </script>
+    </head>
+    <body>
+        <table>
+            <tr><td>1. NBA 2012季后赛</td></tr>
+            <tr><td>2. NBA 2011季后赛</td></tr>
+            <tr><td>3. NBA 2010季后赛</td></tr>
+            <tr><td>4. NBA 2009季后赛</td></tr>
+            <tr><td>5. NBA 2008季后赛</td></tr>
+            <tr><td>6. NBA 2007季后赛</td></tr>
+        </table>
+    </body>
+    </html>
 
 例3（html代码和例2是一样的）：  
 [![SNAGHTMLd6d414]({{ site.JB.FILE_PATH }}/2012-06/20120602203050812.png "SNAGHTMLd6d414")]({{ site.JB.FILE_PATH }}/2012-06/201206022030495056.png)
 
-<label/>
     <script type="text/javascript">
         $(document).ready(function() {
             $('tr:nth-child(3n)').css('background', '#0000FF');
@@ -637,6 +640,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
     });
 
 你现在工作的企业属于：
+
     <input type="radio" name="radio" checked="checked" value="外企"/>外企
     <input type="radio" name="radio" value="国企"/>国企
     <input type="radio" name="radio" value="民企"/>民企

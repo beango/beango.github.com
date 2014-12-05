@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [node.js]
+category: default
 date: 2013-06-14
 title: "(译)深入理解Express.js"
 description: "(译)深入理解Express.js"

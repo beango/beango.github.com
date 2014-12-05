@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [ngnix]
+category: default
 date: 2013-04-23
 title: "Nginx模块fastcgi_cache的几个注意点"
 description: "Nginx模块fastcgi_cache的几个注意点"

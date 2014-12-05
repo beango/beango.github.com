@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, 高性能web]
+category: default
 date: 2013-03-22
 title: "可扩展Web架构与分布式系统"
 description: "可扩展Web架构与分布式系统"

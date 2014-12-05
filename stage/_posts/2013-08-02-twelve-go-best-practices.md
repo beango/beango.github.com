@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [go]
+category: default
 date: 2013-08-02
 title: "Go 语言 12 条最佳实践"
 description: "Go 语言 12 条最佳实践"

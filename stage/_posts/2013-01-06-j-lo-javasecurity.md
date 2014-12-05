@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-02-21
 title: "Java 安全模型介绍"
 description: "Java 安全模型介绍"

@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [OS系统]
+category: default
 date: 2013-03-21
 title: "每个程序员都应该了解的“虚拟内存”知识"
 description: "每个程序员都应该了解的“虚拟内存”知识"

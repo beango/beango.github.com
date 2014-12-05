@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [.net]
+category: default
 date: 2013-11-12
 title: ".NET Framework 4.5 五个很棒的特性"
 description: ".NET Framework 4.5 五个很棒的特性"

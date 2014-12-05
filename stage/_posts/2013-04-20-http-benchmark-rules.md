@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [测试]
+category: default
 date: 2013-04-20
 title: "HTTP负载测试"
 description: "HTTP负载测试"

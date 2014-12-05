@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [web开发]
+category: default
 date: 2012-10-05
 title: "常见的nginx的配置选项"
 description: "常见的nginx的配置选项"

@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [nosql]
+category: default
 date: 2012-12-03
 title: "MongoDB 集群"
 description: "MongoDB 集群"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [sql]
+category: default
 date: 2014-01-13
 title: "十步完全理解SQL"
 description: "十步完全理解SQL"

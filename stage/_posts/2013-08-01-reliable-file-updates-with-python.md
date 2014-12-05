@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2013-08-01
 title: "使用 Python 进行稳定可靠的文件操作"
 description: "使用 Python 进行稳定可靠的文件操作"

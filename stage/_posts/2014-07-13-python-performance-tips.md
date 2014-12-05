@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [Python]
+category: default
 date: 2014-07-13
 title: "Python性能鸡汤"
 description: "Python性能鸡汤"
@@ -29,7 +29,6 @@ redirecturl: http://www.oschina.net/question/1579_45822
     >>> for chunk in input(): 
     >>>    my_string.join(chunk) 
 
-<label />
 3. 使用Python多重赋值，交换变量  
 
 这在Python中即优雅又快速:  
@@ -47,7 +46,6 @@ redirecturl: http://www.oschina.net/question/1579_45822
 
 Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 关键字.　
 
-<label />
 5. 尽量使用 "in" 
     
 使用 "in" 关键字. 简洁而快速. 
@@ -55,12 +53,10 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
     >>> for key in sequence: 
     >>>     print “found” 
 
-<label />
 6. 使用延迟加载加速
 
 將 "import" 声明移入函数中,仅在需要的时候导入. 换句话说,如果某些模块不需马上使用,稍后导入他们. 例如,你不必在一开使就导入大量模块而加速程序启动. 该技术不能提高整体性能. 但它可以帮助你更均衡的分配模块的加载时间.   
 
-<label />
 7. 为无限循环使用 "while 1" 
 
 有时候在程序中你需一个无限循环(例如一个监听套接字的实例). 尽管"while true" 能完成同样的事, 但 "while 1" 是单步运算. 这招能提高你的Python性能. 
@@ -70,7 +66,6 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
     >>> while True: 
     >>>   #do stuff, slower with wile True
 
-<label />
 8. 使用list comprehension 
 
 从Python 2.0 开始,你可以使用 list comprehension 取代大量的 "for" 和 "while" 块. 使用List comprehension通常更快，Python解析器能在循环中发现它是一个可预测的模式而被优化.额外好处是，list comprehension更具可读性（函数式编程），并在大多数情况下，它可以节省一个额外的计数变量。例如，让我们计算1到10之间的偶数个数：
@@ -85,12 +80,11 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
     >>>    if i %2 == 0: evens.append(i) 
     >>>    i += 1 
     >>> [0, 2, 4, 6, 8] 
-<label />
+
 9. 使用xrange()处理长序列： 
 
 这样可为你节省大量的系统内存，因为xrange()在序列中每次调用只产生一个整数元素。而相反 range()，它將直接给你一个完整的元素列表，用于循环时会有不必要的开销。 
 
-<label />
 10. 使用 Python generator：  
 
 这也可以节省内存和提高性能。例如一个视频流，你可以一个一个字节块的发送，而不是整个流。例如 
@@ -105,7 +99,6 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
     >>> chunk.next() 
     2000 
 
-<label />
 11. 了解itertools模块： 
 
 该模块对迭代和组合是非常有效的。让我们生成一个列表[1，2，3]的所有排列组合,仅需三行Python代码： 
@@ -115,7 +108,6 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
     >>> list(iter) 
     [(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)] 
 
-<label />
 12. 学习bisect模块保持列表排序： 
 
 这是一个免费的二分查找实现和快速插入有序序列的工具。也就是说，你可以使用：
@@ -125,7 +117,6 @@ Python 检索局部变量比检索全局变量快. 这意味着,避免 "global" 
 
 你已將一个元素插入列表中, 而你不需要再次调用 sort() 来保持容器的排序, 因为这在长序列中这会非常昂贵.  
 
-<label /> 
 13. 理解Python列表，实际上是一个数组： 
 
 Python中的列表实现并不是以人们通常谈论的计算机科学中的普通单链表实现的。Python中的列表是一个数组。也就是说，你可以以常量时间O(1)检索列表的某个元素，而不需要从头开始搜索。这有什么意义呢？Python开发人员使用列表对象insert（）时, 需三思. 例如： 
@@ -134,7 +125,6 @@ Python中的列表实现并不是以人们通常谈论的计算机科学中的�
     
 在列表的前面插入一个元素效率不高,因为列表中的所有后续下标不得不改变.然而，您可以使用list.append()在列表的尾端有效添加元素. 挑先deque，如果你想快速的在两插入或时。它是快速的，因为在Python中的deque用双链表实现。不再多说。 
 
-<label />
 ​14. 使用dict 和 set 测试成员：
 
 检查一个元素是在dicitonary或set是否存在这在Python中非常快的。这是因为dict和set使用哈希表来实现。查找效率可以达到O(1)。因此，如果您需要经常检查成员，使用 set 或 dict做为你的容器. 
@@ -146,12 +136,10 @@ Python中的列表实现并不是以人们通常谈论的计算机科学中的�
     >>> ‘c’ in myset: 
     >>> True 
 
-<label />
 ​15. 使用Schwartzian Transform 的 sort():
 
 原生的list.sort（）函数是非常快的。Python会按自然顺序排序列表。有时，你需要非自然顺序的排序。例如，你要根据服务器位置排序的IP地址。Python支持自定义的比较，你可以使用list.sort（CMP（）），这会比list.sort（）慢，因为增加了函数调用的开销。如果性能有问题，你可以申请Guttman-Rosler Transform,基于Schwartzian Transform.它只对实际的要用的算法有兴趣，它的简要工作原理是，你可以变换列表，并调用Python内置list.sort（）- \> 更快，而无需使用list.sort（CMP（） ）-\>慢。
 
-<label />
 16. Python装饰器缓存结果：
 
 “@”符号是Python的装饰语法。它不只用于追查，锁或日志。你可以装饰一个Python函数，记住调用结果供后续使用。这种技术被称为memoization的。下面是一个例子：
@@ -173,11 +161,9 @@ Python中的列表实现并不是以人们通常谈论的计算机科学中的�
      
 这里的关键思想是:增强函数(装饰)函数,记住每个已经计算的Fibonacci值;如果它们在缓存中,就不需要再计算了.
 
-<label />
 17. 理解Python的GIL（全局解释器锁）： 
 
 GIL是必要的，因为CPython的内存管理是非线程安全的。你不能简单地创建多个线程，并希望Python能在多核心的机器上运行得更快。这是因为GIL將会防止多个原生线程同时执行Python字节码。换句话说，GIL將序列化您的所有线程。然而，您可以使用线程管理多个派生进程加速程序，这些程序独立的运行于你的Python代码外。 
-<label />
 
 18. 像熟悉文档一样的熟悉Python源代码： 
 
@@ -188,13 +174,11 @@ Python的源码库就是一个很棒的地方：http://svn.python.org/view/pytho
 
 这些不能替代大脑思考.打开引擎盖充分了解是开发者的职责,使得他们不会快速拼凑出一个垃圾设计.本文的Python建议可以帮助你获得好的性能. 如果速度还不够快,Python將需要借助外力:分析和运行外部代码.我们將在本文的第二部分中涉及. 
 
-
 第二部分 
 -------
 
 有益的提醒,静态编译的代码仍然重要. 仅例举几例, Chrome,Firefox,MySQL,MS Office 和 Photoshop都是高度优化的软件,我们每天都在使用. Python作为解析语言,很明显不适合. 不能单靠Python来满足那些性能是首要指示的领域. 这就是为什么Python支持让你接触底层裸机基础设施的原因, 将更繁重的工作代理给更快的语言如C. 这高性能计算和嵌入式编程中是关键的功能. Python性能鸡汤第一部分讨论了怎样高效的使用Python. 在第二部分, 我们將涉及监控和扩展Python.
 
-<label />
 ​1. 首先, 拒绝调优诱惑
 
 ![]({{ site.JB.FILE_PATH }}/2014-07/004610_i9hd_1579.png)
@@ -208,7 +192,6 @@ Python的源码库就是一个很棒的地方：http://svn.python.org/view/pytho
 - 你是为其它开发者编译库吗?  
 - 你的第三方库软件是最新版吗? 
 
-<label />
 2. 使用工具监控代码, 而不是直觉 
 
 速度的问题可能很微妙, 所以不要依赖于直觉. 感谢 "cprofiles" 模块, 通过简单的运行你就可以监控Python代码 
@@ -217,19 +200,16 @@ Python的源码库就是一个很棒的地方：http://svn.python.org/view/pytho
 
 ![]({{ site.JB.FILE_PATH }}/2014-07/004627_qOTi_1579.png)
 
-
 我们写了个测试程序. 基于黑盒监控. 这里的瓶颈是 "very\_slow()" 函数调用. 我们还可以看到 "fast()" 和 "slow()"都被调用200次. 这意味着, 如果我们可以改善 "fast()" 和 "slow()" 函数, 我们可以获得全面的性能提升. cprofiles 模块也可以在运行时导入. 这对于检查长时间运行的进程非常有用.
 
 ![]({{ site.JB.FILE_PATH }}/2014-07/004641_nClP_1579.png)
 
-<label />
 3. 审查时间复杂度 
 
 控制以后, 提供一个基本的算法性能分析. 恒定时间是理想值. 对数时间复度是稳定的. 阶乘复杂度很难扩展. 
 
     O(1) -\> O(lg n) -\> O(n lg n) -\> O(n\^2) -\> O(n\^3) -\> O(n\^k) -\> O(k\^n) -\> O(n!) \
 
-<label />
 4. 使用第三方包 
 
 有很多为Python设计的高性能的第三方库和工具. 下面是一些有用的加速包的简短列表. 
@@ -241,7 +221,6 @@ Python的源码库就是一个很棒的地方：http://svn.python.org/view/pytho
 - [Cython](http://www.oschina.net/p/cython): 將Python优码转成C  
 - [ShedSkin](http://www.oschina.net/p/shedskin): 將Python代码转成C++
 
-<label />
 5. 使用multiprocessing模块实现真正的并发 
 
 因为GIL会序列化线程, Python中的多线程不能在多核机器和集群中加速. 因此Python提供了multiprocessing模块, 可以派生额外的进程代替线程, 跳出GIL的限制. 此外, 你也可以在外部C代码中结合该建议, 使得程序更快. 
@@ -250,7 +229,6 @@ Python的源码库就是一个很棒的地方：http://svn.python.org/view/pytho
 
 ![]({{ site.JB.FILE_PATH }}/2014-07/004911_O7Up_1579.png)
 
-<label />
 6. 本地代码 
 
 好了, 现在你决定为了性能使用本地代码. 在标准的ctypes模块中,你可以直接加载已编程的二进制库(.dll 或 .so文件)到Python中,无需担心编写C/C++代码或构建依赖. 例如,我们可以写个程序加载libc来生成随机数. 

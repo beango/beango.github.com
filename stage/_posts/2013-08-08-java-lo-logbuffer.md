@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [java]
+category: default
 date: 2013-08-08
 title: "Java 日志缓存机制的实现"
 description: "Java 日志缓存机制的实现"

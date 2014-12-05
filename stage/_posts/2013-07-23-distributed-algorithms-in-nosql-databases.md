@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [nosql]
+category: default
 date: 2013-07-23
 title: "NoSQL数据库的分布式算法"
 description: "NoSQL数据库的分布式算法"

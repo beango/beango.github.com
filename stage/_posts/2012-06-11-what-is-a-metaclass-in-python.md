@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [python]
+category: default
 date: 2012-06-11
 title: "深刻理解Python中的元类(metaclass)"
 description: "深刻理解Python中的元类(metaclass)"

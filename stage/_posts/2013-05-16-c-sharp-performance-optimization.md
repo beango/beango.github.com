@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [.net]
+category: default
 date: 2013-05-16
 title: "C#性能优化实践"
 description: "C#性能优化实践"

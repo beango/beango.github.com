@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [SQL]
+category: default
 date: 2013-08-16
 title: "唯一性索引优化实践"
 description: "唯一性索引优化实践"

@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [web开发]
+category: default
 date: 2013-03-08
 title: "翻译-高效的CSS"
 description: "翻译-高效的CSS"

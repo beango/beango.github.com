@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [web开发]
+category: default
 date: 2011-02-25
 title: "当你输入一个网址的时候，实际会发生什么?"
 description: "当你输入一个网址的时候，实际会发生什么?"
@@ -63,7 +63,7 @@ DNS有一点令人担忧，这就是像wikipedia.org 或者facebook.com这样的
 
 所以，浏览器将把一下请求发送到Facebook所在的服务器：
 
-    GET http://facebook.com/ HTTP/1.1 Accept: application/x-ms-application, image/jpeg, application/xaml+xml, [...] User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; [...] Accept-Encoding: gzip, deflate Connection: Keep-Alive Host: facebook.com Cookie: datr=1265876274-[...]; locale=en_US; lsd=WW[...]; c_user=2101[...]
+> GET http://facebook.com/ HTTP/1.1 Accept: application/x-ms-application, image/jpeg, application/xaml+xml, [...] User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; [...] Accept-Encoding: gzip, deflate Connection: Keep-Alive Host: facebook.com Cookie: datr=1265876274-[...]; locale=en_US; lsd=WW[...]; c_user=2101[...]
 
 GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏览器自身定义 (**User-Agent** 头)， 和它希望接受什么类型的相应(**Accept** and **Accept-Encoding** 头).**Connection**头要求服务器为了后边的请求不要关闭TCP连接。
 
@@ -81,7 +81,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 图中所示为Facebook服务器发回给浏览器的响应：
 
-    HTTP/1.1 301 Moved Permanently Cache-Control: private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0 Expires: Sat, 01 Jan 2000 00:00:00 GMT Location: http://www.facebook.com/ P3P: CP="DSP LAW" Pragma: no-cache Set-Cookie: made_write_conn=deleted; expires=Thu, 12-Feb-2009 05:09:50 GMT; path=/; domain=.facebook.com; httponly Content-Type: text/html; charset=utf-8 X-Cnection: close Date: Fri, 12 Feb 2010 05:09:51 GMT Content-Length: 0
+> HTTP/1.1 301 Moved Permanently Cache-Control: private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0 Expires: Sat, 01 Jan 2000 00:00:00 GMT Location: http://www.facebook.com/ P3P: CP="DSP LAW" Pragma: no-cache Set-Cookie: made_write_conn=deleted; expires=Thu, 12-Feb-2009 05:09:50 GMT; path=/; domain=.facebook.com; httponly Content-Type: text/html; charset=utf-8 X-Cnection: close Date: Fri, 12 Feb 2010 05:09:51 GMT Content-Length: 0
 
 服务器给浏览器响应一个301永久重定向响应，这样浏览器就会访问“http://www.facebook.com/”而非“http://facebook.com/”。
 
@@ -97,7 +97,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 现在，浏览器知道了“http://www.facebook.com/”才是要访问的正确地址，所以它会发送另一个获取请求：
 
-    GET http://www.facebook.com/ HTTP/1.1 Accept: application/x-ms-application, image/jpeg, application/xaml+xml, [...] Accept-Language: en-US User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; [...] Accept-Encoding: gzip, deflate Connection: Keep-Alive Cookie: lsd=XW[...]; c_user=21[...]; x-referer=[...] Host: www.facebook.com
+> GET http://www.facebook.com/ HTTP/1.1 Accept: application/x-ms-application, image/jpeg, application/xaml+xml, [...] Accept-Language: en-US User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; [...] Accept-Encoding: gzip, deflate Connection: Keep-Alive Cookie: lsd=XW[...]; c_user=21[...]; x-referer=[...] Host: www.facebook.com
 
 头信息以之前请求中的意义相同。
 
@@ -109,13 +109,13 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 这表面上看起来是一个顺向的任务，但其实这中间发生了很多有意思的东西-就像作者博客这样简单的网站，何况像facebook那样访问量大的网站呢！
 
--   **Web 服务器软件
-    **web服务器软件（像IIS和阿帕奇）接收到HTTP请求，然后确定执行什么请求处理来处理它。请求处理就是一个能够读懂请求并且能生成HTML来进行响应的程序（像ASP.NET,PHP,RUBY...）。
+-   **Web 服务器软件**
+    *web服务器软件*（像IIS和阿帕奇）接收到HTTP请求，然后确定执行什么请求处理来处理它。请求处理就是一个能够读懂请求并且能生成HTML来进行响应的程序（像ASP.NET,PHP,RUBY...）。
 
     举个最简单的例子，需求处理可以以映射网站地址结构的文件层次存储。像http://example.com/folder1/page1.aspx这个地址会映射httpdocs/folder1/page1.aspx这个文件。web服务器软件可以设置成为地址人工的对应请求处理，这样page1.aspx的发布地址就可以是http://example.com/folder1/page1。
 
--   **请求处理
-    **请求处理阅读请求及它的参数和cookies。它会读取也可能更新一些数据，并讲数据存储在服务器上。然后，需求处理会生成一个HTML响应。
+-   **请求处理**
+    *请求处理*阅读请求及它的参数和cookies。它会读取也可能更新一些数据，并讲数据存储在服务器上。然后，需求处理会生成一个HTML响应。
 
 所 有动态网站都面临一个有意思的难点
 -如何存储数据。小网站一半都会有一个SQL数据库来存储数据，存储大量数据和/或访问量大的网站不得不找一些办法把数据库分配到多台机器上。解决方案
@@ -130,13 +130,13 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 图中为服务器生成并返回的响应：
 
-    HTTP/1.1 200 OK Cache-Control: private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0 Expires: Sat, 01 Jan 2000 00:00:00 GMT P3P: CP="DSP LAW" Pragma: no-cache Content-Encoding: gzip Content-Type: text/html; charset=utf-8 X-Cnection: close Transfer-Encoding: chunked Date: Fri, 12 Feb 2010 09:05:55 GMT  2b3Tn@[...]
+> HTTP/1.1 200 OK Cache-Control: private, no-store, no-cache, must-revalidate, post-check=0, pre-check=0 Expires: Sat, 01 Jan 2000 00:00:00 GMT P3P: CP="DSP LAW" Pragma: no-cache Content-Encoding: gzip Content-Type: text/html; charset=utf-8 X-Cnection: close Transfer-Encoding: chunked Date: Fri, 12 Feb 2010 09:05:55 GMT  2b3Tn@[...]
 
 整个响应大小为35kB，其中大部分在整理后以blob类型传输。
 
 **内容编码**头告诉浏览器整个响应体用gzip算法进行压缩。解压blob块后，你可以看到如下期望的HTML：
 
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" id="facebook" class=" no_js"> <head> <meta http-equiv="Content-type" content="text/html; charset=utf-8" /> <meta http-equiv="Content-language" content="en" /> ...
+> <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" id="facebook" class=" no_js"> <head> <meta http-equiv="Content-type" content="text/html; charset=utf-8" /> <meta http-equiv="Content-language" content="en" /> ...
 
 关于压缩，头信息说明了是否缓存这个页面，如果缓存的话如何去做，有什么cookies要去设置（前面这个响应里没有这点）和隐私信息等等。
 
@@ -156,15 +156,15 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 下面是几个我们访问facebook.com时需要重获取的几个URL：
 
--   **图片  
-    **http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif  
+-   **图片**  
+    http://static.ak.fbcdn.net/rsrc.php/z12E0/hash/8q2anwu7.gif  
       http://static.ak.fbcdn.net/rsrc.php/zBS5C/hash/7hwy7at6.gif  
      …
--   **CSS 式样表  
-    **http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css  
+-   **CSS 式样表**  
+    http://static.ak.fbcdn.net/rsrc.php/z448Z/hash/2plh8s4n.css  
       http://static.ak.fbcdn.net/rsrc.php/zANE1/hash/cvtutcee.css  
      …
--   **JavaScript 文件**  
+-   JavaScript 文件**  
      http://static.ak.fbcdn.net/rsrc.php/zEMOA/hash/c8yzb6ub.js  
      http://static.ak.fbcdn.net/rsrc.php/z6R9L/hash/cq2lgbs8.js  
      …

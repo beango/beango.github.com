@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [高性能web]
+category: default
 date: 2012-09-21
 title: "解析 Nginx 负载均衡"
 description: "解析 Nginx 负载均衡"

@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [linux]
+category: default
 date: 2013-04-16
 title: "Linux Netcat命令：网络工具中的瑞士军刀"
 description: "Linux Netcat命令：网络工具中的瑞士军刀"

@@ -1,7 +1,7 @@
 ---
 layout: post
 section: Archive
-categories: [软件架构, web开发]
+category: default
 date: 2012-02-09
 title: "前端必读：浏览器内部工作原理"
 description: "前端必读：浏览器内部工作原理"
