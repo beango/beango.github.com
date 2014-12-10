@@ -19,8 +19,8 @@
 	<article>
 	<h2 id="section">获取文件绝对路径</h2>
 
-<p><label></label>
-    System.IO.Path.Combine(HttpRuntime.AppDomainAppPath,”App_Data\test.txt”);</p>
+<pre><code>System.IO.Path.Combine(HttpRuntime.AppDomainAppPath,"App_Data\\test.txt");
+</code></pre>
 
 <h2 id="section-1">字符连接</h2>
 
@@ -38,11 +38,10 @@
 
 <h2 id="ef">EF下修改指定的字段</h2>
 
-<p><label></label>
-    //NorthwindEntities : ObjectContext
-    NorthwindEntities entities = new NorthwindEntities();</p>
+<pre><code>//NorthwindEntities : ObjectContext
+NorthwindEntities entities = new NorthwindEntities();
 
-<pre><code>entities.Products.Attach(product);
+entities.Products.Attach(product);
 var entry = entities.ObjectStateManager.GetObjectStateEntry(product);
 entry.SetModifiedProperty("ProductName"); 
 entry.SetModifiedProperty("Discontinued");
@@ -76,11 +75,10 @@ entities.SaveChanges();
 
 <h2 id="ef-1">EF使用注意事项</h2>
 
-<p><label></label>
-    //这样才会在数据库中分页.
-    query.Skip((pageInfo.PageIndex - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();</p>
+<pre><code>//这样才会在数据库中分页.
+query.Skip((pageInfo.PageIndex - 1) * pageInfo.PageSize).Take(pageInfo.PageSize).ToList();
 
-<pre><code>//尽量避免延迟加载，而是预加载
+//尽量避免延迟加载，而是预加载
 var list = db.People.Include("StudentGrades").Where(ent =&gt; ent.PersonID &lt; 30).ToList();
 </code></pre>
 

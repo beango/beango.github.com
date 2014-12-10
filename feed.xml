@@ -3,7 +3,7 @@
 	<title>程序员 - 博客 - HuangDing</title>
 	<link href="http://http://uwebs.tk/atom.xml" rel="self" />
 	<link href="http://http://uwebs.tk/" />
-	<updated>2014-12-10T09:02:27+08:00</updated>
+	<updated>2014-12-10T11:30:49+08:00</updated>
 	<id>http://http://uwebs.tk/</id>
 	<author>
 		<name>HuangDing</name>
@@ -679,8 +679,9 @@ if __name__ == '__main__':
 &gt;&gt;&gt; y = temp 
 </code></pre>
 
-<p><label></label>
-4. 尽量使用局部变量 </p>
+<ol>
+  <li>尽量使用局部变量 </li>
+</ol>
 
 <p>Python 检索局部变量比检索全局变量快. 这意味着,避免 “global” 关键字.　</p>
 
@@ -806,15 +807,17 @@ if __name__ == '__main__':
   <li>Python装饰器缓存结果：</li>
 </ol>
 
-<p>“@”符号是Python的装饰语法。它不只用于追查，锁或日志。你可以装饰一个Python函数，记住调用结果供后续使用。这种技术被称为memoization的。下面是一个例子：
-    »&gt; from functools import wraps 
-    »&gt; def memo(f): 
-    »&gt;    cache = { } 
-    »&gt;    @wraps(f) 
-    »&gt;    def  wrap(<em>arg): 
-    »&gt;        if arg not in cache: cache[‘arg’] = f(</em>arg) 
-    »&gt;        return cache[‘arg’] 
-    »&gt;    return wrap </p>
+<p>“@”符号是Python的装饰语法。它不只用于追查，锁或日志。你可以装饰一个Python函数，记住调用结果供后续使用。这种技术被称为memoization的。下面是一个例子：</p>
+
+<pre><code>&gt;&gt;&gt; from functools import wraps 
+&gt;&gt;&gt; def memo(f): 
+&gt;&gt;&gt;    cache = { } 
+&gt;&gt;&gt;    @wraps(f) 
+&gt;&gt;&gt;    def  wrap(*arg): 
+&gt;&gt;&gt;        if arg not in cache: cache['arg'] = f(*arg) 
+&gt;&gt;&gt;        return cache['arg'] 
+&gt;&gt;&gt;    return wrap 
+</code></pre>
 
 <p>我们也可以对 Fibonacci 函数使用装饰器:  </p>
 

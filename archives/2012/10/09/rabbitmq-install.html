@@ -25,13 +25,13 @@
 	<span class="datetime">2012-10-09</span> posted in [<a href="/category/default" class="category">转载</a>]
 </p>
 	
-<h3 id="blockquote">介绍：</h3>
+<h3 id="section">介绍：</h3>
 
 <p>rabbitMQ是一个在AMQP协议标准基础上完整的，可服用的企业消息系统。他遵循Mozilla Public License开源协议。采用 Erlang 实现的工业级的消息队列(MQ)服务器。</p>
 
 <p>RabbitMQ的官方站：<a href="http://www.rabbitmq.com/">http://www.rabbitmq.com/</a></p>
 
-<h3 id="blockquote">RabbitMQ安装（windows）</h3>
+<h3 id="rabbitmqwindows">RabbitMQ安装（windows）</h3>
 
 <ul>
   <li>
@@ -44,111 +44,105 @@
   </li>
 </ul>
 
-<h3 id="blockquote">RabbitMQ安装（CentOS）</h3>
+<h3 id="rabbitmqcentos">RabbitMQ安装（CentOS）</h3>
 
-<ul>
-  <li>安装erlang：</li>
-</ul>
+<p><strong>安装erlang：</strong></p>
 
-<p><label></label>
-    tar zxvf otp_src_R15B02.tar.gz<br />
-    cd otp_src_R15B02<br />
-    ./configure<br />
-    make<br />
-    make install</p>
+<pre><code>tar zxvf otp_src_R15B02.tar.gz  
+cd otp_src_R15B02  
+./configure  
+make  
+make install
+</code></pre>
 
-<ul>
-  <li>安装rabbitmq-server，可以直接下载Binary(rabbitmq-server-generic-unix-2.8.7.tar.gz)，解压并运行sbin/rabbitmq-server即可</li>
-</ul>
+<p><strong>安装rabbitmq-server，可以直接下载Binary(rabbitmq-server-generic-unix-2.8.7.tar.gz)，解压并运行sbin/rabbitmq-server即可</strong></p>
 
-<p><label></label>
-    tar zxvf rabbitmq-server-generic-unix-2.8.7.tar.gz<br />
-    ln -s /usr/local/rabbitmq/sbin/* /usr/local/bin/ </p>
+<pre><code>tar zxvf rabbitmq-server-generic-unix-2.8.7.tar.gz  
+ln -s /usr/local/rabbitmq/sbin/* /usr/local/bin/ 
+</code></pre>
 
-<ul>
-  <li>安装管理插件，访问地址：<a href="http://localhost:55672/mgmt">http://localhost:55672/mgmt</a>用户名guest，密码guest  </li>
-</ul>
+<p><strong>安装管理插件，访问地址：<a href="http://localhost:55672/mgmt">http://localhost:55672/mgmt</a>用户名guest，密码guest</strong></p>
 
-<p><label></label>
-    rabbitmq-plugins enable rabbitmq_management</p>
+<pre><code>rabbitmq-plugins enable rabbitmq_management
+</code></pre>
 
-<ul>
-  <li>修改或创建rabbitmq-env.conf  </li>
-</ul>
+<p><strong>修改或创建rabbitmq-env.conf</strong></p>
 
-<p><label></label>
-    #!/bin/sh<br />
-    # I am a complete /etc/rabbitmq/rabbitmq-env.conf file.<br />
-    # Comment lines start with a hash character.<br />
-    # This is a /bin/sh script file - use ordinary envt var syntax<br />
-    NODENAME=beango<br />
-    RABBIT_HOME=/usr/local/rabbitmq<br />
-    MNESIA_BASE=/usr/local/rabbitmq/data<br />
-    LOG_BASE=/usr/local/rabbitmq/log<br />
-    CONFIG_FILE=/usr/local/rabbitmq/etc/rabbitmq/rabbitmq  </p>
+<pre><code>#!/bin/sh  
+# I am a complete /etc/rabbitmq/rabbitmq-env.conf file.  
+# Comment lines start with a hash character.  
+# This is a /bin/sh script file - use ordinary envt var syntax  
+NODENAME=beango  
+RABBIT_HOME=/usr/local/rabbitmq  
+MNESIA_BASE=/usr/local/rabbitmq/data  
+LOG_BASE=/usr/local/rabbitmq/log  
+CONFIG_FILE=/usr/local/rabbitmq/etc/rabbitmq/rabbitmq  
+</code></pre>
 
-<ul>
-  <li>修改或创建/usr/local/rabbitmq/etc/rabbitmq/rabbitmq.config  </li>
-</ul>
+<p><strong>修改或创建/usr/local/rabbitmq/etc/rabbitmq/rabbitmq.config</strong></p>
 
-<p><label></label>
-    {rabbit,<br />
-        [<br />
-            {vm_memory_limit,0.6},<br />
-            {disk_free_limit,100000000}<br />
-        ]}<br />
-    ].</p>
+<pre><code>[
+    {rabbit,[{vm_memory_limit,0.6},{disk_free_limit,100000000}]}
+].
+</code></pre>
 
-<ul>
-  <li>启动与关闭服务  </li>
-</ul>
+<p><strong>启动与关闭服务</strong></p>
 
-<p>启动：
-    nohup rabbitmq-server start &gt; /usr/local/rabbitmq/log/system.log \ 2&gt;/usr/local/rabbitmq/log/system.log &amp;  </p>
+<p><em>启动：</em></p>
 
-<p>关闭：<br />
-    rabbitmqctl stop</p>
+<pre><code>nohup rabbitmq-server start &gt; /usr/local/rabbitmq/log/system.log \ 2&gt;/usr/local/rabbitmq/log/system.log &amp;  
+</code></pre>
 
-<h3 id="blockquote">RabbitMQ配置</h3>
+<p><em>关闭：</em>  </p>
 
-<ul>
-  <li>首先创建vhosts，命令如下：</li>
-</ul>
+<pre><code>rabbitmqctl stop
+</code></pre>
 
-<p>添加创建虚拟主机<br />
-    D:\rabbitmq\sbin&gt;rabbitmqctl add_vhost dnt_mq  #删除 rabbitmqctl delete_vhost vhostpath</p>
+<h3 id="rabbitmq">RabbitMQ配置</h3>
 
-<p>用下面指定就可以显示出所有虚拟主机信息：
-    D:\rabbitmq\sbin&gt;rabbitmqctl list_vhosts<br />
-    Listing vhosts …<br />
-    /   （根目录）<br />
-    dnt_mq</p>
+<p><strong>首先创建vhosts，命令如下：</strong></p>
 
-<p>下面添加用户和密码(用户名admin, 密码：111111)：
-    D:\rabbitmq\sbin&gt;rabbitmqctl add_user admin 111111<br />
-    //修改用户密码：rabbitmqctl change_password username newpassword</p>
+<p><em>添加创建虚拟主机</em></p>
 
-<p>绑定用户权限： 
-    D:\rabbitmq\sbin&gt;rabbitmqctl set_permissions -p dnt_mq admin “.<em>” ”.</em>” ”.*”  
-    Setting permissions for user “admin” in vhost “dnt_mq” …</p>
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_vhost dnt_mq  #删除 rabbitmqctl delete_vhost vhostpath
+</code></pre>
 
-<p>列出用户权限：
-    D:\rabbitmq\sbin&gt;rabbitmqctl list_user_permissions daizhj<br />
-    //清除用户权限 rabbitmqctl clear_permissions [-p vhostpath] username
-    Listing permissions for user “daizhj” …
-    dnt_mq  .*      .*      .*      client</p>
+<p><em>用下面指定就可以显示出所有虚拟主机信息：</em></p>
 
-<h3 id="blockquote">RabbitMQ使用</h3>
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_vhosts  
+Listing vhosts ...  
+/   （根目录）  
+dnt_mq
+</code></pre>
 
-<ul>
-  <li>Main</li>
-</ul>
+<p><em>下面添加用户和密码(用户名admin, 密码：111111)：</em></p>
 
-<p><label></label>
-    private const string exchange = “dnt_mq”;<br />
-    private const string queuename = “com.iuwebs.queue1”;  </p>
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_user admin 111111  
+//修改用户密码：rabbitmqctl change_password username newpassword
+</code></pre>
 
-<pre><code>public static int Main(string[] args1)  
+<p><em>绑定用户权限：</em></p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl set_permissions -p dnt_mq admin ".*" ".*" ".*"  
+Setting permissions for user "admin" in vhost "dnt_mq" ...
+</code></pre>
+
+<p><em>列出用户权限：</em></p>
+
+<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_user_permissions daizhj  
+//清除用户权限 rabbitmqctl clear_permissions [-p vhostpath] username
+Listing permissions for user "daizhj" ...
+dnt_mq  .*      .*      .*      client
+</code></pre>
+
+<h3 id="rabbitmq-1">RabbitMQ使用</h3>
+
+<p><em>Main</em></p>
+
+<pre><code>private const string exchange = "dnt_mq";  
+private const string queuename = "com.iuwebs.queue1";  
+  
+public static int Main(string[] args1)  
 {  
     ConnectionFactory cf = new ConnectionFactory();  
     cf.Uri = "amqp://192.168.1.121:5672";  
@@ -170,49 +164,43 @@
 }  
 </code></pre>
 
-<ul>
-  <li>ensureQueue</li>
-</ul>
+<p><em>ensureQueue</em></p>
 
-<p><label></label>
-    private static void ensureQueue(IModel ch)<br />
-    {<br />
-        ch.ExchangeDeclare(“dnt_mq”, “direct”);<br />
-        //durable:是否持久化消息队列，即服务器重启后，这个queue及其中的消息是否存在<br />
-        //exclusive:排他性队列（Exclusive Queue)，只对首次声明它的连接（Connection）可见；会在其连接断开的时候自动删除。<br />
-        //autoDelete:这个queue不再使用的时候会被删除<br />
-        ch.QueueDeclare(queuename, true, false, false, null);<br />
-        ch.QueueBind(queuename, exchange, queuename, null);<br />
-    }</p>
+<pre><code>private static void ensureQueue(IModel ch)  
+{  
+    ch.ExchangeDeclare("dnt_mq", "direct");  
+    //durable:是否持久化消息队列，即服务器重启后，这个queue及其中的消息是否存在  
+    //exclusive:排他性队列（Exclusive Queue)，只对首次声明它的连接（Connection）可见；会在其连接断开的时候自动删除。  
+    //autoDelete:这个queue不再使用的时候会被删除  
+    ch.QueueDeclare(queuename, true, false, false, null);  
+    ch.QueueBind(queuename, exchange, queuename, null);  
+}
+</code></pre>
 
-<ul>
-  <li>sendMessages</li>
-</ul>
+<p><em>sendMessages</em></p>
 
-<p><label></label>
-    private static void sendMessages(IModel ch, string queueName, long msgCount)<br />
-    {<br />
-        var basicPro = ch.CreateBasicProperties();<br />
-        basicPro.DeliveryMode = 2;//是否持久化消息，1不是，2是<br />
-        while (msgCount– &gt; 0)<br />
-        {<br />
-            ch.BasicPublish(exchange, queueName, basicPro, Encoding.UTF8.GetBytes(“Welcome to Caerbannog!-持久化”));<br />
-        }<br />
-    }</p>
+<pre><code>private static void sendMessages(IModel ch, string queueName, long msgCount)  
+{  
+    var basicPro = ch.CreateBasicProperties();  
+    basicPro.DeliveryMode = 2;//是否持久化消息，1不是，2是  
+    while (msgCount-- &gt; 0)  
+    {  
+        ch.BasicPublish(exchange, queueName, basicPro, Encoding.UTF8.GetBytes("Welcome to Caerbannog!-持久化"));  
+    }  
+}
+</code></pre>
 
-<ul>
-  <li>enumeratingReceiveMessages</li>
-</ul>
+<p><em>enumeratingReceiveMessages</em></p>
 
-<p><label></label>
-    private static void enumeratingReceiveMessages(Subscription sub, long msgCount)<br />
-    {<br />
-        foreach (BasicDeliverEventArgs ev in sub)<br />
-        {<br />
-            Console.WriteLine(“Message {0}: {1}”, i, Encoding.UTF8.GetString(ev.Body));<br />
-            sub.Ack(ev); //发回响应，否则消息队列还将存在<br />
-        }<br />
-    }</p>
+<pre><code>private static void enumeratingReceiveMessages(Subscription sub, long msgCount)  
+{  
+    foreach (BasicDeliverEventArgs ev in sub)  
+    {  
+        Console.WriteLine("Message {0}: {1}", i, Encoding.UTF8.GetString(ev.Body));  
+        sub.Ack(ev); //发回响应，否则消息队列还将存在  
+    }  
+}
+</code></pre>
 
 	
 	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/10/09/rabbitmq-install.html">http://http://uwebs.tk/archives/2012/10/09/rabbitmq-install.html</a></p>-->
