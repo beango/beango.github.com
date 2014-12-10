@@ -1,74 +1,37 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>翻译-高效的CSS</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='翻译-高效的CSS'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="css" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 翻译-高效的CSS</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">翻译-高效的CSS</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h2>译言：</h2>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 翻译-高效的CSS</div>
+
+<article>
+	<h1><a href="/archives/2013/03/08/efficient-css.html">翻译-高效的CSS</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-03-08</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h2 id="section">译言：</h2>
 
 <p>逛微博的时候看到 <a href="http://weibo.com/u/2093492691">@程序员的那些事</a>推荐的一篇CSS的文章。细细看了下，写的很不错，就翻译过来，与诸前端们共享~</p>
 
 <p>原文地址在<a href="http://csswizardry.com/2011/09/writing-efficient-css-selectors/">这里</a>，由于第一次翻译文章，有不准确的地方欢迎留言讨论~~</p>
 
-<h2>译文：</h2>
+<h2 id="section-1">译文：</h2>
 
 <p>高效的CSS已经不是一个新的话题了，也不是我一个非得重拾的话题，但它却是我在Sky公司工作之时，所感兴趣的，关注已久的话题。</p>
 
@@ -76,7 +39,7 @@
 
 <p>下面的规则只真正被应用到那些速度要求很高，有成百上千的DOM元素被绘制在页面上的大型网站。但是，实践出真理，这和你是在创建下一个Facebook，还是写一个本地的展示页面都没有关系，多知道一点总是好的。</p>
 
-<h3>CSS选择器：</h3>
+<h3 id="css">CSS选择器：</h3>
 
 <p>对我们大多数人来说，CSS选择器并不陌生。最基本的选择器是元素选择器(比如div),ID选择器(比如#header)还有类选择器(比如.tweet)。</p>
 
@@ -86,16 +49,15 @@
 CSS选择器效率从高到低的排序如下：</p>
 
 <ol>
-<li>ID选择器 比如#header</li>
-<li>类选择器 比如.promo</li>
-<li>元素选择器 比如 div</li>
-<li>兄弟选择器 比如 h2 + p</li>
-<li>子选择器 比如 li > ul</li>
-<li>后代选择器 比如 ul a 7. 通用选择器 比如 *</li>
-<li>属性选择器 比如 type = “text”</li>
-<li>伪类/伪元素选择器 比如 a:hover</li>
+  <li>ID选择器 比如#header</li>
+  <li>类选择器 比如.promo</li>
+  <li>元素选择器 比如 div</li>
+  <li>兄弟选择器 比如 h2 + p</li>
+  <li>子选择器 比如 li &gt; ul</li>
+  <li>后代选择器 比如 ul a 7. 通用选择器 比如 *</li>
+  <li>属性选择器 比如 type = “text”</li>
+  <li>伪类/伪元素选择器 比如 a:hover</li>
 </ol>
-
 
 <p>以上引用自<a href="http://stevesouders.com/">Steve Souders</a>的Even Faster网站、</p>
 
@@ -110,7 +72,7 @@ CSS选择器效率从高到低的排序如下：</p>
 <p><strong>注意：</strong>
 这些数据可能在不同计算机和浏览器中间的差异较大。强烈地建议大家在自己的机子上测试一下。</p>
 
-<h3>组合选择器</h3>
+<h3 id="section-2">组合选择器</h3>
 
 <p>你可以有一个标准的选择器比如#nav，来选择任何带有ID为”nav”的元素，或在你可以有一个组合选择器比如#nav a,来选择任何在ID为’nav’的元素里面的链接元素</p>
 
@@ -124,7 +86,7 @@ CSS选择器效率从高到低的排序如下：</p>
 
 <p>这些对CSS选择器的效率有很大的影响。</p>
 
-<h3>关键选择器</h3>
+<h3 id="section-3">关键选择器</h3>
 
 <p>关键选择器，正如前面讨论的一样，是一个复杂的CSS选择器中最右边部分。它是浏览器最先寻找的。</p>
 
@@ -196,7 +158,7 @@ CSS选择器效率从高到低的排序如下：</p>
 
 <p>简单的重述一次，你的关键选择器会决定浏览器的工作量，因此，我们应该重视一下关键选择器</p>
 
-<h3>过度限制选择器</h3>
+<h3 id="section-4">过度限制选择器</h3>
 
 <p>现在我们知道了什么是关键选择器，还有它是大部分工作的来源，但是我们可以更乐观一点。拥有一个明确的关键选择器最大的好处就是你可以避免使用过度限制选择器。一个过度限制选择器可能像：</p>
 
@@ -223,7 +185,7 @@ CSS选择器效率从高到低的排序如下：</p>
 
 <p>过度限制选择器使浏览器工作比它实际需要的更繁重，花费的时间更多。我们可以删掉不必需的限制，来使我们的选择器更简单和高效。</p>
 
-<h3>这些真的需要吗？</h3>
+<h3 id="section-5">这些真的需要吗？</h3>
 
 <p>最短的答案是:或许不是。</p>
 
@@ -232,7 +194,7 @@ CSS选择器效率从高到低的排序如下：</p>
 
 <p>浏览器将会在解析CSS的速度上变得更好，甚至在手机端。在一个网站上，你不太可能会觉察到一个低效的CSS选择器，但是….</p>
 
-<h3>但是</h3>
+<h3 id="section-6">但是</h3>
 
 <p>它确实发生了，浏览器还是不得不去做我们讨论的所有工作，无论它们变得多快。即使你不需要或者甚至不想实践任何一个，但是它都是我们值得学习的知识。请记住选择器可能会让你付出很大代价，你应该避免盯着一个看。这意味着如果你发现你自己在写像这样的：</p>
 
@@ -243,70 +205,85 @@ CSS选择器效率从高到低的排序如下：</p>
 
 <p>现在，在高效选择器的世界我还是一个新人。所以如果我忘记了什么，或者你有需要补充的，请在评论里面留言。</p>
 
-<h3>更多高效选择器</h3>
+<h3 id="section-7">更多高效选择器</h3>
 
 <p>我还不能完全介绍Steve Souders的网站和书籍，它们是如此之好，以至于值得你花更多时间来阅读和推荐。这个家伙只有他自己才了解自己！</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-03-08" datetime="2013-03-08" pubdate>
-							<span class="year">2013-03-08</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="css"><a href="/tags.html#css-ref">css</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://freestyle21.cn/writings/efficient-css.html" target="_blank">http://freestyle21.cn/writings/efficient-css.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/08/efficient-css.html">http://http://uwebs.tk/archives/2013/03/08/efficient-css.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>加速你的Python代码</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='加速你的Python代码'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 加速你的Python代码</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">加速你的Python代码</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://www.oschina.net/translate/speeding-up-your-python-code">oschina</a>,英文原文：<a href="http://maxburstein.com/blog/speeding-up-your-python-code/" title="Speeding Up Your Python Code">Speeding Up Your Python Code</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 加速你的Python代码</div>
+
+<article>
+	<h1><a href="/archives/2013/03/25/speeding-up-your-python-code.html">加速你的Python代码</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-03-25</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>来源：<a href="http://www.oschina.net/translate/speeding-up-your-python-code">oschina</a>,英文原文：<a href="http://maxburstein.com/blog/speeding-up-your-python-code/" title="Speeding Up Your Python Code">Speeding Up Your Python Code</a></p>
 
 <p>在我看来，python社区分为了三个流派，分别是python2.x组织，3.x组织和PyPy组织。这个分类基本上可以归根于类库的兼容性和速度。这篇文章将聚焦于一些通用代码的优化技巧以及编译成C后性能的显著提升，当然我也会给出三大主要python流派运行时间。我的目的不是为了证明一个比另一个强，只是为了让你知道如何在不同的环境下使用这些具体例子作比较。</p>
 
@@ -72,19 +35,19 @@
 
 <pre><code>import timeit
 import random
-
+ 
 def generate(num):
     while num:
         yield random.randrange(10)
         num -= 1
-
+ 
 def create_list(num):
     numbers = []
     while num:
         numbers.append(random.randrange(10))
         num -= 1
     return numbers
-
+        
 print(timeit.timeit("sum(generate(999))", setup="from __main__ import generate", number=1000))
 &gt;&gt;&gt; 0.88098192215 #Python 2.7
 &gt;&gt;&gt; 1.416813850402832 #Python 3.2
@@ -101,7 +64,7 @@ print(timeit.timeit("sum(create_list(999))", setup="from __main__ import create_
 
 <pre><code>import timeit
 from ctypes import cdll
-
+ 
 def generate_c(num):
     #Load standard C library
     libc = cdll.LoadLibrary("libc.so.6") #Linux
@@ -109,7 +72,7 @@ def generate_c(num):
     while num:
         yield libc.rand() % 10
         num -= 1
-
+ 
 print(timeit.timeit("sum(generate_c(999))", setup="from __main__ import generate_c", number=1000))
 &gt;&gt;&gt; 0.434374809265 #Python 2.7
 &gt;&gt;&gt; 0.7084300518035889 #Python 3.2
@@ -128,7 +91,7 @@ print(timeit.timeit("sum(generate_c(999))", setup="from __main__ import generate
 
 <pre><code>#cython_generator.pyx
 import random
-
+ 
 def generate(num):
     while num:
         yield random.randrange(10)
@@ -140,7 +103,7 @@ def generate(num):
 <pre><code>from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
-
+ 
 setup(
     cmdclass = {'build_ext': build_ext},
     ext_modules = [Extension("generator", ["cython_generator.pyx"])]
@@ -164,7 +127,7 @@ print(timeit.timeit("sum(generator.generate(999))", setup="import generator", nu
 <pre><code>#cython_generator.pyx
 cdef extern from "stdlib.h":
     int c_libc_rand "rand"()
-
+ 
 def generate(int num):
     while num:
         yield c_libc_rand() % 10
@@ -182,19 +145,19 @@ def generate(int num):
 
 <pre><code>import timeit
 import random
-
+ 
 def generate(num):
     while num:
         yield random.randrange(10)
         num -= 1
-
+ 
 def create_list(num):
     numbers = []
     while num:
         numbers.append(random.randrange(10))
         num -= 1
     return numbers
-
+        
 print(timeit.timeit("sum(generate(999))", setup="from __main__ import generate", number=1000))
 &gt;&gt;&gt; 0.115154981613 #PyPy 1.9
 &gt;&gt;&gt; 0.118431091309 #PyPy 2.0b1
@@ -211,7 +174,7 @@ print(timeit.timeit("sum(create_list(999))", setup="from __main__ import create_
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-
+ 
 /* http://rosettacode.org/wiki/Sorting_algorithms/Merge_sort#C */
 inline
 void merge(int *left, int l_len, int *right, int r_len, int *out)
@@ -219,36 +182,36 @@ void merge(int *left, int l_len, int *right, int r_len, int *out)
     int i, j, k;
     for (i = j = k = 0; i &lt; l_len &amp;&amp; j &lt; r_len; )
         out[k++] = left[i] &lt; right[j] ? left[i++] : right[j++];
-
+ 
     while (i &lt; l_len) out[k++] = left[i++];
     while (j &lt; r_len) out[k++] = right[j++];
 }
-
+ 
 /* inner recursion of merge sort */
 void recur(int *buf, int *tmp, int len)
 {
     int l = len / 2;
     if (len &lt;= 1) return;
-
+ 
     /* note that buf and tmp are swapped */
     recur(tmp, buf, l);
     recur(tmp + l, buf + l, len - l);
-
+ 
     merge(tmp, l, tmp + l, len - l, buf);
 }
-
+ 
 /* preparation work before recursion */
 void merge_sort(int *buf, int len)
 {
     /* call alloc, copy and free only once */
     int *tmp = malloc(sizeof(int) * len);
     memcpy(tmp, buf, sizeof(int) * len);
-
+ 
     recur(buf, tmp, len);
-
+ 
     free(tmp);
 }
-
+ 
 int fibRec(int n){
     if(n &lt; 2)
         return n;
@@ -268,20 +231,20 @@ gcc -shared -o libfunctions.so functions.o
 <pre><code># functions.py
 from ctypes import *
 import time
-
+ 
 libfunctions = cdll.LoadLibrary("./libfunctions.so")
-
+ 
 def fibRec(n):
     if n &lt; 2:
         return n
     else:
         return fibRec(n-1) + fibRec(n-2)
-
+ 
 start = time.time() 
 fibRec(32)
 finish = time.time()
 print("Python: " + str(finish - start))
-
+ 
 #C Fibonacci
 start = time.time() 
 x = libfunctions.fibRec(32)
@@ -289,7 +252,7 @@ finish = time.time()
 print("C: " + str(finish - start))
 </code></pre>
 
-<p><label /></p>
+<p><label></label></p>
 
 <pre><code>Python: 1.18783187866 #Python 2.7
 Python: 1.272292137145996 #Python 3.2
@@ -309,31 +272,31 @@ C: 0.046403169632 #PyPy 2.0b1 + ctypes
 
 <pre><code>#Python Merge Sort
 from random import shuffle, sample
-
+ 
 #Generate 9999 random numbers between 0 and 100000
 numbers = sample(range(100000), 9999)
 shuffle(numbers)
 c_numbers = (c_int * len(numbers))(*numbers)
-
+ 
 from heapq import merge
-
+ 
 def merge_sort(m):
     if len(m) &lt;= 1:
         return m
-
+ 
     middle = len(m) // 2
     left = m[:middle]
     right = m[middle:]
-
+ 
     left = merge_sort(left)
     right = merge_sort(right)
     return list(merge(left, right))
-
+ 
 start = time.time()
 numbers = merge_sort(numbers)
 finish = time.time()
 print("Python: " + str(finish - start))
-
+ 
 #C Merge Sort
 start = time.time()
 libfunctions.merge_sort(byref(c_numbers), len(numbers))
@@ -341,7 +304,7 @@ finish = time.time()
 print("C: " + str(finish - start))
 </code></pre>
 
-<p><label /></p>
+<p><label></label></p>
 
 <pre><code>Python: 0.190635919571 #Python 2.7
 Python: 0.11785483360290527 #Python 3.2
@@ -355,7 +318,7 @@ C: 0.00287103652954 #PyPy 2.0b1 + ctypes
 
 <p>这儿通过表格和图标来比较不同的结果。</p>
 
-<p><a href="/assets/files/2013-03/speeding-up-your-python-code.jpg" title="加速你的Python代码"><img src="/assets/files/2013-03/speeding-up-your-python-code.jpg" title="加速你的Python代码" alt="加速你的Python代码" /></a></p>
+<p><a href="/assets/files/2013-03/speeding-up-your-python-code.jpg" title="加速你的Python代码"><img src="/assets/files/2013-03/speeding-up-your-python-code.jpg" alt="加速你的Python代码" title="加速你的Python代码" /></a></p>
 
 <table border="1" style="width:100%;text-align:center;">
 <tbody>
@@ -407,69 +370,83 @@ C: 0.00287103652954 #PyPy 2.0b1 + ctypes
 </tbody>
 </table>
 
-
 <p>希望你利用C和PyPy优化你的python代码并以此为敲门砖找到一个好职位。像往常一样如果你有任何意见或问题，请随时把评论下载下面或者在我的网页上与我取得联系。感谢您的阅读！</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-03-25" datetime="2013-03-25" pubdate>
-							<span class="year">2013-03-25</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.oschina.net/translate/speeding-up-your-python-code" target="_blank">http://www.oschina.net/translate/speeding-up-your-python-code</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/25/speeding-up-your-python-code.html">http://http://uwebs.tk/archives/2013/03/25/speeding-up-your-python-code.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

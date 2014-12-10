@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>全面理解面向对象的 JavaScript</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='全面理解面向对象的 JavaScript'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 全面理解面向对象的 JavaScript</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">全面理解面向对象的 JavaScript</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html">DeveloperWorks – 曾滢著</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 全面理解面向对象的 JavaScript</div>
+
+<article>
+	<h1><a href="/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html">全面理解面向对象的 JavaScript</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-04-22</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>来源：<a href="http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html">DeveloperWorks – 曾滢著</a></p>
 
 <p><strong>简介：</strong> </p>
 
@@ -77,11 +40,10 @@
 <p>　　为了说明 JavaScript 是一门彻底的面向对象的语言，首先有必要从面向对象的概念着手 ,探讨一下面向对象中的几个概念：</p>
 
 <ul>
-<li>一切事物皆对象</li>
-<li>对象具有封装和继承特性</li>
-<li>对象与对象之间使用消息通信，各自存在信息隐藏</li>
+  <li>一切事物皆对象</li>
+  <li>对象具有封装和继承特性</li>
+  <li>对象与对象之间使用消息通信，各自存在信息隐藏</li>
 </ul>
-
 
 <p>　　以这三点做为依据，C++是半面向对象半面向过程语言，因为，虽然他实现了类的封装、继承和多态，但存在非对象性质的全局函数和变量。Java、C#是完全的面向对象语言，它们通过类的形式组织函数和变量，使之不能脱离对象存在。但这里函数本身是一个过程，只是依附在某个类上。</p>
 
@@ -111,9 +73,9 @@
  var fun = function() { 
     console.log( "我是一个 Function 对象！谁调用我，我属于谁：", this ); 
  }; 
-
+ 
  obj.fun = fun; 
-
+ 
  console.log( this === window );     // 打印 true 
  console.log( window.str === str );  // 打印 true 
  console.log( window.obj === obj );  // 打印 true 
@@ -185,11 +147,11 @@
  var p = new Person(); 
  // 对象的隐式引用指向了构造器的 prototype 属性，所以此处打印 true 
  console.log( p.__proto__ === Person.prototype ); 
-
+ 
  // 原型本身是一个 Object 对象，所以他的隐式引用指向了
  // Object 构造器的 prototype 属性 , 故而打印 true 
  console.log( Person.prototype.__proto__ === Object.prototype ); 
-
+ 
  // 构造器 Person 本身是一个函数对象，所以此处打印 true 
  console.log( Person.__proto__ === Function.prototype );
 </code></pre>
@@ -198,11 +160,11 @@
 
 <p><strong>图 1. 原型链中的属性隐藏机制</strong></p>
 
-<p><img src="/assets/files/2013-04/image001.png" title="全面理解面向对象的 JavaScript" alt="全面理解面向对象的JavaScript" /> </p>
+<p><img src="/assets/files/2013-04/image001.png" alt="全面理解面向对象的JavaScript" title="全面理解面向对象的 JavaScript" /> </p>
 
-<p>　　在图1 中，object1->prototype1->prototype2 构成了 对象 object1的原型链，根据上述属性隐藏机制，可以清楚地看到 prototype1 对象中的property4 属性和 prototype2 对象中的 property3属性皆被隐藏。理解了原型链，那么将非常容易理解 JS中基于原型的继承实现原理，程序清单 5 是利用原型链实现继承的简单例子。</p>
+<p>　　在图1 中，object1-&gt;prototype1-&gt;prototype2 构成了 对象 object1的原型链，根据上述属性隐藏机制，可以清楚地看到 prototype1 对象中的property4 属性和 prototype2 对象中的 property3属性皆被隐藏。理解了原型链，那么将非常容易理解 JS中基于原型的继承实现原理，程序清单 5 是利用原型链实现继承的简单例子。</p>
 
-<p><strong>清单 5. 利用原型链 Horse->Mammal->Animal 实现继承</strong></p>
+<p><strong>清单 5. 利用原型链 Horse-&gt;Mammal-&gt;Animal 实现继承</strong></p>
 
 <pre><code>// 声明 Animal 对象构造器
  function Animal() { 
@@ -223,7 +185,7 @@
  // 指定 Mammal 对象的原型为一个 Animal 对象。
  // 实际上此处便是在创建 Mammal 对象和 Animal 对象之间的原型链
  Mammal.prototype = new Animal(); 
-
+ 
  // 声明 Horse 对象构造器
  function Horse( height, weight ) { 
     this.name = "horse"; 
@@ -232,7 +194,7 @@
  } 
  // 将 Horse 对象的原型指定为一个 Mamal 对象，继续构建 Horse 与 Mammal 之间的原型链
  Horse.prototype = new Mammal(); 
-
+ 
  // 重新指定 eat 方法 , 此方法将覆盖从 Animal 原型继承过来的 eat 方法
  Horse.prototype.eat = function() { 
     alert( "Horse is eating grass!" ); 
@@ -287,7 +249,7 @@
 
 <p>　　如果您已对原型、函数构造器、闭包和基于上下文的 this 有了充分的理解，那么理解 Simple Inheritance 的实现原理也并非相当困难。从本质上讲，<em>var Person = Class.extend(…)</em>该语句中，左边的 Person 实际上是获得了由 Class 调用 extend 方法返回的一个构造器，也即一个 function 对象的引用。顺着这个思路，我们继续介绍 Simple Inheritance 是如何做到这一点，进而实现了由原型继承方式到类式继承方式的转换的。图 2 是 Simple Inheritance 的源码及其附带注释。为了方便理解，用中文对代码逐行补充说明。</p>
 
-<p><strong>图 2.Simple Inheritance 源码解析</strong> <img src="/assets/files/2013-04/image003.png" title="全面理解面向对象的 JavaScript" alt="全面理解面向对象的JavaScript" /></p>
+<p><strong>图 2.Simple Inheritance 源码解析</strong> <img src="/assets/files/2013-04/image003.png" alt="全面理解面向对象的JavaScript" title="全面理解面向对象的 JavaScript" /></p>
 
 <p>　　抛开代码第二部分，整体连贯地考察第一和第三部分会发现，extend 函数的根本目的就是要构造一个具有新原型属性的新构造器。我们不禁感叹 <em>John Resig</em>的大师手笔及其对 JS 语言本质把握的细腻程度。至于 <em>John Resig</em>是如何想到这样精妙的实现方法，感兴趣的读者可以阅读本文（参考资源），其中有详细介绍关于最初设计 Simple Inheritance 的思维过程。</p>
 
@@ -338,89 +300,103 @@
 <p><strong>学习</strong></p>
 
 <ul>
-<li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Standard ECMA-262: ECMAScript
+  <li><a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm">Standard ECMA-262: ECMAScript
 官方标准</a>，学习它，可以让你全面理解
 JavaScript 的本质。</li>
-<li><a href="http://www.otimaideia.com.br/material/javascript/pro-javascript-techniques.9781590597279.26383.pdf">Pro JavaScript: 《精通 JavaScript
+  <li><a href="http://www.otimaideia.com.br/material/javascript/pro-javascript-techniques.9781590597279.26383.pdf">Pro JavaScript: 《精通 JavaScript
 》</a>：jQuery
 之父 John Resig
 的鼎力之作。他不是一本介绍语法知识及相关入门的书。您可以在书中学习到现代
 JavaScript 编程方法。</li>
-<li><a href="http://www.json.org/">Introducing JSON: JSON
+  <li><a href="http://www.json.org/">Introducing JSON: JSON
 官方介绍</a>：学习它可以理解 JSON 的构造本质。</li>
-<li><a href="http://ejohn.org/blog/simple-javascript-inheritance">Simple JavaScript
+  <li><a href="http://ejohn.org/blog/simple-javascript-inheritance">Simple JavaScript
 Inheritance</a>：John
 Resig 关于实现的简单 JS
 继承的详细介绍，包含源码和思维过程及使用实例。</li>
-<li><a href="http://javascript.crockford.com/javascript.html">The World’s Most Misunderstood Programming
+  <li><a href="http://javascript.crockford.com/javascript.html">The World’s Most Misunderstood Programming
 Language</a>：这是 JS
 大师 Douglas Crockford 写的一篇关于介绍 JavaScript 语言本质的文章。</li>
-<li><a href="http://dean.edwards.name/weblog/2006/03/base/">A Base Class for JavaScript
+  <li><a href="http://dean.edwards.name/weblog/2006/03/base/">A Base Class for JavaScript
 Inheritance</a>：JS 大师
 Dean Edwards 实现的 Base.js。</li>
 </ul>
 
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-04-22" datetime="2013-04-22" pubdate>
-							<span class="year">2013-04-22</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html" target="_blank">http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html">http://http://uwebs.tk/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

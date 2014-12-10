@@ -1,76 +1,39 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>深入研究JavaScript的Module模式</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='深入研究JavaScript的Module模式'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 深入研究JavaScript的Module模式</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">深入研究JavaScript的Module模式</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>Module模式是常见的JavaScript编程模式，一般来说这种模式是很好理解的，但是依然有一些高级的用法没有得到太多的注意。在这篇文章中我会提到Module模式的基础知识和一些真正重要的话题，包括一个可能是我原创的。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 深入研究JavaScript的Module模式</div>
 
-<h2>基础知识</h2>
+<article>
+	<h1><a href="/archives/2013/05/31/javascript-module-pattern-in-depth.html">深入研究JavaScript的Module模式</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-05-31</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>Module模式是常见的JavaScript编程模式，一般来说这种模式是很好理解的，但是依然有一些高级的用法没有得到太多的注意。在这篇文章中我会提到Module模式的基础知识和一些真正重要的话题，包括一个可能是我原创的。</p>
+
+<h2 id="section">基础知识</h2>
 
 <p>首先我们要大概了解一下Module模式（2007年由YUI的EricMiraglia在博客中提出），如果你已熟悉 Module 模式，可以跳过本部分，直接阅读“高级模式”。</p>
 
 <p> </p>
 
-<h3>匿名函数闭包</h3>
+<h3 id="section-1">匿名函数闭包</h3>
 
 <p>匿名函数闭包是JavaScript最棒的特征，没有之一，是它让一切都成为了可能。现在我们来创建一个匿名函数然后立即执行。函数中所有的代码都是在一个闭包中执行的，闭包决定了在整个执行过程中这些代码的私有性和状态。</p>
 
@@ -84,7 +47,7 @@
 
 <p> </p>
 
-<h3>全局导入</h3>
+<h3 id="section-2">全局导入</h3>
 
 <p>JavaScript有一个特征叫做隐藏的全局变量。当一个变量名被使用，编译器会向上级查询用var来声明这个变量的语句。如果没有找到的话这个变量就被认为是全局的。如果在赋值的时候这样使用，就会创建一个全局的作用域。这意味着在一个匿名的闭包中创建一个全局变量是十分容易的。不幸的是，这将会导致代码的难以管理，因为对于程序员来说，如果全局的变量不是在一个文件中声明会很不清晰。幸运的是，匿名函数给我我们另一个选择。我们可以将全局变量通过匿名函数的参数来导入到我们的代码中，这样更加的快速和整洁。</p>
 
@@ -93,9 +56,9 @@
 }(jQuery, YAHOO));
 </code></pre>
 
-<h3></h3>
+<p>### </p>
 
-<h3>Module导出</h3>
+<h3 id="module">Module导出</h3>
 
 <p>有时你并不想要使用全局变量，但是你想要声明他们。我们可以很容易通过匿名函数的返回值来导出他们。关于Module模式的基本内容就这么多，这里有一个复杂一点的例子。</p>
 
@@ -120,11 +83,11 @@
 
 <p> </p>
 
-<h2>高级模式</h2>
+<h2 id="section-3">高级模式</h2>
 
 <p>之前提到的内容已经可以满足很多需求了，但我们可以更深入地研究这种模式来创造一些强力的可拓展的结构。让我们一点一点，继续通过这个叫做MODULE的module来学习。</p>
 
-<h3>拓展</h3>
+<h3 id="section-4">拓展</h3>
 
 <p>目前，module模式的一个局限性就是整个module必须是写在一个文件里面的。每个进行过大规模代码开发的人都知道将一个文件分离成多个文件的重要性。幸运的是我们有一个很好的方式来拓展modules。首先我们导入一个module，然后加属性，最后将它导出。这里的这个例子，就是用上面所说的方法来拓展MODULE。</p>
 
@@ -141,7 +104,7 @@
 
 <p> </p>
 
-<h3>松拓展</h3>
+<h3 id="section-5">松拓展</h3>
 
 <p>我们上面的那个例子需要我们先创建module，然后在对module进行拓展，这并不是必须的。异步加载脚本是提升Javascript应用性能的最佳方式之一。。通过松拓展，我们创建灵活的，可以以任意顺序加载的，分成多个文件的module。每个文件的结构大致如下</p>
 
@@ -156,7 +119,7 @@
 
 <p> </p>
 
-<h3>紧拓展</h3>
+<h3 id="section-6">紧拓展</h3>
 
 <p>虽然松拓展已经很棒了，但是它也给你的module增添了一些局限。最重要的一点是，你没有办法安全的重写module的属性，在初始化的时候你也不能使用其他文件中的module属性（但是你可以在初始化之后运行中使用）。紧拓展包含了一定的载入顺序，但是支持重写，下面是一个例子（拓展了我们最初的MODULE）。</p>
 
@@ -175,7 +138,7 @@
 
 <p> </p>
 
-<h3>复制和继承</h3>
+<h3 id="section-7">复制和继承</h3>
 
 <pre><code>var MODULE_TWO = (function (old) {
     var my = {},
@@ -200,7 +163,7 @@
 
 <p> </p>
 
-<h3>跨文件的私有状态</h3>
+<h3 id="section-8">跨文件的私有状态</h3>
 
 <p>把一个module分成多个文件有一很大的局限，就是每一个文件都在维持自身的私有状态，而且没有办法来获得其他文件的私有状态。这个是可以解决的，下面这个松拓展的例子，可以在不同文件中维持私有状态。</p>
 
@@ -229,7 +192,7 @@
 
 <p> </p>
 
-<h3>Sub-modules</h3>
+<h3 id="sub-modules">Sub-modules</h3>
 
 <p>最后一个高级模式实际上是最简单的，有很多创建子module的例子，就像创建一般的module一样的。</p>
 
@@ -245,7 +208,7 @@
 
 <p> </p>
 
-<h2>总结</h2>
+<h2 id="section-9">总结</h2>
 
 <p>大多数高级模式都可以互相组合来创建更有用的新模式。如果一定要让我提出一个设计复杂应用的方法的话，我会结合松拓展，私有状态，和子module。</p>
 
@@ -273,66 +236,81 @@
 
 <p>译文链接：<a href="http://blog.jobbole.com/40409/">http://blog.jobbole.com/40409/</a></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-05-31" datetime="2013-05-31" pubdate>
-							<span class="year">2013-05-31</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/40409/" target="_blank">http://blog.jobbole.com/40409/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/05/31/javascript-module-pattern-in-depth.html">http://http://uwebs.tk/archives/2013/05/31/javascript-module-pattern-in-depth.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

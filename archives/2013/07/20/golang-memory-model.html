@@ -1,100 +1,58 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Go语言内存模型</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Go语言内存模型'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="go" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Go语言内存模型</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Go语言内存模型</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h1>目录：</h1>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Go语言内存模型</div>
+
+<article>
+	<h1><a href="/archives/2013/07/20/golang-memory-model.html">Go语言内存模型</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-07-20</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h1 id="section">目录：</h1>
 
 <ul>
-<li><a href="#toc_0">名词定义</a></li>
-<li><a href="#toc_1">背景介绍</a></li>
-<li><p><a href="#toc_2">Happens Before</a></p>
-
-<ul>
-<li><a href="#toc_3">Happens-before 定义</a></li>
+  <li><a href="#toc_0">名词定义</a></li>
+  <li><a href="#toc_1">背景介绍</a></li>
+  <li><a href="#toc_2">Happens Before</a>
+    <ul>
+      <li><a href="#toc_3">Happens-before 定义</a></li>
+    </ul>
+  </li>
+  <li><a href="#toc_4">同步方法</a>
+    <ul>
+      <li><a href="#toc_5">初始化</a></li>
+      <li><a href="#toc_6">创建Goroutine</a></li>
+      <li><a href="#toc_7">销毁Goroutine</a></li>
+      <li><a href="#toc_8">Channel通信</a></li>
+      <li><a href="#toc_9">锁</a></li>
+      <li><a href="#toc_10">Once</a></li>
+    </ul>
+  </li>
+  <li><a href="#toc_11">参考链接</a></li>
 </ul>
-</li>
-<li><p><a href="#toc_4">同步方法</a></p>
-
-<ul>
-<li><a href="#toc_5">初始化</a></li>
-<li><a href="#toc_6">创建Goroutine</a></li>
-<li><a href="#toc_7">销毁Goroutine</a></li>
-<li><a href="#toc_8">Channel通信</a></li>
-<li><a href="#toc_9">锁</a></li>
-<li><a href="#toc_10">Once</a></li>
-</ul>
-</li>
-<li><p><a href="#toc_11">参考链接</a></p></li>
-</ul>
-
 
 <h1 id="toc_0">名词定义</h1>
-
 
 <p>执行体 - Go里的Goroutine或Java中的Thread</p>
 
 <h1 id="toc_1">背景介绍</h1>
-
 
 <p>内存模型的目的是为了定义清楚变量的读写在不同执行体里的可见性。理解内存模型在并发编程中非常重要，因为代码的执行顺序和书写的逻辑顺序并不会完全一致，甚至在编译期间编译器也有可能重排代码以最优化CPU执行,另外还因为有CPU缓存的存在，内存的数据不一定会及时更新，这样对内存中的同一个变量读和写也不一定和期望一样。</p>
 
@@ -103,7 +61,6 @@
 <p>Go内存模型规范了在什么条件下一个Goroutine对某个变量的修改一定对其它Goroutine可见。</p>
 
 <h1 id="toc_2">Happens Before</h1>
-
 
 <p>在一个单独的Goroutine里，对变量的读写和代码的书写顺序一致。比如以下的代码:</p>
 
@@ -141,57 +98,40 @@ func main() {
 
 <h2 id="toc_3">Happens-before 定义</h2>
 
-
 <p>Happens-before用来指明Go程序里的内存操作的局部顺序。如果一个内存操作事件e1 happens-before e2，则e2 happens-after e1也成立；如果e1不是happens-before e2,也不是happens-after e2，则e1和e2是并发的。</p>
 
 <p>在这个定义之下，如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说<strong>允许</strong>可见的：</p>
 
 <ol>
-<li>r不在w开始之前发生（可以是之后或并发）；</li>
-<li>w和r之间没有另一个写操作(w’)发生；</li>
+  <li>r不在w开始之前发生（可以是之后或并发）；</li>
+  <li>w和r之间没有另一个写操作(w’)发生；</li>
 </ol>
-
 
 <p>为了保证对变量（v）的一个特定写操作（w）对一个读操作（r）可见，就需要确保w是r<strong>唯一</strong><strong>允许</strong>的写操作，于是如果以下情况满足，则对变量（v）的内存写操作（w）对一个内存读操作（r）来说<strong>保证</strong>可见的：</p>
 
 <ol>
-<li>w在r开始之前发生；</li>
-<li>所有其它对v的写操作只在w之前或r之后发生；</li>
+  <li>w在r开始之前发生；</li>
+  <li>所有其它对v的写操作只在w之前或r之后发生；</li>
 </ol>
-
 
 <p>可以看出后一种约定情况比前一种更严格，这种情况要求没有w或r没有其他的并发写操作。</p>
 
 <p>在单个Goroutine里，因为肯定没有并发，上面两种情况是等价的。对变量v的读操作可以读到最近一次写操作的值（这个应该很容易理解）。但在多个Goroutine里如果要访问一个共享变量，我们就必须使用同步工具来建立happens-before条件，来保证对该变量的读操作能读到期望的修改值。</p>
 
-<p><strong>要保证并行执行体对共享变量的顺序访问方法就是用锁</strong>。Java和Go在这点上是一致的。</p>
+<p>要保证并行执行体对共享变量的顺序访问方法就是用锁**。Java和Go在这点上是一致的。</p>
 
 <p>以下是具体的可被利用的Go语言的happens-before规则，从本质上来讲，happens-before规则确定了CPU缓冲和主存的同步时间点（通过<a href="http://hugozhu.myalert.info/2013/03/28/22-memory-barriers-or-fences.html">内存屏障</a>等指令），从而使得对变量的读写顺序可被确定–也就是我们通常说的“同步”。</p>
 
 <h1 id="toc_4">同步方法</h1>
 
-
-
-
 <h2 id="toc_5">初始化</h2>
 
-
-<ol>
-<li><strong>如果package p 引用了package q，q的init()方法 happens-before p</strong>（Java工程师可以对比一下<a href="http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">final变量的happens-before规则</a>）</li>
-<li><strong>main.main()方法 happens-after所有package的init()方法结束。</strong></li>
-</ol>
-
+<p>如果package p 引用了package q，q的init()方法 happens-before p（Java工程师可以对比一下<a href="http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">final变量的happens-before规则</a>）
+main.main()方法 happens-after所有package的init()方法结束。</p>
 
 <h2 id="toc_6">创建Goroutine</h2>
 
-
-<ol>
-<li><strong>go语句创建新的goroutine happens-before 该goroutine执行</strong>（这个应该很容易理解）</li>
-</ol>
-
-
-<br>
-
+<p>go语句创建新的goroutine happens-before 该goroutine执行（这个应该很容易理解）</p>
 
 <pre><code>package main
 import (
@@ -225,14 +165,7 @@ func main() {
 
 <h2 id="toc_7">销毁Goroutine</h2>
 
-
-<ol>
-<li><strong>Goroutine的退出并不保证happens-before任何事件</strong>。</li>
-</ol>
-
-
-<br>
-
+<p>Goroutine的退出并不保证happens-before任何事件。</p>
 
 <pre><code>var a string
 func hello() {
@@ -247,31 +180,27 @@ func hello() {
 
 <h2 id="toc_8">Channel通信</h2>
 
-
 <p>在Go编程中，Channel是被推荐的执行体间通信的方法，Go的编译器和运行态都会尽力对其优化。</p>
 
-<ol>
-<li><strong>对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成</strong></li>
-<li><strong>关闭一个Channel happens-before 从该Channel接收到最后的返回值0</strong></li>
-<li><strong>不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成</strong></li>
-</ol>
+<ul>
+  <li>对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成</li>
+  <li>关闭一个Channel happens-before 从该Channel接收到最后的返回值0</li>
+  <li>
+    <p>不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成</p>
 
-
-<br>
-
-
-<pre><code>var c = make(chan int, 10)
-var a string
-func f() {
-    a = "hello, world"
-    c &lt;- 0
-}
-func main() {
-    go f()
-    &lt;-c
-    print(a)
-}
-</code></pre>
+    <p>var c = make(chan int, 10)
+  var a string
+  func f() {
+      a = “hello, world”
+      c &lt;- 0
+  }
+  func main() {
+      go f()
+      &lt;-c
+      print(a)
+  }</p>
+  </li>
+</ul>
 
 <p>上述代码可以确保输出<code>hello, world</code>，因为<code>a = "hello, world"</code> happens-before <code>c &lt;- 0</code>，<code>print(a)</code> happens-after <code>&lt;-c</code>， 根据上面的规则1）以及happens-before的可传递性，<code>a = "hello, world"</code> happens-before<code>print(a)</code>。</p>
 
@@ -294,24 +223,16 @@ func main() {
 
 <h2 id="toc_9">锁</h2>
 
-
 <p><code>sync</code> 包实现了两种锁数据结构:</p>
 
 <ol>
-<li>sync.Mutex -> java.util.concurrent.ReentrantLock</li>
-<li>sync.RWMutex -> java.util.concurrent.locks.ReadWriteLock</li>
+  <li>sync.Mutex -&gt; java.util.concurrent.ReentrantLock</li>
+  <li>sync.RWMutex -&gt; java.util.concurrent.locks.ReadWriteLock</li>
 </ol>
-
 
 <p>其happens-before规则和Java的也类似：</p>
 
-<ol>
-<li><strong>任何sync.Mutex或sync.RWMutex 变量（l），定义 n &lt; m， 第n次<code>l.Unlock()</code> happens-before 第m次<code>l.lock()</code>调用返回。</strong></li>
-</ol>
-
-
-<br>
-
+<p>任何sync.Mutex或sync.RWMutex 变量（l），定义 n &lt; m， 第n次<code>l.Unlock()</code> happens-before 第m次<code>l.lock()</code>调用返回。</p>
 
 <pre><code>var l sync.Mutex
 var a string
@@ -331,16 +252,9 @@ func main() {
 
 <h2 id="toc_10">Once</h2>
 
-
 <p><code>sync</code>包还提供了一个安全的初始化工具Once。还记得Java的Singleton设计模式，double-check，甚至triple-check的各种单例初始化方法吗？Go则提供了一个标准的方法。</p>
 
-<ol>
-<li><strong><code>once.Do(f)</code>中的<code>f()</code> happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。</strong></li>
-</ol>
-
-
-<br>
-
+<p><code>once.Do(f)</code>中的<code>f()</code> happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。</p>
 
 <pre><code>var a string
 var once sync.Once
@@ -361,75 +275,88 @@ func twoprint() {
 
 <h1 id="toc_11">参考链接</h1>
 
-
 <ol>
-<li><a href="http://golang.org/ref/mem">http://golang.org/ref/mem</a></li>
-<li><a href="http://en.wikipedia.org/wiki/Java_Memory_Model">http://en.wikipedia.org/wiki/Java_Memory_Model</a></li>
-<li><a href="http://ifeve.com/java-memory-model-1/">http://ifeve.com/java-memory-model-1/</a></li>
-<li><a href="http://code.google.com/p/golang-china/wiki/go_mem">http://code.google.com/p/golang-china/wiki/go_mem</a></li>
+  <li><a href="http://golang.org/ref/mem">http://golang.org/ref/mem</a>  </li>
+  <li><a href="http://en.wikipedia.org/wiki/Java_Memory_Model">http://en.wikipedia.org/wiki/Java_Memory_Model</a>  </li>
+  <li><a href="http://ifeve.com/java-memory-model-1/">http://ifeve.com/java-memory-model-1/</a>  </li>
+  <li><a href="http://code.google.com/p/golang-china/wiki/go_mem">http://code.google.com/p/golang-china/wiki/go_mem</a></li>
 </ol>
 
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-07-20" datetime="2013-07-20" pubdate>
-							<span class="year">2013-07-20</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="go"><a href="/tags.html#go-ref">go</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://hugozhu.myalert.info/2013/04/20/31-golang-memory-model.html" target="_blank">http://hugozhu.myalert.info/2013/04/20/31-golang-memory-model.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/07/20/golang-memory-model.html">http://http://uwebs.tk/archives/2013/07/20/golang-memory-model.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

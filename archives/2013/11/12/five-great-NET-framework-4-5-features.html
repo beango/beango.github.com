@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>.NET Framework 4.5 五个很棒的特性</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='.NET Framework 4.5 五个很棒的特性'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="dotnet,.net 4.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / .NET Framework 4.5 五个很棒的特性</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">.NET Framework 4.5 五个很棒的特性</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h3>简介</h3>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / .NET Framework 4.5 五个很棒的特性</div>
+
+<article>
+	<h1><a href="/archives/2013/11/12/five-great-NET-framework-4-5-features.html">.NET Framework 4.5 五个很棒的特性</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-11-12</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h3 id="section">简介</h3>
 
 <p>自.NET 4.5发布已经过了差不多1年了。但是随着最近微软大多数的发布，与.NET开发者交流的问题显示，开发者仅知道一到两个特性，其他的特性仅仅停留在MSDN并以简单的文档形式存在着。</p>
 
@@ -76,7 +39,7 @@
 
 <p>提示：这篇文章没有讨论在ASP.NET, WCF, WPF, WWF等中的新特性。仅仅讲了关于内核的新特性。</p>
 
-<h3><strong> 特性1：异步与等待（代码开发者）</strong></h3>
+<h3 id="section-1"><strong> 特性1：异步与等待（代码开发者）</strong></h3>
 
 <p>这个特性已经被吹嘘过度并且每个.NET布道者都谈论它。但是这仍然是我喜欢的并且你会知道为什么从这里只有几行。</p>
 
@@ -87,11 +50,10 @@
 <p>让我们尝试通过下面的代码来搞清上面声明的含义。如果你明白下面代码的流程：</p>
 
 <ol>
-<li>Static void main()从开始处调用Method()方法。</li>
-<li>Method()方法产生一个名为LongTask的任务（线程），线程将等待10秒。</li>
-<li>同时，在调用了任务之后，控制又回到Method()方法继续执行剩下的代码。换句话说，正如调用时多线程的（Task.Run…）,LongTask仍在运行。例如，等待10秒并且Method()方法剩下的代码也在执行。</li>
+  <li>Static void main()从开始处调用Method()方法。</li>
+  <li>Method()方法产生一个名为LongTask的任务（线程），线程将等待10秒。</li>
+  <li>同时，在调用了任务之后，控制又回到Method()方法继续执行剩下的代码。换句话说，正如调用时多线程的（Task.Run…）,LongTask仍在运行。例如，等待10秒并且Method()方法剩下的代码也在执行。</li>
 </ol>
-
 
 <p>现在在相同的情景下，我们想要第3步执行得不一样。我们想要在LongTask()执行完成后，控制应该回到Method方法执行接下来的代码。“异步”和“等待”关键字能够帮助实现上面的功能。</p>
 
@@ -100,11 +62,10 @@
 <p>这里有三个关于关键字“异步”和“等待”的重点需要记住：</p>
 
 <ol>
-<li>异步和等待是一对关键字。你不能独立使用它们。</li>
-<li>异步应用于方法。这个关键字是一个标志，是说该方法会有一个等待关键字。</li>
-<li>等待关键字标记了任务恢复执行的位置。所以你总是发现这个关键字与Task关联。</li>
+  <li>异步和等待是一对关键字。你不能独立使用它们。</li>
+  <li>异步应用于方法。这个关键字是一个标志，是说该方法会有一个等待关键字。</li>
+  <li>等待关键字标记了任务恢复执行的位置。所以你总是发现这个关键字与Task关联。</li>
 </ol>
-
 
 <p>下面是前面讨论的代码的修订版本，这里我们应用了异步与等待。所有其他的步骤仍然如前所述，但是“步骤3”将在“步骤2”完成之后执行。简单来说就是控制在任务完成之后回到Method()方法。</p>
 
@@ -112,27 +73,25 @@
 
 <p>现在你已经阅读了“异步”与“等待”的内容，让我来提个问题。上面的代码同样也能通过Task.Wait或者Task.ContinueWith实现，那么它们有什么不同？我把这个问题留作给你的家庭作业。</p>
 
-<h3><strong>特性2：便利Zip压缩（Zip压缩）</strong></h3>
+<h3 id="zipzip"><strong>特性2：便利Zip压缩（Zip压缩）</strong></h3>
 
 <p><img src="/assets/files/2013-11/sawfwsfa5.jpg" alt="sawfwsfa5" /></p>
 
 <p>Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名字被几乎所有操作系统支持。</p>
 
 <ul>
-<li>在Windows操作系统中，它以“压缩文件”的名称实现。</li>
-<li>在MAC操作系统中，它以“文档实用程序”的名称实现。</li>
+  <li>在Windows操作系统中，它以“压缩文件”的名称实现。</li>
+  <li>在MAC操作系统中，它以“文档实用程序”的名称实现。</li>
 </ul>
-
 
 <p>现在在.NET中我们对执行Zip压缩没有内置的支持。许多开发者实用第三方组件如“DotnetZip”。在.NET4.5中，Zip属性内置于框架本身，以System.IO.Compression的命名空间内置。</p>
 
 <p>第一步你需要引用两个命名空间：</p>
 
 <ul>
-<li>System.IO.Compression.FileSystem</li>
-<li>System.IO.Compression</li>
+  <li>System.IO.Compression.FileSystem</li>
+  <li>System.IO.Compression</li>
 </ul>
-
 
 <p>接下来引用如下两个命名空间：</p>
 
@@ -149,13 +108,13 @@
 <pre><code>ZipFile.ExtractToDirectory(@"D:\data.zip", @"D:\data\unzip");
 </code></pre>
 
-<h3><strong>特性3：正则表达式超时（超时）</strong></h3>
+<h3 id="section-2"><strong>特性3：正则表达式超时（超时）</strong></h3>
 
 <p><img src="/assets/files/2013-11/ewfjdnvlgdklgv.jpg" alt="ewfjdnvlgdklgv" /></p>
 
 <p>“正则表达式”一直是做验证首选的方式。如果你是正则表达式的新手，请看正则表达式，我解释了正则表达式是如何执行的。但是正因为正则表达式的典型逻辑解析使得它暴露于DOS攻击下。让我们试着理解刚才我说的。</p>
 
-<p>作为例子请考虑这样的正则表达式-“\^ (\d+)\$”。这个正则表达式表明只能有数字。你也可以看正则表达式符号图，它标明了这个正则表达式会如何求值。现在让我们假设要验证“123456X”。这将有6条路径如下图所示。</p>
+<p>作为例子请考虑这样的正则表达式-“\^ (\d+)$”。这个正则表达式表明只能有数字。你也可以看正则表达式符号图，它标明了这个正则表达式会如何求值。现在让我们假设要验证“123456X”。这将有6条路径如下图所示。</p>
 
 <p><img src="/assets/files/2013-11/afnhjgfnhgm7.jpg" alt="afnhjgfnhgm7" /></p>
 
@@ -163,7 +122,7 @@
 
 <p><img src="/assets/files/2013-11/agnhgm8.jpg" alt="agnhgm8" /></p>
 
-<p>现在让我们把之前定义的正则式从“\^ (\d+)\$”变为“\^ (\d+)+\$”。如果你看正则表达式符号图它将相当复杂。如果我们现在试着验证“123456X”，将会有32条路径。如果你再增加一个字符，路径数将会增加到64。</p>
+<p>现在让我们把之前定义的正则式从“\^ (\d+)$”变为“\^ (\d+)+$”。如果你看正则表达式符号图它将相当复杂。如果我们现在试着验证“123456X”，将会有32条路径。如果你再增加一个字符，路径数将会增加到64。</p>
 
 <p><img src="/assets/files/2013-11/asdgvdfbfgn9.jpg" alt="asdgvdfbfgn9" /></p>
 
@@ -186,7 +145,7 @@ catch (RegexMatchTimeoutException ex)
 }
 </code></pre>
 
-<h3><strong>特性4：优化配置文件（提升启动性能）</strong></h3>
+<h3 id="section-3"><strong>特性4：优化配置文件（提升启动性能）</strong></h3>
 
 <p><img src="/assets/files/2013-11/asdvdbfrbngrb-11.jpg" alt="asdvdbfrbngrb-11" /></p>
 
@@ -201,16 +160,16 @@ catch (RegexMatchTimeoutException ex)
 <p>为了创建“配置文件”这个文件，首先你需要引入System.Runtime命名空间。然后你可以调用静态类ProfileOptimization的SetProfileRoot和StartProfile方法。现在当应用启动后台JIT，它将会读取配置文件并且在后台编译启动方法从而降低启动时间。</p>
 
 <pre><code>using System.Runtime;
-
+ 
 // Call the Setprofilerroot and Startprofile method
 ProfileOptimization.SetProfileRoot(@"D:\ProfileFile");
-
+ 
 ProfileOptimization.StartProfile("ProfileFile");
 </code></pre>
 
 <p>重要提示：ASP.NET 4.5和Silverlight 5应用默认支持Profileoptimization。所以上述代码在这些技术中无需编写。</p>
 
-<h3><strong>特性5：垃圾回收（垃圾后台清理）</strong></h3>
+<h3 id="section-4"><strong>特性5：垃圾回收（垃圾后台清理）</strong></h3>
 
 <p><img src="/assets/files/2013-11/afgjrtk5ytjytn13.jpg" alt="afgjrtk5ytjytn13" /></p>
 
@@ -233,7 +192,7 @@ ProfileOptimization.StartProfile("ProfileFile");
 &lt;/configuration&gt;
 </code></pre>
 
-<h3><strong>另三个值得探索的特性</strong></h3>
+<h3 id="section-5"><strong>另三个值得探索的特性</strong></h3>
 
 <p><strong>设置默认应用程序域的区域性</strong></p>
 
@@ -247,7 +206,7 @@ Thread.CurrentThread.CurrentUICulture = cul;
 <p>在4.5中我们可以在应用程序域级别设置区域性并且所有在这个应用程序域当中的线程都会继承这个区域性。下面就是如何实现DefaultThreadCurrentCulture的示例代码。</p>
 
 <pre><code>CultureInfo culture = CultureInfo.CreateSpecificCulture("fr-FR");
-
+ 
 CultureInfo.DefaultThreadCurrentCulture = culture;
 </code></pre>
 
@@ -262,77 +221,89 @@ CultureInfo.DefaultThreadCurrentCulture = culture;
 <p><strong>引用</strong></p>
 
 <ul>
-<li>http://msdn.microsoft.com/en-us/library/ms171868.aspx</li>
-<li>Mr Sukesh marla的精彩文章ASP.NET 4.5 new features</li>
+  <li>http://msdn.microsoft.com/en-us/library/ms171868.aspx</li>
+  <li>Mr Sukesh marla的精彩文章ASP.NET 4.5 new features</li>
 </ul>
-
 
 <p>当你有空的时候，一定来看看我的网站 www.questpond.com关于.NET4.5面试问和答，我已经在这方面有了不少努力。</p>
 
 <p><img src="/assets/files/2013-11/astrhhjync.jpg" alt="astrhhjync" /></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-11-12" datetime="2013-11-12" pubdate>
-							<span class="year">2013-11-12</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="dotnet"><a href="/tags.html#dotnet-ref">dotnet</a></li>
-     
-    	<li value="1" title=".net 4.5"><a href="/tags.html#.net 4.5-ref">.net 4.5</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/51271/" target="_blank">http://blog.jobbole.com/51271/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/11/12/five-great-NET-framework-4-5-features.html">http://http://uwebs.tk/archives/2013/11/12/five-great-NET-framework-4-5-features.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

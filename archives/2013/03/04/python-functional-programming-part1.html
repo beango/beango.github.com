@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Python中函数式编程，第一部分</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Python中函数式编程，第一部分'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Python中函数式编程，第一部分</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Python中函数式编程，第一部分</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>英文原文：<a href="http://www.ibm.com/developerworks/linux/library/l-prog/index.html">Charming Python: Functional programming in Python, Part 1</a>，翻译：<a href="http://www.oschina.net/translate/python-functional-programming-part1">开源中国</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python中函数式编程，第一部分</div>
+
+<article>
+	<h1><a href="/archives/2013/03/04/python-functional-programming-part1.html">Python中函数式编程，第一部分</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-03-04</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>英文原文：<a href="http://www.ibm.com/developerworks/linux/library/l-prog/index.html">Charming Python: Functional programming in Python, Part 1</a>，翻译：<a href="http://www.oschina.net/translate/python-functional-programming-part1">开源中国</a></p>
 
 <p><strong>摘要</strong>：虽然人们总把Python当作过程化的，面向对象的语言，但是他实际上包含了函数化编程中，你需要的任何东西。这篇文章主要讨论函数化编程的一般概念，并说明用Python来函数化编程的技术。</p>
 
@@ -73,21 +36,20 @@
 <p>我个人粗略总结了一下，认为函数式编程至少应该具有下列几点中的多个特点。在谓之为函数式的语言中，要做到这些就比较容易，但要做到其它一些事情不是很难就是完全不可能：</p>
 
 <ul>
-<li>函数具有首要地位(对象)。也就是说，能对“数据”做什么事，就要能对函数本身做到那些事（比如将函数作为参数传递给另外一个函数）。</li>
-<li>将递归作为主要的控制结构。在有些函数式语言中，都不存在其它的“循环”结构。</li>
-<li>列表处理作为一个重点（例如，Lisp语言的名字）。列表往往是通过对子列表进行递归取代了循环。</li>
-<li>“纯”函数式语言会完全避免副作用。这么做就完全弃绝了命令式语言中几乎无处不在的这种做法：将第一个值赋给一个变量之后为了跟踪程序的运行状态，接着又将另外一个值赋给同一个变量。</li>
-<li>函数式编程不是不鼓励就是完全禁止使用<em>语句</em>，而是通过对表达式(换句话说，就是函数加上参数）求值（evaluation of expressions）完成任务.
+  <li>函数具有首要地位(对象)。也就是说，能对“数据”做什么事，就要能对函数本身做到那些事（比如将函数作为参数传递给另外一个函数）。</li>
+  <li>将递归作为主要的控制结构。在有些函数式语言中，都不存在其它的“循环”结构。</li>
+  <li>列表处理作为一个重点（例如，Lisp语言的名字）。列表往往是通过对子列表进行递归取代了循环。</li>
+  <li>“纯”函数式语言会完全避免副作用。这么做就完全弃绝了命令式语言中几乎无处不在的这种做法：将第一个值赋给一个变量之后为了跟踪程序的运行状态，接着又将另外一个值赋给同一个变量。</li>
+  <li>函数式编程不是不鼓励就是完全禁止使用<em>语句</em>，而是通过对表达式(换句话说，就是函数加上参数）求值（evaluation of expressions）完成任务.
 在最纯粹的情形下，一个程序就是一个表达式（再加上辅助性的定义）</li>
-<li>函数式编程中最关心的是要对<em>什么</em>进行计算，而不是要<em>怎么来</em>进行计算。</li>
-<li>在很多函数式<a href="http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="如何选择语言和编程语言排名相关文章">编程语言</a>中都会用到“高阶”（higher order）函数
+  <li>函数式编程中最关心的是要对<em>什么</em>进行计算，而不是要<em>怎么来</em>进行计算。</li>
+  <li>在很多函数式<a href="http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="如何选择语言和编程语言排名相关文章">编程语言</a>中都会用到“高阶”（higher order）函数
 (换句话说，高阶函数就是对对函数进行运算的函数进行运算的函数）。</li>
 </ul>
 
-
 <p>函数式编程的倡导者们认为，所有这些特性都有助于更快地编写出更多更简洁并且更不容易出Bug的代码。而且，计算机科学、逻辑学和数学这三个领域中的高级理论家发现，函数式编程语言和程序的形式化特性在证明起来比命令式编程语言和程序要简单很多。</p>
 
-<h2>Python内在的函数式功能</h2>
+<h2 id="python">Python内在的函数式功能</h2>
 
 <p>自Python 1.0起，Python就已具有了以上所列中的绝大多数特点。但是就象Python所具有的大多数特性一样，这些特点出现在了一种混合了各种特性的语言中。 和Python的OOP（面向对象编程）特性非常象，你想用多少就用多少，剩下的都可以不管（直到你随后需要用到它们为止）。在Python 2.0中，加入了<em>列表解析</em>（<em>list comprehensions</em>）这个非常好用的”语法糖“。尽管列表解析没有添加什么新功能，但它让很多旧功能看起来好了<em>不少</em>。</p>
 
@@ -96,7 +58,7 @@
 
 <p>所有(if,elif,else,assert,try,except,finally,for,break,continue,while,def)这些都都能通过仅仅使用函数式编程中的函数和算子就能以函数式编程的风格处理好。尽管真正地在程序中完全排除使用所有流程控制命令可能只在想参加”Python混乱编程“大赛（可将Python代码写得跟Lisp代码非常象）时才有意义，但这对理解函数式编程如何通过函数和递归表达流程控制很有价值。</p>
 
-<h2>剔除流程控制语句</h2>
+<h2 id="section">剔除流程控制语句</h2>
 
 <p>剔除练习首先要考虑的第一件事是，实际上，Python会对布尔表达式求值进行“短路”处理。这就为我们提供了一个if/elif/else分支语句的表达式版（假设每个分支只调用一个函数，不是这种情况时也很容易组织成重新安排成这种情况）。
 这里给出怎么做：</p>
@@ -107,10 +69,10 @@
 if &lt;cond1&gt;:   func1()
 elif &lt;cond2&gt;: func2()
 else:         func3()
-
+ 
 # Equivalent "short circuit" expression
 (&lt;cond1&gt; and func1()) or (&lt;cond2&gt; and func2()) or (func3())
-
+ 
 # Example "short circuit" expression
 &gt;&gt;&gt; x = 3
 &gt;&gt;&gt; def pr(s): return s
@@ -144,17 +106,16 @@ else:         func3()
 <p>我们对具有首要地位的对象做的比较多的事情就是，将它们作为参数传递给函数式编程固有的函数map()、reduce()和filter()。这三个函数接受的第一个参数都是一个函数对象。</p>
 
 <ul>
-<li>map()针对指定给它的一个或多个列表中每一项对应的内容，执行一次作为参数传递给它的那个函数，最后返回一个结果列表。</li>
-<li>reduce()针对每个后继项以及最后结果的累积结果，执行一次作为参数传递给它的那个函数；例如，reduce(lambdan,m:n*m,range(1,10))是求”10的阶乘”的意思（换言之，将每一项和前面所得的乘积进行相乘）</li>
-<li>filter()使用那个作为参数传递给它的函数，对一个列表中的所有项进行”求值“，返回一个由所有能够通过那个函数测试的项组成的经过遴选后的列表。</li>
+  <li>map()针对指定给它的一个或多个列表中每一项对应的内容，执行一次作为参数传递给它的那个函数，最后返回一个结果列表。</li>
+  <li>reduce()针对每个后继项以及最后结果的累积结果，执行一次作为参数传递给它的那个函数；例如，reduce(lambdan,m:n*m,range(1,10))是求”10的阶乘”的意思（换言之，将每一项和前面所得的乘积进行相乘）</li>
+  <li>filter()使用那个作为参数传递给它的函数，对一个列表中的所有项进行”求值“，返回一个由所有能够通过那个函数测试的项组成的经过遴选后的列表。</li>
 </ul>
-
 
 <p>我们经常也会把函数对象传递给我们自己定义的函数，不过一般情况下这些自定义的函数就是前文提及的内建函数的某种形式的组合。</p>
 
 <p>通过组合使用这三种函数式编程内建的函数，能够实现范围惊人的“执行流程”操作(全都不用语句，仅仅使用表达式实现)。</p>
 
-<h2> Python中的函数式循环</h2>
+<h2 id="python-1"> Python中的函数式循环</h2>
 
 <p>替换循环语言和条件状态语言块同样简单。for可以直接翻译成map()函数。正如我们的条件执行，我们会需要简化语句块成简单的函数调用（我们正在接近通常能做的）：</p>
 
@@ -170,9 +131,9 @@ map(func,lst)           # map()-based loop
 
 <pre><code># let's create an execution utility function
 do_it = lambda f: f()
-
+ 
 # let f1, f2, f3 (etc) be functions that perform actions
-
+ 
 map(do_it, [f1,f2,f3])   # map()-based action sequence
 </code></pre>
 
@@ -189,7 +150,7 @@ while &lt;cond&gt;:
         break
     else:
         &lt;suite&gt;
-
+ 
 # FP-style recursive while loop
 def while_block():
     &lt;pre-suite&gt;
@@ -198,12 +159,12 @@ def while_block():
     else:
         &lt;suite&gt;
     return 0
-
+ 
 while_FP = lambda: (&lt;cond&gt; and while_block()) or while_FP()
 while_FP()
 </code></pre>
 
-<p>在翻译while循环时，我们仍然需要使用while_block()函数，这个函数本身里面可以包含语句而不是仅仅包含表达式。但我们可能还能够对这个函数再进行更进一步的剔除过程（就像前面模版中的对if/else进行短路处理一样）。还有，&lt;cond>很难对普通的测试有什么用，比如while myvar==7，既然循环体（在设计上）不能对任何变量的值进行修改（当然，在while_block()中可以修改全局变量）。有一种方法可以用来为while_block()添加更有用的条件判断，让while_block()返回一个有意义的值，然后将这个返回值同循环结束条件进行比较。现在应该来看一个剔除其中语句的具体例子了：</p>
+<p>在翻译while循环时，我们仍然需要使用while_block()函数，这个函数本身里面可以包含语句而不是仅仅包含表达式。但我们可能还能够对这个函数再进行更进一步的剔除过程（就像前面模版中的对if/else进行短路处理一样）。还有，&lt;cond&gt;很难对普通的测试有什么用，比如while myvar==7，既然循环体（在设计上）不能对任何变量的值进行修改（当然，在while_block()中可以修改全局变量）。有一种方法可以用来为while_block()添加更有用的条件判断，让while_block()返回一个有意义的值，然后将这个返回值同循环结束条件进行比较。现在应该来看一个剔除其中语句的具体例子了：</p>
 
 <p>Python中’echo’循环</p>
 
@@ -216,12 +177,12 @@ def echo_IMP():
         else
             print x
 echo_IMP()
-
+ 
 # utility function for "identity with side-effect"
 def monadic_print(x):
     print x
     return x
-
+ 
 # FP version of "echo()"
 echo_FP = lambda: monadic_print(raw_input("FP -- "))=='quit' or echo_FP()
 echo_FP()
@@ -229,7 +190,7 @@ echo_FP()
 
 <p>在上面的例子中我们所做的，就是想办法将一个涉及I/O、循环和条件判断的小程序，表达为一个递归方式的纯粹的表达式 （确切地说，表达为一个可以在需要的情况下传递到别的地方的函数对象）。我们<em>的确</em>仍然使用了实用函数monadic_print()，但这个函数是完全通用的，而且可以用于以后我们可能会创建的每个函数式程序的表达式中（它的代价是一次性的）。请注意，任何包含monadic_print(x)的表达式的<em>值</em>都是一样的，好像它只是包含了一个x而已。函数式编程中（特别是在Haskell中）的函数有一种叫做”monad”（一元）的概念，这种一元函数“实际什么都不做，只是在执行过程中产生一个副作用”。</p>
 
-<h2> 避免副作用</h2>
+<h2 id="section-1"> 避免副作用</h2>
 
 <p>在做完这些没有非常明智的理由陈述，并把晦涩的嵌套表达式代替他们之后，一个很自然的问题是“为什么要这样做？！”　我描述的函数式编程在Python中都实现了。但是最重要的特性和一个有具体用处——就是避免副作用（或至少它们阻止如monads的特殊区域）。程序错误的大部分——并且这些问题驱使程序员去debug——出现是因为在程序的运行中变量获取了非期望的值。函数式编程简单地通过从不给变量赋值而绕过了这个问题。</p>
 
@@ -273,7 +234,7 @@ print bigmuls((1,2,3,4),(10,15,3,22))
 <pre><code>print [(x,y) for x in (1,2,3,4) for y in (10,15,3,22) if x*y &gt; 25]
 </code></pre>
 
-<h2> 结束语</h2>
+<h2 id="section-2"> 结束语</h2>
 
 <p>我已经列出了把每一个Python控制流替换成一个相等的函数式代码的方法（在程序中减少副作用）。高效翻译一个特定的程序需要一些额外的思考，但我们已经看出内置的函数式功能是全面且完善的。在接下来的文章里，我们会看到更多函数式编程的高级技巧；并且希望我们接下来能够摸索到函数式编程风格的更多优点和缺点。</p>
 
@@ -285,66 +246,81 @@ print bigmuls((1,2,3,4),(10,15,3,22))
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-03-04" datetime="2013-03-04" pubdate>
-							<span class="year">2013-03-04</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.oschina.net/translate/python-functional-programming-part1" target="_blank">http://www.oschina.net/translate/python-functional-programming-part1</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/04/python-functional-programming-part1.html">http://http://uwebs.tk/archives/2013/03/04/python-functional-programming-part1.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

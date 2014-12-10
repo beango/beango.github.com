@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="css" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / CSS收集</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+</head>
+
+<body class="page-type-post">
+
+<div class="main">
+	<article>
+	<h2 id="section">图片等比缩放</h2>
+
+<pre><code>.Pic {MARGIN: auto;WIDTH: 638px;}  
+.Pic img{MAX-WIDTH: 100%!important;HEIGHT: auto!important;  
+  width:expression(this.width&gt;638?"638px":this.width)!important;}
+</code></pre>
+
+<h2 id="section-1">浏览器样式兼容</h2>
+
+<p>针对ie6,ie7,ie8,firefox,chrome显示不同效果 做网站时经常会用到.</p>
+
+<p>演示简单的hack实现方式和原理。浏览器呈红色则为firefox，浏览器呈灰色则为ie6，浏览器呈黄色则为ie9，浏览器呈蓝色则为ie7</p>
+
+<pre><code>#hacker{
+    color:red; 
+    *color:white; /*for ie6,ie7*/
+    *+color:blue; /*for ie7*/
+    _color:gray; /*for ie6*/
+    color:balck !important; /*for firefox*/
+    color:yellow \9; /*for ie9*/
+}
+</code></pre>
+
+<h2 id="section-2">透明</h2>
+
+<p>一段兼容的css透明代码一段兼容的css透明代码一段兼容的css透明代码</p>
+
+<pre><code>.transparent{
+    filter:alpha(opacity=50); 
+    -moz-opacity:0.5;/**Firefox 3.5即将原生支持opacity属性，所以本条属性只在Firefox3以下版本有效 ***/ 
+    -khtml-opacity: 0.5; 
+    opacity: 0.5; 
+}
+</code></pre>
+
+<h2 id="section-3">高亮</h2>
+
+<p>一段兼容的css高亮代码一段兼容的css高亮代码一段兼容的css高亮代码一段兼容的css高亮代码</p>
+
+<pre><code>.highlighted {
+    background: none repeat scroll 0 0 #00ADEE;
+    color: #FFFFFF;
+    padding: 0 5px;
+}
+</code></pre>
+
+<h3 id="section-4">阴影+圆角</h3>
+
+<pre><code>/**阴影**/
+-webkit-box-shadow:0 0 3px black;
+-moz-box-shadow:0 0 3px black;
+/**圆角**/
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+border-radius:3px;
+</code></pre>
+
+
+</article>
+
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
+		</p>
+	</div>
+</aside>
+
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
+</body>
+</html>

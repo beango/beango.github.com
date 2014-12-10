@@ -1,83 +1,46 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>前端必读：浏览器内部工作原理</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='前端必读：浏览器内部工作原理'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="浏览器" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 前端必读：浏览器内部工作原理</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">前端必读：浏览器内部工作原理</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>　　目录</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 前端必读：浏览器内部工作原理</div>
 
-<p>　　一、<a href="#chapter1">介绍</a><br/>
-　　二、<a href="#chapter2">渲染引擎</a><br/>
-　　三、<a href="#chapter3">解析与DOM树构建</a><br/>
-　　四、<a href="#chapter4">渲染树构建</a><br/>
-　　五、<a href="#chapter5">布局</a><br/>
-　　六、<a href="#chapter6">绘制</a><br/>
-　　七、<a href="#chapter7">动态变化</a><br/>
-　　八、<a href="#chapter8">渲染引擎的线程</a><br/>
-　　九、<a href="#chapter9">CSS2可视模型</a></p>
+<article>
+	<h1><a href="/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html">前端必读：浏览器内部工作原理</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-02-09</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>　　目录</p>
+
+<p>　　一、<a href="#chapter1">介绍</a><br />
+　　二、<a href="#chapter2">渲染引擎</a><br />
+　　三、<a href="#chapter3">解析与DOM树构建</a><br />
+　　四、<a href="#chapter4">渲染树构建</a><br />
+　　五、<a href="#chapter5">布局</a><br />
+　　六、<a href="#chapter6">绘制</a><br />
+　　七、<a href="#chapter7">动态变化</a><br />
+　　八、<a href="#chapter8">渲染引擎的线程</a><br />
+　　九、<a href="#chapter9">CSS2可视模型</a>  </p>
 
 <p>　　英文原文：<a href="http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/">How Browsers Work: Behind the Scenes of Modern Web
 Browsers</a></p>
 
-<h2><label id="chapter1" />一、介绍</h2>
+<h2 id="label-idchapter1-"><label id="chapter1"></label>一、介绍</h2>
 
 <p>　　浏览器可以被认为是使用最广泛的软件，本文将介绍浏览器的工作原理，我们将看到，从你在地址栏输入google.com到你看到google主页过程中都发生了什么。</p>
 
@@ -146,12 +109,11 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <center>图1：浏览器主要组件</center>
 
-
 <p>　　需要注意的是，不同于大部分浏览器，Chrome为每个Tab分配了各自的渲染引擎实例，每个Tab就是一个独立的进程。</p>
 
 <p>　　对于构成浏览器的这些组件，后面会逐一详细讨论。</p>
 
-<h2><label id="chapter2" />二、渲染引擎（The rendering engine）</h2>
+<h2 id="label-idchapter2-the-rendering-engine"><label id="chapter2"></label>二、渲染引擎（The rendering engine）</h2>
 
 <p>　　渲染引擎的职责就是渲染，即在浏览器窗口中显示所请求的内容。</p>
 
@@ -169,13 +131,12 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <p>　　下面是渲染引擎在取得内容之后的基本流程：</p>
 
-<p>　　解析html以构建dom树 -> 构建render树 -> 布局render树 ->
+<p>　　解析html以构建dom树 -&gt; 构建render树 -&gt; 布局render树 -&gt;
 绘制render树</p>
 
 <p><img src="/assets/files/2012-02/2011110316263715.png" alt="" /></p>
 
 <center>图2：渲染引擎基本流程</center>
-
 
 <p>　　渲染引擎开始解析html，并将标签转化为内容树中的dom节点。接着，它解析外部CSS文件及style标签中的样式信息。这些样式信息以及html中的可见性指令将被用来构建另一棵树——render树。</p>
 
@@ -189,15 +150,13 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <center>图3：webkit主流程</center>
 
-
 <p><img src="/assets/files/2012-02/2011110316270146.jpg" alt="" /></p>
 
 <center>图4：Mozilla的Geoko渲染引擎主流程</center>
 
-
 <p>　　从图3和4中可以看出，尽管webkit和Gecko使用的术语稍有不同，他们的主要流程基本相同。Gecko称可见的格式化元素组成的树为frame树，每个元素都是一个frame，webkit则使用render树这个名词来命名由渲染对象组成的树。Webkit中元素的定位称为布局，而Gecko中称为回流。Webkit称利用dom节点及样式信息去构建render树的过程为attachment，Gecko在html和dom树之间附加了一层，这层称为内容接收器，相当制造dom元素的工厂。下面将讨论流程中的各个阶段。</p>
 
-<h2><label id="chapter3" />三、解析与DOM树构建（Parsing and DOM tree construction）</h2>
+<h2 id="label-idchapter3-domparsing-and-dom-tree-construction"><label id="chapter3"></label>三、解析与DOM树构建（Parsing and DOM tree construction）</h2>
 
 <p>　　<strong>解析（Parsing－general）</strong></p>
 
@@ -205,12 +164,11 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <p>　　解析一个文档即将其转换为具有一定意义的结构——编码可以理解和使用的东西。解析的结果通常是表达文档结构的节点树，称为解析树或语法树。</p>
 
-<p>　　例如，解析"2＋3－1"这个表达式，可能返回这样一棵树。</p>
+<p>　　例如，解析”2＋3－1”这个表达式，可能返回这样一棵树。</p>
 
 <p><img src="/assets/files/2012-02/2011110316271310.png" alt="" /></p>
 
 <center>图5：数学表达式树节点</center>
-
 
 <p>　　<strong>文法（Grammars）</strong></p>
 
@@ -230,7 +188,6 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <center>图6：从源文档到解析树</center>
 
-
 <p>　　解析过程是迭代的，解析器从词法分析器处取到一个新的符号，并试着用这个符号匹配一条语法规则，如果匹配了一条规则，这个符号对应的节点将被添加到解析树上，然后解析器请求另一个符号。如果没有匹配到规则，解析器将在内部保存该符号，并从词法分析器取下一个符号，直到所有内部保存的符号能够匹配一项语法规则。如果最终没有找到匹配的规则，解析器将抛出一个异常，这意味着文档无效或是包含语法错误。</p>
 
 <p>　　<strong>转换（Translation）</strong></p>
@@ -240,7 +197,6 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 <p><img src="/assets/files/2012-02/2011110316274796.png" alt="" /></p>
 
 <center>图7：编译流程</center>
-
 
 <p>　　<strong>解析实例Parsing example</strong></p>
 
@@ -260,9 +216,9 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <p>　　5. term可以是一个整数或一个表达式</p>
 
-<p>　　现在来分析一下"2＋3－1"这个输入</p>
+<p>　　现在来分析一下”2＋3－1”这个输入</p>
 
-<p>　　第一个匹配规则的子字符串是"2"，根据规则5，它是一个term，第二个匹配的是"2+3"，它符合第2条规则——一个操作符连接两个term，下一次匹配发生在输入的结束处。"2+3-1"是一个表达式，因为我们已经知道"2+3"是一个term，所以我们有了一个term紧跟着一个操作符及另一个term。"2++"将不会匹配任何规则，因此是一个无效输入。</p>
+<p>　　第一个匹配规则的子字符串是”2”，根据规则5，它是一个term，第二个匹配的是”2+3”，它符合第2条规则——一个操作符连接两个term，下一次匹配发生在输入的结束处。”2+3-1”是一个表达式，因为我们已经知道”2+3”是一个term，所以我们有了一个term紧跟着一个操作符及另一个term。”2++”将不会匹配任何规则，因此是一个无效输入。</p>
 
 <p>　　<strong>词汇表及语法的定义</strong></p>
 
@@ -282,9 +238,23 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <p>　　expression :＝ term operation term</p>
 
-<p>　　operation := PLUS | MINUS</p>
+<table>
+  <tbody>
+    <tr>
+      <td>　　operation := PLUS</td>
+      <td>MINUS</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>　　term := INTEGER | expression</p>
+<table>
+  <tbody>
+    <tr>
+      <td>　　term := INTEGER</td>
+      <td>expression</td>
+    </tr>
+  </tbody>
+</table>
 
 <p>　　如果一个语言的文法是上下文无关的，则它可以用正则解析器来解析。对上下文无关文法的一个直观的定义是，该文法可以用BNF来完整的表达。可查看<a href="http://en.wikipedia.org/wiki/Context-free_grammar">http://en.wikipedia.org/wiki/Context-free_grammar</a>。</p>
 
@@ -294,7 +264,7 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 
 <p>　　来看一下这两种解析器如何解析上面的例子：</p>
 
-<p>　　自顶向下解析器从最高层规则开始——它先识别出"2+3"，将其视为一个表达式，然后识别出"2+3-1"为一个表达式（识别表达式的过程中匹配了其他规则，但出发点是最高层规则）。</p>
+<p>　　自顶向下解析器从最高层规则开始——它先识别出”2+3”，将其视为一个表达式，然后识别出”2+3-1”为一个表达式（识别表达式的过程中匹配了其他规则，但出发点是最高层规则）。</p>
 
 <p>　　自底向上解析会扫描输入直到匹配了一条规则，然后用该规则取代匹配的输入，直到解析完所有输入。部分匹配的表达式被放置在解析堆栈中。</p>
 
@@ -355,7 +325,6 @@ database技术，这是一种轻量级完整的客户端存储技术</p>
 </tbody>
 </table>
 
-
 <p>　　自底向上解析器称为shift
 reduce解析器，因为输入向右移动（想象一个指针首先指向输入开始处，并向右移动），并逐渐简化为语法规则。</p>
 
@@ -393,7 +362,7 @@ DTD并没有生成一种上下文无关文法。</p>
 
 <p>　　输出的树，也就是解析树，是由DOM元素及属性节点组成的。DOM是文档对象模型的缩写，它是html文档的对象表示，作为html元素的外部接口供js等调用。</p>
 
-<p>　　树的根是"document"对象。</p>
+<p>　　树的根是”document”对象。</p>
 
 <p>　　DOM和标签基本是一一对应的关系，例如，如下的标签：</p>
 
@@ -411,7 +380,6 @@ DTD并没有生成一种上下文无关文法。</p>
 
 <center>图8：示例标签对应的DOM树</center>
 
-
 <p>　　和html一样，DOM的规范也是由W3C组织制定的。访问<a href="http://www.w3.org/DOM/DOMTR">http://www.w3.org/DOM/DOMTR</a>，这是使用文档的一般规范。一个模型描述一种特定的html元素，可以在<a href="http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/idl-definitions.htm">http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109/idl-definitions.htm</a>查看html定义。</p>
 
 <p>　　这里所谓的树包含了DOM节点是说树是由实现了DOM接口的元素构建而成的，浏览器使用已被浏览器内部使用的其他属性的具体实现。</p>
@@ -427,7 +395,7 @@ DTD并没有生成一种上下文无关文法。</p>
 <p>　　2. 浏览器对一些常见的非法html有容错机制</p>
 
 <p>　　3.
-解析过程是往复的，通常源码不会在解析过程中发生改变，但在html中，脚本标签包含的"document.write"可能添加标签，这说明在解析过程中实际上修改了输入。</p>
+解析过程是往复的，通常源码不会在解析过程中发生改变，但在html中，脚本标签包含的”document.write”可能添加标签，这说明在解析过程中实际上修改了输入。</p>
 
 <p>　　不能使用正则解析技术，浏览器为html定制了专属的解析器。</p>
 
@@ -440,7 +408,6 @@ DTD并没有生成一种上下文无关文法。</p>
 <p><img src="/assets/files/2012-02/2011110316282058.png" alt="" /></p>
 
 <center>图9：HTML解析流程</center>
-
 
 <p>　　<strong>符号识别算法（The tokenization algorithm）</strong></p>
 
@@ -455,25 +422,24 @@ DTD并没有生成一种上下文无关文法。</p>
 &lt;/html&gt;
 </code></pre>
 
-<p>　　初始状态为"Data State"，当遇到"&lt;"字符，状态变为"Tag open
-state"，读取一个a－z的字符将产生一个开始标签符号，状态相应变为"Tag name
-state"，一直保持这个状态直到读取到">"，每个字符都附加到这个符号名上，例子中创建的是一个html符号。</p>
+<p>　　初始状态为”Data State”，当遇到”&lt;“字符，状态变为”Tag open
+state”，读取一个a－z的字符将产生一个开始标签符号，状态相应变为”Tag name
+state”，一直保持这个状态直到读取到”&gt;“，每个字符都附加到这个符号名上，例子中创建的是一个html符号。</p>
 
-<p>　　当读取到">"，当前的符号就完成了，此时，状态回到"Data
-state"，"&lt;body>"重复这一处理过程。到这里，html和body标签都识别出来了。现在，回到"Data
-state"，读取"Hello
-world"中的字符"H"将创建并识别出一个字符符号，这里会为"Hello
-world"中的每个字符生成一个字符符号。</p>
+<p>　　当读取到”&gt;“，当前的符号就完成了，此时，状态回到”Data
+state”，”&lt;body&gt;“重复这一处理过程。到这里，html和body标签都识别出来了。现在，回到”Data
+state”，读取”Hello
+world”中的字符”H”将创建并识别出一个字符符号，这里会为”Hello
+world”中的每个字符生成一个字符符号。</p>
 
-<p>　　这样直到遇到"&lt;/body>"中的"&lt;"。现在，又回到了"Tag open
-state"，读取下一个字符"/"将创建一个闭合标签符号，并且状态转移到"Tag name
-state"，还是保持这一状态，直到遇到">"。然后，产生一个新的标签符号并回到"Data
-state"。后面的"&lt;/html>"将和"&lt;/body>"一样处理。</p>
+<p>　　这样直到遇到”&lt;/body&gt;“中的”&lt;“。现在，又回到了”Tag open
+state”，读取下一个字符”/”将创建一个闭合标签符号，并且状态转移到”Tag name
+state”，还是保持这一状态，直到遇到”&gt;“。然后，产生一个新的标签符号并回到”Data
+state”。后面的”&lt;/html&gt;“将和”&lt;/body&gt;“一样处理。</p>
 
 <p><img src="/assets/files/2012-02/2011110316283115.png" alt="" /></p>
 
 <center>图10：符号化示例输入</center>
-
 
 <p>　　<strong>树的构建算法（Tree construction algorithm）</strong></p>
 
@@ -488,27 +454,26 @@ state"。后面的"&lt;/html>"将和"&lt;/body>"一样处理。</p>
 
 <p>　　构建树这一阶段的输入是符号识别阶段生成的符号序列。</p>
 
-<p>　　首先是"initial mode"，接收到html符号后将转换为"before
-html"模式，在这个模式中对这个符号进行再处理。此时，创建了一个HTMLHtmlElement元素，并将其附加到根Document对象上。</p>
+<p>　　首先是”initial mode”，接收到html符号后将转换为”before
+html”模式，在这个模式中对这个符号进行再处理。此时，创建了一个HTMLHtmlElement元素，并将其附加到根Document对象上。</p>
 
-<p>　　状态此时变为"before
-head"，接收到body符号时，即使这里没有head符号，也将自动创建一个HTMLHeadElement元素并附加到树上。</p>
+<p>　　状态此时变为”before
+head”，接收到body符号时，即使这里没有head符号，也将自动创建一个HTMLHeadElement元素并附加到树上。</p>
 
-<p>　　现在，转到"in head"模式，然后是"after
-head"。到这里，body符号会被再次处理，将创建一个HTMLBodyElement并插入到树中，同时，转移到"in
-body"模式。</p>
+<p>　　现在，转到”in head”模式，然后是”after
+head”。到这里，body符号会被再次处理，将创建一个HTMLBodyElement并插入到树中，同时，转移到”in
+body”模式。</p>
 
-<p>　　然后，接收到字符串"Hello
-world"的字符符号，第一个字符将导致创建并插入一个text节点，其他字符将附加到该节点。</p>
+<p>　　然后，接收到字符串”Hello
+world”的字符符号，第一个字符将导致创建并插入一个text节点，其他字符将附加到该节点。</p>
 
-<p>　　接收到body结束符号时，转移到"after
-body"模式，接着接收到html结束符号，这个符号意味着转移到了"after after
-body"模式，当接收到文件结束符时，整个解析过程结束。</p>
+<p>　　接收到body结束符号时，转移到”after
+body”模式，接着接收到html结束符号，这个符号意味着转移到了”after after
+body”模式，当接收到文件结束符时，整个解析过程结束。</p>
 
 <p><img src="/assets/files/2012-02/2011110316284511.gif" alt="" /></p>
 
 <center>图11：示例html树的构建过程</center>
-
 
 <p>　　<strong>解析结束时的处理（Action when the parsing is finished）</strong></p>
 
@@ -520,7 +485,7 @@ body"模式，当接收到文件结束符时，整个解析过程结束。</p>
 
 <p>　　<strong>浏览器容错（Browsers error tolerance）</strong></p>
 
-<p>　　你从来不会在一个html页面上看到"无效语法"这样的错误，浏览器修复了无效内容并继续工作。</p>
+<p>　　你从来不会在一个html页面上看到”无效语法”这样的错误，浏览器修复了无效内容并继续工作。</p>
 
 <p>　　以下面这段html为例：</p>
 
@@ -549,9 +514,9 @@ HEAD BODY TR TD LI等</p>
 
 <p>　　下面来看一些webkit容错的例子：</p>
 
-<p>　　&lt;/br>替代&lt;br></p>
+<p>　　&lt;/br&gt;替代&lt;br&gt;</p>
 
-<p>　　一些网站使用&lt;/br>替代&lt;br>，为了兼容IE和Firefox，webkit将其看作&lt;br>。</p>
+<p>　　一些网站使用&lt;/br&gt;替代&lt;br&gt;，为了兼容IE和Firefox，webkit将其看作&lt;br&gt;。</p>
 
 <p>　　代码：</p>
 
@@ -653,7 +618,7 @@ name{nmchar}+
 ident{nmstart}{nmchar}*
 </code></pre>
 
-<p>　　"ident"是识别器的缩写，相当于一个class名，"name"是一个元素id（用"＃"引用）。</p>
+<p>　　”ident”是识别器的缩写，相当于一个class名，”name”是一个元素id（用”＃”引用）。</p>
 
 <p>　　语法用BNF进行描述：</p>
 
@@ -703,7 +668,6 @@ ruleset
 
 <center>图12：解析css</center>
 
-
 <p>　　<strong>处理脚本及样式表的顺序（The order of processing scripts and style sheets）</strong></p>
 
 <p>　　<strong>脚本</strong></p>
@@ -718,7 +682,7 @@ ruleset
 
 <p>　　样式表采用另一种不同的模式。理论上，既然样式表不改变Dom树，也就没有必要停下文档的解析等待它们，然而，存在一个问题，脚本可能在文档的解析过程中请求样式信息，如果样式还没有加载和解析，脚本将得到错误的值，显然这将会导致很多问题，这看起来是个边缘情况，但确实很常见。Firefox在存在样式表还在加载和解析时阻塞所有的脚本，而Chrome只在当脚本试图访问某些可能被未加载的样式表所影响的特定的样式属性时才阻塞这些脚本。</p>
 
-<h2><label id="chapter4" />四、渲染树构建（Render tree construction）</h2>
+<h2 id="label-idchapter4-render-tree-construction"><label id="chapter4"></label>四、渲染树构建（Render tree construction）</h2>
 
 <p>　　当Dom树构建完成时，浏览器开始构建另一棵树——渲染树。渲染树由元素显示序列中的可见元素组成，它是文档的可视化表示，构建这棵树是为了以正确的顺序绘制文档内容。</p>
 
@@ -769,7 +733,7 @@ ruleset
 
 <p>　　元素的类型也需要考虑，例如，表单控件和表格带有特殊的框架。</p>
 
-<p>　　在Webkit中，如果一个元素想创建一个特殊的渲染对象，它需要重写"createRenderer"方法，使渲染对象指向不包含几何信息的样式对象。</p>
+<p>　　在Webkit中，如果一个元素想创建一个特殊的渲染对象，它需要重写”createRenderer”方法，使渲染对象指向不包含几何信息的样式对象。</p>
 
 <p>　　<strong>渲染树和Dom树的关系（The render tree relation to the DOM tree）</strong></p>
 
@@ -782,7 +746,6 @@ ruleset
 <p><img src="/assets/files/2012-02/2011110316305784.png" alt="" /></p>
 
 <center>图13：渲染树及对应的Dom树</center>
-
 
 <p>　　<strong>创建树的流程（The flow of constructing the tree）</strong></p>
 
@@ -851,7 +814,6 @@ Profile目录下放置样式表实现）。</p>
 
 <center>图14：Firefox样式上下文树</center>
 
-
 <p>　　样式上下文包含最终值，这些值是通过以正确顺序应用所有匹配的规则，并将它们由逻辑值转换为具体的值，例如，如果逻辑值为屏幕的百分比，则通过计算将其转化为绝对单位。样式树的使用确实很巧妙，它使得在节点中共享的这些值不需要被多次计算，同时也节省了存储空间。</p>
 
 <p>　　所有匹配的规则都存储在规则树中，一条路径中的底层节点拥有最高的优先级，这棵树包含了所找到的所有规则匹配的路径（译注：可以取巧理解为每条路径对应一个节点，路径上包含了该节点所匹配的所有规则）。规则树并不是一开始就为所有节点进行计算，而是在某个节点需要计算样式时，才进行相应的计算并将计算后的路径添加到树中。</p>
@@ -899,11 +861,11 @@ Profile目录下放置样式表实现）。</p>
 
 <p>　　以及下面这些规则</p>
 
-<p>　　1.div {margin:5px;color:black}<br/>
-　　2..err {color:red}<br/>
-　　3..big {margin-top:3px}<br/>
-　　4.div span {margin-bottom:4px}<br/>
-　　5.#div1 {color:blue}<br/>
+<p>　　1.div {margin:5px;color:black}<br />
+　　2..err {color:red}<br />
+　　3..big {margin-top:3px}<br />
+　　4.div span {margin-bottom:4px}<br />
+　　5.#div1 {color:blue}<br />
 　　6.#div2 {color:green}</p>
 
 <p>　　简化下问题，我们只填充两个结构——color和margin，color结构只包含一个成员－颜色，margin结构包含四边。</p>
@@ -942,8 +904,8 @@ Profile目录下放置样式表实现）。</p>
 
 <p>　　样式规则有几个来源：</p>
 
-<p>　　-   外部样式表或style标签内的css规则<br/>
-　　-   行内样式属性<br/>
+<p>　　-   外部样式表或style标签内的css规则<br />
+　　-   行内样式属性<br />
 　　-   html可视化属性（映射为相应的样式规则）</p>
 
 <p>　　后面两个很容易匹配到元素，因为它们所拥有的样式属性和html属性可以将元素作为key进行映射。</p>
@@ -969,7 +931,7 @@ div {margin:5px}
 &lt;div id=" messageDiv"&gt;this is a message&lt;/div&gt;
 </code></pre>
 
-<p>　　我们首先找到p元素对应的规则，class映射将包含一个"error"的key，找到p.error的规则，div在id映射和标签映射中都有相关的规则，剩下的工作就是找出这些由key对应的规则中哪些确实是正确匹配的。</p>
+<p>　　我们首先找到p元素对应的规则，class映射将包含一个”error”的key，找到p.error的规则，div在id映射和标签映射中都有相关的规则，剩下的工作就是找出这些由key对应的规则中哪些确实是正确匹配的。</p>
 
 <p>　　例如，如果div的规则是</p>
 
@@ -1006,9 +968,9 @@ div {margin:5px}
 
 <p>　　Css2规范中定义的选择符specifity如下：</p>
 
-<p>　　-   如果声明来自style属性，而不是一个选择器的规则，则计1，否则计0（＝a）<br/>
-　　-   计算选择器中id属性的数量（＝b）<br/>
-　　-   计算选择器中class及伪类的数量（＝c）<br/>
+<p>　　-   如果声明来自style属性，而不是一个选择器的规则，则计1，否则计0（＝a）<br />
+　　-   计算选择器中id属性的数量（＝b）<br />
+　　-   计算选择器中class及伪类的数量（＝c）<br />
 　　-   计算选择器中元素名及伪元素的数量（＝d）</p>
 
 <p>　　连接a－b－c－d四个数量（用一个大基数的计算系统）将得到specifity。这里使用的基数由分类中最高的基数定义。例如，如果a为14，可以使用16进制。不同情况下，a为17时，则需要使用阿拉伯数字17作为基数，这种情况可能在这个选择符时发生html
@@ -1039,7 +1001,7 @@ li.red.level{}/* a=0 b=0 c=2 d=1 -&gt; specificity = 0,0,2,1 */
 
 <p>　　<strong>规则排序</strong></p>
 
-<p>　　规则匹配后，需要根据级联顺序对规则进行排序，WebKit先将小列表用冒泡排序，再将它们合并为一个大列表，WebKit通过为规则复写">"操作来执行排序：</p>
+<p>　　规则匹配后，需要根据级联顺序对规则进行排序，WebKit先将小列表用冒泡排序，再将它们合并为一个大列表，WebKit通过为规则复写”&gt;“操作来执行排序：</p>
 
 <pre><code>static bool operator &gt;(CSSRuleData&amp; r1, CSSRuleData&amp; r2)
 {
@@ -1053,7 +1015,7 @@ li.red.level{}/* a=0 b=0 c=2 d=1 -&gt; specificity = 0,0,2,1 */
 
 <p>　　webkit使用一个标志位标识所有顶层样式表都已加载，如果在attch时样式没有完全加载，则放置占位符，并在文档中标记，一旦样式表完成加载就重新进行计算。</p>
 
-<h2><label id="chapter5" />五、布局（Layout）</h2>
+<h2 id="label-idchapter5-layout"><label id="chapter5"></label>五、布局（Layout）</h2>
 
 <p>　　当渲染对象被创建并添加到树中，它们并没有位置和大小，计算这些值的过程称为layout或reflow。</p>
 
@@ -1089,12 +1051,11 @@ dirty说明即使这个渲染对象可能没问题，但它至少有一个child�
 
 <center>图20：增量layout</center>
 
-
 <p>　　<strong>异步和同步layout</strong></p>
 
 <p>　　增量layout的过程是异步的，Firefox为增量layout生成了reflow队列，以及一个调度执行这些批处理命令。WebKit也有一个计时器用来执行增量layout－遍历树，为dirty状态的渲染对象重新布局。</p>
 
-<p>　　另外，当脚本请求样式信息时，例如"offsetHeight"，会同步的触发增量布局。</p>
+<p>　　另外，当脚本请求样式信息时，例如”offsetHeight”，会同步的触发增量布局。</p>
 
 <p>　　全局的layout一般都是同步触发。</p>
 
@@ -1122,15 +1083,15 @@ dirty说明即使这个渲染对象可能没问题，但它至少有一个child�
 
 <p>　　　　d. 将dirty标识设置为false</p>
 
-<p>　　Firefox使用一个"state"对象（nsHTMLReflowState）做为参数去布局（firefox称为reflow），state包含parent的宽度及其他内容。</p>
+<p>　　Firefox使用一个”state”对象（nsHTMLReflowState）做为参数去布局（firefox称为reflow），state包含parent的宽度及其他内容。</p>
 
-<p>　　Firefox布局的输出是一个"metrics"对象（nsHTMLReflowMetrics）。它包括渲染对象计算出的高度。</p>
+<p>　　Firefox布局的输出是一个”metrics”对象（nsHTMLReflowMetrics）。它包括渲染对象计算出的高度。</p>
 
 <p>　　<strong>宽度计算</strong></p>
 
 <p>　　渲染对象的宽度使用容器的宽度、渲染对象样式中的宽度及margin、border进行计算。例如，下面这个div的宽度：</p>
 
-<p>　　&lt;div /></p>
+<p>　　&lt;div /&gt;</p>
 
 <p>　　webkit中宽度的计算过程是（RenderBox类的calcWidth方法）：</p>
 
@@ -1144,7 +1105,7 @@ dirty说明即使这个渲染对象可能没问题，但它至少有一个child�
 
 <p>　　当一个渲染对象在布局过程中需要折行时，则暂停并告诉它的parent它需要折行，parent将创建额外的渲染对象并调用它们的layout。</p>
 
-<h2><label id="chapter6" />六、绘制（Painting）</h2>
+<h2 id="label-idchapter6-painting"><label id="chapter6"></label>六、绘制（Painting）</h2>
 
 <p>　　绘制阶段，遍历渲染树并调用渲染对象的paint方法将它们的内容显示在屏幕上，绘制使用UI基础组件，这在UI的章节有更多的介绍。</p>
 
@@ -1180,11 +1141,11 @@ dirty说明即使这个渲染对象可能没问题，但它至少有一个child�
 
 <p>　　重绘前，WebKit将旧的矩形保存为位图，然后只绘制新旧矩形的差集。</p>
 
-<h2><label id="chapter7" />七、动态变化</h2>
+<h2 id="label-idchapter7-"><label id="chapter7"></label>七、动态变化</h2>
 
 <p>　　浏览器总是试着以最小的动作响应一个变化，所以一个元素颜色的变化将只导致该元素的重绘，元素位置的变化将大致元素的布局和重绘，添加一个Dom节点，也会大致这个元素的布局和重绘。一些主要的变化，比如增加html元素的字号，将会导致缓存失效，从而引起整数的布局和重绘。</p>
 
-<h2><label id="chapter8" />八、渲染引擎的线程</h2>
+<h2 id="label-idchapter8-"><label id="chapter8"></label>八、渲染引擎的线程</h2>
 
 <p>　　渲染引擎是单线程的，除了网络操作以外，几乎所有的事情都在单一的线程中处理，在Firefox和Safari中，这是浏览器的主线程，Chrome中这是tab的主线程。</p>
 
@@ -1198,7 +1159,7 @@ dirty说明即使这个渲染对象可能没问题，但它至少有一个child�
   NS_ProcessNextEvent(thread);
 </code></pre>
 
-<h2><label id="chapter9" />九、CSS2可视模型（CSS2 visual module）</h2>
+<h2 id="label-idchapter9-css2css2-visual-module"><label id="chapter9"></label>九、CSS2可视模型（CSS2 visual module）</h2>
 
 <p>　　<strong>画布The Canvas</strong></p>
 
@@ -1262,13 +1223,13 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
 
 <p>　　<strong>定位Position</strong></p>
 
-<p>　　<strong><strong>Relative</strong></strong></p>
+<p>　　<strong>**Relative</strong>**</p>
 
 <p>　　相对定位——先按照一般的定位，然后按所要求的差值移动。</p>
 
 <p><img src="/assets/files/2012-02/2011110316594780.png" alt="" /></p>
 
-<p>　　<strong><strong>Floats</strong></strong></p>
+<p>　　<strong>**Floats</strong>**</p>
 
 <p>　　一个浮动的box移动到一行的最左边或是最右边，其余的box围绕在它周围。下面这段html：</p>
 
@@ -1281,7 +1242,7 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
 
 <p><img src="/assets/files/2012-02/2011110316595942.png" alt="" /></p>
 
-<p>　　<strong><strong>Absolute和Fixed</strong></strong></p>
+<p>　　<strong>**Absolute和Fixed</strong>**</p>
 
 <p>　　这种情况下的布局完全不顾普通的文档流，元素不属于文档流的一部分，大小取决于容器。Fixed时，容器为viewport（可视区域）。</p>
 
@@ -1289,10 +1250,9 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
 
 <center>图17：fixed</center>
 
-
 <p>　　注意－fixed即使在文档流滚动时也不会移动。</p>
 
-<p>　　<strong><strong>Layered representation</strong></strong></p>
+<p>　　<strong>**Layered representation</strong>**</p>
 
 <p>　　这个由CSS属性中的z-index指定，表示盒模型的第三个大小，即在z轴上的位置。Box分发到堆栈中（称为堆栈上下文），每个堆栈中靠后的元素将被较早绘制，栈顶靠前的元素离用户最近，当发生交叠时，将隐藏靠后的元素。堆栈根据z-index属性排序，拥有z-index属性的box形成了一个局部堆栈，viewport有外部堆栈，例如：</p>
 
@@ -1317,66 +1277,81 @@ box中，每行至少和最高的box一样高，当box以baseline对齐时——
 
 <p>　　虽然绿色div排在红色div后面，可能在正常流中也已经被绘制在后面，但z-index有更高优先级，所以在根box的堆栈中更靠前。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-02-09" datetime="2012-02-09" pubdate>
-							<span class="year">2012-02-09</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="浏览器"><a href="/tags.html#浏览器-ref">浏览器</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/cnwebdeveloper/articles/2234423.html" target="_blank">http://www.cnblogs.com/cnwebdeveloper/articles/2234423.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html">http://http://uwebs.tk/archives/2012/02/09/How-browsers-work--Behind-the-scenes-of-modern-web-browsers.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>HTTPS连接的前几毫秒发生了什么</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='HTTPS连接的前几毫秒发生了什么'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="HTTPS" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / HTTPS连接的前几毫秒发生了什么</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">HTTPS连接的前几毫秒发生了什么</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / HTTPS连接的前几毫秒发生了什么</div>
+
+<article>
+	<h1><a href="/archives/2013/09/21/first-few-milliseconds-of-https.html">HTTPS连接的前几毫秒发生了什么</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-09-21</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……</p>
 
 <p>哇！刚刚发生了什么?</p>
 
@@ -76,7 +39,7 @@
 
 <p>很多人会把HTTPS和网景公司（Netscape）于上世纪九十年代中期创建的SSL（安全套接层）联系起来。事实上，随着时间的推移，这两者之间的关系也慢慢淡化。随着网景公司渐渐的失去市场份额，SSL的维护工作移交给了Internet工程任务组（IETF）。由网景公司发布的第一个版本被重新命名为TLS1.0（安全传输层协议1.0），并于1999年1月正式发布。考虑到TLS已经发布了将近10年，如今已经很难再见到真正的SSL通信了。</p>
 
-<h2>客户端问候（Client Hello）</h2>
+<h2 id="client-hello">客户端问候（Client Hello）</h2>
 
 <p>TLS将全部的通信以不同方式包裹为“记录”（Records）。我们可以看到，从浏览器发出的第一个字节为0×16（十进制的22），它表示了这是一个“握手”记录。</p>
 
@@ -87,36 +50,32 @@
 <p>整个握手记录被拆分为数条信息，其中第一条就是我们的客户端问候（ClientHello），即0×01。在客户端问候中，有几个需要着重注意的地方：</p>
 
 <ul>
-<li> 随机数：</li>
+  <li> 随机数：</li>
 </ul>
-
 
 <p><img src="/assets/files/2013-09/63918611gw1e8uafsvt2cj20b4022mxd.jpg" alt="" /></p>
 
 <p>在客户端问候中，有四个字节以Unix时间格式记录了客户端的协调世界时间（UTC）。协调世界时间是从1970年1月1日开始到当前时刻所经历的秒数。在这个例子中，0x4a2f07ca就是协调世界时间。在他后面有28字节的随机数，在后面的过程中我们会用到这个随机数。</p>
 
 <ul>
-<li>SID（Session ID）：</li>
+  <li>SID（Session ID）：</li>
 </ul>
-
 
 <p><img src="/assets/files/2013-09/63918611gw1e8uafu3wcij20b400tt8m.jpg" alt="" /></p>
 
 <p>在这里，SID是一个空值（Null）。如果我们在几秒钟之前就登陆过了Amazon.com，我们有可能会恢复之前的会话，从而避免一个完整的握手过程。</p>
 
 <ul>
-<li>密文族（Cipher Suites）：</li>
+  <li>密文族（Cipher Suites）：</li>
 </ul>
-
 
 <p><img src="/assets/files/2013-09/63918611gw1e8uafv0zu5j20b403aq3h.jpg" alt="" /></p>
 
 <p>密文族是浏览器所支持的加密算法的清单。整个密文族是由推荐的加密算法“TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA”和33种其他加密算法所组成。别担心其他的加密算法会出现问题，我们一会儿就会发现Amazon也没有使用推荐的加密算法。</p>
 
 <ul>
-<li> Server_name扩展：</li>
+  <li> Server_name扩展：</li>
 </ul>
-
 
 <p><img src="/assets/files/2013-09/63918611gw1e8uafvtru3j20b401caa4.jpg" alt="" /></p>
 
@@ -124,7 +83,7 @@
 
 <p> </p>
 
-<h2>服务器问候（Server Hello）</h2>
+<h2 id="server-hello">服务器问候（Server Hello）</h2>
 
 <p>Amazon.com回复的握手记录由两个比较大的包组成（2551字节）。记录中包含了0×0301的版本信息，意味着Amazon同意我们使用TLS1.0访问的请求。这条记录包含了三条有趣的子信息：</p>
 
@@ -133,11 +92,10 @@
 <p><img src="/assets/files/2013-09/63918611gw1e8uafwsvx9j20b4057dgj.jpg" alt="" /></p>
 
 <ol>
-<li>我们得到了服务器的以Unix时间格式记录的UTC和28字节的随机数。</li>
-<li>32字节的SID，在我们想要重新连接到Amazon.com的时候可以避免一整套握手过程。</li>
-<li>在我们所提供的34个加密族中，Amazon挑选了“TLS_RSA_WITH_RC4_128_MD5”（0×0004）。这就意味着Amazon会使用RSA公钥加密算法来区分证书签名和交换密钥，通过RC4加密算法来加密数据，利用Md5来校验信息。我们之后会深入的研究这一部分内容。我个人认为，Amazon选择这一密码组是有其自身的原因的。在我们所提供的密码族中，这一加密组的加密方式是CPU占用最低的，这就允许Amazon的每台服务器接受更多的连接。当然了，也许还有一个原因是，Amazon是在向这三种加密算法的发明者Ron Rivest（罗恩·李·维斯特）致敬。</li>
+  <li>我们得到了服务器的以Unix时间格式记录的UTC和28字节的随机数。</li>
+  <li>32字节的SID，在我们想要重新连接到Amazon.com的时候可以避免一整套握手过程。</li>
+  <li>在我们所提供的34个加密族中，Amazon挑选了“TLS_RSA_WITH_RC4_128_MD5”（0×0004）。这就意味着Amazon会使用RSA公钥加密算法来区分证书签名和交换密钥，通过RC4加密算法来加密数据，利用Md5来校验信息。我们之后会深入的研究这一部分内容。我个人认为，Amazon选择这一密码组是有其自身的原因的。在我们所提供的密码族中，这一加密组的加密方式是CPU占用最低的，这就允许Amazon的每台服务器接受更多的连接。当然了，也许还有一个原因是，Amazon是在向这三种加密算法的发明者Ron Rivest（罗恩·李·维斯特）致敬。</li>
 </ol>
-
 
 <p><strong>2.证书信息（11）：</strong></p>
 
@@ -153,7 +111,7 @@
 
 <p>这是一个零字节信息，用于告诉客户端整个“问候”过程已经结束，并且表明服务器不会再向客户端询问证书。</p>
 
-<h2>校验证书</h2>
+<h2 id="section">校验证书</h2>
 
 <p>此时，浏览器已经知道是否应该信任Amazon.com。在这个例子中，浏览器通过证书确认网站是否受信，它会检查Amazon.com的证书，并且确认当前的时间是在“最早时间”2008年8月26日之后，在“最晚时间”2009年8月27日之前。浏览器还会确认证书所携带的公共密钥已被授权用于交换密钥。</p>
 
@@ -165,23 +123,23 @@
 
 <p>任何人都可以向我们发送这些字节，但我们为什么要信任这个签名？为了解释这个问题，我们首先要回顾一些重要的数学知识：</p>
 
-<h2>RSA加密算法的基础介绍</h2>
+<h2 id="rsa">RSA加密算法的基础介绍</h2>
 
 <p>人人常常会问，编程和数学之间有什么联系？证书就为数学在编程领域的应用提供了一个实际的例子。Amazon的服务器告诉我们需要使用RSA算法来校验证书签名。什么又是RSA算法呢？RSA算法是由麻省理工（MIT）的Ron Rivest、Adi Shamirh和Len Adleman（RSA命名各取了三人名字中的首字母）三人于上世纪70年代创建的。三位天才的学者结合了2000多年数学史上的精华，发明了这种简洁高效的算法：</p>
 
 <p>选取两个较大的初值p和q，相乘得n；<strong>n = p*q </strong>接下来选取一个较小的数作为加密指数e，d作为解密指数是e的倒数。在加密的过程中，n和e是公开信息，解密密钥d则是最高机密。至于p和q，你可以将他们公开，也可以作为机密保管。但是一定要记住，e和d是互为倒数的两个数。</p>
 
-<p>假设你现在有一段信息M（转换成数字），将其加密只需要进行运算：C ≡ M<sup>e</sup> (mod n)</p>
+<p>假设你现在有一段信息M（转换成数字），将其加密只需要进行运算：C ≡ M^e (mod n)</p>
 
-<p>这个公式表示M的e次幂，mod n表示除以n取余数。当这段密文的接受者知道解密指数d的时候就可以将密文进行还原：C<sup>d</sup> ≡ ( M<sup>e</sup> )<sup>d</sup> ≡ M<sup>e*d</sup> ≡ M<sup>1</sup> ≡ M(mod n)</p>
+<p>这个公式表示M的e次幂，mod n表示除以n取余数。当这段密文的接受者知道解密指数d的时候就可以将密文进行还原：C^d ≡ ( M^e )^d ≡ M^e*d ≡ M^1 ≡ M(mod n)</p>
 
-<p>有趣的是，解密指数d的持有者还可以将信息M进行用解密指数d进行加密：M<sup>d</sup> ≡ S(mod n)</p>
+<p>有趣的是，解密指数d的持有者还可以将信息M进行用解密指数d进行加密：M^d ≡ S(mod n)</p>
 
-<p>加密者将S、M、e、n公开之后，任何人都可以获得这段信息的原文：S<sup>e</sup> ≡ ( M<sup>d</sup> )<sup>e</sup> ≡ M<sup>d*e</sup> ≡ M<sup>e*d</sup> ≡ M<sup>1</sup> ≡ M(mod n)</p>
+<p>加密者将S、M、e、n公开之后，任何人都可以获得这段信息的原文：S^e ≡ ( M^d )^e ≡ M^d*e ≡ M^e*d ≡ M^1 ≡ M(mod n)</p>
 
 <p>如同RSA的公共密钥加密算法经常被称之为非对称算法，因为加密密钥（在我们的例子中为e）和解密密钥（在我们的例子中是d）并不对称。取余运算的过程也不像我们平常接触的运算（诸如对数运算）那样简单。RSA加密算法的神奇之处在于你可以非常快速的进行数据的加密运算，即，但是如果没有解密密码d，你将很难破解出密码，即运算将不可能实现。正如我们所看到的，通过对n进行因式分解而得到p和q，再推断出解密密钥d的过程难于上青天。</p>
 
-<h2>签名验证</h2>
+<h2 id="section-1">签名验证</h2>
 
 <p>在使用RSA加密算法的时候，最重要的一条就是要确保任何涉及到的数字都要足够复杂才能保证不被现有的计算方法所破解。这些数字要多复杂呢？Amazon.com的服务器是利用“VeriSign Class 3 Secure Server CA”来对证书进行签名的。从证书中，我们可以看到这个VeriSign（电子签名校验器，也称威瑞信公司）的系数n有2048位二进制数构成，换算成十进制足足有617位数字：</p>
 
@@ -251,7 +209,7 @@ FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFF00302130
 
 <p>这样的检查是为了防止中间人攻击：因为我们对整个信任链条上的人都采取了完全信任的态度，认为他们并不会进行黑客行为，就像我们的证书中所声称它是来自Amazon.com，但是假如他的真实来源并非Amazon.com，那我们可能就有被攻击的危险。如果攻击者使用域名污染（DNS cache poisoning）等技术对你的DNS服务器进行篡改，那么你也许会把黑客的网站误认为是一个安全的受信网站（诸如Amazon.com），因为地址栏显示的信息一切正常。这最后一步对证书颁发机构的检查就是为了防止这样的事情发生。</p>
 
-<h2>随机密码串（Pre-Master Secret）</h2>
+<h2 id="pre-master-secret">随机密码串（Pre-Master Secret）</h2>
 
 <p>现在我们已经了解了Amazon.com的各项要求，并且知道了公共解密密钥e和参数n。在通信过程中的任何一方也都知道了这些信息（佐证就是我们通过Wireshark获得了这些信息）。现在我们所需要做的事情就是生成一串窃密者/攻击者都不能知道的随机密码。这并不像听上去的那么简单。早在1996年，研究人员就发现了网景浏览器1.1的伪随机数发生器仅仅利用了三个参数：当天的时间，进程ID和父进程ID。正如研究人员所指出的问题：这些用于生成随机数的参数并不具有随机性，而且他们相对来说比较容易被破解。</p>
 
@@ -272,7 +230,7 @@ ad 6e 11 3f 20 c4 66 f0 64 22 57 7e e1 06 7a 3b .n.? .f.d"W~..z;
 
 <p>需要注意的是，这串数字从各种意义上来说都不是真正的随机数，就拿它的前两位来说：这就是根据TLS协议约定的TLS版本号（0301）。</p>
 
-<h2>****密码交换（Trading Secret）</h2>
+<h2 id="trading-secret"><em>**</em>密码交换（Trading Secret）</h2>
 
 <p>我们现在需要做的就是计算出Amazon.com所要求的密码。因为Amazon.com希望使用“TLS_RSA_WITH_RC4_128_MD5”加密组，所以我们使用RSA加密算法进行这一过程。你可以将这48字节的随机密码串作为初始参数，但是根据公共密钥密码标准（PKCS）#1 v1.5中的注释，我们需要用随机数据将随机密码串填充到实际要求的参数大小（1024位二进制/128字节）。这样的话攻击者想要破解我们的随机密码串就难上加难了。这也是我们保障自己安全的最后一道防线，以防我们在前面的步骤中犯了诸如重复使用密码这样的低级错误。如果我们重复使用了随机密码串，由于使用了随机数填充，窃密者在网络中拦截的也会是两个不同的值。</p>
 
@@ -309,7 +267,7 @@ Spec”记录：</p>
 
 <p>通过这种方式：火狐浏览器要求Amazon.com在后面的通信过程中使用约定的加密方式传输信息。</p>
 
-<h2>获得主密钥（Master Secret）</h2>
+<h2 id="master-secret">获得主密钥（Master Secret）</h2>
 
 <p>如果我们正确完成了之前的过程，并且各方都获得了48字节（256二进制位）的随机密码串。从Amazon.com的角度来看，这里还有一些信任问题：随机密码串是由客户端生成的，并没有将任何服务器信息或者之前约定的信息加入其中。这一点，我们会通过生成主密钥的方式加以完善。根据协议规范约定，这个的计算过程为：</p>
 
@@ -327,7 +285,7 @@ Spec”记录：</p>
 
 <p> </p>
 
-<h2>生成各种密钥</h2>
+<h2 id="section-2">生成各种密钥</h2>
 
 <p>现在，各方面已经有了主密钥，根据协议约定，我们需要利用PRF生成这个会话中所需要的各种密钥，称之为“密钥块”（key
 block）：</p>
@@ -355,7 +313,7 @@ client_write_key = 32 13 2C DD 1B 39 36 40 84 4A DE E5 6C 52 46 72
 server_write_key = 58 36 C4 0D 8C 7C 74 DA 6D B7 34 0A 91 B6 8F A7
 </code></pre>
 
-<h2>准备加密！</h2>
+<h2 id="section-3">准备加密！</h2>
 
 <p>客户端最后一次送出的握手信息是“结束信息”。这条信息保证了没有人篡改握手信息，并且我们已经知晓所必须的密钥。客户端将整个握手过程的全部信息都放入一个名为“handshake_messages”的缓冲区。我们能通过伪随机函数利用主密钥、“client finished”标签、MD5和SHA-1的哈希值生成12字节的“区别数据”（verify_data）：</p>
 
@@ -379,7 +337,7 @@ TLSCompressed.version + TLSCompressed.length + TLSCompressed.fragment));</p>
 
 <p>剩下的工作只剩下啊加密这些数据了！</p>
 
-<h2>RC4加密</h2>
+<h2 id="rc4">RC4加密</h2>
 
 <p>我们之前协商过的密码组是“TLS_RSA_WITH_RC4_128_MD5”。这就意味着我们需要使用RC4（Ron`s code 4）加密规则进行数据流的加密。罗纳德李威斯特（Ron Rivest）开发了这种基于一个256字节的Key产生随机加密效果的算法。这个算法简单到你几分钟就能记住。</p>
 
@@ -387,7 +345,7 @@ TLSCompressed.version + TLSCompressed.length + TLSCompressed.fragment));</p>
 
 <p><img src="/assets/files/2013-09/63918611gw1e8uag9iu9nj208w0480st.jpg" alt="" /></p>
 
-<p>为了加密一个字节，我们将其与随机字节进行异或运算。记住：一位二进制数与1作异或运算会翻转（译者注：即1\<sup>1=0；1\<sup>0=1）。因为我们利用的是随机数，所以从统计学的角度来讲，有一半的数被翻转。这种随机翻转的现象就是我们加密数据的有效方法。正如你所见，这并不复杂，而且计算速度十分快，我认为这也是Amazon.com选择它的原因之一。</sup></sup></p>
+<p>为了加密一个字节，我们将其与随机字节进行异或运算。记住：一位二进制数与1作异或运算会翻转（译者注：即1\^1=0；1\^0=1）。因为我们利用的是随机数，所以从统计学的角度来讲，有一半的数被翻转。这种随机翻转的现象就是我们加密数据的有效方法。正如你所见，这并不复杂，而且计算速度十分快，我认为这也是Amazon.com选择它的原因之一。</p>
 
 <p>记得我们有“client_write_key”和“server_write_key”吗？这就意味我们需要两个RC4实例：一个用来加密浏览器向服务器传送的数据，一个用来解密服务器向浏览器传送的数据。</p>
 
@@ -397,7 +355,7 @@ TLSCompressed.version + TLSCompressed.length + TLSCompressed.fragment));</p>
 
 <p>服务器端做的几乎是相同的事情。它们发送了一个密钥协议的说明和一个包含全部握手过程的结束信息，其中有结束信息的解密版本。因此，这种机制就保证了客户端和服务器能成功的解密信息。</p>
 
-<h2>欢迎来到应用层！</h2>
+<h2 id="section-4">欢迎来到应用层！</h2>
 
 <p>现在，从我们点击了按钮之后已经过去了220毫秒，我们终于为应用层做好了准备！现在，我们发送的普通的HTTP数据流会通过TLS层的加密实例进行加密，在服务器的解密实例进行解密。而且TLS会对数据进行哈希校验，以保证数据内容的准确性。</p>
 
@@ -447,7 +405,7 @@ Transfer-Encoding: chunked
 
 <p>需要注意的是：应用程序可以发送任何数据，但是HTTPS的特殊之处在于WEB应用的广泛普及。要知道还有非常多的基于TCP/IP并且使用TLS进行数据加密的协议（如FTPS，sSMTP）。使用TLS要比你自己发明一种是数据加密方案便捷的多。况且，你所使用的安全协议一定要足够安全。</p>
 
-<h2>…完工！</h2>
+<h2 id="section-5">…完工！</h2>
 
 <p>TLS RFC的文档包含了更多的信息，有需要的朋友们可以自己查阅，我们在这里只是简单的介绍了其中的过程和原理，观察了这220毫秒内发生在火狐浏览器和Amazon服务器之间发生的故事：由Amazon.com基于速度和安全的综合考虑选择的“TLS_RSA_WITH_RC4_128_MD5”密码组在HTTPS连接建立过程中的全部流程。</p>
 
@@ -465,66 +423,81 @@ Transfer-Encoding: chunked
 
 <p><strong>本文由 <a href="http://blog.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/author/ripenc/">水果泡腾片</a> 翻译自 <a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html">JEFF MOSER</a>。</strong></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-09-21" datetime="2013-09-21" pubdate>
-							<span class="year">2013-09-21</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="HTTPS"><a href="/tags.html#HTTPS-ref">HTTPS</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/48369/" target="_blank">http://blog.jobbole.com/48369/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/09/21/first-few-milliseconds-of-https.html">http://http://uwebs.tk/archives/2013/09/21/first-few-milliseconds-of-https.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

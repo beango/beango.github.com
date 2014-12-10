@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>.Net垃圾回收机制原理（一）</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='.Net垃圾回收机制原理（一）'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content=".net" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / .Net垃圾回收机制原理（一）</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">.Net垃圾回收机制原理（一）</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985010(en-us).aspx">Jeffrey Richter</a> ，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html">赵玉开</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / .Net垃圾回收机制原理（一）</div>
+
+<article>
+	<h1><a href="/archives/2012/12/13/dot-net-gc-1.html">.Net垃圾回收机制原理（一）</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-12-13</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985010\(en-us\).aspx">Jeffrey Richter</a> ，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html">赵玉开</a></p>
 
 <p>有了Microsoft.Net clr中的垃圾回收机制<a href="http://blog.jobbole.com/821/" title="程序员的本质">程序员</a>不需要再关注什么时候释放内存，释放内存这件事儿完全由GC做了，对程序员来说是透明的。尽管如此，作为一个.Net程序员很有必要理解垃圾回收是如何工作的。这篇文章我们就来看下.Net是如何分配和管理托管内存的，之后再一步一步描述垃圾回收器工作的算法机制。</p>
 
@@ -99,8 +62,8 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>应用程序使用new操作符创建一个新对象，这个操作符首先要确认托管堆剩余空间能放得下这个对象，如果能放得下，就把NextObjPtr指针指向这个对象，然后调用对象的构造函数，new操作符返回对象的地址。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-01.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-01.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net
-垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-01.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-01.gif" alt=".Net
+垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>图1托管堆</p>
 
@@ -126,7 +89,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>图2显示，托管堆上应用程序的根对象是A，C，D和F，这几个对象就是图的一部分，然后对象D引用了对象H，那么对象H也被添加到图中；垃圾回收器会循环遍历所有可达对象。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-02.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-02.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-02.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-02.gif" alt=".Net垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>图2 托管堆上的对象</p>
 
@@ -134,7 +97,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>所有的根对象都检查完之后，垃圾回收器的图中就有了应用程序中所有的可达对象。托管堆上所有不在这个图上的对象就是要做回收的垃圾对象了。构建好可达对象图之后垃圾回收器开始线性的遍历托管堆，找到连续垃圾对象块（可以认为是空闲内存）。然后垃圾回收器将非垃圾对象移动到一起（使用c语言中的memcpy函数），覆盖所有的内存碎片。当然，移动对象时要禁用所有对象的指针（因为他们都可能是错误的了）。因此垃圾回收器必须修改应用程序的根对象使他们指向对象的新内存地址。此外，如果某个对象包含另一个对象的指针，垃圾回收器也要负责修改引用。图3显示了一次回收之后的托管堆。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-03.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-03.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-03.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-03.gif" alt=".Net垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>图3 回收之后的托管堆</p>
 
@@ -146,31 +109,31 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 <p>下面的代码说明了对象是如何被创建管理的：</p>
 
 <pre><code>class Application {
-    public static int Main(String[] args) {
-
-      // ArrayList object created in heap, myArray is now a root
-      ArrayList myArray = new ArrayList();
-
-      // Create 10000 objects in the heap
-      for (int x = 0; x &lt; 10000; x++) {
-         myArray.Add(new Object());    // Object object created in heap
-      }
-
-      // Right now, myArray is a root (on the thread's stack). So, 
-      // myArray is reachable and the 10000 objects it points to are also 
-      // reachable.
-      Console.WriteLine(a.Length);
-
-      // After the last reference to myArray in the code, myArray is not 
-      // a root.
-      // Note that the method doesn't have to return, the JIT compiler 
-      // knows
-      // to make myArray not a root after the last reference to it in the 
-      // code.
-
-      // Since myArray is not a root, all 10001 objects are not reachable
-      // and are considered garbage.  However, the objects are not 
-      // collected until a GC is performed.
+	public static int Main(String[] args) {
+ 
+	  // ArrayList object created in heap, myArray is now a root
+	  ArrayList myArray = new ArrayList();
+ 
+	  // Create 10000 objects in the heap
+	  for (int x = 0; x &lt; 10000; x++) {
+		 myArray.Add(new Object());    // Object object created in heap
+	  }
+ 
+	  // Right now, myArray is a root (on the thread's stack). So, 
+	  // myArray is reachable and the 10000 objects it points to are also 
+	  // reachable.
+	  Console.WriteLine(a.Length);
+ 
+	  // After the last reference to myArray in the code, myArray is not 
+	  // a root.
+	  // Note that the method doesn't have to return, the JIT compiler 
+	  // knows
+	  // to make myArray not a root after the last reference to it in the 
+	  // code.
+ 
+	  // Since myArray is not a root, all 10001 objects are not reachable
+	  // and are considered garbage.  However, the objects are not 
+	  // collected until a GC is performed.
    }
 }
 </code></pre>
@@ -187,9 +150,9 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 <p>Finalize方法是object对象的一个虚方法，如果需要你可以重写这个方法，但是这个方法只能通过类似c++析构函数的方式重写。例如：</p>
 
 <pre><code>{
-    ~Foo(){
-        Console.WriteLine(“Foo Finalize”);
-    }
+	~Foo(){
+		Console.WriteLine(“Foo Finalize”);
+	}
 }
 </code></pre>
 
@@ -228,7 +191,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>下图显示的堆上包含几个对象，其中一些对象是跟对象，一些对象不是。当对象C、E、F、I和J创建时，系统会检测这些对象实现了Finalize方法，并将它们的指针放到终结队列中。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-04.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-04.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-04.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-04.gif" alt=".Net垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>Finalize方法要做的事情通常是回收垃圾回收器不能回收的资源，例如文件句柄，数据库连接等等。</p>
 
@@ -236,7 +199,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>垃圾回收之后，托管堆如图6所示。你可以看到对象B、G、H已经被回收了，因为这几个对象没有Finalize方法。然而对象E、I、J还没有被回收掉，因为他们的Finalize方法还没有执行。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-05.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-05.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-05.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-05.gif" alt=".Net垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>图5 垃圾回收后的托管堆</p>
 
@@ -246,7 +209,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>简短点说，当一个对象是不可达的，垃圾回收器会认为这个对象是垃圾。那么，当垃圾回收器将对象从终结队列移动到Freachable队列中，这些对象就不再是垃圾了，它们的内存也不会回收。从这一点上来讲，垃圾回收器已经完成标识垃圾，一些对象被标识成垃圾又被重新认为成非垃圾对象。垃圾回收器回收压缩内存，清空freachable队列，执行队列中每一个对象的Finalize方法。</p>
 
-<p><a href="/assets/files/2011-11/Net-GC-06.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-06.gif" title=".Net 垃圾回收机制原理（一）" alt=".Net垃圾回收机制原理（一）" /></a></p>
+<p><a href="/assets/files/2011-11/Net-GC-06.gif" title=".Net 垃圾回收机制原理（一）"><img src="/assets/files/2011-11/Net-GC-06.gif" alt=".Net垃圾回收机制原理（一）" title=".Net 垃圾回收机制原理（一）" /></a></p>
 
 <p>图6 再次执行垃圾回收后的托管堆</p>
 
@@ -265,7 +228,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
   Application.ObjHolder = this;
   }
 }
-
+ 
 class Application{
   static public Object ObjHolder = null;
 }
@@ -296,66 +259,81 @@ class Application{
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-12-13" datetime="2012-12-13" pubdate>
-							<span class="year">2012-12-13</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html" target="_blank">http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/12/13/dot-net-gc-1.html">http://http://uwebs.tk/archives/2012/12/13/dot-net-gc-1.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

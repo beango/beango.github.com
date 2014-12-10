@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Linux常用命令</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+</head>
+
+<body class="page-type-post">
+
+<div class="main">
+	<article>
+	<h3 id="section">一、网络</h3>
+
+<ul>
+  <li>
+    <p>查看IP或MAC地址</p>
+
+    <pre><code>ifconfig -a   
+cat /sys/class/net/eth0/address #查看eth0的mac地址  
+cat /proc/net/arp #查看连接到本机的远端ip的mac地址
+</code></pre>
+  </li>
+  <li>
+    <p>指定ip地址</p>
+
+    <pre><code>vim /etc/sysconfig/network-scripts/ifcfg-eth0  
+DEVICE=eth0    
+ONBOOT=yes  
+BOOTPROTO=static  
+IPADDR=192.168.1.115  
+NETMASK=255.255.255.0  
+GATEWAY=192.168.1.1  
+TYPE=Ethernet  
+USERCTL=no  
+NETWORK=192.168.1.0  
+BROADCAST=192.168.1.255  
+PEERDNS=no  
+HWADDR=00:50:56:44:41:9b 
+</code></pre>
+  </li>
+  <li>
+    <p>使IP地址生效</p>
+
+    <pre><code>/sbin/ifdown eth0  
+/sbin/ifup eth0
+</code></pre>
+  </li>
+  <li>
+    <p>配置dns解析</p>
+
+    <pre><code>#将nameserver 211.98.1.28写入/etc/resolv.conf，重启网络服务后生效  
+echo "nameserver 211.98.1.28" &gt;&gt; /etc/resolv.conf 
+</code></pre>
+  </li>
+  <li>
+    <p>网络服务重启</p>
+
+    <pre><code>service network start  
+service network stop  
+service network restart 
+</code></pre>
+  </li>
+  <li>
+    <p>重启后永久性生效</p>
+
+    <pre><code>chkconfig iptables on  //开启
+chkconfig iptables off //关闭
+</code></pre>
+  </li>
+  <li>
+    <p>即时生效，重启后失效</p>
+
+    <pre><code>service iptables start  //开启
+service iptables stop   //关闭
+</code></pre>
+  </li>
+  <li>
+    <p>开放端口  </p>
+
+    <pre><code>/sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT #80为指定端口  
+/etc/rc.d/init.d/iptables save #将更改保存到iptables
+</code></pre>
+  </li>
+  <li>
+    <p>其他 </p>
+
+    <pre><code>/etc/rc.d/init.d/iptables stop #关闭防火墙,start,restart  
+vim /etc/sysconfig/iptables
+</code></pre>
+  </li>
+  <li>
+    <p>防火墙配置</p>
+
+    <pre><code>-P INPUT DROP #禁止掉服务器所有入口请求，后面的规则只允许部分常用的服务端口  
+-P OUTPUT ACCEPT #允许服务器访问出口请求  
+-A INPUT -i lo -j ACCEPT #允许本地接口访问  
+-A INPUT -p icmp -m icmp --icmp-type 8 -j DROP #禁止ping，因为ping是基于icmp协议的  
+-A INPUT -p tcp -m tcp --dport 20 -j ACCEPT #允许部分常用端口入口请求访问  
+-A INPUT -p tcp -m tcp --dport 21 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 25 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT  
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT  
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT  
+-A INPUT -p all -m state --state ESTABLISHED,RELATED -j ACCEPT #允许所有已经连接端口请求  
+-A INPUT -p all -m state --state INVALID,NEW -j DROP  
+</code></pre>
+  </li>
+</ul>
+
+<h3 id="section-1">二、常用命令</h3>
+
+<ul>
+  <li>
+    <p>删除文件夹下所有文件  </p>
+
+    <pre><code>rm –rf *
+</code></pre>
+  </li>
+  <li>
+    <p>查找文件  </p>
+
+    <pre><code>find / -name "*memcache*" //查找根目录下，文件名匹配memcache的文件
+</code></pre>
+  </li>
+  <li>
+    <p>查找包安装位置  </p>
+
+    <pre><code>rpm -qa | grep apache
+rpm -ql 包名
+</code></pre>
+  </li>
+</ul>
+
+<h3 id="section-2">二、系统相关</h3>
+
+<ul>
+  <li>
+    <p>centos修改为命令行启动  </p>
+
+    <pre><code>#默认的 run level 设置中,可以看到第一行书写如:id:5:initdefault:(默认的 run level 等级为 5,即图形界面)  
+#将第一行的 5 修改为 3 即可。  
+vim /etc/inittab  
+</code></pre>
+  </li>
+</ul>
+
+
+</article>
+
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
+		</p>
+	</div>
+</aside>
+
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
+</body>
+</html>

@@ -1,71 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>RabbitMQ安装及使用</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='RabbitMQ安装及使用'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="rabbitmq" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / RabbitMQ安装及使用</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">RabbitMQ安装及使用</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / RabbitMQ安装及使用</div>
 
+<article>
+	<h1><a href="/archives/2012/10/09/rabbitmq-install.html">RabbitMQ安装及使用</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-10-09</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
 <h3 id="blockquote">介绍：</h3>
-
 
 <p>rabbitMQ是一个在AMQP协议标准基础上完整的，可服用的企业消息系统。他遵循Mozilla Public License开源协议。采用 Erlang 实现的工业级的消息队列(MQ)服务器。</p>
 
@@ -73,156 +33,122 @@
 
 <h3 id="blockquote">RabbitMQ安装（windows）</h3>
 
-
 <ul>
-<li><p>首先需要下载erlang运行时环境(Windows binary): <a href="http://erlang.org/download.html">http://erlang.org/download.html</a>
-下面设置一下环境变量：变量名：ERLANG_HOME，变量值：安装路径</p></li>
-<li><p>接着下载RabbitMQ Server（目前最新版本为2.8.7），链接如下：<a href="http://www.rabbitmq.com/server.html">http://www.rabbitmq.com/server.html</a>
-安装并启动服务。</p></li>
+  <li>
+    <p>首先需要下载erlang运行时环境(Windows binary): <a href="http://erlang.org/download.html">http://erlang.org/download.html</a>
+下面设置一下环境变量：变量名：ERLANG_HOME，变量值：安装路径</p>
+  </li>
+  <li>
+    <p>接着下载RabbitMQ Server（目前最新版本为2.8.7），链接如下：<a href="http://www.rabbitmq.com/server.html">http://www.rabbitmq.com/server.html</a>
+安装并启动服务。</p>
+  </li>
 </ul>
-
 
 <h3 id="blockquote">RabbitMQ安装（CentOS）</h3>
 
-
 <ul>
-<li>安装erlang：</li>
+  <li>安装erlang：</li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>tar zxvf otp_src_R15B02.tar.gz  
-cd otp_src_R15B02  
-./configure  
-make  
-make install
-</code></pre>
+<p><label></label>
+    tar zxvf otp_src_R15B02.tar.gz<br />
+    cd otp_src_R15B02<br />
+    ./configure<br />
+    make<br />
+    make install</p>
 
 <ul>
-<li>安装rabbitmq-server，可以直接下载Binary(rabbitmq-server-generic-unix-2.8.7.tar.gz)，解压并运行sbin/rabbitmq-server即可</li>
+  <li>安装rabbitmq-server，可以直接下载Binary(rabbitmq-server-generic-unix-2.8.7.tar.gz)，解压并运行sbin/rabbitmq-server即可</li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>tar zxvf rabbitmq-server-generic-unix-2.8.7.tar.gz  
-ln -s /usr/local/rabbitmq/sbin/* /usr/local/bin/ 
-</code></pre>
+<p><label></label>
+    tar zxvf rabbitmq-server-generic-unix-2.8.7.tar.gz<br />
+    ln -s /usr/local/rabbitmq/sbin/* /usr/local/bin/ </p>
 
 <ul>
-<li>安装管理插件，访问地址：<a href="http://localhost:55672/mgmt">http://localhost:55672/mgmt</a>用户名guest，密码guest</li>
+  <li>安装管理插件，访问地址：<a href="http://localhost:55672/mgmt">http://localhost:55672/mgmt</a>用户名guest，密码guest  </li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>rabbitmq-plugins enable rabbitmq_management
-</code></pre>
+<p><label></label>
+    rabbitmq-plugins enable rabbitmq_management</p>
 
 <ul>
-<li>修改或创建rabbitmq-env.conf</li>
+  <li>修改或创建rabbitmq-env.conf  </li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>#!/bin/sh  
-# I am a complete /etc/rabbitmq/rabbitmq-env.conf file.  
-# Comment lines start with a hash character.  
-# This is a /bin/sh script file - use ordinary envt var syntax  
-NODENAME=beango  
-RABBIT_HOME=/usr/local/rabbitmq  
-MNESIA_BASE=/usr/local/rabbitmq/data  
-LOG_BASE=/usr/local/rabbitmq/log  
-CONFIG_FILE=/usr/local/rabbitmq/etc/rabbitmq/rabbitmq  
-</code></pre>
+<p><label></label>
+    #!/bin/sh<br />
+    # I am a complete /etc/rabbitmq/rabbitmq-env.conf file.<br />
+    # Comment lines start with a hash character.<br />
+    # This is a /bin/sh script file - use ordinary envt var syntax<br />
+    NODENAME=beango<br />
+    RABBIT_HOME=/usr/local/rabbitmq<br />
+    MNESIA_BASE=/usr/local/rabbitmq/data<br />
+    LOG_BASE=/usr/local/rabbitmq/log<br />
+    CONFIG_FILE=/usr/local/rabbitmq/etc/rabbitmq/rabbitmq  </p>
 
 <ul>
-<li>修改或创建/usr/local/rabbitmq/etc/rabbitmq/rabbitmq.config</li>
+  <li>修改或创建/usr/local/rabbitmq/etc/rabbitmq/rabbitmq.config  </li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>{rabbit,  
-    [  
-        {vm_memory_limit,0.6},  
-        {disk_free_limit,100000000}  
-    ]}  
-].
-</code></pre>
+<p><label></label>
+    {rabbit,<br />
+        [<br />
+            {vm_memory_limit,0.6},<br />
+            {disk_free_limit,100000000}<br />
+        ]}<br />
+    ].</p>
 
 <ul>
-<li>启动与关闭服务</li>
+  <li>启动与关闭服务  </li>
 </ul>
 
+<p>启动：
+    nohup rabbitmq-server start &gt; /usr/local/rabbitmq/log/system.log \ 2&gt;/usr/local/rabbitmq/log/system.log &amp;  </p>
 
-<p>启动：</p>
-
-<pre><code>nohup rabbitmq-server start &gt; /usr/local/rabbitmq/log/system.log \ 2&gt;/usr/local/rabbitmq/log/system.log &amp;  
-</code></pre>
-
-<p>关闭：</p>
-
-<pre><code>rabbitmqctl stop
-</code></pre>
+<p>关闭：<br />
+    rabbitmqctl stop</p>
 
 <h3 id="blockquote">RabbitMQ配置</h3>
 
-
 <ul>
-<li>首先创建vhosts，命令如下：</li>
+  <li>首先创建vhosts，命令如下：</li>
 </ul>
 
+<p>添加创建虚拟主机<br />
+    D:\rabbitmq\sbin&gt;rabbitmqctl add_vhost dnt_mq  #删除 rabbitmqctl delete_vhost vhostpath</p>
 
-<p>添加创建虚拟主机</p>
+<p>用下面指定就可以显示出所有虚拟主机信息：
+    D:\rabbitmq\sbin&gt;rabbitmqctl list_vhosts<br />
+    Listing vhosts …<br />
+    /   （根目录）<br />
+    dnt_mq</p>
 
-<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_vhost dnt_mq  #删除 rabbitmqctl delete_vhost vhostpath
-</code></pre>
+<p>下面添加用户和密码(用户名admin, 密码：111111)：
+    D:\rabbitmq\sbin&gt;rabbitmqctl add_user admin 111111<br />
+    //修改用户密码：rabbitmqctl change_password username newpassword</p>
 
-<p>用下面指定就可以显示出所有虚拟主机信息：</p>
+<p>绑定用户权限： 
+    D:\rabbitmq\sbin&gt;rabbitmqctl set_permissions -p dnt_mq admin “.<em>” ”.</em>” ”.*”  
+    Setting permissions for user “admin” in vhost “dnt_mq” …</p>
 
-<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_vhosts  
-Listing vhosts ...  
-/   （根目录）  
-dnt_mq
-</code></pre>
-
-<p>下面添加用户和密码(用户名admin, 密码：111111)：</p>
-
-<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl add_user admin 111111  
-//修改用户密码：rabbitmqctl change_password username newpassword
-</code></pre>
-
-<p>绑定用户权限：</p>
-
-<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl set_permissions -p dnt_mq admin ".*" ".*" ".*"  
-Setting permissions for user "admin" in vhost "dnt_mq" ...
-</code></pre>
-
-<p>列出用户权限：</p>
-
-<pre><code>D:\rabbitmq\sbin&gt;rabbitmqctl list_user_permissions daizhj  
-//清除用户权限 rabbitmqctl clear_permissions [-p vhostpath] username
-Listing permissions for user "daizhj" ...
-dnt_mq  .*      .*      .*      client
-</code></pre>
+<p>列出用户权限：
+    D:\rabbitmq\sbin&gt;rabbitmqctl list_user_permissions daizhj<br />
+    //清除用户权限 rabbitmqctl clear_permissions [-p vhostpath] username
+    Listing permissions for user “daizhj” …
+    dnt_mq  .*      .*      .*      client</p>
 
 <h3 id="blockquote">RabbitMQ使用</h3>
 
-
 <ul>
-<li>Main</li>
+  <li>Main</li>
 </ul>
 
+<p><label></label>
+    private const string exchange = “dnt_mq”;<br />
+    private const string queuename = “com.iuwebs.queue1”;  </p>
 
-<p><label/></p>
-
-<pre><code>private const string exchange = "dnt_mq";  
-private const string queuename = "com.iuwebs.queue1";  
-
-public static int Main(string[] args1)  
+<pre><code>public static int Main(string[] args1)  
 {  
     ConnectionFactory cf = new ConnectionFactory();  
     cf.Uri = "amqp://192.168.1.121:5672";  
@@ -245,117 +171,124 @@ public static int Main(string[] args1)
 </code></pre>
 
 <ul>
-<li>ensureQueue</li>
+  <li>ensureQueue</li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>private static void ensureQueue(IModel ch)  
-{  
-    ch.ExchangeDeclare("dnt_mq", "direct");  
-    //durable:是否持久化消息队列，即服务器重启后，这个queue及其中的消息是否存在  
-    //exclusive:排他性队列（Exclusive Queue)，只对首次声明它的连接（Connection）可见；会在其连接断开的时候自动删除。  
-    //autoDelete:这个queue不再使用的时候会被删除  
-    ch.QueueDeclare(queuename, true, false, false, null);  
-    ch.QueueBind(queuename, exchange, queuename, null);  
-}
-</code></pre>
+<p><label></label>
+    private static void ensureQueue(IModel ch)<br />
+    {<br />
+        ch.ExchangeDeclare(“dnt_mq”, “direct”);<br />
+        //durable:是否持久化消息队列，即服务器重启后，这个queue及其中的消息是否存在<br />
+        //exclusive:排他性队列（Exclusive Queue)，只对首次声明它的连接（Connection）可见；会在其连接断开的时候自动删除。<br />
+        //autoDelete:这个queue不再使用的时候会被删除<br />
+        ch.QueueDeclare(queuename, true, false, false, null);<br />
+        ch.QueueBind(queuename, exchange, queuename, null);<br />
+    }</p>
 
 <ul>
-<li>sendMessages</li>
+  <li>sendMessages</li>
 </ul>
 
-
-<p><label/></p>
-
-<pre><code>private static void sendMessages(IModel ch, string queueName, long msgCount)  
-{  
-    var basicPro = ch.CreateBasicProperties();  
-    basicPro.DeliveryMode = 2;//是否持久化消息，1不是，2是  
-    while (msgCount-- &gt; 0)  
-    {  
-        ch.BasicPublish(exchange, queueName, basicPro, Encoding.UTF8.GetBytes("Welcome to Caerbannog!-持久化"));  
-    }  
-}
-</code></pre>
+<p><label></label>
+    private static void sendMessages(IModel ch, string queueName, long msgCount)<br />
+    {<br />
+        var basicPro = ch.CreateBasicProperties();<br />
+        basicPro.DeliveryMode = 2;//是否持久化消息，1不是，2是<br />
+        while (msgCount– &gt; 0)<br />
+        {<br />
+            ch.BasicPublish(exchange, queueName, basicPro, Encoding.UTF8.GetBytes(“Welcome to Caerbannog!-持久化”));<br />
+        }<br />
+    }</p>
 
 <ul>
-<li>enumeratingReceiveMessages</li>
+  <li>enumeratingReceiveMessages</li>
 </ul>
 
+<p><label></label>
+    private static void enumeratingReceiveMessages(Subscription sub, long msgCount)<br />
+    {<br />
+        foreach (BasicDeliverEventArgs ev in sub)<br />
+        {<br />
+            Console.WriteLine(“Message {0}: {1}”, i, Encoding.UTF8.GetString(ev.Body));<br />
+            sub.Ack(ev); //发回响应，否则消息队列还将存在<br />
+        }<br />
+    }</p>
 
-<p><label/></p>
-
-<pre><code>private static void enumeratingReceiveMessages(Subscription sub, long msgCount)  
-{  
-    foreach (BasicDeliverEventArgs ev in sub)  
-    {  
-        Console.WriteLine("Message {0}: {1}", i, Encoding.UTF8.GetString(ev.Body));  
-        sub.Ack(ev); //发回响应，否则消息队列还将存在  
-    }  
-}
-</code></pre>
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-10-09" datetime="2012-10-09" pubdate>
-							<span class="year">2012-10-09</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="rabbitmq"><a href="/tags.html#rabbitmq-ref">rabbitmq</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/10/09/rabbitmq-install.html">http://http://uwebs.tk/archives/2012/10/09/rabbitmq-install.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

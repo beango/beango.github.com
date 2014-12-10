@@ -1,68 +1,14 @@
+<p>﻿—
+layout: post
+category: default
+date: 2012-04-19
+title: “说说JSON和JSONP”
+description: “说说JSON和JSONP”
+tags: [json,jsonp]
+redirecturl: http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html
+—</p>
 
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>说说JSON和JSONP</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='说说JSON和JSONP'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
-</head>
-<body>
-
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">说说JSON和JSONP</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
-
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html">随它去吧</a></p>
+<p>来源：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html">随它去吧</a></p>
 
 <p><strong>前言</strong></p>
 
@@ -100,13 +46,13 @@
 
 <p>JSON能够以非常简单的方式来描述数据结构，XML能做的它都能做，因此在跨平台方面两者完全不分伯仲。</p>
 
-<p>1、JSON只有两种数据类型描述符，大括号{}和方括号[]，其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号”"是定义符。</p>
+<p>1、JSON只有两种数据类型描述符，大括号{}和方括号[]，其余英文冒号:是映射符，英文逗号,是分隔符，英文双引号””是定义符。</p>
 
 <p>2、大括号{}用来描述一组“不同类型的无序键值对集合”（每个键值对可以理解为OOP的属性描述），方括号[]用来描述一组“相同类型的有序数据集合”（可对应OOP的数组）。</p>
 
 <p>3、上述两种集合中若有多个子项，则通过英文逗号,进行分隔。</p>
 
-<p>4、键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号”"，以便于不同语言的解析。</p>
+<p>4、键值对以英文冒号:进行分隔，并且建议键名都加上英文双引号””，以便于不同语言的解析。</p>
 
 <p>5、JSON内部常用数据类型无非就是字符串、数字、布尔、日期、null
 这么几个，字符串必须用双引号引起来，其余的都不用，日期类型比较特殊，这里就不展开讲述了，只是建议如果客户端没有按日期排序功能需求的话，那么把日期时间直接作为字符串传递就好，可以省去很多麻烦。</p>
@@ -120,10 +66,10 @@ var person = {
     "Company": "IBM",
     "Engineer": true
 }
-
+ 
 // 获取这个人的信息
 var personAge = person.Age;
-
+ 
 // 描述几个人
 var members = [
     {
@@ -145,10 +91,10 @@ var members = [
         "Engineer": false
     }
 ]
-
+ 
 // 读取其中John的公司名称
 var johnsCompany = members[1].Company;
-
+ 
 // 描述一次会议
 var conference = {
     "Conference": "Future Marketing",
@@ -176,7 +122,7 @@ var conference = {
         }
     ]
 }
-
+ 
 // 读取参会者Henry是否工程师
 var henryIsAnEngineer = conference.Members[2].Engineer;
 </code></pre>
@@ -191,7 +137,7 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>1、一个众所周知的问题，Ajax直接请求普通文件存在跨域无权限访问的问题，甭管你是静态页面、动态网页、web服务、WCF，只要是跨域请求，一律不准；</p>
 
-<p>2、不过我们又发现，Web页面上调用js文件时则不受是否跨域的影响（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如&lt;script>、&lt;img>、&lt;iframe>）；</p>
+<p>2、不过我们又发现，Web页面上调用js文件时则不受是否跨域的影响（不仅如此，我们还发现凡是拥有”src”这个属性的标签都拥有跨域的能力，比如&lt;script&gt;、&lt;img&gt;、&lt;iframe&gt;）；</p>
 
 <p>3、于是可以判断，当前阶段如果想通过纯web端（ActiveX控件、服务端代理、属于未来的HTML5之Websocket等方式不算）跨域访问数据就只有一种可能，那就是在远程服务器上设法把数据装进js格式的文件里，供客户端调用和进一步处理；</p>
 
@@ -225,7 +171,7 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
     &lt;script type="text/javascript" src="http://remoteserver.com/remote.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-
+ 
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
@@ -248,7 +194,7 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
     &lt;script type="text/javascript" src="http://remoteserver.com/remote.js"&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-
+ 
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
@@ -283,7 +229,7 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
     &lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
-
+ 
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
@@ -346,76 +292,10 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>1、ajax和jsonp这两种技术在调用方式上“看起来”很像，目的也一样，都是请求一个url，然后把服务器返回的数据进行处理，因此jquery和ext等框架都把jsonp作为ajax的一种形式进行了封装；</p>
 
-<p>2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而jsonp的核心则是动态添加&lt;script>标签来调用服务器提供的js脚本。</p>
+<p>2、但ajax和jsonp其实本质上是不同的东西。ajax的核心是通过XmlHttpRequest获取非本页内容，而jsonp的核心则是动态添加&lt;script&gt;标签来调用服务器提供的js脚本。</p>
 
 <p>3、所以说，其实ajax与jsonp的区别不在于是否跨域，ajax通过服务端代理一样可以实现跨域，jsonp本身也不排斥同域的数据的获取。</p>
 
 <p>4、还有就是，jsonp是一种方式或者说非强制性协议，如同ajax一样，它也不一定非要用json格式来传递数据，如果你愿意，字符串都行，只不过这样不利于用jsonp提供公开服务。</p>
 
 <p>总而言之，jsonp不是ajax的一个特例，哪怕jquery等巨头把jsonp封装进了ajax，也不能改变着一点！</p>
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-04-19" datetime="2012-04-19" pubdate>
-							<span class="year">2012-04-19</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="json"><a href="/tags.html#json-ref">json</a></li>
-     
-    	<li value="1" title="jsonp"><a href="/tags.html#jsonp-ref">jsonp</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html" target="_blank">http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
-</article>
-
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
-		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
-
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
-</body>
-</html>
-

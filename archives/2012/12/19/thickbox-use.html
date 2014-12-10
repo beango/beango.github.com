@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="js,jquery,thickbox" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / thickbox使用</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+</head>
+
+<body class="page-type-post">
+
+<div class="main">
+	<article>
+	
+<h3 id="section">一  准备工作</h3>
+
+<ul>
+  <li>
+    <p>首先在 HTML 文件的 head中导入jquery.js 和thickbox.js，thickbox.css文件：</p>
+
+    <pre><code>&lt;script src="jquery.js" type="text/javascript"&gt;&lt;/script&gt;    //jquery
+&lt;script src="thickbox.js" type="text/javascript"&gt;&lt;/script&gt;  //thickbox
+&lt;link rel="stylesheet" href="thickbox.css" type="text/css" /&gt; //弹出层样式
+</code></pre>
+  </li>
+</ul>
+
+<h3 id="section-1">二  使用示例</h3>
+
+<ul>
+  <li>
+    <p>单个图片：</p>
+
+    <pre><code>&lt;!-- title控制显示的标题显示  --&gt; 
+&lt;a href="big.jpg" title="点击小图看大图" class="thickbox"&gt;  
+    &lt;img src="small.jpg" alt="Single Image" /&gt;  
+&lt;/a&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>一组图片 (设置一组相同的rel属性)<em>用 jquery-1.1.3.1.pack.js 时有效，更高级别的JQ库只会出现全屏黑</em></p>
+
+    <pre><code>&lt;a href="1.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="1_t.jpg" alt="Plant1" /&gt;&lt;/a&gt;  
+&lt;a href="2.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="2_t.jpg" alt="Plant2" /&gt;&lt;/a&gt;  
+&lt;a href="3.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="3_t.jpg" alt="Plant3" /&gt;&lt;/a&gt;  
+&lt;a href="4.jpg" title="1" class="thickbox" rel="gallery-plants"&gt;&lt;img src="4_t.jpg" alt="Plant4" /&gt;&lt;/a&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>内嵌内容：<em>可设定弹出层的高度、宽度、inlineId 控制显示的内容、modal控制是否显示标题栏</em></p>
+
+    <pre><code>&lt;input type="button" alt="#TB_inline?height=200&amp;width=300&amp;inlineId=test" title="按钮" value="显示" class="thickbox" /&gt;
+</code></pre>
+
+    <p>或  </p>
+
+    <pre><code>&lt;a href="#TB_inline?height=200&amp;width=300&amp;inlineId=hiddenModalContent&amp;modal=true" title="链接" class="thickbox"&gt;显示&lt;/a&gt;   &lt;div id="test" style="display:none"&gt;这里是隐藏的内容&lt;/div&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>iframe方式弹出  </p>
+
+    <pre><code>&lt;a href="boxs.html?keepThis=true&amp;TB_iframe=true&amp;height=100&amp;width=220&amp;modal=true" title="显示IF" class="thickbox"&gt;显示&lt;/a&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>ajax方式弹出： </p>
+
+    <pre><code>&lt;a href="box.html?height=350&amp;width=350&amp;modal=true" title="Ajax载入，页面无法查看源代码" class="thickbox"&gt;Example&lt;/a&gt;
+</code></pre>
+  </li>
+  <li>
+    <p>关闭弹出框：</p>
+
+    <pre><code>tb_remove();  
+self.parent.tb_remove();//如果是子页面
+</code></pre>
+  </li>
+</ul>
+
+<h3 id="section-2">三  自定义内容</h3>
+
+<ul>
+  <li>
+    <p>弹出窗口(div)右上角的关闭按钮为显示为”close or esc key”，而不是中文的; 如果想把它变成[X]或”关闭”应该怎么来办呢 
+将thickbox.js文件打开，查找关键字”or esc key”，将其删除，并将前面的close更改为[X]或”关闭”，然后把文件另存为UTF-8格式，如果不保存为UTF-8的话，将会出现乱码。  </p>
+  </li>
+  <li>
+    <p>修改遮罩层透明度修改thickbox.css。
+查找.tb_overlaybg修改相关数值  </p>
+  </li>
+  <li>
+    <p>关闭层：如果我们需要自己添加一个关闭按钮或者图片</p>
+
+    <pre><code>onclick="self.parent.tb_remove();"  
+</code></pre>
+  </li>
+  <li>
+    <p>thickbox插件默认情况是点击灰色的遮罩层就会关闭取消<br />
+把两个$(“#tb_overlay”).click(tb_remove);去掉就可以取消掉</p>
+  </li>
+</ul>
+
+<h3 id="section-3">四  相关参数</h3>
+<ul>
+  <li>
+    <p>class=”thickbox”<br />
+调用特效（必须）</p>
+  </li>
+  <li>
+    <p>height<br />
+打开页面的高度</p>
+  </li>
+  <li>
+    <p>width<br />
+打开页面的宽度</p>
+  </li>
+  <li>
+    <p>title=”Iframe”<br />
+title的内容</p>
+  </li>
+  <li>
+    <p>keepThis=true<br />
+(不知道有什么用)</p>
+  </li>
+  <li>
+    <p>TB_iframe=true<br />
+设置后iframe中的thickbox还有效果 （适用于thickbox嵌套）</p>
+  </li>
+  <li>
+    <p>#TB_inline<br />
+调用当前页面的层；</p>
+  </li>
+  <li>
+    <p>inlineId<br />
+当前页面层的ID</p>
+  </li>
+  <li>
+    <p>modal=true<br />
+表示禁用title，去掉即可显示title及可自动关闭</p>
+  </li>
+</ul>
+
+<h3 id="section-4">五  更多资源</h3>
+
+<ul>
+  <li><a href="/thickbox/" target="_blank"><span style="font-size:26px;font-bold:bold; color:#800080;">thickbox</span></a></li>
+  <li><a href="/fancybox/" target="_blank"><span style="font-size:26px;font-bold:bold; color:#800080;">fancybox</span></a></li>
+  <li><a href="http://www.nickstakenburg.com/projects/lightview/" target="_blank">Lightview</a><br />
+Lightview是一个基于Prototype与Script.aculo.us开发，用于创建可以覆盖整个页面的模式对话框。展示的内容不仅可以是图片、文字、网页、通过Ajax 调用的内容，还可以是Quicktime/Flash影片都能够以非常酷的效果展示。</li>
+  <li><a href="http://orangoo.com/labs/GreyBox/" target="_blank">Greybox</a></li>
+</ul>
+
+</article>
+
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
+		</p>
+	</div>
+</aside>
+
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
+</body>
+</html>

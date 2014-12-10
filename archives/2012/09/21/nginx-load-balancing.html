@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>解析 Nginx 负载均衡</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='解析 Nginx 负载均衡'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="nginx" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 解析 Nginx 负载均衡</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">解析 Nginx 负载均衡</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://stblog.baidu-tech.com/?p=2027">百度搜索研发部</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 解析 Nginx 负载均衡</div>
+
+<article>
+	<h1><a href="/archives/2012/09/21/nginx-load-balancing.html">解析 Nginx 负载均衡</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-09-21</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>来源：<a href="http://stblog.baidu-tech.com/?p=2027">百度搜索研发部</a></p>
 
 <p><strong>摘要</strong>：对于一个大型网站来说，负载均衡是永恒的话题。随着硬件技术的迅猛发展，越来越多的负载均衡硬件设备涌现出来，如F5 BIG-IP、Citrix NetScaler、Radware等等，虽然可以解决问题，但其高昂的价格却往往令人望而却步，因此负载均衡软件仍然是大部分公司的不二之选。nginx作为webserver的后起之秀，其优秀的反向代理功能和灵活的负载均衡策略受到了业界广泛的关注。本文将以工业生产为背景，从设计实现和具体应用等方面详细介绍nginx负载均衡策略。</p>
 
@@ -82,37 +45,44 @@
 
 <p>轮询的原理很简单，首先我们介绍一下轮询的基本流程。如下是处理一次请求的流程图：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing1.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>图中有两点需要注意，第一，如果可以把加权轮询算法分为先深搜索和先广搜索，那么nginx采用的是先深搜索算法，即将首先将请求都分给高权重的机器，直到该机器的权值降到了比其他机器低，才开始将请求分给下一个高权重的机器；第二，当所有后端机器都down掉时，nginx会立即将所有机器的标志位清成初始状态，以避免造成所有的机器都处在timeout的状态，从而导致整个前端被夯住。</p>
 
-<p>接下来看下源码。nginx源码的目录结构很清晰，加权轮询所在路径为nginx-1.0.15/src/http/ngx_http_upstream_round_robin.[c|h]，在源码的基础上，针对重要的、不易理解的地方我加了注释。首先看下ngx_http_upstream_round_robin.h中的重要声明：</p>
+<table>
+  <tbody>
+    <tr>
+      <td>接下来看下源码。nginx源码的目录结构很清晰，加权轮询所在路径为nginx-1.0.15/src/http/ngx_http_upstream_round_robin.[c</td>
+      <td>h]，在源码的基础上，针对重要的、不易理解的地方我加了注释。首先看下ngx_http_upstream_round_robin.h中的重要声明：</td>
+    </tr>
+  </tbody>
+</table>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing2.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>从变量命名中，我们就可以大致猜出其作用。其中，current_weight和weight的区别主要是前者为权重排序的值，随着处理请求会动态的变化，后者是配置值，用于恢复初始状态。</p>
 
 <p>接下来看下轮询的创建过程，代码如下图所示。</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing3.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>这里有个tried变量需要做些说明。tried中记录了服务器当前是否被尝试连接过。他是一个位图。如果服务器数量小于32，则只需在一个int中即可记录下所有服务器状态。如果服务器数量大于32，则需在内存池中申请内存来存储。对该位图数组的使用可参考如下代码：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing4.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>最后是实际的策略代码，逻辑很简单，代码实现也只有30行，直接上代码。</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing5.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p><strong>2.2. ip hash</strong></p>
 
 <p>ip hash是nginx内置的另一个负载均衡的策略，流程和轮询很类似，只是其中的算法和具体的策略有些变化，如下图所示：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing6.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>ip hash算法的核心实现如下图：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing7.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>从代码中可以看出，hash值既与ip有关又与后端机器的数量有关。经过测试，上述算法可以连续产生1045个互异的value，这是该算法的硬限制。对此nginx使用了保护机制，当经过20次hash仍然找不到可用的机器时，算法退化成轮询。因此，从本质上说，ip hash算法是一种变相的轮询算法，如果两个ip的初始hash值恰好相同，那么来自这两个ip的请求将永远落在同一台服务器上，这为均衡性埋下了很深的隐患。</p>
 
@@ -138,7 +108,7 @@
 
 <p>polygraph是一款免费的性能测试工具，以对缓存服务、代理、交换机等方面的测试见长。它有规范的配置语言PGL（Polygraph Language），为软件提供了强大的灵活性。其工作原理如下图所示：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing8.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>polygraph提供client端和server端，将测试目标nginx放在二者之间，三者之间的网络交互均走http协议，只需配置ip+port即可。client端可以配置虚拟robot的个数以及每个robot发请求的速率，并向代理服务器发起随机的静态文件请求，server端将按照请求的url生成随机大小的静态文件做响应。这也是选用这个测试软件的一个<strong>主要原因</strong>：可以产生随机的url作为nginx各种hash策略的key。</p>
 
@@ -148,7 +118,7 @@
 
 <p>本测试运行在5台物理机上，其中被测对象单独搭在一台8核机器上，另外四台4核机器分别搭建了easyABC、webserver桩和polygraph，如下图所示：</p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing9.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p><strong>3.3. 测试方案</strong></p>
 
@@ -176,23 +146,23 @@
 
 <p>表1和图1是轮询策略在两种测试工具下的负载情况。对比在两种测试工具下的测试结果会发现，结果完全一致，因此可以排除测试工具的影响。从图表中可以看出，轮询策略对于均衡性和容灾性都可以做到很好的满足。</p>
 
-<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing10.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing11.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>表2和图2是fair策略在两种测试工具下的负载情况。fair策略受环境影响非常大，在排除了测试工具的干扰之后，结果仍然有非常大的抖动。从直观上讲，这完全不满足均衡性。但是从另一个角度出发，恰恰是由于这种自适应性确保了在复杂的网络环境中能够物尽所用。因此，在应用到工业生产中之前，需要在具体的环境中做好测试工作。</p>
 
-<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a> </p>
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing12.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a> </p>
 
-<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p><a href="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing13.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>以下图表是各种hash策略，所不同的仅仅是hash key或者是具体的算法实现，因此一起做对比。实际测试中发现，通用hash和一致性hash均存在一个问题：当某台后端的机器挂掉时，原有落到这台机器上的流量会丢失，但是在ip hash中就不存在这样的问题。正如上文中对ip hash源码的分析，当ip hash失效时，会退化为轮询策略，因此不会有丢失流量的情况。从这个层面上说，ip hash也可以看成是轮询的升级版。</p>
 
-<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx 负载均衡" /></a></p>
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing14.jpg" alt="解析 Nginx 负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>图5为ip hash策略，ip hash是nginx内置策略，可以看做是前两种策略的特例：以来源ip为key。由于测试工具不便于模拟海量ip下的请求，因此这里截取线上实际的情况加以分析，如下图所示：</p>
 
-<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a><a href="/assets/files/2012-09/Parse-nginx-load-balancing15.jpg"></a></p>
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing16.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a>[](/assets/files/2012-09/Parse-nginx-load-balancing15.jpg)</p>
 
 <p>图5 ip hash策略</p>
 
@@ -205,70 +175,85 @@ hash策略恰恰是按照ip来划分流量，因此造成上述后果也就自�
 
 <p>通过实际的对比测试，我们对nginx各个负载均衡策略进行了验证。下面从均衡性、一致性、容灾性以及适用场景等角度对比各种策略。(点击图片查看大图)</p>
 
-<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" title="解析 Nginx 负载均衡" alt="解析 Nginx负载均衡" /></a></p>
+<p> <a href="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" title="解析 Nginx 负载均衡"><img src="/assets/files/2012-09/Parse-nginx-load-balancing17.jpg" alt="解析 Nginx负载均衡" title="解析 Nginx 负载均衡" /></a></p>
 
 <p>以上从源码和实际的测试数据角度分析说明了nginx负载均衡的策略，并给出了各种策略适合的应用场景。通过本文的分析不难发现，无论哪种策略都不是万金油，在具体的场景下应该选择哪种策略一定程度上依赖于使用者对这些策略的熟悉程度。希望本文的分析和测试数据能够对读者有所帮助，更希望有越来越多、越来越好的负载均衡策略产出。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-09-21" datetime="2012-09-21" pubdate>
-							<span class="year">2012-09-21</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="8" title="nginx"><a href="/tags.html#nginx-ref">nginx</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://stblog.baidu-tech.com/?p=2027" target="_blank">http://stblog.baidu-tech.com/?p=2027</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/09/21/nginx-load-balancing.html">http://http://uwebs.tk/archives/2012/09/21/nginx-load-balancing.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

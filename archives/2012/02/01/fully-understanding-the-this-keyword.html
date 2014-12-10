@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>完全理解关键字this</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='完全理解关键字this'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 完全理解关键字this</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">完全理解关键字this</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>今天的教程来自天才的<a href="http://codylindley.com/">Cody Lindley</a>的新书：《JavaScript启蒙教程<a href="http://javascriptenlightenment.com/">JavaScript Enlightenment</a>》。他讨论了令人迷惑的关键字this，以及确定和设置this的值的方法。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 完全理解关键字this</div>
+
+<article>
+	<h1><a href="/archives/2012/02/01/fully-understanding-the-this-keyword.html">完全理解关键字this</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-02-01</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>今天的教程来自天才的<a href="http://codylindley.com/">Cody Lindley</a>的新书：《JavaScript启蒙教程<a href="http://javascriptenlightenment.com/">JavaScript Enlightenment</a>》。他讨论了令人迷惑的关键字this，以及确定和设置this的值的方法。</p>
 
 <p><strong>概念性的概述this</strong></p>
 
@@ -77,9 +40,9 @@ var cody = {
   gender:'male',
   getGender:function(){return cody.gender;}
 };
-
+ 
 console.log(cody.getGender()); // logs 'male'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -92,9 +55,9 @@ var cody = {
   gender:'male',
   getGender:function(){return this.gender;}
 };
-
+ 
 console.log(cody.getGender()); // logs 'male'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -104,7 +67,7 @@ console.log(cody.getGender()); // logs 'male'
 
 <p><strong>重要提示</strong></p>
 
-<p>****- 关键字this就像其他的变量，唯一不同就是你不能更改它。</p>
+<p><em>**</em>- 关键字this就像其他的变量，唯一不同就是你不能更改它。</p>
 
 <p>-
 不同于传给函数的其他参数和变量，在调用函数的对象中，this是一个关键字(而不是属性)。</p>
@@ -118,34 +81,34 @@ console.log(cody.getGender()); // logs 'male'
 <p>因为myObject有个叫foo的属性，在这里被使用。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var foo = 'foo';
 var myObject = {foo: 'I am myObject.foo'};
-
+ 
 var sayFoo = function() {
   console.log(this['foo']);
 };
-
+ 
 ￼￼// give myObject a sayFoo property and have it point to sayFoo function
 myObject.sayFoo = sayFoo;
 myObject.sayFoo(); // logs 'I am myObject.foo' 12
-
+ 
 sayFoo(); // logs 'foo'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
 <p>很清楚，this的值取决于函数什么时候被调用。myObject.sayFoo和sayFoo都指向同样的函数，但sayFoo()调用的上下文不同，this的值也就不同。下面是类似的代码，head对象(window)显式使用，希望对你有用。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 window.foo = 'foo';
 window.myObject = {foo: 'I am myObject.foo'};
 window.sayFoo = function() { ! console.log(this.foo); };
 window.myObject.sayFoo = window.sayFoo;
 window.myObject.sayFoo();
 window.sayFoo();
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -153,7 +116,7 @@ window.sayFoo();
 
 <p><strong>重要提示</strong></p>
 
-<p>****- 除了this以外的所有变量和参数都属于静态变量范围(<a href="http://en.wikipedia.org/wiki/Lexical_scope#Lexical_scoping">lexical
+<p><em>**</em>- 除了this以外的所有变量和参数都属于静态变量范围(<a href="http://en.wikipedia.org/wiki/Lexical_scope#Lexical_scoping">lexical
 scope</a>)。</p>
 
 <p><strong>在嵌入函数内this指向head对象</strong></p>
@@ -163,7 +126,7 @@ scope</a>)。</p>
 <p>在下面的代码，func2和func3中的this不再指向myObject，而是head对象。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var myObject = {
   func1:function() {
      console.log(this); //logs myObject
@@ -175,9 +138,9 @@ var myObject = {
      }();
   }
 };
-
+ 
 myObject.func1();
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -192,7 +155,7 @@ var foo = {
     console.log(this);//the this keyword here will be a reference to foo object
   }
 };
-
+ 
 foo.func1(function(){console.log(this)});
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
@@ -204,7 +167,7 @@ foo.func1(function(){console.log(this)});
 <p>为了使this的值不丢失，你可以在父函数中使用一个作用域链(scope chain)来保存对this进行引用。下面的代码中，使用一个叫that的变量，利用它的作用域，我们可以更好的保存函数上下文。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var myObject = {
   myProperty:'Icanseethelight',
     myMethod:function() {
@@ -216,9 +179,9 @@ var myObject = {
         }();
     }
 }
-
+ 
 myObject.myMethod(); // invoke myMethod
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -229,39 +192,39 @@ myObject.myMethod(); // invoke myMethod
 <p>下面，我们创建了一个对象和一个函数，然后我们通过call()来触发函数，所以函数中的this指向的是myOjbect。在myFunction函数中的this会操作myObject而不是head对象，这样我们就改变了在myFunction中this指向的对象。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var myObject = {};
-
+ 
 var myFunction = function(param1, param2) {
   //setviacall()'this'points to my Object when function is invoked
   this.foo = param1;
   this.bar = param2;
   console.log(this); //logs Object{foo = 'foo', bar = 'bar'}
 };
-
+ 
 myFunction.call(myObject, 'foo', 'bar'); // invoke function, set this value to myObject
-
+ 
 console.log(myObject) // logs Object {foo = 'foo', bar = 'bar'}
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
 <p>在上面的例子，我们用了call()，apply()也可适用于同样用法，二者的不同之处在于参数如何传给函数。用call()，参数用逗号分开，而用apply()，参数放在一个数组中传递。下面是同样的代码，但是用apply()。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var myObject = {};
-
+ 
 var myFunction = function(param1, param2) {
   //set via apply(), this points to my Object when function is invoked
   this.foo=param1;
   this.bar=param2;
   console.log(this); // logs Object{foo='foo', bar='bar'}
 };
-
+ 
 myFunction.apply(myObject, ['foo', 'bar']); // invoke function, set this value
 console.log(myObject); // logs Object {foo = 'foo', bar = 'bar'}
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -272,30 +235,30 @@ console.log(myObject); // logs Object {foo = 'foo', bar = 'bar'}
 <p>下面，我们构造了一个构造函数Person，this指向创建的对象。当Person的对象创建后，this指向这个对象，并将属性name放在对象内，值为传给这个构造函数的参数值(name)。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var Person = function(name) {
   this.name = name || 'johndoe'; // this will refer to the instanc ecreated
 }
-
+ 
 var cody = new Person('Cody Lindley'); // create an instance, based on Person constructor
-
+ 
 console.log(cody.name); // logs 'Cody Lindley'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
 <p>这样，当用关键字new触发构造函数时，this指向“要创建的对象”。那么如果我们没有用关键字new，this的值将会指向触发Person的上下文——这时是head对象。让我们来看看下面的代码。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var Person = function(name) {
   this.name=name||'johndoe';
 }
-
+ 
 var cody = Person('Cody Lindley'); // notice we did not use 'new'
 console.log(cody.name); // undefined, the value is actually set at window.name
 console.log(window.name); // logs 'Cody Lindley'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -306,30 +269,30 @@ console.log(window.name); // logs 'Cody Lindley'
 <p>下面我创建了两个Person对象(cody和lisa)，继承的whatIsMyFullName方法包含的this就指向这个实例。</p>
 
 <pre><code>&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;body&gt;&lt;script&gt;
-
+ 
 var Person = function(x){
     if(x){this.fullName = x};
 };
-
+ 
 Person.prototype.whatIsMyFullName = function() {
     return this.fullName; // 'this' refers to the instance created from Person()
 }
-
+ 
 var cody = new Person('cody lindley');
 var lisa = new Person('lisa lindley');
-
+ 
 // call the inherited whatIsMyFullName method, which uses this to refer to the instance
 console.log(cody.whatIsMyFullName(), lisa.whatIsMyFullName());
-
+ 
 /* The prototype chain is still in effect, so if the instance does not have a
 fullName property, it will look for it in the prototype chain.
 Below, we add a fullName property to both the Person prototype and the Object
 prototype. See notes. */
-
+ 
 Object.prototype.fullName = 'John Doe';
 var john = new Person(); // no argument is passed so fullName is not added to instance
 console.log(john.whatIsMyFullName()); // logs 'John Doe'
-
+ 
 &lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 
@@ -342,66 +305,81 @@ console.log(john.whatIsMyFullName()); // logs 'John Doe'
 <p>英文原文：<a href="http://net.tutsplus.com/tutorials/javascript-ajax/fully-understanding-the-this-keyword/?ref=vastwork">Fully Understanding the this Keyword</a> 
 编译：<a href="http://www.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/12203/">唐小娟</a></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-02-01" datetime="2012-02-01" pubdate>
-							<span class="year">2012-02-01</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/12203/" target="_blank">http://blog.jobbole.com/12203/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/02/01/fully-understanding-the-this-keyword.html">http://http://uwebs.tk/archives/2012/02/01/fully-understanding-the-this-keyword.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

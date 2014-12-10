@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>jQuery最佳实践</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='jQuery最佳实践'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="jquery,javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / jQuery最佳实践</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">jQuery最佳实践</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p><strong>1. 使用最新版本的jQuery</strong></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / jQuery最佳实践</div>
+
+<article>
+	<h1><a href="/archives/2011/08/11/jquery-best-practices.html">jQuery最佳实践</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2011-08-11</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p><strong>1. 使用最新版本的jQuery</strong></p>
 
 <p>jQuery的版本更新很快，你应该总是使用最新的版本。因为新版本会改进性能，还有很多新功能。</p>
 
@@ -79,7 +42,7 @@ context.find('.elem')
 
 <p>可以看到，1.6.2版本的运行次数，远远超过两个老版本。尤其是第一条语句，性能有数倍的提高。</p>
 
-<p>其他语句的测试，比如<a href="http://jsperf.com/attr-vs-attrhooks">.attr("value")</a>和<a href="http://jsperf.com/valhooks-vs-val/2">.val()</a>，也是新版本的jQuery表现好于老版本。</p>
+<p>其他语句的测试，比如<a href="http://jsperf.com/attr-vs-attrhooks">.attr(“value”)</a>和<a href="http://jsperf.com/valhooks-vs-val/2">.val()</a>，也是新版本的jQuery表现好于老版本。</p>
 
 <p><strong>2. 用对选择器</strong></p>
 
@@ -98,7 +61,7 @@ $('input')
 
 <p><strong>（2）较慢的选择器：class选择器</strong></p>
 
-<p>$('.className')的性能，取决于不同的浏览器。</p>
+<p>$(‘.className’)的性能，取决于不同的浏览器。</p>
 
 <p>Firefox、Safari、Chrome、Opera浏览器，都有原生方法getElementByClassName()，所以速度并不慢。但是，IE5-IE8都没有部署这个方法，所以这个选择器在IE中会相当慢。</p>
 
@@ -136,31 +99,31 @@ $('.child', $('#parent'))
 
 <p>我们一句句来看。</p>
 
-<p><strong>(1) $('.child', $parent)</strong></p>
+<p><strong>(1) $(‘.child’, $parent)</strong></p>
 
-<p>这条语句的意思是，给定一个DOM对象，然后从中选择一个子元素。jQuery会自动把这条语句转成$.parent.find('child')，这会导致一定的性能损失。它比最快的形式慢了5%-10%。</p>
+<p>这条语句的意思是，给定一个DOM对象，然后从中选择一个子元素。jQuery会自动把这条语句转成$.parent.find(‘child’)，这会导致一定的性能损失。它比最快的形式慢了5%-10%。</p>
 
-<p><strong>(2) $parent.find('.child')</strong></p>
+<p><strong>(2) $parent.find(‘.child’)</strong></p>
 
 <p>这条是最快的语句。.find()方法会调用浏览器的原生方法（getElementById，getElementByName，getElementByTagName等等），所以速度较快。</p>
 
-<p><strong>(3) $parent.children('.child')</strong></p>
+<p><strong>(3) $parent.children(‘.child’)</strong></p>
 
 <p>这条语句在jQuery内部，会使用$.sibling()和javascript的nextSibling()方法，一个个遍历节点。它比最快的形式大约慢50%。</p>
 
-<p><strong>(4) $('#parent > .child')</strong></p>
+<p><strong>(4) $(‘#parent &gt; .child’)</strong></p>
 
 <p>jQuery内部使用Sizzle引擎，处理各种选择器。Sizzle引擎的选择顺序是从右到左，所以这条语句是先选.child，然后再一个个过滤出父元素#parent，这导致它比最快的形式大约慢70%。</p>
 
-<p><strong>(5) $('#parent .child')</strong></p>
+<p><strong>(5) $(‘#parent .child’)</strong></p>
 
 <p>这条语句与上一条是同样的情况。但是，上一条只选择直接的子元素，这一条可以于选择多级子元素，所以它的速度更慢，大概比最快的形式慢了77%。</p>
 
-<p><strong>(6) $('.child', $('#parent'))</strong></p>
+<p><strong>(6) $(‘.child’, $(‘#parent’))</strong></p>
 
-<p>jQuery内部会将这条语句转成$('#parent').find('.child')，比最快的形式慢了23%。</p>
+<p>jQuery内部会将这条语句转成$(‘#parent’).find(‘.child’)，比最快的形式慢了23%。</p>
 
-<p>所以，最佳选择是$parent.find('.child')。而且，由于$parent往往在前面的操作已经生成，jQuery会进行缓存，所以进一步加快了执行速度。</p>
+<p>所以，最佳选择是$parent.find(‘.child’)。而且，由于$parent往往在前面的操作已经生成，jQuery会进行缓存，所以进一步加快了执行速度。</p>
 
 <p>具体的例子和比较结果，请看<a href="http://jsperf.com/jquery-selectors-context/2">这里</a>。</p>
 
@@ -168,7 +131,7 @@ $('.child', $('#parent'))
 
 <p>jQuery速度再快，也无法与原生的javascript方法相比。所以有原生方法可以使用的场合，尽量避免使用jQuery。</p>
 
-<p>以最简单的选择器为例，document.getElementById("foo")要比\$("#foo")<a href="http://jsperf.com/id-vs-class-vs-tag-selectors/46">快10多倍</a>。</p>
+<p>以最简单的选择器为例，document.getElementById(“foo”)要比$(“#foo”)<a href="http://jsperf.com/id-vs-class-vs-tag-selectors/46">快10多倍</a>。</p>
 
 <p>再来看一个例子，为a元素绑定一个处理点击事件的函数：</p>
 
@@ -177,7 +140,7 @@ $('.child', $('#parent'))
 });
 </code></pre>
 
-<p>这段代码的意思是，点击a元素后，弹出该元素的id属性。为了获取这个属性，必须连续两次调用jQuery，第一次是$(this)，第二次是attr('id')。</p>
+<p>这段代码的意思是，点击a元素后，弹出该元素的id属性。为了获取这个属性，必须连续两次调用jQuery，第一次是$(this)，第二次是attr(‘id’)。</p>
 
 <p>事实上，这种处理完全不必要。更正确的写法是，直接采用javascript原生方法，调用this.id：</p>
 
@@ -186,7 +149,7 @@ $('.child', $('#parent'))
 });
 </code></pre>
 
-<p>根据<a href="http://jsperf.com/el-attr-id-vs-el-id/2">测试</a>，this.id的速度比$(this).attr('id')快了20多倍。</p>
+<p>根据<a href="http://jsperf.com/el-attr-id-vs-el-id/2">测试</a>，this.id的速度比$(this).attr(‘id’)快了20多倍。</p>
 
 <p><strong>5. 做好缓存</strong></p>
 
@@ -218,7 +181,7 @@ cached.find('p.classB');
 
 <p><strong>7. 事件的委托处理（Event Delegation）</strong></p>
 
-<p>javascript的事件模型，采用"冒泡"模式，也就是说，子元素的事件会逐级向上"冒泡"，成为父元素的事件。</p>
+<p>javascript的事件模型，采用”冒泡”模式，也就是说，子元素的事件会逐级向上”冒泡”，成为父元素的事件。</p>
 
 <p>利用这一点，可以大大简化事件的绑定。比如，有一个表格（table元素），里面有100个格子（td元素），现在要求在每个格子上面绑定一个点击事件（click），请问是否需要将下面的命令执行100次？</p>
 
@@ -227,9 +190,9 @@ cached.find('p.classB');
 });
 </code></pre>
 
-<p>回答是不需要，我们只要把这个事件绑定在table元素上面就可以了，因为td元素发生点击事件之后，这个事件会"冒泡"到父元素table上面，从而被监听到。</p>
+<p>回答是不需要，我们只要把这个事件绑定在table元素上面就可以了，因为td元素发生点击事件之后，这个事件会”冒泡”到父元素table上面，从而被监听到。</p>
 
-<p>因此，这个事件只需要在父元素绑定1次即可，而不需要在子元素上绑定100次，从而大大提高性能。这就叫事件的"委托处理"，也就是子元素"委托"父元素处理这个事件。</p>
+<p>因此，这个事件只需要在父元素绑定1次即可，而不需要在子元素上绑定100次，从而大大提高性能。这就叫事件的”委托处理”，也就是子元素”委托”父元素处理这个事件。</p>
 
 <pre><code>$("table").on("click", "td", function(){
 　　$(this).toggleClass("click");
@@ -268,7 +231,7 @@ elem.data(key,value);
 $.data(elem[0],key,value);
 </code></pre>
 
-<p>根据<a href="http://jsperf.com/jquery-data-vs-jqueryselection-data/11">测试</a>，后一种写法要比前一种写法，快了将近10倍。因为elem.data()方法是定义在jQuery函数的prototype对象上面的，而\$.data()方法是定义jQuery函数上面的，调用的时候不从复杂的jQuery对象上调用，所以速度快得多。（此处可以参阅下面第10点。）</p>
+<p>根据<a href="http://jsperf.com/jquery-data-vs-jqueryselection-data/11">测试</a>，后一种写法要比前一种写法，快了将近10倍。因为elem.data()方法是定义在jQuery函数的prototype对象上面的，而$.data()方法是定义jQuery函数上面的，调用的时候不从复杂的jQuery对象上调用，所以速度快得多。（此处可以参阅下面第10点。）</p>
 
 <p>（4）插入html代码的时候，浏览器原生的innterHTML()方法比jQuery对象的html()<a href="http://jsperf.com/jquery-dom-manipulation/4">更快</a>。</p>
 
@@ -280,7 +243,7 @@ $.data(elem[0],key,value);
 
 <p><strong>10. 尽量少生成jQuery对象</strong></p>
 
-<p>每当你使用一次选择器（比如$('#id')），就会生成一个jQuery对象。jQuery对象是一个很庞大的对象，带有很多属性和方法，会占用不少资源。所以，尽量少生成jQuery对象。</p>
+<p>每当你使用一次选择器（比如$(‘#id’)），就会生成一个jQuery对象。jQuery对象是一个很庞大的对象，带有很多属性和方法，会占用不少资源。所以，尽量少生成jQuery对象。</p>
 
 <p>举例来说，许多jQuery方法都有两个版本，一个是供<strong>jQuery对象</strong>使用的版本，另一个是供<strong>jQuery函数</strong>使用的版本。下面两个例子，都是取出一个元素的文本，使用的都是text()方法。</p>
 
@@ -375,68 +338,81 @@ function doSomethingElse(){
 
 <p>（完）</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2011-08-11" datetime="2011-08-11" pubdate>
-							<span class="year">2011-08-11</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="jquery"><a href="/tags.html#jquery-ref">jquery</a></li>
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.ruanyifeng.com/blog/2011/08/jquery_best_practices.html" target="_blank">http://www.ruanyifeng.com/blog/2011/08/jquery_best_practices.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2011/08/11/jquery-best-practices.html">http://http://uwebs.tk/archives/2011/08/11/jquery-best-practices.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

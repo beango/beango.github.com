@@ -1,74 +1,37 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>如何绘制业务流程图(一)</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='如何绘制业务流程图(一)'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="uml" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 如何绘制业务流程图(一)</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">如何绘制业务流程图(一)</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://heidixie.blog.sohu.com/219290540.html">heidixie 的博客</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 如何绘制业务流程图(一)</div>
+
+<article>
+	<h1><a href="/archives/2012/06/03/how-to-draw-business-process-diagrams-1.html">如何绘制业务流程图(一)</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-06-03</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>来源：<a href="http://heidixie.blog.sohu.com/219290540.html">heidixie 的博客</a></p>
 
 <p>前言：近来一段时间，忙于整理业务流程图，期间，关于流程图的绘制方法和工具也与内部团队和外部做了心得交流，恰好，个人生活也牵涉在买房，婚礼，户口迁移等流程中。不知不觉，伴随着实践与反思，个人所得的系统知识趋于完整，今儿天气极好，坐在飘窗一隅，听着间或几声鸟鸣歌唱，偶尔瞥一眼窗外的遍地绿荫，真真觉得是个写点什么的日子。所以就整理成文，如果恰好对你有所帮助，那是真真好的。</p>
 
 <p>真实整理的流程牵涉到公司未公布的计划，不好公开，所以在本文中会借助一个简单的案例替代（这个案例呢，也就是计划写本文前30分分钟才想到的，如有考虑不周，请各位见谅），但是仅传达概念和方法，倒也足够了。恩，甄環体告一段落，咱们开始吧。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图1：用即时贴与白板做的简单流程图</p>
 
@@ -98,7 +61,7 @@
 
 <p>那什么是流程图呢？说文解字是一种了解定义的好方法。流程图=流程+图，如下图：</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图2：流程图的定义</p>
 
@@ -115,7 +78,7 @@
 Map)，，开发工程师们经常说的用例图(Use
 Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简单做个对比，如图：</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图3：流程图VS其他常用图表</p>
 
@@ -143,7 +106,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p>那么流程图要体现出他的差异定义，要素是什么？总结出了流程图的6大要素，希望大家能够记住，这6个要素可以在以后的文章里不断回顾，你也可以拿来判断你所看到的流程图是否专业。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图4：流程图6大要素</p>
 
@@ -161,9 +124,9 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p>关于流程图的标准化，并不是强制的，事实上，我们见过很多种类的流程图，只要能够传递明白任务和次序其实已经归类于流程图了。如下面的图：</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>但是若在一个公司的环境下，你的流程图的受众又非常多的话，采取标准化的符号会带来很多交流上的好处，总之你懂的。</p>
 
@@ -210,7 +173,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p>我们平时工作中，还会经常听人谈到泳道图啊，任务流程图啊等等概念，究竟是神马关系呢？</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图5：流程图的分类</p>
 
@@ -220,15 +183,15 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p>在工作中，我们经常能够看到两种业务流程图，从表现形式来看，一种很好区分，俗称为“泳道图”的它，在样子上也确实像个泳道，可以有横向的泳道，也会有纵向的泳道。泳道图在某些文档里会被称为“以活动为单位的流程图”，浮在泳道中的都是一个个活动。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>另外一种类型是以部门和岗位为单位的流程图，下图中的圆形就代表一个个部门或岗位。矩形代表活动。这种流程图关注事情如何完成的逻辑，但是在体现各个部门的责任上比较弱。如果是某个岗位的人来看，很难像泳道图那样一眼就能看到自己部门的职责和任务。所以现在用得比较少。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>再回过头来说泳道图，泳道图有几个关键点：两大维度，活动流转，流程要素。我们会在以后详解。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p> </p>
 
@@ -244,7 +207,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p><strong>1. 员工培训</strong></p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图6：流程图的应用场景之一：培训</p>
 
@@ -254,7 +217,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 <p><strong>2：流程优化与重组</strong></p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图7：流程图的应用场景之二：流程优化</p>
 
@@ -267,7 +230,7 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 <p><strong>3：信息化的基础</strong></p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>图8：流程图的应用场景之三：信息化基础</p>
 
@@ -291,9 +254,8 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 <p><strong>1. 调研</strong></p>
 
-<p>如何快速了解业务运作真相？有没有调研的技巧放送？</p>
-
-<hr />
+<p>如何快速了解业务运作真相？有没有调研的技巧放送？
+ <em>**</em></p>
 
 <p><strong>2. 梳理与呈现</strong></p>
 
@@ -319,14 +281,14 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 <p>小的流程图用用PPT就够了，完了就导出图片或截图。交互设计师们因为常用axure绘制线框图，所以也不必为了流程图去学习新的工具，完全可以用axure的flow控件完成简单的业务流程图的制作。而PD们则常用微软的visio。</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>此外，特别推荐一个软件：<a href="http://www.smartdraw.com/">SmartDraw</a>。</p>
 
 <p>我最近的流程图都是用SmartDraw绘制的，你可以下载一个免费版本体验下。这个工具不仅仅是为了流程图而设计的，几乎上包罗万象：线框图，流程图，E-R图，UML
 ,韦恩图，甚至甘特图，脑图……没有像很多人推荐就是因为他太庞大了，尤其是里面的模版。大家体验下：</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>Mac电脑:</p>
 
@@ -341,20 +303,20 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 <p>1.<a href="https://cacoo.com/">https://cacoo.com/</a></p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>这个是界面做得最好看的一个工具。我用它来绘制过概念图（Concept
 map）。如下图即是用以上的工具画的。</p>
 
-<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>​2. http://creately.com/</p>
 
-<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p>​3. www.lucidchart.com</p>
 
-<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" title="业务流程图的绘制流程分享" alt="业务流程图的绘制流程分享" /></a></p>
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
 
 <p> </p>
 
@@ -362,66 +324,81 @@ map）。如下图即是用以上的工具画的。</p>
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-06-03" datetime="2012-06-03" pubdate>
-							<span class="year">2012-06-03</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="uml"><a href="/tags.html#uml-ref">uml</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://heidixie.blog.sohu.com/219290540.html" target="_blank">http://heidixie.blog.sohu.com/219290540.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/06/03/how-to-draw-business-process-diagrams-1.html">http://http://uwebs.tk/archives/2012/06/03/how-to-draw-business-process-diagrams-1.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

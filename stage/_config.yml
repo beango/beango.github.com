@@ -3,7 +3,7 @@ pygments: true
 safe: false
 auto: true
 permalink: /archives/:year/:month/:day/:title.html
-exclude: [".gitignore", ".rvmrc", ".rbenv-version", "Rakefile", "changelog.md", "stage.rar"]
+exclude: [".gitignore", ".rvmrc", ".rbenv-version", "Rakefile", "changelog.md", "README.md"]
 
 name: 程序员 - 博客 - HuangDing
 host: http://uwebs.tk

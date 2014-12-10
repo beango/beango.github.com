@@ -1,88 +1,49 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>HTTP协议之代理</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='HTTP协议之代理'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="redis" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / HTTP协议之代理</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">HTTP协议之代理</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h3>阅读目录</h3>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / HTTP协议之代理</div>
+
+<article>
+	<h1><a href="/archives/2012/12/15/http-protocol-proxy.html">HTTP协议之代理</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-12-15</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h3 id="section">阅读目录</h3>
 
 <ul>
-<li><a href="#chapter1">什么是代理服务器</a></li>
-<li><a href="#chapter2">Fiddler就是个典型的代理</a></li>
-<li><a href="#chapter3">代理作用一：翻墙</a></li>
-<li><a href="#chapter4">代理作用二：匿名访问</a></li>
-<li><a href="#chapter5">代理作用三：通过代理上网</a></li>
-<li><a href="#chapter6">代理作用四：通过代理缓存，加快上网速度</a></li>
-<li><a href="#chapter7">代理作用五：儿童过滤器</a></li>
-<li><a href="#chapter8">IE代理设置：手动设置代理</a></li>
-<li><a href="#chapter9">IE代理设置：使用自动配置脚本(PAC)</a></li>
-<li><a href="#chapter10">IE代理设置：自动探测设置(WPAD)</a></li>
-<li><a href="#chapter11">代理认证，407状态码</a></li>
-<li><a href="#chapter12">使用代理服务器的安全问题</a></li>
-<li><a href="#chapter13">如何搭建代理服务器</a></li>
+  <li><a href="#chapter1">什么是代理服务器</a></li>
+  <li><a href="#chapter2">Fiddler就是个典型的代理</a></li>
+  <li><a href="#chapter3">代理作用一：翻墙</a></li>
+  <li><a href="#chapter4">代理作用二：匿名访问</a></li>
+  <li><a href="#chapter5">代理作用三：通过代理上网</a></li>
+  <li><a href="#chapter6">代理作用四：通过代理缓存，加快上网速度</a></li>
+  <li><a href="#chapter7">代理作用五：儿童过滤器</a></li>
+  <li><a href="#chapter8">IE代理设置：手动设置代理</a></li>
+  <li><a href="#chapter9">IE代理设置：使用自动配置脚本(PAC)</a></li>
+  <li><a href="#chapter10">IE代理设置：自动探测设置(WPAD)</a></li>
+  <li><a href="#chapter11">代理认证，407状态码</a></li>
+  <li><a href="#chapter12">使用代理服务器的安全问题</a></li>
+  <li><a href="#chapter13">如何搭建代理服务器</a></li>
 </ul>
 
-
 <h3 id="chapter1">什么是代理服务器</h3>
-
 
 <p>Web代理（proxy）服务器是网络的中间实体。
 代理位于Web客户端和Web服务器之间，扮演“中间人”的角色。</p>
@@ -93,7 +54,6 @@
 
 <h3 id="chapter2">Fiddler就是个典型的代理</h3>
 
-
 <p>Fiddler 是以代理web服务器的形式工作的,它使用代理地址:127.0.0.1,
 端口:8888. 当Fiddler退出的时候它会自动注销代理，这样就不会影响别的程序。</p>
 
@@ -103,9 +63,8 @@
 
 <h3 id="chapter3">代理的作用一， 翻墙</h3>
 
-
 <p>很多人都喜欢用Facebook， 看youTube。但是我们在天朝，天朝有The Great of
-Wall(长城防火墙)，屏蔽了这些好网站。  怎么办?<br/>
+Wall(长城防火墙)，屏蔽了这些好网站。  怎么办?<br />
 通过代理来跳墙，就可以访问了。</p>
 
 <p>自己去寻找代理服务器很麻烦， 一般都是用翻墙软件来自动发现代理服务器的。</p>
@@ -114,9 +73,8 @@ Wall(长城防火墙)，屏蔽了这些好网站。  怎么办?<br/>
 
 <h3 id="chapter4">代理的作用二， 匿名访问</h3>
 
-
-<p>经常听新闻，说”某某某“在网络上发布帖子，被跨省追缉了。<br/>
-假如他使用匿名的代理服务器，就不容易暴露自己的身份了。</p>
+<p>经常听新闻，说”某某某“在网络上发布帖子，被跨省追缉了。<br />
+假如他使用匿名的代理服务器，就不容易暴露自己的身份了。 </p>
 
 <p>http代理服务器的匿名性是指：
 HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的IP地址，
@@ -126,11 +84,9 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
 
 <h3 id="chapter5">代理的作用三， 通过代理上网</h3>
 
-
 <p>比如局域网不能上网， 只能通过局域网内的一台代理服务器上网。</p>
 
 <h3 id="chapter6">代理的作用四， 通过代理缓存，加快上网速度</h3>
-
 
 <p>大部分代理服务器都具有缓存的功能，就好像一个大的cache，
 它有很大的存储空间，它不断将新取得数据存储到它本地的存储器上，
@@ -138,17 +94,15 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
 
 <h3 id="chapter7">代理的作用五：儿童过滤器</h3>
 
-
 <p>很多教育机构， 会利用过滤器代理来阻止学生访问成人内容。</p>
 
 <p><img src="/assets/files/2012-12/2012120516393239.png" alt="" class="Pic" /></p>
 
 <h3 id="chapter8">IE代理设置：手动设置代理</h3>
 
-
 <p>IE浏览器可以手动设置代理， 很简单，指定一个IP地址和端口就可以了。 如下图。</p>
 
-<p>工具 -＞ Internet选项 -> 连接 -> 局域网设置 （快捷键）</p>
+<p>工具 -＞ Internet选项 -&gt; 连接 -&gt; 局域网设置 （快捷键）</p>
 
 <p><img src="/assets/files/2012-12/2012120519480694.png" alt="" class="Pic" /></p>
 
@@ -156,29 +110,46 @@ HTTP代理服务器通过删除HTTP报文中的身份特性（比如客户端的
 难道要几百个客户端的浏览器去修改浏览器设置？ Impossable  这太难维护了。  下面还有一种更高级点的方法。</p>
 
 <h3 id="chapter9">IE代理设置：使用自动配置脚本（PAC）</h3>
-
-
-<p> 手动配置代理很简单，但是不灵活。 只能指定一个代理服务器，而且不支持故障转移。</p>
+<p>手动配置代理很简单，但是不灵活。 只能指定一个代理服务器，而且不支持故障转移。 </p>
 
 <p>在大公司里一般都使用PAC文件来配置。只需要指定PAC文件的URL就可以了， 如图：</p>
 
 <p><img src="/assets/files/2012-12/2012120519531553.png" alt="" class="Pic" /></p>
 
-<p>PAC（Proxy Auto Config）文件是一个小型的JavaScript程序的文本文件，后缀为.dat。</p>
+<p>PAC（Proxy Auto Config）文件是一个小型的JavaScript程序的文本文件，后缀为.dat。 </p>
 
 <p>当浏览器访问网络的时候，会根据PAC文件中的JavaScript函数来选择恰当的代理服务器。</p>
 
-<p>sample_pac.dat文件的内容
-Liquid error: No such file or directory - pygmentize</p>
+<p>sample_pac.dat文件的内容</p>
+
+<div class="highlight"><pre><code class="perl"><span class="n">function</span> <span class="n">FindProxyForURL</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;http:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="sr">//</span> <span class="err">应该使用指定的代理</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY proxy:80&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;ftp:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY fproxy:80&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;gopher:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY gproxy&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;https:&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;PROXY secproxy:8080&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="sr">//</span> <span class="err">直连，不经过任何代理</span>
+        <span class="k">return</span> <span class="s">&quot;DIRECT&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
 
 <h3 id="chapter10">IE代理设置：自动探测设置（WPAD）</h3>
 
-
-<p> 浏览器只要选中“自动检测设置”， 就可以使用WPAD协议， WPAD会自动找到PAC文件的URL。  WPAD会使用一系列的资源发现技术（DHCP,DNS等）去寻找PAC文件。
+<p>浏览器只要选中“自动检测设置”， 就可以使用WPAD协议， WPAD会自动找到PAC文件的URL。  WPAD会使用一系列的资源发现技术（DHCP,DNS等）去寻找PAC文件。
 <img src="/assets/files/2012-12/2012120519553441.png" alt="" class="Pic" /></p>
 
 <h3 id="chapter11">代理认证，和407状态码</h3>
-
 
 <p>代理服务器也可以需要权限认证， HTTP定义了一种名为代理认证（Proxy authentication）的机制。 这种机制可以阻止对内容的请求。</p>
 
@@ -189,74 +160,88 @@ Liquid error: No such file or directory - pygmentize</p>
 
 <h3 id="chapter12">使用代理服务器的安全问题</h3>
 
-
 <p>代理服务器和抓包工具（比如Fiddler）都能看到http request中的数据。 如果我们发送的request中有敏感数据，比如用户名，密码，信用卡号码。这些信息都会被代理服务器看到。所以非常危险。 所以我们一般都是用HTTPS来加密Http request.  这样代理服务器就看不到里面的数据了。</p>
 
 <h3 id="chapter13">如何搭建代理服务器</h3>
 
-
 <p>可以使用CCproxy, 和Squid 来搭建代理服务器。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-12-15" datetime="2012-12-15" pubdate>
-							<span class="year">2012-12-15</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
 
-
-  
-     
-    	<li value="6" title="redis"><a href="/tags.html#redis-ref">redis</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html" target="_blank">http://www.cnblogs.com/TankXiao/archive/2012/12/12/2794160.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/12/15/http-protocol-proxy.html">http://http://uwebs.tk/archives/2012/12/15/http-protocol-proxy.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

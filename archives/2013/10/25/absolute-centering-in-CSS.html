@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>如何只用CSS做到完全居中</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='如何只用CSS做到完全居中'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="CSS" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 如何只用CSS做到完全居中</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">如何只用CSS做到完全居中</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>我们都知道 <code>margin:0 auto;</code> 的样式能让元素水平居中，而 <code>margin: auto;</code>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 如何只用CSS做到完全居中</div>
+
+<article>
+	<h1><a href="/archives/2013/10/25/absolute-centering-in-CSS.html">如何只用CSS做到完全居中</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-10-25</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>我们都知道 <code>margin:0 auto;</code> 的样式能让元素水平居中，而 <code>margin: auto;</code>
 却不能做到垂直居中……直到现在。但是，请注意！想让元素绝对居中，只需要声明元素高度，并且附加以下样式，就可以做到：</p>
 
 <pre><code>.Absolute-Center {
@@ -79,27 +42,25 @@
 <p>以前从未用过这种方法的我想试试，看看这种”完全居中”的方法到底有多么神奇。好处：</p>
 
 <ul>
-<li>跨浏览器，兼容性好（无需hack，可兼顾IE8\~IE10）</li>
-<li>无特殊标记，样式更精简</li>
-<li>自适应布局，可以使用百分比和最大最小高宽等样式</li>
-<li>居中时不考虑元素的padding值（也不需要使用box-sizing样式）</li>
-<li>布局块可以自由调节大小</li>
-<li>img的图像也可以使用</li>
+  <li>跨浏览器，兼容性好（无需hack，可兼顾IE8\~IE10）</li>
+  <li>无特殊标记，样式更精简</li>
+  <li>自适应布局，可以使用百分比和最大最小高宽等样式</li>
+  <li>居中时不考虑元素的padding值（也不需要使用box-sizing样式）</li>
+  <li>布局块可以自由调节大小</li>
+  <li>img的图像也可以使用</li>
 </ul>
-
 
 <p>同时注意：</p>
 
 <ul>
-<li>必须声明元素高度</li>
-<li>推荐设置overflow:auto;样式避免元素溢出，显示不正常的问题</li>
-<li>这种方法在Windows Phone上不起作用</li>
+  <li>必须声明元素高度</li>
+  <li>推荐设置overflow:auto;样式避免元素溢出，显示不正常的问题</li>
+  <li>这种方法在Windows Phone上不起作用</li>
 </ul>
-
 
 <p>浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile Safari中，甚至也可以运行在IE8\~IE10上</p>
 
-<h2>对照表</h2>
+<h2 id="section">对照表</h2>
 
 <p>“完全居中”并不是本篇文章中唯一的选项。要做到垂直居中，还存在着其他方法，各有各的长处。采取什么样的方法，取决于你所支持的浏览器，以及现有标签的结构。下面这张对照表能够帮你选出最符合你需要的方法。</p>
 
@@ -257,15 +218,13 @@
 </tbody>
 </table>
 
-
-<h2>说明</h2>
+<h2 id="section-1">说明</h2>
 
 <p>在研究了规范和文档后，我总结出了“完全居中”的工作原理：</p>
 
 <ol>
-<li>在普通文档流里，margin: auto; 的意思是设置元素的margin-top和margin-bottom为0。</li>
+  <li>在普通文档流里，margin: auto; 的意思是设置元素的margin-top和margin-bottom为0。</li>
 </ol>
-
 
 <p><a href="http://www.w3.org/TR/CSS2/visudet.html#normal-block">W3.org</a>: <em>If ‘margin-top’, or ‘margin-bottom’ are ‘auto’, their used value is 0.</em></p>
 
@@ -287,16 +246,16 @@
 
 <p>使用“完全居中”，有意遵照了标准margin: auto;样式渲染的规定，所以应当在与标准兼容的各种浏览器中起作用。</p>
 
-<h2>对齐</h2>
+<h2 id="section-2">对齐</h2>
 
-<h3>容器内对齐</h3>
+<h3 id="section-3">容器内对齐</h3>
 
 <p>使用“完全居中”，就可以在一个设置了position: relative的容器中做到完全居中元素了！<a href="http://codepen.io/shshaw/full/gEiDt">（居中例子，请前往英文原文查看）</a></p>
 
 <pre><code>.Center-Container {
   position: relative;
 }
-
+ 
 .Absolute-Center {
   width: 50%;
   height: 50%;
@@ -311,7 +270,7 @@
 
 <p>接下来的示例会假设已经包含了以下样式，并且以逐步添加样式的方式提供不同的特性。</p>
 
-<h3>在可视区域内居中</h3>
+<h3 id="section-4">在可视区域内居中</h3>
 
 <p>想要使内容区在可视区域内居中么？设置position: fixed样式，并设置一个较高的z-index值，就可以做到。</p>
 
@@ -325,9 +284,9 @@
 
 <p><strong>移动版Safari</strong><strong>的说明</strong>：如果外面没有一层设置position: relative的容器，内容区会以整个文档的高度的中心点为基准居中，而不是以可视区域的高度中心点为基准居中。</p>
 
-<h3>偏移值</h3>
+<h3 id="section-5">偏移值</h3>
 
-<p>如果需要添加固定的标题，或者其他带偏移样式的元素，可以直接把类似top: 70px;的样式写进内容区域的样式中。一旦声明了margin: auto;的样式，内容块的<code>top ``left ``bottom ``right</code>的属性值也会同时计算进去。</p>
+<p>如果需要添加固定的标题，或者其他带偏移样式的元素，可以直接把类似top: 70px;的样式写进内容区域的样式中。一旦声明了margin: auto;的样式，内容块的<code>top </code><code>left </code><code>bottom </code><code>right</code>的属性值也会同时计算进去。</p>
 
 <p>如果想让内容块在贴近侧边的过程中保持水平居中，可以使用right: 0; left: auto; 让内容贴在右侧，或者使用left: 0; right: auto; 使内容贴在左侧。</p>
 
@@ -339,7 +298,7 @@
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtm8nu2ej20gw0b50t1.jpg" alt="" /></p>
 
-<h3>带响应式</h3>
+<h3 id="section-6">带响应式</h3>
 
 <p>使用absolute的最大好处就是可以完美地使用带百分比的宽高样式！就算是min-width/max-width或者min-height/max-height也能够有如预期般的表现。</p>
 
@@ -356,7 +315,7 @@
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg" alt="" /></p>
 
-<h3>带溢出内容</h3>
+<h3 id="section-7">带溢出内容</h3>
 
 <p>内容区高度大于可视区域或者一个position: relative的容器，其内容可能会溢出容器，或被容器截断。只要内容区域没有超出容器（没有给内容容器预留padding的话，可以设置max-height: 100%;的样式），那么容器内就会产生滚动条。</p>
 
@@ -367,7 +326,7 @@
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg" alt="" /></p>
 
-<h3>大小可调整</h3>
+<h3 id="section-8">大小可调整</h3>
 
 <p>使用其他样式，或者使用JavaScript调整内容区的大小，也是不用手动重新计算的！如果设置了resize的样式，甚至可以让用户自行调节内容区域的大小。“完全居中”法，无论内容区怎么改变大小，都会保持居中。</p>
 
@@ -390,13 +349,12 @@
 <p>使用注意：</p>
 
 <ul>
-<li>需要设置max-width/max-height给内容区域留足够的空间，不然就有可能使容器溢出。</li>
-<li>resize属性不支持移动版浏览器和IE8-10，如果用户体验很重要的话，请确保用户可以有其他替代方法来改变大小。</li>
-<li>同时使用resize样式和transition会使用户在开始改变大小时产生等于transition效果时间等长的延时。</li>
+  <li>需要设置max-width/max-height给内容区域留足够的空间，不然就有可能使容器溢出。</li>
+  <li>resize属性不支持移动版浏览器和IE8-10，如果用户体验很重要的话，请确保用户可以有其他替代方法来改变大小。</li>
+  <li>同时使用resize样式和transition会使用户在开始改变大小时产生等于transition效果时间等长的延时。</li>
 </ul>
 
-
-<h3>图像</h3>
+<h3 id="section-9">图像</h3>
 
 <p>图像也同样有效！提供相应的class，并指定样式 height: auto;，就得到了一张随着容器改变大小的响应式图片。</p>
 
@@ -416,14 +374,14 @@
 <pre><code>.Absolute-Center.is-Image {
   height: auto;
 }
-
+ 
 .Absolute-Center.is-Image img { 
   width: 100%;
   height: auto;
 }
 </code></pre>
 
-<h3>可变高度</h3>
+<h3 id="section-10">可变高度</h3>
 
 <p>“完全居中”法的确需要声明容器高度，但是高度受max-height样式的影响，也可以是百分比。这非常适合响应式的方案，只需要设置好带溢出内容就行。</p>
 
@@ -434,12 +392,11 @@
 <p>注意要点：这种方法会破坏浏览器兼容性，如果Modernizr测试不能满足你的需求，你可能需要考虑其他的实现方案。</p>
 
 <ul>
-<li>与大小可调整技术是不兼容的</li>
-<li><strong>Firefox/IE8</strong>中使用display: table，内容区在垂直方向靠上，水平方向仍然居中。</li>
-<li><strong>IE9/10</strong>中使用display: table，内容区会跑到左上角。</li>
-<li><strong>移动版</strong><strong>Safari</strong>中内容区是水平对齐的，但是如果使用了百分比的宽度，水平方向上会稍稍偏离中心。</li>
+  <li>与大小可调整技术是不兼容的</li>
+  <li><strong>Firefox/IE8</strong>中使用display: table，内容区在垂直方向靠上，水平方向仍然居中。</li>
+  <li><strong>IE9/10</strong>中使用display: table，内容区会跑到左上角。</li>
+  <li><strong>移动版</strong><strong>Safari</strong>中内容区是水平对齐的，但是如果使用了百分比的宽度，水平方向上会稍稍偏离中心。</li>
 </ul>
-
 
 <p><strong>Javascript:</strong></p>
 
@@ -457,11 +414,11 @@ Modernizr.testStyles('#modernizr { display: table; height: 50px; width: 50px; ma
 }
 </code></pre>
 
-<h2>其他方法</h2>
+<h2 id="section-11">其他方法</h2>
 
 <p>“完全居中”法是解决居中问题的好方法，同时也有许多可以满足不同需求的其他方法。最常见的，推荐的方法有负margin值、transform法、table-cell法、inline-block法、以及现在出现的Flexbox法，这些方法其他文章都有深入介绍，所以这里只会稍稍提及。</p>
 
-<h3>负margin值</h3>
+<h3 id="margin">负margin值</h3>
 
 <p>这或许是最常用的方法。如果知道了各个元素的大小，设置等于宽高一半大小的负margin值（如果没有使用box-sizing:
 border-box样式，还需要加上padding值），再配合top: 50%; left:
@@ -485,21 +442,19 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 <p>好处：</p>
 
 <ul>
-<li>浏览器兼容性非常好，甚至支持IE6-7</li>
-<li>需要的编码量很少</li>
+  <li>浏览器兼容性非常好，甚至支持IE6-7</li>
+  <li>需要的编码量很少</li>
 </ul>
-
 
 <p>同时注意：</p>
 
 <ul>
-<li>这是个非响应式的方法，不能使用百分比的大小，也不能设置min-/max-的最大值最小值。</li>
-<li>内容可能会超出容器</li>
-<li>需要为padding预留空间，或者需要使用box-sizing: border-box样式。</li>
+  <li>这是个非响应式的方法，不能使用百分比的大小，也不能设置min-/max-的最大值最小值。</li>
+  <li>内容可能会超出容器</li>
+  <li>需要为padding预留空间，或者需要使用box-sizing: border-box样式。</li>
 </ul>
 
-
-<h3>transform法</h3>
+<h3 id="transform">transform法</h3>
 
 <p>和“完全居中”法的好处一样，简单有效，同时支持可变高度。为内容指定带有厂商前缀的transform: translate(-50%,-50%)和top: 50%; left: 50%;样式就可以让内容块居中。</p>
 
@@ -519,22 +474,20 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 <p>好处：</p>
 
 <ul>
-<li>内容高度可变</li>
-<li>代码量小</li>
+  <li>内容高度可变</li>
+  <li>代码量小</li>
 </ul>
-
 
 <p>同时注意：</p>
 
 <ul>
-<li>不支持IE8</li>
-<li>需要写厂商前缀</li>
-<li>会和其他transform样式有冲突</li>
-<li>某些情况下的边缘和字体渲染会有问题</li>
+  <li>不支持IE8</li>
+  <li>需要写厂商前缀</li>
+  <li>会和其他transform样式有冲突</li>
+  <li>某些情况下的边缘和字体渲染会有问题</li>
 </ul>
 
-
-<h3>table-cell法</h3>
+<h3 id="table-cell">table-cell法</h3>
 
 <p>这种可能是最好的方法，因为高度可以随内容改变，浏览器支持也不差。主要缺陷是会产生额外的标签，每一个需要居中的元素需要三个额外的HTML标签。</p>
 
@@ -567,20 +520,18 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 <p>好处：</p>
 
 <ul>
-<li>内容高度可变</li>
-<li>内容溢出则能自动撑开父元素高度</li>
-<li>浏览器兼容性好</li>
+  <li>内容高度可变</li>
+  <li>内容溢出则能自动撑开父元素高度</li>
+  <li>浏览器兼容性好</li>
 </ul>
-
 
 <p>同时注意：</p>
 
 <ul>
-<li>需要额外的HTML标签</li>
+  <li>需要额外的HTML标签</li>
 </ul>
 
-
-<h3>inline-block法</h3>
+<h3 id="inline-block">inline-block法</h3>
 
 <p>迫切需要的方法：inline-block法居中。基本方法是使用 <code>display: inline-block</code>, <code>vertical-align: middle</code>样式和伪元素让内容块在容器中居中。我的实现用到了几个在其他地方见不到的新技巧解决了一些问题。</p>
 
@@ -607,19 +558,19 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
   text-align: center;
   overflow: auto;
 }
-
+ 
 .Center-Container.is-Inline:after,
 .is-Inline .Center-Block {
   display: inline-block;
   vertical-align: middle;
 }
-
+ 
 .Center-Container.is-Inline:after {
   content: '';
   height: 100%;
   margin-left: -0.25em; /* To offset spacing. May vary by font */
 }
-
+ 
 .is-Inline .Center-Block {
   max-width: 99%; /* Prevents issues with long content causes the content block to be pushed to the top */
   /* max-width: calc(100% - 0.25em) /* Only for IE9+ */
@@ -629,23 +580,21 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 <p>好处：</p>
 
 <ul>
-<li>内容高度可变</li>
-<li>内容溢出则能自动撑开父元素高度</li>
-<li>浏览器兼容性好，甚至可以调整支持IE7</li>
+  <li>内容高度可变</li>
+  <li>内容溢出则能自动撑开父元素高度</li>
+  <li>浏览器兼容性好，甚至可以调整支持IE7</li>
 </ul>
-
 
 <p>同时注意：</p>
 
 <ul>
-<li>需要额外容器</li>
-<li>依赖于margin-left:
+  <li>需要额外容器</li>
+  <li>依赖于margin-left:
 -0.25em的样式，做到水平居中，需要为不同的字体大小作调整</li>
-<li>内容区声明的宽度不能大于容器的100% 减去0.25em的宽度</li>
+  <li>内容区声明的宽度不能大于容器的100% 减去0.25em的宽度</li>
 </ul>
 
-
-<h3>Flexbox法</h3>
+<h3 id="flexbox">Flexbox法</h3>
 
 <p>CSS未来发展的方向就是采用Flexbox这种设计，解决像垂直居中这种共同的问题。请注意，Flexbox有不止一种办法居中，他也可以用来分栏，并解决奇奇怪怪的布局问题。</p>
 
@@ -673,21 +622,19 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 <p>好处：</p>
 
 <ul>
-<li>内容可以是任意高宽，溢出也能表现良好</li>
-<li>可以用于各种高级布局技巧</li>
+  <li>内容可以是任意高宽，溢出也能表现良好</li>
+  <li>可以用于各种高级布局技巧</li>
 </ul>
-
 
 <p>同时注意： 不支持IE8-9</p>
 
 <ul>
-<li>需要在body上写样式，或者需要额外容器</li>
-<li>需要各种厂商前缀兼容现代浏览器</li>
-<li>可能有潜在的性能问题</li>
+  <li>需要在body上写样式，或者需要额外容器</li>
+  <li>需要各种厂商前缀兼容现代浏览器</li>
+  <li>可能有潜在的性能问题</li>
 </ul>
 
-
-<h2>最后的建议</h2>
+<h2 id="section-12">最后的建议</h2>
 
 <p>各项技术都有各自的好处，采取什么样的方法，取决于你所支持的浏览器，以及现有标签的结构。请使用上面提供对照表帮你选出最符合你需要的方法。</p>
 
@@ -695,66 +642,81 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p>如果网站需要可变高度的内容，而且同时照顾到浏览器兼容性的话，可以尝试table-cell和inline-block技术，如果想尝试新鲜事物的话，可以使用Flexbox，并享受这种高级技术带来的好处。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-10-25" datetime="2013-10-25" pubdate>
-							<span class="year">2013-10-25</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="CSS"><a href="/tags.html#CSS-ref">CSS</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/46574/" target="_blank">http://blog.jobbole.com/46574/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/10/25/absolute-centering-in-CSS.html">http://http://uwebs.tk/archives/2013/10/25/absolute-centering-in-CSS.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>JavaScript的性能优化：加载和执行</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='JavaScript的性能优化：加载和执行'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / JavaScript的性能优化：加载和执行</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">JavaScript的性能优化：加载和执行</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>原文出处：<a href="http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html">蔡愉晟</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / JavaScript的性能优化：加载和执行</div>
+
+<article>
+	<h1><a href="/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html">JavaScript的性能优化：加载和执行</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-09-04</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>原文出处：<a href="http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html">蔡愉晟</a></p>
 
 <p><strong>简介：</strong> 随着 Web2.0 技术的不断推广，越来越多的应用使用 JavaScript 技术在客户端进行处理，从而使 JavaScript 在浏览器中的性能成为开发者所面临的最重要的可用性问题。而这个问题又因 JavaScript 的阻塞特性变的复杂，也就是说当浏览器在执行 JavaScript
 代码时，不能同时做其他任何事情。本文详细介绍了如何正确的加载和执行 JavaScript 代码，从而提高其在浏览器中的性能。</p>
@@ -84,11 +47,11 @@
 &lt;/html&gt;
 </code></pre>
 
-<p>当浏览器遇到&lt;script>标签时，当前 HTML 页面无从获知 JavaScript 是否会向&lt;p>标签添加内容，或引入其他元素，或甚至移除该标签。因此，这时浏览器会停止处理页面，先执行JavaScript代码，然后再继续解析和渲染页面。同样的情况也发生在使用 src 属性加载JavaScript的过程中，浏览器必须先花时间下载外链文件中的代码，然后解析并执行它。在这个过程中，页面渲染和用户交互完全被阻塞了。</p>
+<p>当浏览器遇到&lt;script&gt;标签时，当前 HTML 页面无从获知 JavaScript 是否会向&lt;p&gt;标签添加内容，或引入其他元素，或甚至移除该标签。因此，这时浏览器会停止处理页面，先执行JavaScript代码，然后再继续解析和渲染页面。同样的情况也发生在使用 src 属性加载JavaScript的过程中，浏览器必须先花时间下载外链文件中的代码，然后解析并执行它。在这个过程中，页面渲染和用户交互完全被阻塞了。</p>
 
 <p><strong>脚本位置</strong></p>
 
-<p>HTML 4 规范指出 &lt;script> 标签可以放在 HTML 文档的&lt;head>或&lt;body>中，并允许出现多次。Web 开发人员一般习惯在 &lt;head> 中加载外链的 JavaScript，接着用 &lt;link> 标签用来加载外链的 CSS 文件或者其他页面信息。例如清单 2</p>
+<p>HTML 4 规范指出 &lt;script&gt; 标签可以放在 HTML 文档的&lt;head&gt;或&lt;body&gt;中，并允许出现多次。Web 开发人员一般习惯在 &lt;head&gt; 中加载外链的 JavaScript，接着用 &lt;link&gt; 标签用来加载外链的 CSS 文件或者其他页面信息。例如清单 2</p>
 
 <p>清单 2 低效率脚本位置示例</p>
 
@@ -106,7 +69,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p>然而这种常规的做法却隐藏着严重的性能问题。在清单 2 的示例中，当浏览器解析到 &lt;script> 标签（第 4 行）时，浏览器会停止解析其后的内容，而优先下载脚本文件，并执行其中的代码，这意味着，其后的 styles.css 样式文件和&lt;body>标签都无法被加载，由于&lt;body>标签无法被加载，那么页面自然就无法渲染了。因此在该 JavaScript 代码完全执行完之前，页面都是一片空白。图 1 描述了页面加载过程中脚本和样式文件的下载过程。</p>
+<p>然而这种常规的做法却隐藏着严重的性能问题。在清单 2 的示例中，当浏览器解析到 &lt;script&gt; 标签（第 4 行）时，浏览器会停止解析其后的内容，而优先下载脚本文件，并执行其中的代码，这意味着，其后的 styles.css 样式文件和&lt;body&gt;标签都无法被加载，由于&lt;body&gt;标签无法被加载，那么页面自然就无法渲染了。因此在该 JavaScript 代码完全执行完之前，页面都是一片空白。图 1 描述了页面加载过程中脚本和样式文件的下载过程。</p>
 
 <p><strong>图 1 JavaScript 文件的加载和执行阻塞其他文件的下载</strong>\</p>
 
@@ -114,9 +77,9 @@
 
 <p>我们可以发现一个有趣的现象：第一个 JavaScript 文件开始下载，与此同时阻塞了页面其他文件的下载。此外，从 script1.js 下载完成到 script2.js 开始下载前存在一个延时，这段时间正好是 script1.js 文件的执行过程。每个文件必须等到前一个文件下载并执行完成才会开始下载。在这些文件逐个下载过程中，用户看到的是一片空白的页面。</p>
 
-<p>从 IE 8、Firefox 3.5、Safari 4 和 Chrome 2 开始都允许并行下载 JavaScript 文件。这是个好消息，因为&lt;script>标签在下载外部资源时不会阻塞其他&lt;script>标签。遗憾的是，JavaScript 下载过程仍然会阻塞其他资源的下载，比如样式文件和图片。尽管脚本的下载过程不会互相影响，但页面仍然必须等待所有 JavaScript 代码下载并执行完成才能继续。因此，尽管最新的浏览器通过允许并行下载提高了性能，但问题尚未完全解决，脚本阻塞仍然是一个问题。</p>
+<p>从 IE 8、Firefox 3.5、Safari 4 和 Chrome 2 开始都允许并行下载 JavaScript 文件。这是个好消息，因为&lt;script&gt;标签在下载外部资源时不会阻塞其他&lt;script&gt;标签。遗憾的是，JavaScript 下载过程仍然会阻塞其他资源的下载，比如样式文件和图片。尽管脚本的下载过程不会互相影响，但页面仍然必须等待所有 JavaScript 代码下载并执行完成才能继续。因此，尽管最新的浏览器通过允许并行下载提高了性能，但问题尚未完全解决，脚本阻塞仍然是一个问题。</p>
 
-<p>由于脚本会阻塞页面其他资源的下载，因此推荐将所有&lt;script>标签尽可能放到&lt;body>标签的底部，以尽量减少对整个页面下载的影响。例如清单 3</p>
+<p>由于脚本会阻塞页面其他资源的下载，因此推荐将所有&lt;script&gt;标签尽可能放到&lt;body&gt;标签的底部，以尽量减少对整个页面下载的影响。例如清单 3</p>
 
 <p>清单 3 推荐的代码放置位置示例</p>
 
@@ -135,7 +98,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p>这段代码展示了在 HTML 文档中放置&lt;script>标签的推荐位置。尽管脚本下载会阻塞另一个脚本，但是页面的大部分内容都已经下载完成并显示给了用户，因此页面下载不会显得太慢。这是优化 JavaScript 的首要规则：将脚本放在底部。</p>
+<p>这段代码展示了在 HTML 文档中放置&lt;script&gt;标签的推荐位置。尽管脚本下载会阻塞另一个脚本，但是页面的大部分内容都已经下载完成并显示给了用户，因此页面下载不会显得太慢。这是优化 JavaScript 的首要规则：将脚本放在底部。</p>
 
 <p><strong>　　组织脚本</strong></p>
 
@@ -198,7 +161,7 @@
 
 <p>文档对象模型（DOM）允许您使用 JavaScript 动态创建 HTML 的几乎全部文档内容。<code>&lt;script&gt;</code>元素与页面其他元素一样，可以非常容易地通过标准 DOM 函数创建：</p>
 
-<p>清单 6 通过标准 DOM 函数创建&lt;script>元素</p>
+<p>清单 6 通过标准 DOM 函数创建&lt;script&gt;元素</p>
 
 <pre><code>var script = document.createElement("script");
 script.type = "text/javascript";
@@ -227,13 +190,12 @@ document.getElementsByTagName("head")[0].appendChild(script);
 <p>Internet Explorer支持另一种实现方式，它发出一个 <code>readystatechange</code> 事件。<code>&lt;script&gt;</code>元素有一个<code>readyState</code> 属性，它的值随着下载外部文件的过程而改变。<code>readyState</code> 有五种取值：</p>
 
 <ul>
-<li>“uninitialized”：默认状态</li>
-<li>“loading”：下载开始</li>
-<li>“loaded”：下载完成</li>
-<li>“interactive”：下载完成但尚不可用</li>
-<li>“complete”：所有数据已经准备好</li>
+  <li>“uninitialized”：默认状态</li>
+  <li>“loading”：下载开始</li>
+  <li>“loaded”：下载完成</li>
+  <li>“interactive”：下载完成但尚不可用</li>
+  <li>“complete”：所有数据已经准备好</li>
 </ul>
-
 
 <p>微软文档上说，在<code>&lt;script&gt;</code>元素的生命周期中，<code>readyState</code> 的这些取值不一定全部出现，但并没有指出哪些取值总会被用到。实践中，我们最感兴趣的是“loaded”和“complete”状态。Internet Explorer 对这两个 <code>readyState</code> 值所表示的最终状态并不一致，有时<code>&lt;script&gt;</code>元素会得到“loader”却从不出现“complete”，但另外一些情况下出现“complete”而用不到“loaded”。最安全的办法就是在<code>readystatechange</code> 事件中检查这两种状态，并且当其中一种状态出现时，删除 <code>readystatechange</code> 事件句柄（保证事件不会被处理两次）：</p>
 
@@ -335,78 +297,92 @@ xhr.send(null);
 <p>减少 JavaScript 对性能的影响有以下几种方法：</p>
 
 <ul>
-<li>将所有的<code>&lt;script&gt;</code>标签放到页面底部，也就是<code>&lt;/body&gt;</code>闭合标签之前，这能确保在脚本执行前页面已经完成了渲染。</li>
-<li>尽可能地合并脚本。页面中的<code>&lt;script&gt;</code>标签越少，加载也就越快，响应也越迅速。无论是外链脚本还是内嵌脚本都是如此。</li>
-<li>采用无阻塞下载 JavaScript 脚本的方法：</li>
-<li>使用<code>&lt;script&gt;</code>标签的 defer 属性（仅适用于 IE 和 Firefox 3.5
+  <li>将所有的<code>&lt;script&gt;</code>标签放到页面底部，也就是<code>&lt;/body&gt;</code>闭合标签之前，这能确保在脚本执行前页面已经完成了渲染。</li>
+  <li>尽可能地合并脚本。页面中的<code>&lt;script&gt;</code>标签越少，加载也就越快，响应也越迅速。无论是外链脚本还是内嵌脚本都是如此。</li>
+  <li>采用无阻塞下载 JavaScript 脚本的方法：</li>
+  <li>使用<code>&lt;script&gt;</code>标签的 defer 属性（仅适用于 IE 和 Firefox 3.5
 以上版本）；</li>
-<li>使用动态创建的<code>&lt;script&gt;</code>元素来下载并执行代码；</li>
-<li>使用 XHR 对象下载 JavaScript 代码并注入页面中。</li>
+  <li>使用动态创建的<code>&lt;script&gt;</code>元素来下载并执行代码；</li>
+  <li>使用 XHR 对象下载 JavaScript 代码并注入页面中。</li>
 </ul>
-
 
 <p>通过以上策略，可以在很大程度上提高那些需要使用大量 JavaScript 的 Web 网站和应用的实际性能。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-09-04" datetime="2013-09-04" pubdate>
-							<span class="year">2013-09-04</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html" target="_blank">http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html">http://http://uwebs.tk/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>python realtime</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='python realtime'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / python realtime</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">python realtime</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h2>声明</h2>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / python realtime</div>
+
+<article>
+	<h1><a href="/archives/2014/08/05/python-realtime.html">python realtime</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2014-08-05</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h2 id="section">声明</h2>
 
 <p>本文是基于一篇英文文章翻译过来的。</p>
 
@@ -72,15 +35,15 @@
 
 <p>License：Creative Commons attribution-noncommercial-sharealike License</p>
 
-<h2>简介</h2>
+<h2 id="section-1">简介</h2>
 
 <p>最近我参与了 <a href="http://www.kickstarter.com/projects/1223051718/practical-flask-book-project">Flask book</a>的一次聚会,涉及到些realtime相关的问题-它是如何工作的，如何整合实时部分与传统的WSGI应用，如何组织应用程序代码等。</p>
 
 <p>我们使用Google Hangouts，原本打算将我们的Hangouts视频录下来，但失败了。所以，我决定还是写一篇详尽的博客文章，其中包括一些基础知识，以及简短的介绍用Python异步编程等。</p>
 
-<h2>一点理论知识</h2>
+<h2 id="section-2">一点理论知识</h2>
 
-<p>让我们尝试解决服务器"推送"的问题。web都是拉取数据 - 浏览器发出请求到服务器，服务器会产生并发送回响应。但是，如果有需要将数据主动从服务器推送到浏览器该怎么办呢？</p>
+<p>让我们尝试解决服务器”推送”的问题。web都是拉取数据 - 浏览器发出请求到服务器，服务器会产生并发送回响应。但是，如果有需要将数据主动从服务器推送到浏览器该怎么办呢？</p>
 
 <p>解决方法很简单：浏览器发出AJAX请求到服务器，并要求更新。虽然看起来这个是常用浏览器和服务器之间推送办法，但有一个问题:</p>
 
@@ -96,7 +59,7 @@
 
 <p>HTTP/1.1还引入了<a href="http://wikipedia.org/wiki/Chunked_transfer_encoding">块传输协议</a> 。它允许将响应分解为成更小的数据块，并将它们立即发送到客户端，而不是一直等到完成HTTP请求。</p>
 
-<p>不幸的是，有些不兼容这个功能的代理服务器还是试图在转发之前缓存整个响应，所以客户端将不会收到任何数据，直到代理认为HTTP请求已经完成。虽然看起来web还是能"正常"工作 - 因为客户端最终还是会得到来自服务器的响应，但它打破了为实时而设计的块传输协议的整体思路。</p>
+<p>不幸的是，有些不兼容这个功能的代理服务器还是试图在转发之前缓存整个响应，所以客户端将不会收到任何数据，直到代理认为HTTP请求已经完成。虽然看起来web还是能”正常”工作 - 因为客户端最终还是会得到来自服务器的响应，但它打破了为实时而设计的块传输协议的整体思路。</p>
 
 <p>Opera在2006年9月，为它的浏览器实现了实验性的<a href="http://en.wikipedia.org/wiki/Server-sent_events">服务事件发送</a> 功能。虽然SSE和块传输协议很相似，但还是是不同的协议，而且有更好的客户端API。</p>
 
@@ -105,20 +68,19 @@
 <p>还有其他的技术，比如<a href="http://cometdaily.com/2007/11/05/the-forever-frame-technique/">forever-iframe</a>。 这是两种可以为Internet Explorer版本低于8做跨域推送的技术之一（另一个是<a href="http://en.wikipedia.org/wiki/JSONP">jsonp</a> -polling），以及<a href="http://cometdaily.com/2007/10/25/http-streaming-and-internet-explorer/">HTMLFILE</a>
 等</p>
 
-<p>总之，所有这些基于HTTP的折中方案都可以叫做<a href="http://en.wikipedia.org/wiki/Comet_(programming">Comet</a> 。</p>
+<p>总之，所有这些基于HTTP的折中方案都可以叫做[Comet](http://en.wikipedia.org/wiki/Comet_(programming) 。</p>
 
 <p>让我们来看看这些方法的利弊：</p>
 
 <ul>
-<li>长轮询（Long-polling）是昂贵的，但兼容性很好。</li>
-<li>块传输协议效率更高，但有可能不是所有客户端都能正常工作，并且如果没有某种形式的探测你都无法发现这个问题的存在。</li>
-<li>SSE也不错，但不是所有的浏览器都支持。比较好的是有办法在建立连接前就知道它是否支持。</li>
+  <li>长轮询（Long-polling）是昂贵的，但兼容性很好。</li>
+  <li>块传输协议效率更高，但有可能不是所有客户端都能正常工作，并且如果没有某种形式的探测你都无法发现这个问题的存在。</li>
+  <li>SSE也不错，但不是所有的浏览器都支持。比较好的是有办法在建立连接前就知道它是否支持。</li>
 </ul>
-
 
 <p>但是，所有这些方法都有一个问题：他们都只提供一种方式将数据从服务器推送到客户端，而不是在建立双向通信，客户端每次想发送一些数据的时候，将不得不使用AJAX请求到服务器。这样会增加延迟，并在服务器也会产生额外的负载。</p>
 
-<h2>邂逅WebSockets</h2>
+<h2 id="websockets">邂逅WebSockets</h2>
 
 <p>虽然WebSockets的不是什么新技术，但经历了几个不兼容的迭代后该规范终于通过了，RFC编号：<a href="http://tools.ietf.org/html/rfc6455">RFC-6455</a>。</p>
 
@@ -134,15 +96,15 @@
 
 <p>无论如何，WebSocket的来建立客户端和服务器端之间的双向通信是最好的方式，但不能单一的用来解决推送问题。</p>
 
-<h2>用例</h2>
+<h2 id="section-3">用例</h2>
 
 <p>鉴于以上情况，如果您的应用程序大多是从服务器推送数据，基于HTTP的传输会工作得很好。</p>
 
 <p>但是，如果浏览器支持WebSocket的传输并且WebSocket的连接是可以建立的，它将是更好的选择。</p>
 
-<p>总而言之，最好的办法是：尝试打开的WebSocket连接，如果失败 - 尝试回退到基于HTTP传输。 当然也有可以"升级"连接 - 首先使用长轮询（long-polling），然后尝试建立WebSocket的连接。如果成功，就切换到WebSocket的连接。虽然这种做法可能会降低初始连接的时间，需要注意服务器端实现，以避免但在两者连接之间切换时发生任何的跳变情况（race conditions）。</p>
+<p>总而言之，最好的办法是：尝试打开的WebSocket连接，如果失败 - 尝试回退到基于HTTP传输。 当然也有可以”升级”连接 - 首先使用长轮询（long-polling），然后尝试建立WebSocket的连接。如果成功，就切换到WebSocket的连接。虽然这种做法可能会降低初始连接的时间，需要注意服务器端实现，以避免但在两者连接之间切换时发生任何的跳变情况（race conditions）。</p>
 
-<h2>Polyfill库</h2>
+<h2 id="polyfill">Polyfill库</h2>
 
 <p>幸运的是，你没有必要自己实现这一切。为所有已知的浏览器提供变通方案，搞定代理和防火墙的奇怪问题，尤其是从头开始搞这些事情，是非常困难的。已经有人投入人多年的工作使他们的解决方案尽可能稳定。</p>
 
@@ -156,7 +118,7 @@
 
 <p>不幸的是，在使用Socket.IO 0.8.x的时候有较差的体验。我一般在我自己的项目中使用<a href="https://github.com/mrjoes/sockjs-tornado">sockjs-tornado</a>，即使我自己写了 TornadIO2](https://github.com/mrjoes/tornadio2) 。Socket.IO早期的server实现是基于 <a href="http://tornadoweb.org/">Tornado</a> 的。</p>
 
-<h2>服务器端</h2>
+<h2 id="section-4">服务器端</h2>
 
 <p>让我们回到Python。</p>
 
@@ -165,11 +127,10 @@
 <p>让我们再次回顾长轮询（long-polling）传输：</p>
 
 <ul>
-<li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
-<li>无可用数据，服务器保持连接打开并等待数据发送</li>
-<li>因为服务器无法处理任何其他请求，一切都被阻塞</li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
+  <li>无可用数据，服务器保持连接打开并等待数据发送 </li>
+  <li>因为服务器无法处理任何其他请求，一切都被阻塞 </li>
 </ul>
-
 
 <p>用伪代码，它会看起来像这样：</p>
 
@@ -189,21 +150,19 @@
 <p>在这种情况下，长轮询（long-polling）传输将看起来像这样：</p>
 
 <ul>
-<li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
-<li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西</li>
-<li>当有数据要发送时，服务器发送数据然后关闭连接</li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
+  <li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西 </li>
+  <li>当有数据要发送时，服务器发送数据然后关闭连接 </li>
 </ul>
 
-
-<h2>Greenlets</h2>
+<h2 id="greenlets">Greenlets</h2>
 
 <p>在Python中有两种方法编写异步代码：</p>
 
 <ul>
-<li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets）</li>
-<li>使用<a href="http://en.wikipedia.org/wiki/Callback_(computer_programming">回调</a></li>
+  <li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets） </li>
+  <li>使用[回调](http://en.wikipedia.org/wiki/Callback_(computer_programming)</li>
 </ul>
-
 
 <p>简而言之，greenlets让你写出能在执行过程中暂停的功能，然后还可以继续执行。</p>
 
@@ -212,12 +171,11 @@
 <p>让我们再次看看长轮询（long-polling）的例子，这次基于greenlets：</p>
 
 <ul>
-<li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
-<li>服务器启动新的greenlet用来处理长轮询逻辑</li>
-<li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能</li>
-<li>当有数据要发生的时候，greenlet唤醒，发送数据然后关闭连接</li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
+  <li>服务器启动新的greenlet用来处理长轮询逻辑 </li>
+  <li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能 </li>
+  <li>当有数据要发生的时候，greenlet唤醒，发送数据然后关闭连接</li>
 </ul>
-
 
 <p>用伪代码，它看起来和同步版本完全一样：</p>
 
@@ -242,17 +200,16 @@
 
 <p>基于greenlets的代码实现方式也不太像线程。因为他更容易造成死锁，代码实现中调用者其实并不希望调用的函数去暂停greenlet，但是这个函数却把greenlet暂停了，调用者将没有机会释放锁。</p>
 
-<h2>回调</h2>
+<h2 id="section-5">回调</h2>
 
 <p>做上下文切换的另一种方法是使用回调。以长轮询（long-polling）为例：</p>
 
 <ul>
-<li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
-<li>服务器发现有没有数据发送</li>
-<li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数</li>
-<li>服务器发送响应的回调函数，并关闭连接</li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
+  <li>服务器发现有没有数据发送 </li>
+  <li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数 </li>
+  <li>服务器发送响应的回调函数，并关闭连接</li>
 </ul>
-
 
 <p>在伪代码：</p>
 
@@ -265,30 +222,28 @@ def on_data(request):
 
 <p>正如你看到的，工作流是相似的，但代码结构有所不同。</p>
 
-<p>不幸的是，回调不是很直观，而且调试基于回调的大型应用程序简直就是个噩梦。此外，这种方式很难让现有的"阻塞"类库与异步应用一起使用，除非做一些重写或使用某种形式的线程池。例如， <a href="http://motor.readthedocs.org/en/stable/">Motor</a>，为Tornado用混合方式实现的异步MongoDB的驱动程序-它用greenlets封装了IO，但提供了与Tornado兼容的异步API。</p>
+<p>不幸的是，回调不是很直观，而且调试基于回调的大型应用程序简直就是个噩梦。此外，这种方式很难让现有的”阻塞”类库与异步应用一起使用，除非做一些重写或使用某种形式的线程池。例如， <a href="http://motor.readthedocs.org/en/stable/">Motor</a>，为Tornado用混合方式实现的异步MongoDB的驱动程序-它用greenlets封装了IO，但提供了与Tornado兼容的异步API。</p>
 
-<h2>Futures</h2>
+<h2 id="futures">Futures</h2>
 
 <p>有不同的方法来完善使用回调的情况：</p>
 
 <ul>
-<li>使用futures</li>
-<li>使用generators</li>
+  <li>使用futures </li>
+  <li>使用generators</li>
 </ul>
-
 
 <p>什么是Futures？首先，Futures是一个函数的返回值，它是一个对象，它有以下几个属性：</p>
 
 <ul>
-<li>函数执行的状态（idling, running，停止等）</li>
-<li>返回值（如果函数尚未执行，可能是空的）</li>
-<li>各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</li>
+  <li>函数执行的状态（idling, running，停止等）  </li>
+  <li>返回值（如果函数尚未执行，可能是空的）  </li>
+  <li>各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</li>
 </ul>
-
 
 <p>您可以看看这篇优秀的<a href="http://blog.jcoglan.com/2013/03/30/callbacks-are-imperative-promises-are-functional-nodes-biggest-missed-opportunity/">博客文章</a>，其中比较了promises和回调，以及为什么对于写更好的异步代码来说promises优于纯写回调。</p>
 
-<h2>Generators</h2>
+<h2 id="generators">Generators</h2>
 
 <p>Python生成器也可让写异步程序的程序员更快乐一点。我们还是看长轮询的例子，但这次我们基于生成器（请注意，从Python 3.3开始会允许从生成器返回值）：</p>
 
@@ -318,19 +273,19 @@ def process_request(request):
 
 <p>另一个问题 - 如果有必要使现有的函数异步，它的所有的调用者都应更新。</p>
 
-<h2>总结</h2>
+<h2 id="section-6">总结</h2>
 
-<p>Greenlets使一切变得"容易"，但其代价是你可能遇到问题，并要允许隐式上下文切换。</p>
+<p>Greenlets使一切变得”容易”，但其代价是你可能遇到问题，并要允许隐式上下文切换。</p>
 
 <p>使用回调的代码非常的乱。Futures使得情况有所改善。生成器使代码更易于阅读。</p>
 
-<p>使用Python编写异步应用程序,似乎"官方"推荐的方式是使用回调/Futures/生成器，而不是greenlets。请参阅<a href="http://www.python.org/dev/peps/pep-3156/">PEP 3156</a> 。</p>
+<p>使用Python编写异步应用程序,似乎”官方”推荐的方式是使用回调/Futures/生成器，而不是greenlets。请参阅<a href="http://www.python.org/dev/peps/pep-3156/">PEP 3156</a> 。</p>
 
 <p>当然，没有什么会阻止您使用greenlet框架。有选择是件好事。</p>
 
 <p>我更喜欢明确的上下文切换，因为在花了几个晚上生产环境中使用gdb搞清楚奇怪的解释器崩溃问题后，我对greenlets变得比较谨慎了。</p>
 
-<h2>异步框架</h2>
+<h2 id="section-7">异步框架</h2>
 
 <p>在大多数的情况下，完全没有必要写自己的异步网络层，应该更好地利用现有的框架。在这里我就不一一列举所有的Python异步框架，我只说工作中使用的一个，所以不会对其他框架有所冒犯。</p>
 
@@ -341,20 +296,19 @@ def process_request(request):
 <p>3,Tornado是的我最终选择的框架。有几个原因：</p>
 
 <ul>
-<li>快</li>
-<li>可预测的</li>
-<li>更符合Python的风格</li>
-<li>相对较小</li>
-<li>开发活跃</li>
-<li>源代码很容易阅读和理解</li>
+  <li>快 </li>
+  <li>可预测的 </li>
+  <li>更符合Python的风格 </li>
+  <li>相对较小 </li>
+  <li>开发活跃 </li>
+  <li>源代码很容易阅读和理解</li>
 </ul>
-
 
 <p>Tornado没有Twisted大，并且没有一些同步调用库的异步移植（主要是DB方面），但附带了Twisted reactor，所以它是可以在Tornado的基础上使用为Twisted编写的模块。</p>
 
 <p>我会基于Tornado来解释后面所有的例子，但我敢肯定，类似的抽象同样可以用于其他框架。</p>
 
-<h2>Tornado</h2>
+<h2 id="tornado">Tornado</h2>
 
 <p>Tornado的结构是非常简单的。有一个主循环（称为IOLoop）。IOLoop检查socket，文件描述符等的IO事件（借助 epoll， kqueue或select），并管理基于时间的回调函数。当有IO事件发生，Tornado调用注册的回调函数。</p>
 
@@ -394,21 +348,20 @@ def process_request(request):
 <p>逻辑是非常简单的：</p>
 
 <ul>
-<li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open</li>
-<li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。</li>
-<li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者</li>
-<li>如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</li>
+  <li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open </li>
+  <li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。 </li>
+  <li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者 </li>
+  <li>如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</li>
 </ul>
-
 
 <p>客户端的完整的例子可以在<a href="https://github.com/mrjoes/sockjs-tornado/blob/master/examples/chat/chat.py">这里找到</a>
 。</p>
 
-<h2>管理状态</h2>
+<h2 id="section-8">管理状态</h2>
 
 <p>服务器端的session是状态的一个例子。如果服务器需要某种先行数据才能处理请求，那服务器是状态相关的。</p>
 
-<p>状态增加了复杂性 - 它消耗内存，它使伸缩更加困难。例如，如果没有共享的session状态，客户只能和集群中的一台服务器"说话"。共享会话状态 - 在为每一个请求从存储中获取状态的时候，每一次数据交换会有额外的IO开销。</p>
+<p>状态增加了复杂性 - 它消耗内存，它使伸缩更加困难。例如，如果没有共享的session状态，客户只能和集群中的一台服务器”说话”。共享会话状态 - 在为每一个请求从存储中获取状态的时候，每一次数据交换会有额外的IO开销。</p>
 
 <p>不幸的是，无状态的Comet服务器是不可能实现。为了保持逻辑连接，需要一些会话状态来确保数据在客户端之间数据不会丢失。</p>
 
@@ -422,17 +375,16 @@ def process_request(request):
 
 <p>由于网络层是有状态的，运行在应用程序前面负载均衡程序为了满足实时连接将使用粘性sessions（客户端应该每次去到相同的服务器）。</p>
 
-<h2>与WSGI应用集成</h2>
+<h2 id="wsgi">与WSGI应用集成</h2>
 
 <p>显然，使用新的异步框架重写现有的Web站点是不太可行的。但是可以让他们共存。</p>
 
 <p>有两种方法来整合实时部分：</p>
 
 <ul>
-<li>在同一进程</li>
-<li>不在同一进程</li>
+  <li>在同一进程 </li>
+  <li>不在同一进程</li>
 </ul>
-
 
 <p>如果使用GEVENT，它是可以使WSGI应用与实时部分共存于相同的进程。如果使用tornado和其他基于回调的框架，尽管实时部分有可能运行在相同的进程中单独的线程，但是不被推荐这样做，这有性能方面的问题（由于GIL ）。</p>
 
@@ -446,7 +398,7 @@ def process_request(request):
 
 <p>在这篇文章中我们将分析简单的推送broker架构。</p>
 
-<h2>组织你的代码</h2>
+<h2 id="section-9">组织你的代码</h2>
 
 <p>我会用Flask作为一个例子，但同样可以应用到任何其他的框架（Django，Pyramid等）。</p>
 
@@ -458,7 +410,7 @@ def process_request(request):
 
 <p>让我们看看一些用例。</p>
 
-<h2>推送broker</h2>
+<h2 id="broker">推送broker</h2>
 
 <p>Broker接受从Flask应用发来的消息，并将其转发到已连接的客户端。有很多现成可以使用的broker服务（ PubNub ，Pusher及一些其他的或自托管解决方案，如Hookbox ），但由于某种原因你可能要搭建自己的。</p>
 
@@ -496,9 +448,9 @@ if __name__ == '__main__':
 
 <p><img src="/assets/files/2014-08/push-servers.png" alt="" /></p>
 
-<h2>游戏</h2>
+<h2 id="section-10">游戏</h2>
 
-<p>让我们为一个"典型"的纸牌游戏做个架构草案。</p>
+<p>让我们为一个”典型”的纸牌游戏做个架构草案。</p>
 
 <p>假设，有一桌子，一组玩家在玩同一个游戏。桌子可能包含可见牌和桌面的信息。 每个玩家有其内部状态 - 手上牌的列表，以及一些身份验证数据。</p>
 
@@ -507,15 +459,14 @@ if __name__ == '__main__':
 <p>让我们弄清楚我们需要什么样的消息：</p>
 
 <ul>
-<li>验证</li>
-<li>错误处理</li>
-<li>房间列表</li>
-<li>加入的房间</li>
-<li>摸牌</li>
-<li>出牌</li>
-<li>离开房间</li>
+  <li>验证</li>
+  <li>错误处理</li>
+  <li>房间列表</li>
+  <li>加入的房间</li>
+  <li>摸牌</li>
+  <li>出牌</li>
+  <li>离开房间</li>
 </ul>
-
 
 <p>认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：</p>
 
@@ -595,7 +546,7 @@ if __name__ == '__main__':
 
 <p>我已经说过了，分布式应用程序的伸缩性就看 ** 状态管理是否高效 ** 。</p>
 
-<h2>部署</h2>
+<h2 id="section-11">部署</h2>
 
 <p>把Flask和Tornado放到负载均衡的后面（如haproxy）或反向代理服务器（即nginx是个不错的想法，但要使用最新有WebSocket协议的支持的版本）。</p>
 
@@ -604,44 +555,53 @@ if __name__ == '__main__':
 <p>1, 把Web和实时部分都运行在相同的主机和端口，并使用基于URL路由分发</p>
 
 <ul>
-<li><p>优点</p>
+  <li>
+    <p>优点 </p>
 
-<p>所有的事情看起来是一致的<br/>
-无需担心跨域脚本问题<br/>
-一般可以工作在有防火墙限制的环境</p></li>
-<li><p>缺点</p>
+    <p>所有的事情看起来是一致的<br />
+无需担心跨域脚本问题<br />
+一般可以工作在有防火墙限制的环境</p>
+  </li>
+  <li>
+    <p>缺点 </p>
 
-<p>一些透明HTTP代理服务器不兼容</p></li>
+    <p>一些透明HTTP代理服务器不兼容</p>
+  </li>
 </ul>
 
-
-<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口</p>
+<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口 </p>
 
 <ul>
-<li><p>优点</p>
+  <li>
+    <p>优点 </p>
 
-<p>和透明代理更加兼容</p></li>
-<li><p>缺点</p>
+    <p>和透明代理更加兼容 </p>
+  </li>
+  <li>
+    <p>缺点 </p>
 
-<p>跨域脚本问题（不是每个浏览器都支持CORS ）<br/>
-很有可能被防火墙阻止</p></li>
+    <p>跨域脚本问题（不是每个浏览器都支持CORS ）<br />
+很有可能被防火墙阻止 </p>
+  </li>
 </ul>
 
-
-<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com）</p>
+<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com） </p>
 
 <ul>
-<li><p>优点</p>
+  <li>
+    <p>优点 </p>
 
-<p>可以将实时部分从主站点分离出来（无需使用相同的负载均衡）</p></li>
-<li><p>缺点</p>
+    <p>可以将实时部分从主站点分离出来（无需使用相同的负载均衡）</p>
+  </li>
+  <li>
+    <p>缺点 </p>
 
-<p>跨域脚本问题<br/>
-会碰到行为古怪的透明代理</p></li>
+    <p>跨域脚本问题<br />
+会碰到行为古怪的透明代理</p>
+  </li>
 </ul>
 
-
-<h2>现实生活中的经验</h2>
+<h2 id="section-12">现实生活中的经验</h2>
 
 <p>我看到过一些使用sockjs-tornado的成功案例：<a href="http://blog.playbuildy.com/">PlayBuildy</a> <a href="http://blog.pythonanywhere.com/27/">PythonAnywhere</a> 和其他的。</p>
 
@@ -673,7 +633,7 @@ if __name__ == '__main__':
 
 <p>更新（2013年7月2日）： <a href="http://www.techempower.com/">TechEmpower</a>发布了他们的<a href="http://www.techempower.com/benchmarks/#section=data-r6&amp;hw=ec2&amp;test=json">第6轮</a>的框架基准测试，新版本的Tornado更快了，或与node.js有的一比。</p>
 
-<h2>备注：</h2>
+<h2 id="section-13">备注：</h2>
 
 <p>虽然有人可能会争辩说，要编写出可伸缩的服务器，Python并不是最好的语言。当然， Erlang的已经有内建的工具来写高效和可扩展的应用程序（而且也有<a href="https://github.com/sockjs/sockjs-erlang">sockjs-erlang</a> ），但是要找到erlang的开发人员是比较困难的。Clojure和Scala也是不错的选项，但Java是完全不同的世界，有自己的类库，方法论和约定。找到不错的Clojure开发者仍然比找到好的Python开发者很难很多。<a href="http://golang.org/">Go</a> 也不错，但他是相当年轻的语言接受程度还不高。</p>
 
@@ -683,66 +643,81 @@ if __name__ == '__main__':
 
 <p>P.S. 图表是在 <a href="http://draw.io/">draw.io</a> 上完成的-我不得不提一下这个优秀且免费的服务。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2014-08-05" datetime="2014-08-05" pubdate>
-							<span class="year">2014-08-05</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://taokeqin.com/python-realtime.html" target="_blank">http://taokeqin.com/python-realtime.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2014/08/05/python-realtime.html">http://http://uwebs.tk/archives/2014/08/05/python-realtime.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

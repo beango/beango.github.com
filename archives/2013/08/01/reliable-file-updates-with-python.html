@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>使用 Python 进行稳定可靠的文件操作</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='使用 Python 进行稳定可靠的文件操作'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 使用 Python 进行稳定可靠的文件操作</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">使用 Python 进行稳定可靠的文件操作</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>原文出处：<a href="http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/">ckauhaus</a>   
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 使用 Python 进行稳定可靠的文件操作</div>
+
+<article>
+	<h1><a href="/archives/2013/08/01/reliable-file-updates-with-python.html">使用 Python 进行稳定可靠的文件操作</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-08-01</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>原文出处：<a href="http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/">ckauhaus</a>   
 译文出处：<a href="http://www.oschina.net/translate/reliable-file-updates-with-python">oschina</a></p>
 
 <p>程序需要更新文件。虽然大部分程序员知道在执行I/O的时候会发生不可预期的事情，但是我经常看到一些异常幼稚的代码。在本文中，我想要分享一些如何在Python代码中改善I/O可靠性的见解。</p>
@@ -81,29 +44,27 @@ with open(filename, 'w') as f:
 <p>这是我看过的失效模式的例子：</p>
 
 <ul>
-<li>失控的服务器进程溢出大量日志，磁盘被填满。write()在截断文件之后抛出异常，文件将会变成空的。</li>
-<li>应用的几个实例并行执行。在各个实例结束之后，因为混合了多个实例的输出，文件内容最终变成了天书。</li>
-<li>在完成了写操作之后，应用会触发一些后续操作。几秒钟后断电。在我们重启了服务器之后，我们再一次看到了旧的文件内容。已经传递给其它应用的数据与我们在文件中看到的不再一致。</li>
+  <li>失控的服务器进程溢出大量日志，磁盘被填满。write()在截断文件之后抛出异常，文件将会变成空的。</li>
+  <li>应用的几个实例并行执行。在各个实例结束之后，因为混合了多个实例的输出，文件内容最终变成了天书。</li>
+  <li>在完成了写操作之后，应用会触发一些后续操作。几秒钟后断电。在我们重启了服务器之后，我们再一次看到了旧的文件内容。已经传递给其它应用的数据与我们在文件中看到的不再一致。</li>
 </ul>
-
 
 <p>下面没有什么新的内容。本文的目的是为在系统编程方面缺少经验的Python开发者提供常见的方法和技术。我将会提供代码例子，使得开发者可以很容易的将这些方法应用到自己的代码中。</p>
 
-<h2>“可靠性”意味着什么？</h2>
+<h2 id="section">“可靠性”意味着什么？</h2>
 
 <p>广义的讲，可靠性意味着在所有规定的条件下操作都能执行它所需的函数。至于文件的操作，这个函数就是创建，替换或者追加文件的内容的问题。这里可以从数据库理论上获得灵感。经典的事务模型的ACID性质作为指导来提高可靠性。</p>
 
 <p>开始之前，让我们先看看我们的例子怎样和ACID4个性质扯上关系：</p>
 
 <ul>
-<li><strong>原子性(Atomicity)</strong>要求这个事务要么完全成功，要么完全失败。在上面的实例中，磁盘满了可能导致部分内容写入文件。另外，如果正当在写入内容时其它程序又在读取文件，它们可能获得是部分完成的版本，甚至会导致写错误</li>
-<li><strong>一致性(Consistency)</strong>?表示操作必须从系统的一个状态到另一个状态。一致性可以分为两部分：内部和外部一致性。内部一致性是指文件的数据结构是一致的。外部一致性是指文件的内容与它相关的数据是相符合的。在这个例子中，因为我们不了解这个应用，所以很难推断是否符合一致性。但是因为一致性需要原子性，我们至少可以说没有保证内部一致性。</li>
-<li><strong>隔离性(Isolation)</strong>如果在并发的执行事务中，多个相同的事务导致了不同的结果，就违反了隔离性。很明显上面的代码对操作失败或者其它<a href="http://drtom.ch/posts/2011/11/12/The_Lost_Update_Problem_-_Part_1/">隔离性失败</a>都没有保护。</li>
-<li><strong>持久性(Durability)</strong>意味着改变是持久不变的。在我们告诉用户成功之前，我们必须确保我们的数据存储是可靠的并且不只是一个写缓存。上面的代码已经成功写入数据的前提是假设我们调用write()函数，磁盘I/O就立即执行。但是POSIX标准是不保证这个假设的。</li>
+  <li><strong>原子性(Atomicity)</strong>要求这个事务要么完全成功，要么完全失败。在上面的实例中，磁盘满了可能导致部分内容写入文件。另外，如果正当在写入内容时其它程序又在读取文件，它们可能获得是部分完成的版本，甚至会导致写错误</li>
+  <li><strong>一致性(Consistency)</strong>?表示操作必须从系统的一个状态到另一个状态。一致性可以分为两部分：内部和外部一致性。内部一致性是指文件的数据结构是一致的。外部一致性是指文件的内容与它相关的数据是相符合的。在这个例子中，因为我们不了解这个应用，所以很难推断是否符合一致性。但是因为一致性需要原子性，我们至少可以说没有保证内部一致性。</li>
+  <li><strong>隔离性(Isolation)</strong>如果在并发的执行事务中，多个相同的事务导致了不同的结果，就违反了隔离性。很明显上面的代码对操作失败或者其它<a href="http://drtom.ch/posts/2011/11/12/The_Lost_Update_Problem_-_Part_1/">隔离性失败</a>都没有保护。</li>
+  <li><strong>持久性(Durability)</strong>意味着改变是持久不变的。在我们告诉用户成功之前，我们必须确保我们的数据存储是可靠的并且不只是一个写缓存。上面的代码已经成功写入数据的前提是假设我们调用write()函数，磁盘I/O就立即执行。但是POSIX标准是不保证这个假设的。</li>
 </ul>
 
-
-<h2>尽可能使用数据库系统</h2>
+<h2 id="section-1">尽可能使用数据库系统</h2>
 
 <p>如果我们能够获得ACID
 四个性质，那么我们增加可靠性方面取得了长远发展。但是这需要很大的编码功劳。为什么重复发明轮子？大多数数据库系统已经有ACID事务了。</p>
@@ -113,17 +74,16 @@ with open(filename, 'w') as f:
 <p>文章本该在这里就结束的，但是还有一些有根有据的原因，就是不使用数据。它们通常是文件格式或者文件位置约束。这两个在数据库系统中都不好控制。理由如下：</p>
 
 <ul>
-<li>我们必须处理其它应用产生的固定格式或者在固定位置的文件，</li>
-<li>我们必须为了其它应用的消耗而写文件（和应用了同样的限制条件）</li>
-<li>我们的文件必须方便人阅读或者修改。</li>
+  <li>我们必须处理其它应用产生的固定格式或者在固定位置的文件，</li>
+  <li>我们必须为了其它应用的消耗而写文件（和应用了同样的限制条件）</li>
+  <li>我们的文件必须方便人阅读或者修改。</li>
 </ul>
-
 
 <p>…等等。你懂的。</p>
 
 <p>如果我们自己动手实现可靠的文件更新，那么这里有一些编程技术供参考。下面我将展示四种常见的操作文件更新模式。在那之后，我会讨论采取哪些步骤在每个文件更新模式下满足ACID性质。</p>
 
-<h2>文件更新模式</h2>
+<h2 id="section-2">文件更新模式</h2>
 
 <p>文件可以以多种方式更新，但是我认为至少有四种常见的模式。这四种模式将做为本文剩余部分的基础。</p>
 
@@ -195,7 +155,7 @@ with os.fdopen(fd, 'w') as f:
 
 <p>在以O_EXCL方式打开文件后，我们用os.fdopen将原始的文件描述符转化为普通的Python文件对象。</p>
 
-<h2>应用ACID属性到文件更新</h2>
+<h2 id="acid">应用ACID属性到文件更新</h2>
 
 <p>下面，我将尝试加强文件更新模式。反过来让我们看看可以做些什么来满足ACID属性。我将会尽可能保持简单，因为我们并不是要写一个完整的数据库系统。请注意本节的材料并不彻底，但是可以为你自己的实验提供一个好的起点.</p>
 
@@ -330,13 +290,13 @@ f.write('{}\n'.format(n))
 <p>这段代码有什么问题呢？设想两个进程竞争更新某个文件。第一个进程运行在前面，但是第二个进程阻塞在fcntl.flock()调用。当第一个进程替换了文件，释放了锁，现在在第二个进程中打开的文件描述符指向了一个包含旧内容的“幽灵”文件（任意路径名都不可达）。想要避免这个冲突，我们必须检查打开的文件是否与fcntl.flock()返回的相同。所以我写了一个新的LockedOpen上下文管理器来替换内建的open上下文。来确保我们实际打开了正确的文件：</p>
 
 <pre><code>class LockedOpen(object):
-
+ 
     def __init__(self, filename, *args, **kwargs):
         self.filename = filename
         self.open_args = args
         self.open_kwargs = kwargs
         self.fileobj = None
-
+ 
     def __enter__(self):
         f = open(self.filename, *self.open_args, **self.open_kwargs)
         while True:
@@ -350,15 +310,11 @@ f.write('{}\n'.format(n))
                 f = fnew
         self.fileobj = f
         return f
-
+ 
     def __exit__(self, _exc_type, _exc_value, _traceback):
-        self.fileobj.close()
-</code></pre>
+        self.fileobj.close() &lt;br&gt;
 
-<br>
-
-
-<pre><code>def update(self):
+def update(self):
     with LockedOpen(filename, 'r+') as f:
         n = int(f.read())
         n += 1
@@ -403,70 +359,85 @@ os.close(dirfd)
 
 <p><strong>spooldir</strong>模式与写-替换模式同样的目录同步问题。幸运地是，可以使用同样的解决方案：第一步同步文件，然后同步目录。</p>
 
-<h2>总结</h2>
+<h2 id="section-3">总结</h2>
 
 <p>这使可靠的更新文件成为可能。我已经演示了满足ACID的四大性质。这些展示的实例代码充当一个工具箱。掌握这编程技术最大的满足你的需求。有时，你并不需要满足所有的ACID性质，可能仅仅需要一到两个。我希望这篇文章可以帮助你去做已充分了解的决定，什么该去实现以及什么该舍弃。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-08-01" datetime="2013-08-01" pubdate>
-							<span class="year">2013-08-01</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.oschina.net/translate/reliable-file-updates-with-python" target="_blank">http://www.oschina.net/translate/reliable-file-updates-with-python</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/08/01/reliable-file-updates-with-python.html">http://http://uwebs.tk/archives/2013/08/01/reliable-file-updates-with-python.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,114 +1,74 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="centos,php,nginx,mysql" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h3>操作环境</h3>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</div>
 
+<article>
+	<h1><a href="/archives/2012/09/10/centos-php-nginx-mysql.html">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-09-10</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h3 id="section">操作环境</h3>
 <ul>
-<li>操作系统:Win7旗舰版</li>
-<li>虚拟主机:Oracle VM VirtualBox</li>
-<li>虚拟系统:Centos 6.3</li>
-<li>操作用户:Root</li>
-<li>实现目的:搭建LNMP环境.</li>
+  <li>操作系统:Win7旗舰版  </li>
+  <li>虚拟主机:Oracle VM VirtualBox  </li>
+  <li>虚拟系统:Centos 6.3  </li>
+  <li>操作用户:Root  </li>
+  <li>实现目的:搭建LNMP环境.</li>
 </ul>
 
+<h3 id="section-1">安装依赖库和开发环境</h3>
 
-<h3>安装依赖库和开发环境</h3>
-
-<p><li>依赖库和开发工具</li></p>
+<li>依赖库和开发工具</li>
 
 <pre><code>yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers  
 </code></pre>
 
-<p><li>Nginx</li></p>
+<li>Nginx</li>
 
 <pre><code>yum -y install pcre-devel  zlib-devel
 </code></pre>
 
-<p><li>Php</li></p>
+<li>Php</li>
 
 <pre><code>yum -y install gd-devel libjpeg-devel libpng-devel freetype-devel libxml2-devel curl-devel freetype-devel  
 </code></pre>
 
-<p><li>Mysql</li></p>
+<li>Mysql</li>
 
 <pre><code>yum -y install bison gcc gcc-c++ autoconf automake zlib\* libxml\* ncurses-devel libtool-ltdl-devel\* mysql-devel  
 </code></pre>
 
-<h3>下载软件包</h3>
-
-<p><li>创建目录</li></p>
+<h3 id="section-2">下载软件包</h3>
+<li>创建目录</li>
 
 <pre><code>mkdir /web  
 cd /web 
 </code></pre>
 
-<p><li>PHP5.3.7</li></p>
+<li>PHP5.3.7</li>
 
 <pre><code>wget http://cn.php.net/distributions/php-5.3.8.tar.bz2
 </code></pre>
 
-<p><li>PHP库文件</li></p>
+<li>PHP库文件</li>
 
 <pre><code>wget http://ncu.dl.sourceforge.net/project/mcrypt/MCrypt/2.6.8/mcrypt-2.6.8.tar.gz  
 wget http://ncu.dl.sourceforge.net/project/mhash/mhash/0.9.9.9/mhash-0.9.9.9.tar.gz  
@@ -116,337 +76,554 @@ wget http://ncu.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.
 wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
 </code></pre>
 
-<p><li>Nginx1.0.9</li></p>
+<li>Nginx1.0.9</li>
 
 <pre><code>wget http://www.nginx.org/download/nginx-1.0.9.tar.gz
 </code></pre>
 
-<p><li>Nginx(pcre)</li></p>
+<li>Nginx(pcre)</li>
 
 <pre><code>wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.13.tar.gz
 </code></pre>
 
-<p><li>Mysql5.5.17</li></p>
+<li>Mysql5.5.17</li>
 
 <pre><code>wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.17.tar.gz/from/http://mysql.ntu.edu.tw/
 </code></pre>
 
-<p><li>Mysql(cmake1)</li></p>
+<li>Mysql(cmake1)</li>
 
 <pre><code>wget http://www.cmake.org/files/v2.8/cmake-2.8.6.tar.gz
 </code></pre>
 
-<h3>安装Mysql</h3>
+<h3 id="mysql">安装Mysql</h3>
 
 <ul>
-<li>安装cmake</li>
+  <li>安装cmake</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">cmake</span><span class="o">-</span><span class="mf">2.8.6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>  
+<span class="n">cd</span> <span class="n">cmake</span><span class="o">-</span><span class="mf">2.8.6</span><span class="o">/</span>  
+<span class="o">./</span><span class="n">configure</span>  
+<span class="n">gmake</span> <span class="o">&amp;&amp;</span> <span class="n">gmake</span> <span class="n">install</span>  <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>添加mysql用户</li>
+  <li>添加mysql用户</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="sr">/usr/s</span><span class="n">bin</span><span class="o">/</span><span class="n">groupadd</span> <span class="n">mysql</span>  
+<span class="sr">/usr/s</span><span class="n">bin</span><span class="o">/</span><span class="n">useradd</span> <span class="o">-</span><span class="n">g</span> <span class="n">mysql</span> <span class="n">mysql</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="sr">/data/m</span><span class="n">ysql</span>  
+<span class="nb">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">mysql:mysql</span> <span class="sr">/data/m</span><span class="n">ysql</span>  
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>安装Mysql</li>
+  <li>安装Mysql</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">mysql</span><span class="o">-</span><span class="mf">5.5.27</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>  
+<span class="n">cd</span> <span class="n">mysql</span><span class="o">-</span><span class="mf">5.5.27</span>  
+<span class="c1"># 便于粘贴运行 START  </span>
+<span class="n">shell</span> <span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">cmake</span> <span class="o">.</span> <span class="o">-</span><span class="n">DCMAKE_INSTALL_PREFIX</span><span class="o">=</span><span class="sr">/opt/m</span><span class="n">ysql</span> <span class="o">-</span><span class="n">DMYSQL_DATADIR</span><span class="o">=</span><span class="sr">/opt/m</span><span class="n">ysql</span><span class="o">/</span><span class="n">data</span> <span class="o">-</span><span class="n">DMYSQL_USER</span><span class="o">=</span><span class="n">mysql</span> <span class="o">-</span><span class="n">DDEFAULT_CHARSET</span><span class="o">=</span><span class="n">utf8</span> <span class="o">-</span><span class="n">DDEFAULT_COLLATION</span><span class="o">=</span><span class="n">utf8_general_ci</span> <span class="o">-</span><span class="n">DWITH_EXTRA_CHARSETS</span><span class="o">=</span><span class="n">all</span> <span class="o">-</span><span class="n">DWITH_READLINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DWITH_SSL</span><span class="o">=</span><span class="nb">system</span> <span class="o">-</span><span class="n">DWITH_EMBEDDED_SERVER</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DWITH_ZLIB</span><span class="o">=</span><span class="nb">system</span> <span class="o">-</span><span class="n">DWITH_LIBWRAP</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DWITH_INNOBASE_STORAFE_ENGINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DENABLE_LOCAL_INFILE</span><span class="o">=</span><span class="mi">1</span>  
+<span class="c1"># 便于粘贴运行 END  </span>
+<span class="n">cmake</span> <span class="o">.</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DCMAKE_INSTALL_PREFIX</span><span class="o">=</span><span class="sr">/opt/m</span><span class="n">ysql</span> <span class="o">\</span> <span class="c1">#指定安装目录  </span>
+<span class="o">-</span><span class="n">DMYSQL_DATADIR</span><span class="o">=</span><span class="sr">/opt/m</span><span class="n">ysql</span><span class="o">/</span><span class="n">data</span> <span class="o">\</span> <span class="c1">#指定data目录  </span>
+<span class="o">-</span><span class="n">DMYSQL_USER</span><span class="o">=</span><span class="n">mysql</span> <span class="c1">#指定运行mysqld的用户，默认就是mysql，所以此配置可忽略，但记得添加mysql用户  </span>
+<span class="o">-</span><span class="n">DDEFAULT_CHARSET</span><span class="o">=</span><span class="n">utf8</span> <span class="o">\</span> <span class="c1">#指定默认字符集  </span>
+<span class="o">-</span><span class="n">DDEFAULT_COLLATION</span><span class="o">=</span><span class="n">utf8_general_ci</span> <span class="o">\</span> <span class="c1">#指定默认连接校对字符集  </span>
+<span class="o">-</span><span class="n">DWITH_EXTRA_CHARSETS</span><span class="o">=</span><span class="n">all</span> <span class="o">\</span> <span class="c1">#安装所有字符集  </span>
+<span class="o">-</span><span class="n">DWITH_READLINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DWITH_SSL</span><span class="o">=</span><span class="nb">system</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DWITH_EMBEDDED_SERVER</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DWITH_ZLIB</span><span class="o">=</span><span class="nb">system</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DWITH_LIBWRAP</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="n">DWITH_INNOBASE_STORAFE_ENGINE</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#开启INNODB引擎，MyISAM MERGE MEMORY CSV是默认安装的  </span>
+<span class="o">-</span><span class="n">DENABLE_LOCAL_INFILE</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span> <span class="c1">#开启 LOAD DATA INFILE，就是从文件导入数据库  </span>
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>设置Mysql</li>
+  <li>设置Mysql</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="c1">#在support-files目录中有五个配置信息文件：  </span>
+<span class="c1">#my-small.cnf (内存&lt;=64M)  </span>
+<span class="c1">#my-medium.cnf (内存 128M)  </span>
+<span class="c1">#my-large.cnf (内存 512M)  </span>
+<span class="c1">#my-huge.cnf (内存 1G-2G)  </span>
+<span class="c1">#my-innodb-heavy-4G.cnf (内存 4GB)  </span>
+<span class="n">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="n">mysql</span>  
+<span class="n">cp</span> <span class="o">.</span><span class="sr">/support-files/m</span><span class="n">y</span><span class="o">-</span><span class="n">medium</span><span class="o">.</span><span class="n">cnf</span> <span class="sr">/etc/m</span><span class="n">y</span><span class="o">.</span><span class="n">cnf</span>  
+<span class="n">vi</span> <span class="sr">/etc/m</span><span class="n">y</span><span class="o">.</span><span class="n">cnf</span>  
+<span class="c1">#在 [mysqld] 段增加  </span>
+<span class="n">datadir</span> <span class="o">=</span> <span class="sr">/data/m</span><span class="n">ysql</span>  
+<span class="nb">wait</span><span class="o">-</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">30</span>  
+<span class="n">max_connections</span> <span class="o">=</span> <span class="mi">512</span>  
+<span class="n">default</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">engine</span> <span class="o">=</span> <span class="n">MyISAM</span>  
+<span class="c1">#在 [mysqld] 段修改  </span>
+<span class="n">max_allowed_packet</span> <span class="o">=</span> <span class="mi">16</span><span class="n">M</span> 
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>生成授权表</li>
+  <li>生成授权表</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="n">mysql</span>  
+<span class="o">.</span><span class="sr">/scripts/m</span><span class="n">ysql_install_db</span> <span class="o">--</span><span class="n">user</span><span class="o">=</span><span class="n">mysql</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>更改密码</li>
+  <li>更改密码</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqladmin</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="n">password</span> <span class="mi">123456</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>开启mysql</li>
+  <li>开启mysql</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqld_safe</span> <span class="o">&amp;</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>测试连接mysql</li>
+  <li>测试连接mysql</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="n">root</span> <span class="o">-</span><span class="n">p</span> <span class="mi">123456</span>  
+<span class="n">show</span> <span class="n">databases</span><span class="p">;</span>  
+<span class="nb">exit</span><span class="p">;</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>设置开机启动</li>
+  <li>设置开机启动</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">vi</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysqld_safe</span> <span class="o">&amp;</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>允许远程访问</li>
+  <li>允许远程访问</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="k">use</span> <span class="n">mysql</span><span class="p">;</span>
+<span class="n">update</span> <span class="n">user</span> <span class="n">set</span> <span class="n">host</span> <span class="o">=</span> <span class="s">&#39;%&#39;</span> <span class="n">where</span> <span class="n">user</span> <span class="o">=</span> <span class="s">&#39;用户名&#39;</span><span class="p">;</span> <span class="err">（如果写成</span> <span class="n">host</span><span class="o">=</span><span class="n">localhost</span> <span class="err">那此用户就不具有远程访问权限）</span>
+<span class="n">FLUSH</span> <span class="n">PRIVILEGES</span><span class="p">;</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
-<h3>安装PHP</h3>
+<h3 id="php">安装PHP</h3>
 
 <ul>
-<li>1</li>
+  <li>1</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">/</span>  
+<span class="o">.</span><span class="sr">/configure --prefix=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">local</span>  
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>2</li>
+  <li>2</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">libmcrypt</span><span class="o">-</span><span class="mf">2.5.8</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">libmcrypt</span><span class="o">-</span><span class="mf">2.5.8</span><span class="o">/</span>  
+<span class="o">./</span><span class="n">configure</span> <span class="o">&amp;&amp;</span>  <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>  
+<span class="sr">/sbin/</span><span class="n">ldconfig</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">libltdl</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">ltdl</span><span class="o">-</span><span class="n">install</span>  
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>3</li>
+  <li>3</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span>  
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>4</li>
+  <li>4</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">la</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">la</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span><span class="mf">.4</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span><span class="mf">.4</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span><span class="mf">.4.4.8</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">.</span><span class="n">so</span><span class="mf">.4.4.8</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">a</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">a</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">la</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">la</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2.0.1</span> <span class="sr">/usr/</span><span class="n">lib</span><span class="o">/</span><span class="n">libmhash</span><span class="o">.</span><span class="n">so</span><span class="mf">.2.0.1</span>  
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/bin/</span><span class="n">libmcrypt</span><span class="o">-</span><span class="n">config</span> <span class="sr">/usr/</span><span class="n">bin</span><span class="o">/</span><span class="n">libmcrypt</span><span class="o">-</span><span class="n">config</span>  
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>5</li>
+  <li>5</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">mcrypt</span><span class="o">-</span><span class="mf">2.6.8</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">mcrypt</span><span class="o">-</span><span class="mf">2.6.8</span><span class="o">/</span>  
+<span class="sr">/sbin/</span><span class="n">ldconfig</span>  
+<span class="o">./</span><span class="n">configure</span>  
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>6</li>
+  <li>6</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">xjvf</span> <span class="n">php</span><span class="o">-</span><span class="mf">5.3.8</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">bz2</span>  
+<span class="n">cd</span> <span class="n">php</span><span class="o">-</span><span class="mf">5.3.8</span>
 
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<span class="o">.</span><span class="sr">/configure --prefix=/</span><span class="n">usr</span><span class="sr">/local/</span><span class="n">php</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">config</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="n">etc</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">iconv</span><span class="o">-</span><span class="n">dir</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">freetype</span><span class="o">-</span><span class="n">dir</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">mysql</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="n">mysql</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">mysqli</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="n">bin</span><span class="o">/</span><span class="n">mysql_config</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">jpeg</span><span class="o">-</span><span class="n">dir</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">png</span><span class="o">-</span><span class="n">dir</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">zlib</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">mhash</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">sockets</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">ftp</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">libxml</span><span class="o">-</span><span class="n">dir</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">xml</span> <span class="o">--</span><span class="n">disable</span><span class="o">-</span><span class="n">rpath</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">safe</span><span class="o">-</span><span class="n">mode</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">bcmath</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">shmop</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">sysvsem</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">inline</span><span class="o">-</span><span class="n">optimization</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">curl</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">curlwrappers</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">mbregex</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">mbstring</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">mcrypt</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">gd</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">gd</span><span class="o">-</span><span class="n">native</span><span class="o">-</span><span class="n">ttf</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">openssl</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">mhash</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">pcntl</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">sockets</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">ldap</span> <span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">ldap</span><span class="o">-</span><span class="n">sasl</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">fpm</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">xmlrpc</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">zip</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">soap</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">without</span><span class="o">-</span><span class="n">pear</span> <span class="o">\</span>  
+
+<span class="n">make</span> <span class="n">ZEND_EXTRA_LIBS</span><span class="o">=</span><span class="s">&#39;-liconv&#39;</span>  
+
+<span class="c1">#注意这里容易出现 make: *** [ext/phar/phar.php] 错误 127  </span>
+
+<span class="c1">#出现mysql client解决方法  </span>
+<span class="c1">#ln -s /usr/local/mysql/lib/libmysqlclient.so /usr/lib/  </span>
+<span class="c1">#ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18  </span>
+
+<span class="c1">#或者chmod: 无法访问 “ext/phar/phar.phar”: 没有那个文件或目录  </span>
+<span class="c1">#make: [ext/phar/phar.phar] 错误 1 (忽略)  </span>
+<span class="c1">#解决方法在编译的时候加--without-pear参数  </span>
+
+<span class="c1">#如果还不行,make的时候不添加 ZEND_EXTRA_LIBS=&#39;-liconv&#39; 参数  </span>
+
+<span class="n">make</span> <span class="n">install</span>  
+
+<span class="c1">#选择PHP.ini配置文件  </span>
+<span class="n">cp</span> <span class="n">php</span><span class="o">.</span><span class="n">ini</span><span class="o">-</span><span class="n">production</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="n">etc</span><span class="o">/</span><span class="n">php</span><span class="o">.</span><span class="n">ini</span>  
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>更改PHP-FPM</li>
+  <li>更改PHP-FPM</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div class="highlight"><pre><code class="perl"><span class="c1">#添加WWW用户  </span>
+<span class="sr">/usr/s</span><span class="n">bin</span><span class="sr">/groupadd www &amp;&amp; /</span><span class="n">usr</span><span class="sr">/sbin/</span><span class="n">useradd</span> <span class="o">-</span><span class="n">g</span> <span class="n">www</span> <span class="n">www</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="sr">/var/</span><span class="nb">log</span><span class="sr">/nginx &amp;&amp; chmod +w /</span><span class="n">var</span><span class="sr">/log/</span><span class="n">nginx</span> <span class="o">&amp;&amp;</span><span class="nb">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">www:www</span> <span class="sr">/var/</span><span class="nb">log</span><span class="o">/</span><span class="n">nginx</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="sr">/data/</span><span class="n">www</span> <span class="o">&amp;&amp;</span> <span class="nb">chmod</span> <span class="o">+</span><span class="n">w</span> <span class="sr">/data/</span><span class="n">www</span> <span class="o">&amp;&amp;</span> <span class="nb">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">www:www</span> <span class="sr">/data/</span><span class="n">www</span>  
 
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<span class="n">cp</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="n">etc</span><span class="sr">/php-fpm.conf.default /</span><span class="n">usr</span><span class="sr">/local/</span><span class="n">php</span><span class="sr">/etc/</span><span class="n">php</span><span class="o">-</span><span class="n">fpm</span><span class="o">.</span><span class="n">conf</span>  
+<span class="n">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="n">etc</span><span class="o">/</span><span class="n">php</span><span class="o">-</span><span class="n">fpm</span><span class="o">.</span><span class="n">conf</span>  
+
+<span class="c1">#去掉/更改配置文件中的;  </span>
+<span class="n">pm</span><span class="o">.</span><span class="n">max_children</span> <span class="o">=</span> <span class="mi">64</span>   
+<span class="n">pm</span><span class="o">.</span><span class="n">start_servers</span> <span class="o">=</span> <span class="mi">20</span>  
+<span class="n">pm</span><span class="o">.</span><span class="n">min_spare_servers</span> <span class="o">=</span> <span class="mi">5</span>  
+<span class="n">pm</span><span class="o">.</span><span class="n">max_spare_servers</span> <span class="o">=</span> <span class="mi">35</span>  
+<span class="n">pm</span><span class="o">.</span><span class="n">max_requests</span> <span class="o">=</span> <span class="mi">1024</span>  
+<span class="n">user</span> <span class="o">=</span> <span class="n">www</span>  
+<span class="n">group</span> <span class="o">=</span> <span class="n">www</span>   
+
+<span class="c1">#检查语法是否正确  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="n">bin</span><span class="o">/</span><span class="n">php</span><span class="o">-</span><span class="n">fpm</span> <span class="o">-</span><span class="n">t</span>  
+<span class="c1">#出现NOTICE: configuration file /usr/local/php/etc/php-fpm.conf test is successful 测试成功  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="n">bin</span><span class="o">/</span><span class="n">php</span><span class="o">-</span><span class="n">fpm</span> <span class="o">&amp;</span>  
+<span class="c1">#设置开机启动  </span>
+<span class="n">vi</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#在行末加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="n">bin</span><span class="o">/</span><span class="n">php</span><span class="o">-</span><span class="n">fpm</span> <span class="o">&amp;</span>  
+
+<span class="c1">#返回安装包目录   </span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">web</span> 
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
-<h3>安装Nginx</h3>
+<h3 id="nginx">安装Nginx</h3>
 
 <ul>
-<li>安装pcre库</li>
+  <li>安装pcre库</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
-
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="sr">/ &amp;&amp; ./co</span><span class="n">nfigure</span>  
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>安装Nginx</li>
+  <li>安装Nginx</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div class="highlight"><pre><code class="perl"><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">nginx</span><span class="o">-</span><span class="mf">1.0.9</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">nginx</span><span class="o">-</span><span class="mf">1.0.9</span> <span class="o">&amp;&amp;</span>  
+<span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">user</span><span class="o">=</span><span class="n">www</span> <span class="o">--</span><span class="n">group</span><span class="o">=</span><span class="n">www</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">prefix</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="n">nginx</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">sbin</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="n">bin</span><span class="o">/</span><span class="n">nginx</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">conf</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/co</span><span class="n">nf</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">conf</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">http_stub_status_module</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">http_ssl_module</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">with</span><span class="o">-</span><span class="n">pcre</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">lock</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/var/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">lock</span> <span class="o">\</span>  
+<span class="o">--</span><span class="n">pid</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="sr">/var/</span><span class="n">run</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">pid</span>  
 
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">../</span>  
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
 <ul>
-<li>更改配置</li>
+  <li>更改配置</li>
 </ul>
 
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a>
+&lt;div style="display:none;"&gt;</p>
 
-<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div class="highlight"><pre><code class="perl"><span class="n">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/co</span><span class="n">nf</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">conf</span>      
 
-<div style="display:none;">
-Liquid error: No such file or directory - pygmentize
+<span class="c1">#修改一些参数,别直接替换文件,这只是一部分     </span>
+<span class="n">user</span> <span class="n">www</span>  
+
+<span class="n">events</span> <span class="p">{</span>  
+        <span class="k">use</span> <span class="n">epoll</span><span class="p">;</span>  
+        <span class="n">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+<span class="n">location</span> <span class="o">~</span> <span class="o">\.</span><span class="n">php</span><span class="nv">$</span> <span class="p">{</span>  
+        <span class="n">root</span>           <span class="n">html</span><span class="p">;</span>  
+        <span class="n">fastcgi_pass</span>   <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">9000</span><span class="p">;</span>  
+        <span class="n">fastcgi_index</span>  <span class="nb">index</span><span class="o">.</span><span class="n">php</span><span class="p">;</span>  
+        <span class="n">fastcgi_param</span>  <span class="n">SCRIPT_FILENAME</span>  <span class="nv">$document_root$fastcgi_script_name</span><span class="p">;</span>  
+        <span class="n">include</span>        <span class="n">fastcgi_params</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+<span class="c1">#注意这里  </span>
+<span class="c1">#$document_root$fastcgi_script_name;  </span>
+<span class="c1">#检测配置文件  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="n">bin</span><span class="o">/</span><span class="n">nginx</span> <span class="o">-</span><span class="n">t</span>  
+
+<span class="c1">#提示表示成功  </span>
+<span class="c1">#nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok  </span>
+<span class="c1">#nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful  </span>
+
+<span class="c1">#开启Nginx  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="n">bin</span><span class="o">/</span><span class="n">nginx</span> <span class="o">&amp;</span>  
+<span class="c1">#平滑重启Nginx  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="n">bin</span><span class="o">/</span><span class="n">nginx</span> <span class="o">-</span><span class="n">s</span> <span class="n">reload</span>  
+
+<span class="c1">#添加开机启动  </span>
+<span class="n">vi</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#最后移行加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="n">bin</span><span class="o">/</span><span class="n">nginx</span>  
+
+<span class="c1">#测试  </span>
+<span class="n">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/</span><span class="n">html</span><span class="o">/</span>  
+<span class="n">touch</span> <span class="nb">index</span><span class="o">.</span><span class="n">php</span>  
+<span class="n">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/</span><span class="n">html</span><span class="o">/</span><span class="nb">index</span><span class="o">.</span><span class="n">php</span>  
+<span class="o">&lt;</span><span class="p">?</span><span class="n">php</span>  
+<span class="n">phpinfo</span><span class="p">();</span>  
+<span class="p">?</span><span class="o">&gt;</span>   
+</code></pre>
 </div>
 
+<p>&lt;/div&gt;</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-09-10" datetime="2012-09-10" pubdate>
-							<span class="year">2012-09-10</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="centos"><a href="/tags.html#centos-ref">centos</a></li>
-     
-    	<li value="1" title="php"><a href="/tags.html#php-ref">php</a></li>
-     
-    	<li value="8" title="nginx"><a href="/tags.html#nginx-ref">nginx</a></li>
-     
-    	<li value="1" title="mysql"><a href="/tags.html#mysql-ref">mysql</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/09/10/centos-php-nginx-mysql.html">http://http://uwebs.tk/archives/2012/09/10/centos-php-nginx-mysql.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

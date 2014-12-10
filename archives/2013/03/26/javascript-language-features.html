@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>浅谈JavaScript的语言特性</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='浅谈JavaScript的语言特性'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 浅谈JavaScript的语言特性</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">浅谈JavaScript的语言特性</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h2>前言</h2>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 浅谈JavaScript的语言特性</div>
+
+<article>
+	<h1><a href="/archives/2013/03/26/javascript-language-features.html">浅谈JavaScript的语言特性</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-03-26</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h2 id="section">前言</h2>
 
 <p>在JavaScript中，作用域、上下文、闭包、函数等算是精华中的精华了。对于初级JSer来说，是进阶必备。对于前端攻城师来说，只有静下心来，理解了这些精华，才能写出优雅的代码。</p>
 
@@ -78,9 +41,9 @@
 
 <p> </p>
 
-<h2>语言特性</h2>
+<h2 id="section-1">语言特性</h2>
 
-<h3>函数表达式</h3>
+<h3 id="section-2">函数表达式</h3>
 
 <p>先看代码段：</p>
 
@@ -94,7 +57,7 @@ f(); // "function"
 
 <p>这里想说一点的就是，在函数表达式中的foo，只能在函数内部引用，外面是不能引用的。</p>
 
-<h3>json</h3>
+<h3 id="json">json</h3>
 
 <p>很多JavaScript开发人员都错误地把JavaScript对象字面量(Object Literals)称为JSON对象(JSON Objects)。
 JSON是设计成描述数据交换格式的，它也有自己的语法，这个语法是JavaScript的一个子集。</p>
@@ -104,14 +67,14 @@ JSON是设计成描述数据交换格式的，它也有自己的语法，这个�
 
 <pre><code>// 这是JSON字符串
 var foo = '{ "prop": "val" }';
-
+ 
 // 这是对象字面量
 var bar = { "prop": "val" };
 </code></pre>
 
 <p>还有一点需要知道的是，JSON.parse用来将JSON字符串反序列化成对象，JSON.stringify用来将对象序列化成JSON字符串。<strong>老版本的<a href="http://blog.jobbole.com/12749/" title="浏览器">浏览器</a>不支持这个对象，但你可以通过json2.js来实现同样的功能。</strong></p>
 
-<h3>原型</h3>
+<h3 id="section-3">原型</h3>
 
 <pre><code>function Animal (){  
     // ...
@@ -121,7 +84,7 @@ function cat (){
 }  
 cat.prototype = new Animal();//这种方式会继承构造函数里面的。
 cat.prototype = Animal.prototype;//这种方式不会继承构造函数里面的。
-
+ 
 //还有一个重要的细节需要注意的就是一定要维护自己的原型链,新手总会忘记这个！
 cat.prototype.constructor = cat;
 </code></pre>
@@ -132,7 +95,7 @@ cat.prototype.constructor = cat;
 A.prototype = {
   x: 10
 };
-
+ 
 var a = new A();
 alert(a.x); // 10
 alert(a.constructor === A); // false!
@@ -145,7 +108,7 @@ A.prototype = {
   constructor: A,
   x: 10
 };
-
+ 
 var a = new A();
 alert(a.x); // 10
 alert(a.constructor === A); // true
@@ -155,22 +118,22 @@ alert(a.constructor === A); // true
 
 <pre><code>function A() {}
 A.prototype.x = 10;
-
+ 
 var a = new A();
 alert(a.x); // 10
-
+ 
 A.prototype = {
   constructor: A,
   x: 20
   y: 30
 };
-
+ 
 // 对象a是通过隐式的[[Prototype]]引用从原油的prototype上获取的值
 alert(a.x); // 10
 alert(a.y) // undefined
-
+ 
 var b = new A();
-
+ 
 // 但新对象是从新原型上获取的值
 alert(b.x); // 20
 alert(b.y) // 30
@@ -178,7 +141,7 @@ alert(b.y) // 30
 
 <p>因此，“动态修改原型将影响所有的对象都会拥有新的原型”是错误的，新原型仅仅在原型修改以后的新创建对象上生效。这里的主要规则是：对象的原型是对象的创建的时候创建的，并且在此之后不能修改为新的对象，如果依然引用到同一个对象，可以通过构造函数的显式prototype引用，对象创建以后，只能对原型的属性进行添加或修改。</p>
 
-<h3>变量对象</h3>
+<h3 id="section-4">变量对象</h3>
 
 <p>在函数执行上下文中，VO(variable
 object)是不能直接访问的，此时由活动对象(activation object)扮演VO的角色。
@@ -187,10 +150,10 @@ object)是不能直接访问的，此时由活动对象(activation object)扮演
 <pre><code>function foo(x, y, z) {
   // 声明的函数参数数量arguments (x, y, z)
   alert(foo.length); // 3
-
+ 
   // 真正传进来的参数个数(only x, y)
   alert(arguments.length); // 2
-
+ 
   // 参数的callee是函数自身
   alert(arguments.callee === foo); // true
 }
@@ -200,22 +163,21 @@ object)是不能直接访问的，此时由活动对象(activation object)扮演
 函数的所有形参(如果我们是在函数执行上下文中)；</p>
 
 <ol>
-<li>所有函数声明(FunctionDeclaration, FD)；</li>
-<li>所有变量声明(var, VariableDeclaration)；</li>
+  <li>所有函数声明(FunctionDeclaration, FD)；</li>
+  <li>所有变量声明(var, VariableDeclaration)；</li>
 </ol>
-
 
 <p>另一个经典例子：</p>
 
 <pre><code>alert(x); // function
-
+ 
 var x = 10;
 alert(x); // 10
-
+ 
 x = 20;
-
+ 
 function x() {};
-
+ 
 alert(x); // 20
 </code></pre>
 
@@ -226,14 +188,14 @@ alert(x); // 20
 alert(window.a); // 10
 alert(delete a); // true
 alert(window.a); // undefined
-
+ 
 var b = 20;
 alert(window.b); // 20
 alert(delete b); // false
 alert(window.b); // still 20。b is variable,not property!
-
+ 
 var a = 10; // 全局上下文中的变量
-
+ 
 (function () {
   var b = 20; // function上下文中的局部变量
 })();
@@ -241,7 +203,7 @@ alert(a); // 10
 alert(b); // 全局变量 "b" 没有声明.
 </code></pre>
 
-<h3>this</h3>
+<h3 id="this">this</h3>
 
 <hr />
 
@@ -262,10 +224,10 @@ object），在其他情况下（与引用类型不同的任何其它属性）�
       alert(this);
     }
 };
-
+ 
 foo.bar(); // Reference, OK =&gt; foo
 (foo.bar)(); // Reference, OK =&gt; foo
-
+ 
 (foo.bar = foo.bar)(); // global
 (false || foo.bar)(); // global
 (foo.bar, foo.bar)(); // global
@@ -274,13 +236,12 @@ foo.bar(); // Reference, OK =&gt; foo
 <p>问题在于后面的三个调用，在应用一定的运算操作之后，在调用括号的左边的值不在是引用类型。</p>
 
 <ol>
-<li>第一个例子很明显———明显的引用类型，结果是，this为base对象，即foo。</li>
-<li>在第二个例子中，组运算符并不适用，想想上面提到的，从引用类型中获得一个对象真正的值的方法，如GetValue。相应的，在组运算的返回中———我们得到仍是一个引用类型。这就是this值为什么再次设为base对象，即foo。</li>
-<li>第三个例子中，与组运算符不同，赋值运算符调用了GetValue方法。返回的结果是函数对象（但不是引用类型），这意味着this设为null，结果是global对象。</li>
-<li>第四个和第五个也是一样——逗号运算符和逻辑运算符（OR）调用了GetValue
+  <li>第一个例子很明显———明显的引用类型，结果是，this为base对象，即foo。</li>
+  <li>在第二个例子中，组运算符并不适用，想想上面提到的，从引用类型中获得一个对象真正的值的方法，如GetValue。相应的，在组运算的返回中———我们得到仍是一个引用类型。这就是this值为什么再次设为base对象，即foo。</li>
+  <li>第三个例子中，与组运算符不同，赋值运算符调用了GetValue方法。返回的结果是函数对象（但不是引用类型），这意味着this设为null，结果是global对象。</li>
+  <li>第四个和第五个也是一样——逗号运算符和逻辑运算符（OR）调用了GetValue
 方法，相应地，我们失去了引用而得到了函数。并再次设为global。</li>
 </ol>
-
 
 <p>正如我们知道的，局部变量、内部函数、形式参数储存在给定函数的激活对象中。</p>
 
@@ -294,7 +255,7 @@ foo.bar(); // Reference, OK =&gt; foo
 
 <p>活动对象总是作为this返回，值为null——（即伪代码的AO.bar()相当于null.bar()）。这里我们再次回到上面描述的例子，this设置为全局对象。</p>
 
-<h3>作用域链</h3>
+<h3 id="section-5">作用域链</h3>
 
 <p>通过函构造函数创建的函数的scope属性总是唯一的全局对象。</p>
 
@@ -317,15 +278,15 @@ foo();
 <p>还有：</p>
 
 <pre><code>var x = 10, y = 10;
-
+ 
 with ({x: 20}) {
-
+ 
   var x = 30, y = 30;
  //这里的 x = 30 覆盖了x = 20；
   alert(x); // 30
   alert(y); // 30
 }
-
+ 
 alert(x); // 10
 alert(y); // 30
 </code></pre>
@@ -333,17 +294,16 @@ alert(y); // 30
 <p>在进入上下文时发生了什么？标识符“x”和“y”已被添加到变量对象中。此外，在代码运行阶段作如下修改：</p>
 
 <ol>
-<li>x = 10, y = 10;</li>
-<li>对象{x:20}添加到作用域的前端;</li>
-<li>在with内部，遇到了var声明，当然什么也没创建，因为在进入上下文时，所有变量已被解析添加;</li>
-<li>在第二步中，仅修改变量“x”，实际上对象中的“x”现在被解析，并添加到作用域链的最前端，“x”为20，变为30;</li>
-<li>同样也有变量对象“y”的修改，被解析后其值也相应的由10变为30;</li>
-<li>此外，在with声明完成后，它的特定对象从作用域链中移除（已改变的变量“x”－－30也从那个对象中移除），即作用域链的结构恢复到with得到加强以前的状态。</li>
-<li>在最后两个alert中，当前变量对象的“x”保持同一，“y”的值现在等于30，在with声明运行中已发生改变。</li>
+  <li>x = 10, y = 10;</li>
+  <li>对象{x:20}添加到作用域的前端;</li>
+  <li>在with内部，遇到了var声明，当然什么也没创建，因为在进入上下文时，所有变量已被解析添加;</li>
+  <li>在第二步中，仅修改变量“x”，实际上对象中的“x”现在被解析，并添加到作用域链的最前端，“x”为20，变为30;</li>
+  <li>同样也有变量对象“y”的修改，被解析后其值也相应的由10变为30;</li>
+  <li>此外，在with声明完成后，它的特定对象从作用域链中移除（已改变的变量“x”－－30也从那个对象中移除），即作用域链的结构恢复到with得到加强以前的状态。</li>
+  <li>在最后两个alert中，当前变量对象的“x”保持同一，“y”的值现在等于30，在with声明运行中已发生改变。</li>
 </ol>
 
-
-<h3>函数</h3>
+<h3 id="section-6">函数</h3>
 
 <p>关于圆括号的问题</p>
 
@@ -356,9 +316,9 @@ alert(y); // 30
 <pre><code>function () {
   ...
 }();
-
+ 
 // 即便有名称
-
+ 
 function foo() {
   ...
 }();
@@ -388,15 +348,17 @@ foo(10); // 这才是一个真正的函数调用，结果是10
         return x % 2 != 0 ? 'yes' : 'no';
     }(1)
 };
-
+ 
 alert(foo.bar); // 'yes'
 </code></pre>
 
 <p>就像我们看到的，foo.bar是一个字符串而不是一个函数，这里的函数仅仅用来根据条件参数初始化这个属性——它创建后并立即调用。</p>
 
-<blockquote><p>因此，”关于圆括号”问题完整的答案如下：
+<blockquote>
+  <p>因此，”关于圆括号”问题完整的答案如下：
 当函数不在表达式的位置的时候，分组操作符圆括号是必须的——也就是手工将函数转化成FE。
-如果解析器知道它处理的是FE，就没必要用圆括号。</p></blockquote>
+如果解析器知道它处理的是FE，就没必要用圆括号。</p>
+</blockquote>
 
 <p>自由变量：</p>
 
@@ -432,79 +394,93 @@ foo(); // 10 – 使用静态和动态作用域的时候
 })(foo);
 </pre>
 
-
-<p><strong>理论</strong>：因为作用域链，使得所有的函数都是闭包（与函数类型无关：匿名函数，FE，NFE，FD都是闭包）。<br/>
+<p><strong>理论</strong>：因为作用域链，使得所有的函数都是闭包（与函数类型无关：匿名函数，FE，NFE，FD都是闭包）。<br />
 <strong>从实践角度</strong>：以下函数才算是闭包：</p>
 
-<p>* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）<br/>
+<p>* 即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）<br />
 * 在代码中引用了自由变量</p>
 
-<h2>最后：</h2>
+<h2 id="section-7">最后：</h2>
 
 <p>ECMAScript是一种面向对象语言，支持基于原型的委托式继承。</p>
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-03-26" datetime="2013-03-26" pubdate>
-							<span class="year">2013-03-26</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://freestyle21.cn/writings/javascript-core.html" target="_blank">http://freestyle21.cn/writings/javascript-core.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/26/javascript-language-features.html">http://http://uwebs.tk/archives/2013/03/26/javascript-language-features.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

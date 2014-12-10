@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Javascript 常见陷阱及特殊用法</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Javascript 常见陷阱及特殊用法'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Javascript 常见陷阱及特殊用法</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Javascript 常见陷阱及特殊用法</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<h2>对象使用和属性</h2>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Javascript 常见陷阱及特殊用法</div>
+
+<article>
+	<h1><a href="/archives/2013/07/01/javascript-common-traps-and-special-usage.html">Javascript 常见陷阱及特殊用法</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-07-01</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<h2 id="section">对象使用和属性</h2>
 
 <p>JavaScript 中所有变量都是对象，除了两个例外 <code>null</code> 和 <code>undefined</code>。</p>
 
@@ -86,7 +49,7 @@ Foo.bar; // 1
 (2).toString(); // 2先被计算
 </code></pre>
 
-<h2>对象作为数据类型</h2>
+<h2 id="section-1">对象作为数据类型</h2>
 
 <p>JavaScript 的对象可以作为哈希表使用，主要用来保存命名的键与值的对应关系。</p>
 
@@ -98,7 +61,7 @@ Foo.bar; // 1
 var bar = {test: 12}; 
 </code></pre>
 
-<h2>访问对象属性</h2>
+<h2 id="section-2">访问对象属性</h2>
 
 <p>有两种方式来访问对象的属性，点操作符或者中括号操作符。</p>
 
@@ -115,7 +78,7 @@ foo['1234']; // works
 
 <p>两种语法是等价的，但是中括号操作符在下面两种情况下依然有效 - 动态设置属性 - 属性名不是一个有效的变量名（译者注：比如属性名中包含空格，或者属性名是 JS 的关键词）</p>
 
-<h2>删除对象属性</h2>
+<h2 id="section-3">删除对象属性</h2>
 
 <p>删除属性的唯一方法是使用 <code>delete</code> 操作符；设置属性为 <code>undefined</code> 或者 <code>null</code> 并不能真正的删除属性， 而仅仅是移除了属性和值的关联。</p>
 
@@ -137,7 +100,7 @@ for(var i in obj) {
 
 <p>上面的输出结果有 <code>bar undefined</code> 和 <code>foo null</code> - 只有 <code>baz</code> 被真正的删除了，所以从输出结果中消失。</p>
 
-<h2>对象属性名的语法</h2>
+<h2 id="section-4">对象属性名的语法</h2>
 
 <pre><code>var test = {
     'case': 'I am a keyword so I must be notated as a string',
@@ -149,7 +112,7 @@ for(var i in obj) {
 
 <p>这个错误的原因是 <code>delete</code> 是 JavaScript 语言的一个关键词；因此为了在更低版本的 JavaScript 引擎下也能正常运行，必须使用字符串字面值声明方式。</p>
 
-<h2>﻿原型</h2>
+<h2 id="section-5">﻿原型</h2>
 
 <p>JavaScript 不包含传统的类继承模型，而是使用prototypal原型模型。</p>
 
@@ -193,13 +156,13 @@ test [Bar的实例]
 
 <p>注意:不要使用 <code>Bar.prototype = Foo</code>，因为这不会执行 <code>Foo</code> 的原型，而是指向函数 <code>Foo</code>。 因此原型链将会回溯到 <code>Function.prototype</code> 而不是 <code>Foo.prototype</code>，因此 <code>method</code> 将不会在 Bar 的原型链上。</p>
 
-<h2>属性查找</h2>
+<h2 id="section-6">属性查找</h2>
 
 <p>当查找一个对象的属性时，JavaScript 会向上遍历原型链，直到找到给定名称的属性为止。</p>
 
 <p>到查找到达原型链的顶部 - 也就是 <code>Object.prototype</code> - 但是仍然没有找到指定的属性，就会返回 undefined。</p>
 
-<h3>原型属性</h3>
+<h3 id="section-7">原型属性</h3>
 
 <p>当原型属性用来创建原型链时，可以把任何类型的值赋给它（prototype）。然而将原子类型赋给 prototype 的操作将会被忽略。</p>
 
@@ -209,13 +172,13 @@ Foo.prototype = 1; // 无效
 
 <p>而将对象赋值给 prototype，正如上面的例子所示，将会动态的创建原型链。</p>
 
-<h3>性能</h3>
+<h3 id="section-8">性能</h3>
 
 <p>如果一个属性在原型链的上端，则对于查找时间将带来不利影响。特别的，试图获取一个不存在的属性将会遍历整个原型链。</p>
 
 <p>并且，当使用 <code>for in</code> 循环遍历对象的属性时，原型链上的所有属性都将被访问。</p>
 
-<h3>扩展内置类型的原型</h3>
+<h3 id="section-9">扩展内置类型的原型</h3>
 
 <p>一个错误特性被经常使用，那就是扩展 <code>Object.prototype</code> 或者其他内置类型的原型对象。</p>
 
@@ -225,7 +188,7 @@ Foo.prototype = 1; // 无效
 
 <p>译者注：这是编程领域常用的一种方式，称之为Backport，也就是将新的补丁添加到老版本中。</p>
 
-<h2>﻿<code>hasOwnProperty</code> 函数</h2>
+<h2 id="hasownproperty-">﻿<code>hasOwnProperty</code> 函数</h2>
 
 <p>为了判断一个对象是否包含自定义属性而不是原型链上的属性，我们需要使用继承自 <code>Object.prototype</code> 的 <code>hasOwnProperty</code> 方法。</p>
 
@@ -246,7 +209,7 @@ foo.hasOwnProperty('goo'); // true
 
 <p>只有 <code>hasOwnProperty</code> 可以给出正确和期望的结果，这在遍历对象的属性时会很有用。没有其它方法可以用来排除原型链上的属性，而不是定义在对象自身上的属性。</p>
 
-<h3><code>hasOwnProperty</code> 作为属性</h3>
+<h3 id="hasownproperty--1"><code>hasOwnProperty</code> 作为属性</h3>
 
 <p>JavaScript不会保护 <code>hasOwnProperty</code> 被非法占用，因此如果一个对象碰巧存在这个属性， 就需要使用外部的 <code>hasOwnProperty</code> 函数来获取正确的结果。</p>
 
@@ -263,11 +226,11 @@ foo.hasOwnProperty('bar'); // 总是返回 false
 {}.hasOwnProperty.call(foo, 'bar'); // true
 </code></pre>
 
-<h3>结论</h3>
+<h3 id="section-10">结论</h3>
 
 <p>当检查对象上某个属性是否存在时，<code>hasOwnProperty</code> 是唯一可用的方法。同时在使用 <code>for in</code> loop 遍历对象时，推荐总是使用 <code>hasOwnProperty</code> 方法，这将会避免原型对象扩展带来的干扰。</p>
 
-<h2>﻿<code>for in</code> 循环</h2>
+<h2 id="for-in-">﻿<code>for in</code> 循环</h2>
 
 <p>和 <code>in</code> 操作符一样，<code>for in</code> 循环同样在查找对象属性时遍历原型链上的所有属性。</p>
 
@@ -286,7 +249,7 @@ for(var i in foo) {
 
 <p>注意:由于 <code>for in</code> 总是要遍历整个原型链，因此如果一个对象的继承层次太深的话会影响性能。</p>
 
-<h3>使用 <code>hasOwnProperty</code> 过滤</h3>
+<h3 id="hasownproperty--2">使用 <code>hasOwnProperty</code> 过滤</h3>
 
 <pre><code>// foo 变量是上例中的
 for(var i in foo) {
@@ -300,15 +263,15 @@ for(var i in foo) {
 
 <p>一个广泛使用的类库 Prototype 就扩展了原生的 JavaScript 对象。因此，但这个类库被包含在页面中时，不使用 <code>hasOwnProperty</code> 过滤的 <code>for in</code> 循环难免会出问题。</p>
 
-<h3>总结</h3>
+<h3 id="section-11">总结</h3>
 
 <p>推荐总是使用<code>hasOwnProperty</code>。不要对代码运行的环境做任何假设，不要假设原生对象是否已经被扩展了。</p>
 
-<h2>﻿函数声明与表达式</h2>
+<h2 id="section-12">﻿函数声明与表达式</h2>
 
 <p>函数是JavaScript中的一等对象，这意味着可以把函数像其它值一样传递。一个常见的用法是把匿名函数作为回调函数传递对异步函数中。</p>
 
-<h3>函数声明</h3>
+<h3 id="section-13">函数声明</h3>
 
 <pre><code>function foo() {}
 </code></pre>
@@ -319,7 +282,7 @@ for(var i in foo) {
 function foo() {}
 </code></pre>
 
-<h3>函数赋值表达式</h3>
+<h3 id="section-14">函数赋值表达式</h3>
 
 <pre><code>var foo = function() {};
 </code></pre>
@@ -335,7 +298,7 @@ var foo = function() {};
 
 <p>但是由于赋值语句只在运行时执行，因此在相应代码执行之前， <code>foo</code> 的值缺省为 undefined。</p>
 
-<h3>命名函数的赋值表达式</h3>
+<h3 id="section-15">命名函数的赋值表达式</h3>
 
 <p>另外一个特殊的情况是将命名函数赋值给一个变量。</p>
 
@@ -347,11 +310,11 @@ bar(); // 出错：ReferenceError
 
 <p><code>bar</code> 函数声明外是不可见的，这是因为我们已经把函数赋值给了 <code>foo</code>； 然而在 <code>bar</code> 内部依然可见。这是由于 JavaScript 的 命名处理 所致，函数名在函数内总是可见的。</p>
 
-<h2>﻿<code>this</code> 的工作原理</h2>
+<h2 id="this-">﻿<code>this</code> 的工作原理</h2>
 
 <p>JavaScript 有一套完全不同于其它语言的对 <code>this</code> 的处理机制。在五种不同的情况下 ，<code>this</code> 指向的各不相同。</p>
 
-<h3>全局范围内</h3>
+<h3 id="section-16">全局范围内</h3>
 
 <pre><code>this;
 </code></pre>
@@ -360,7 +323,7 @@ bar(); // 出错：ReferenceError
 
 <p>译者注：浏览器中运行的 JavaScript 脚本，这个全局对象是 <code>window</code>。</p>
 
-<h3>函数调用</h3>
+<h3 id="section-17">函数调用</h3>
 
 <pre><code>foo();
 </code></pre>
@@ -369,21 +332,21 @@ bar(); // 出错：ReferenceError
 
 <p>ES5 注意:在严格模式下（strict mode），不存在全局变量。 这种情况下 <code>this</code> 将会是 <code>undefined</code>。</p>
 
-<h3>方法调用</h3>
+<h3 id="section-18">方法调用</h3>
 
 <pre><code>test.foo(); 
 </code></pre>
 
 <p>这个例子中，<code>this</code> 指向 <code>test</code> 对象。</p>
 
-<h3>调用构造函数</h3>
+<h3 id="section-19">调用构造函数</h3>
 
 <pre><code>new foo(); 
 </code></pre>
 
 <p>如果函数倾向于和 <code>new</code> 关键词一块使用，则我们称这个函数是 构造函数。在函数内部，<code>this</code> 指向新创建的对象。</p>
 
-<h3>显式的设置 <code>this</code></h3>
+<h3 id="this">显式的设置 <code>this</code></h3>
 
 <pre><code>function foo(a, b, c) {}
 
@@ -398,7 +361,7 @@ foo.call(bar, 1, 2, 3); // 传递到foo的参数是：a = 1, b = 2, c = 3
 
 <p>注意:在对象的字面声明语法中，<code>this</code> 不能用来指向对象本身。 因此 <code>var obj = {me: this}</code> 中的 <code>me</code> 不会指向 <code>obj</code>，因为 <code>this</code> 只可能出现在上述的五种情况中。译者注：这个例子中，如果是在浏览器中运行，<code>obj.me</code> 等于 <code>window</code> 对象。</p>
 
-<h3>常见误解</h3>
+<h3 id="section-20">常见误解</h3>
 
 <p>尽管大部分的情况都说的过去，不过第一个规则（译者注：这里指的应该是第二个规则，也就是直接调用函数时，<code>this</code> 指向全局对象）被认为是JavaScript语言另一个错误设计的地方，因为它从来就没有实际的用途。</p>
 
@@ -425,7 +388,7 @@ foo.call(bar, 1, 2, 3); // 传递到foo的参数是：a = 1, b = 2, c = 3
 
 <p><code>that</code> 只是我们随意起的名字，不过这个名字被广泛的用来指向外部的 <code>this</code> 对象。 在 闭包 一节，我们可以看到 <code>that</code> 可以作为参数传递。</p>
 
-<h3>方法的赋值表达式</h3>
+<h3 id="section-21">方法的赋值表达式</h3>
 
 <p>另一个看起来奇怪的地方是函数别名，也就是将一个方法赋值给一个变量。</p>
 
@@ -448,11 +411,11 @@ new Bar().method();
 
 <p>当 <code>method</code> 被调用时，<code>this</code> 将会指向 <code>Bar</code> 的实例对象。</p>
 
-<h2>﻿闭包和引用</h2>
+<h2 id="section-22">﻿闭包和引用</h2>
 
 <p>闭包是 JavaScript 一个非常重要的特性，这意味着当前作用域总是能够访问外部作用域中的变量。因为 函数 是 JavaScript 中唯一拥有自身作用域的结构，因此闭包的创建依赖于函数。</p>
 
-<h3>模拟私有变量</h3>
+<h3 id="section-23">模拟私有变量</h3>
 
 <pre><code>function Counter(start) {
     var count = start;
@@ -474,7 +437,7 @@ foo.get(); // 5
 
 <p>这里，<code>Counter</code> 函数返回两个闭包，函数 <code>increment</code> 和函数 <code>get</code>。这两个函数都维持着 对外部作用域 <code>Counter</code> 的引用，因此总可以访问此作用域内定义的变量 <code>count</code>.</p>
 
-<h3>为什么不可以在外部访问私有变量</h3>
+<h3 id="section-24">为什么不可以在外部访问私有变量</h3>
 
 <p>因为 JavaScript 中不可以对作用域进行引用或赋值，因此没有办法在外部访问 <code>count</code> 变量。 唯一的途径就是通过那两个闭包。</p>
 
@@ -486,7 +449,7 @@ foo.hack = function() {
 
 <p>上面的代码不会改变定义在 <code>Counter</code> 作用域中的 <code>count</code> 变量的值，因为 <code>foo.hack</code> 没有 定义在那个作用域内。它将会创建或者覆盖全局变量 <code>count</code>。</p>
 
-<h3>循环中的闭包</h3>
+<h3 id="section-25">循环中的闭包</h3>
 
 <p>一个常见的错误出现在循环中使用闭包，假设我们需要在每次循环中调用循环序号</p>
 
@@ -503,7 +466,7 @@ foo.hack = function() {
 
 <p>为了得到想要的结果，需要在每次循环中创建变量 <code>i</code> 的拷贝。</p>
 
-<h3>避免引用错误</h3>
+<h3 id="section-26">避免引用错误</h3>
 
 <p>为了正确的获得循环序号，最好使用匿名包裹器（译者注：其实就是我们通常说的自执行匿名函数）。</p>
 
@@ -531,7 +494,7 @@ foo.hack = function() {
 }
 </code></pre>
 
-<h2>﻿<code>arguments</code> 对象</h2>
+<h2 id="arguments-">﻿<code>arguments</code> 对象</h2>
 
 <p>JavaScript 中每个函数内都能访问一个特别变量<code>arguments</code>。这个变量维护着所有传递到这个函数中的参数列表。</p>
 
@@ -541,7 +504,7 @@ foo.hack = function() {
 
 <p>因此，无法对 <code>arguments</code> 变量使用标准的数组方法，比如 <code>push</code>, <code>pop</code> 或者<code>slice</code>。 虽然使用 <code>for</code> 循环遍历也是可以的，但是为了更好的使用数组方法，最好把它转化为一个真正的数组。</p>
 
-<h3>转化为数组</h3>
+<h3 id="section-27">转化为数组</h3>
 
 <p>下面的代码将会创建一个新的数组，包含所有 <code>arguments</code> 对象中的元素。</p>
 
@@ -550,7 +513,7 @@ foo.hack = function() {
 
 <p>这个转化比较慢，在性能不好的代码中不推荐这种做法。</p>
 
-<h3>传递参数</h3>
+<h3 id="section-28">传递参数</h3>
 
 <p>下面将参数从一个函数传递到另一个函数，是推荐的做法。</p>
 
@@ -587,7 +550,7 @@ Foo.method = function() {
 };
 </code></pre>
 
-<h3>自动更新</h3>
+<h3 id="section-29">自动更新</h3>
 
 <p><code>arguments</code> 对象为其内部属性以及函数形式参数创建getter和setter方法。</p>
 
@@ -607,7 +570,7 @@ Foo.method = function() {
 foo(1, 2, 3);
 </code></pre>
 
-<h3>性能真相</h3>
+<h3 id="section-30">性能真相</h3>
 
 <p><code>arguments</code> 对象总会被创建，除了两个特殊情况 -作为局部变量声明和作为形式参数。 而不管它是否有被使用。</p>
 
@@ -648,7 +611,7 @@ function bigLoop() {
 
 <p>ES5 提示:在严格模式下，<code>arguments.callee</code> 会报错<code>TypeError</code>，因为它已经被废除了。</p>
 
-<h2>﻿构造函数</h2>
+<h2 id="section-31">﻿构造函数</h2>
 
 <p>JavaScript 中的构造函数和其它语言中的构造函数是不同的。 通过 <code>new</code> 关键字方式调用的函数都被认为是构造函数。</p>
 
@@ -710,7 +673,7 @@ Foo(); // undefined
 
 <p>虽然上例在有些情况下也能正常运行，但是由于 JavaScript 中 <code>this</code> 的工作原理， 这里的 <code>this</code> 指向全局对象。</p>
 
-<h3>工厂模式</h3>
+<h3 id="section-32">工厂模式</h3>
 
 <p>为了不使用 <code>new</code> 关键字，构造函数必须显式的返回一个值。</p>
 
@@ -747,7 +710,7 @@ typeof(bar2.method); // "function"
 typeof(bar2.foo); // "undefined"
 </code></pre>
 
-<h3>通过工厂模式创建新对象</h3>
+<h3 id="section-33">通过工厂模式创建新对象</h3>
 
 <p>我们常听到的一条忠告是不要使用 <code>new</code> 关键字来调用函数，因为如果忘记使用它就会导致错误。</p>
 
@@ -773,18 +736,17 @@ typeof(bar2.foo); // "undefined"
 但是随之而来的是一些不好的地方。</p>
 
 <ol>
-<li>会占用更多的内存，因为新创建的对象不能共享原型上的方法。</li>
-<li>为了实现继承，工厂方法需要从另外一个对象拷贝所有属性，或者把一个对象作为新创建对象的原型。</li>
-<li>放弃原型链仅仅是因为防止遗漏 <code>new</code>
+  <li>会占用更多的内存，因为新创建的对象不能共享原型上的方法。</li>
+  <li>为了实现继承，工厂方法需要从另外一个对象拷贝所有属性，或者把一个对象作为新创建对象的原型。</li>
+  <li>放弃原型链仅仅是因为防止遗漏 <code>new</code>
 带来的问题，这似乎和语言本身的思想相违背。</li>
 </ol>
 
-
-<h3>总结</h3>
+<h3 id="section-34">总结</h3>
 
 <p>虽然遗漏 <code>new</code> 关键字可能会导致问题，但这并不是放弃使用原型链的借口。最终使用哪种方式取决于应用程序的需求，选择一种代码书写风格并坚持下去才是最重要的。</p>
 
-<h2>﻿作用域与命名空间</h2>
+<h2 id="section-35">﻿作用域与命名空间</h2>
 
 <p>尽管 JavaScript 支持一对花括号创建的代码段，但是并不支持块级作用域；而仅仅支持函数作用域。</p>
 
@@ -812,7 +774,7 @@ console.log(add(1, 2));
 
 <p>每次引用一个变量，JavaScript 会向上遍历整个作用域直到找到这个变量为止。如果到达全局作用域但是这个变量仍未找到，则会抛出 <code>ReferenceError</code> 异常。</p>
 
-<h3>隐式的全局变量</h3>
+<h3 id="section-36">隐式的全局变量</h3>
 
 <pre><code>// 脚本 A
 foo = '42';
@@ -853,7 +815,7 @@ function subLoop() {
 
 <p>外部循环在第一次调用 <code>subLoop</code> 之后就会终止，因为 <code>subLoop</code> 覆盖了全局变量 <code>i</code>。 在第二个 <code>for</code> 循环中使用 <code>var</code> 声明变量可以避免这种错误。 声明变量时绝对不要遗漏 <code>var</code> 关键字，除非这就是期望的影响外部作用域的行为。</p>
 
-<h3>局部变量</h3>
+<h3 id="section-37">局部变量</h3>
 
 <p>JavaScript中局部变量只可能通过两种方式声明，一个是作为函数参数，另一个是通过 <code>var</code> 关键字声明。</p>
 
@@ -874,7 +836,7 @@ test(10);
 
 <p><code>foo</code> 和 <code>i</code> 是函数 <code>test</code> 内的局部变量，而对 <code>bar</code> 的赋值将会覆盖全局作用域内的同名变量。</p>
 
-<h3>变量声明提升（Hoisting）</h3>
+<h3 id="hoisting">变量声明提升（Hoisting）</h3>
 
 <p>JavaScript 会提升变量声明。这意味着 <code>var</code> 表达式和 <code>function</code> 声明都将会被提升到当前作用域的顶部。</p>
 
@@ -957,7 +919,7 @@ var myvar = 'my value';
 })();  
 </code></pre>
 
-<h3>名称解析顺序</h3>
+<h3 id="section-38">名称解析顺序</h3>
 
 <p>JavaScript 中的所有作用域，包括全局作用域，都有一个特别的名称 <code>this</code> 指向当前对象。</p>
 
@@ -966,16 +928,15 @@ var myvar = 'my value';
 <p>比如，当访问函数内的 <code>foo</code> 变量时，JavaScript 会按照下面顺序查找：</p>
 
 <ol>
-<li>当前作用域内是否有 <code>var foo</code> 的定义。</li>
-<li>函数形式参数是否有使用 <code>foo</code> 名称的。</li>
-<li>函数自身是否叫做 <code>foo</code>。</li>
-<li>回溯到上一级作用域，然后从#1重新开始。</li>
+  <li>当前作用域内是否有 <code>var foo</code> 的定义。</li>
+  <li>函数形式参数是否有使用 <code>foo</code> 名称的。</li>
+  <li>函数自身是否叫做 <code>foo</code>。</li>
+  <li>回溯到上一级作用域，然后从#1重新开始。</li>
 </ol>
-
 
 <p>注意:自定义 <code>arguments</code> 参数将会阻止原生的 <code>arguments</code> 对象的创建。</p>
 
-<h3>命名空间</h3>
+<h3 id="section-39">命名空间</h3>
 
 <p>只有一个全局作用域导致的常见错误是命名冲突。在JavaScript中，这可以通过匿名包装器轻松解决。</p>
 
@@ -1004,13 +965,13 @@ function() {}
 (function(){}());
 </code></pre>
 
-<h3>结论</h3>
+<h3 id="section-40">结论</h3>
 
 <p>推荐使用匿名包装器（译者注：也就是自执行的匿名函数）来创建命名空间。这样不仅可以防止命名冲突，而且有利于程序的模块化。</p>
 
 <p>另外，使用全局变量被认为是不好的习惯。这样的代码倾向于产生错误和带来高的维护成本。</p>
 
-<h2>﻿数组遍历与属性</h2>
+<h2 id="section-41">﻿数组遍历与属性</h2>
 
 <p>虽然在 JavaScript 中数组是是对象，但是没有好的理由去使用 <code>for in</code> 循环遍历数组。 相反，有一些好的理由不去使用 <code>for in</code> 遍历数组。</p>
 
@@ -1018,7 +979,7 @@ function() {}
 
 <p>由于 <code>for in</code> 循环会枚举原型链上的所有属性，唯一过滤这些属性的方式是使用 <code>hasOwnProperty</code> 函数， 因此会比普通的 <code>for</code> 循环慢上好多倍。</p>
 
-<h3>遍历</h3>
+<h3 id="section-42">遍历</h3>
 
 <p>为了达到遍历数组的最佳性能，推荐使用经典的 <code>for</code> 循环。</p>
 
@@ -1034,7 +995,7 @@ for(var i = 0, l = list.length; i &lt; l; i++) {
 
 <p>实际上，不使用缓存数组长度的方式比缓存版本要慢很多。</p>
 
-<h3><code>length</code> 属性</h3>
+<h3 id="length-"><code>length</code> 属性</h3>
 
 <p><code>length</code> 属性的getter方式会简单的返回数组的长度，而setter方式会截断数组。</p>
 
@@ -1056,11 +1017,11 @@ foo[5] = undefined;
 
 <p>为 <code>length</code> 设置一个更小的值会截断数组，但是增大 <code>length</code> 属性值不会对数组产生影响。</p>
 
-<h3>结论</h3>
+<h3 id="section-43">结论</h3>
 
 <p>为了更好的性能，推荐使用普通的 <code>for</code> 循环并缓存数组的 <code>length</code> 属性。使用 <code>for in</code> 遍历数组被认为是不好的代码习惯并倾向于产生错误和导致性能问题。</p>
 
-<h2>﻿<code>Array</code> 构造函数</h2>
+<h2 id="array-">﻿<code>Array</code> 构造函数</h2>
 
 <p>由于 <code>Array</code> 的构造函数在如何处理参数时有点模棱两可，因此总是推荐使用数组的字面语法 -
 <code>[]</code> - 来创建数组。</p>
@@ -1095,15 +1056,15 @@ arr[1]; // undefined
 
 <p>译者注：<code>new Array(3).join('#')</code> 将会返回 <code>##</code></p>
 
-<h3>结论</h3>
+<h3 id="section-44">结论</h3>
 
 <p>应该尽量避免使用数组构造函数创建新数组。推荐使用数组的字面语法。它们更加短小和简洁，因此增加了代码的可读性。</p>
 
-<h2>﻿相等与比较</h2>
+<h2 id="section-45">﻿相等与比较</h2>
 
 <p>JavaScript 有两种方式判断两个值是否相等。</p>
 
-<h3>等于操作符</h3>
+<h3 id="section-46">等于操作符</h3>
 
 <p>等于操作符由两个等号组成：<code>==</code></p>
 
@@ -1124,7 +1085,7 @@ null         ==   undefined     // true
 
 <p>此外，强制类型转换也会带来性能消耗，比如一个字符串为了和一个数组进行比较，必须事先被强制转换为数字。</p>
 
-<h3>严格等于操作符</h3>
+<h3 id="section-47">严格等于操作符</h3>
 
 <p>严格等于操作符由三个等号组成：<code>===</code></p>
 
@@ -1143,7 +1104,7 @@ null         ===   undefined     // false
 
 <p>上面的结果更加清晰并有利于代码的分析。如果两个操作数类型不同就肯定不相等也有助于性能的提升。</p>
 
-<h3>比较对象</h3>
+<h3 id="section-48">比较对象</h3>
 
 <p>虽然 <code>==</code> 和 <code>===</code> 操作符都是等于操作符，但是当其中有一个操作数为对象时，行为就不同了。</p>
 
@@ -1156,11 +1117,11 @@ foo === foo;                 // true
 
 <p>这里等于操作符比较的不是值是否相等，而是是否属于同一个身份；也就是说，只有对象的同一个实例才被认为是相等的。这有点像 Python 中的 <code>is</code> 和 C 中的指针比较。</p>
 
-<h3>结论</h3>
+<h3 id="section-49">结论</h3>
 
 <p>强烈推荐使用严格等于操作符。如果类型需要转换，应该在比较之前显式的转换，而不是使用语言本身复杂的强制转换规则。</p>
 
-<h2>﻿<code>typeof</code> 操作符</h2>
+<h2 id="typeof-">﻿<code>typeof</code> 操作符</h2>
 
 <p><code>typeof</code> 操作符（和 <code>instanceof</code> 一起）或许是 JavaScript 中最大的设计缺陷，因为几乎不可能从它们那里得到想要的结果。</p>
 
@@ -1168,7 +1129,7 @@ foo === foo;                 // true
 
 <p>注意:由于 <code>typeof</code> 也可以像函数的语法被调用，比如<code>typeof(obj)</code>，但这并是一个函数调用。那两个小括号只是用来计算一个表达式的值，这个返回值会作为 <code>typeof</code> 操作符的一个操作数。 实际上不存在名为 <code>typeof</code> 的函数。</p>
 
-<h3>JavaScript 类型表格</h3>
+<h3 id="javascript-">JavaScript 类型表格</h3>
 
 <pre><code>Value               Class      Type
 -------------------------------------
@@ -1189,7 +1150,7 @@ new RegExp("meow")  RegExp     object (function in Nitro/V8)
 new Object()        Object     object
 </code></pre>
 
-<p>上面表格中，Type一列表示 <code>typeof</code> 操作符的运算结果。可以看到，这个值在大多数情况下都返回 "object"。</p>
+<p>上面表格中，Type一列表示 <code>typeof</code> 操作符的运算结果。可以看到，这个值在大多数情况下都返回 “object”。</p>
 
 <p>Class一列表示对象的内部属性 <code>[[Class]]</code> 的值。</p>
 
@@ -1197,7 +1158,7 @@ new Object()        Object     object
 
 <p>为了获取对象的 <code>[[Class]]</code>，我们需要使用定义在 <code>Object.prototype</code> 上的方法 <code>toString</code>。</p>
 
-<h3>对象的类定义</h3>
+<h3 id="section-50">对象的类定义</h3>
 
 <p>JavaScript 标准文档只给出了一种获取 <code>[[Class]]</code> 值的方法，那就是使用 <code>Object.prototype.toString</code>。</p>
 
@@ -1232,24 +1193,24 @@ Object.prototype.toString.call(null)    // "[object Null]"
 Object.prototype.toString.call(undefined)   // "[object Undefined]"
 </code></pre>
 
-<h3>测试为定义变量</h3>
+<h3 id="section-51">测试为定义变量</h3>
 
 <pre><code>typeof foo !== 'undefined'
 </code></pre>
 
 <p>上面代码会检测 <code>foo</code> 是否已经定义；如果没有定义而直接使用会导致 <code>ReferenceError</code> 的异常。 这是 <code>typeof</code> 唯一有用的地方。</p>
 
-<h3>结论</h3>
+<h3 id="section-52">结论</h3>
 
 <p>为了检测一个对象的类型，强烈推荐使用 <code>Object.prototype.toString</code> 方法；因为这是唯一一个可依赖的方式。正如上面表格所示，<code>typeof</code>的一些返回值在标准文档中并未定义， 因此不同的引擎实现可能不同。</p>
 
 <p>除非为了检测一个变量是否已经定义，我们应尽量避免使用 <code>typeof</code> 操作符。</p>
 
-<h2>﻿<code>instanceof</code> 操作符</h2>
+<h2 id="instanceof-">﻿<code>instanceof</code> 操作符</h2>
 
 <p><code>instanceof</code>操作符用来比较两个操作数的构造函数。只有在比较自定义的对象时才有意义。如果用来比较内置类型，将会和 <code>typeof</code> 操作符 一样用处不大。</p>
 
-<h3>比较自定义对象</h3>
+<h3 id="section-53">比较自定义对象</h3>
 
 <pre><code>function Foo() {}
 function Bar() {}
@@ -1263,7 +1224,7 @@ Bar.prototype = Foo;
 new Bar() instanceof Foo; // false
 </code></pre>
 
-<h3><code>instanceof</code> 比较内置类型</h3>
+<h3 id="instanceof--1"><code>instanceof</code> 比较内置类型</h3>
 
 <pre><code>new String('foo') instanceof String; // true
 new String('foo') instanceof Object; // true
@@ -1274,11 +1235,11 @@ new String('foo') instanceof Object; // true
 
 <p>有一点需要注意，<code>instanceof</code> 用来比较属于不同 JavaScript 上下文的对象（比如，浏览器中不同的文档结构）时将会出错，因为它们的构造函数不会是同一个对象。</p>
 
-<h3>结论</h3>
+<h3 id="section-54">结论</h3>
 
 <p><code>instanceof</code> 操作符应该仅仅用来比较来自同一个 JavaScript 上下文的自定义对象。 正如 <code>typeof</code> 操作符一样，任何其它的用法都应该是避免的。</p>
 
-<h2>﻿类型转换</h2>
+<h2 id="section-55">﻿类型转换</h2>
 
 <p>JavaScript 是弱类型语言，所以会在任何可能的情况下应用强制类型转换。</p>
 
@@ -1300,7 +1261,7 @@ isNaN(null) == false; // null 被转换为数字 0
 
 <p>为了避免上面复杂的强制类型转换，强烈推荐使用严格的等于操作符。虽然这可以避免大部分的问题，但 JavaScript 的弱类型系统仍然会导致一些其它问题。</p>
 
-<h3>内置类型的构造函数</h3>
+<h3 id="section-56">内置类型的构造函数</h3>
 
 <p>内置类型（比如 <code>Number</code> 和 <code>String</code>）的构造函数在被调用时，使用或者不使用 <code>new</code> 的结果完全不同。</p>
 
@@ -1315,14 +1276,14 @@ new Number(10) + 0 === 10; // True, 由于隐式的类型转换
 
 <p>最好的选择是把要比较的值显式的转换为三种可能的类型之一。</p>
 
-<h3>转换为字符串</h3>
+<h3 id="section-57">转换为字符串</h3>
 
 <pre><code>'' + 10 === '10'; // true
 </code></pre>
 
 <p>将一个值加上空字符串可以轻松转换为字符串类型。</p>
 
-<h3>转换为数字</h3>
+<h3 id="section-58">转换为数字</h3>
 
 <pre><code>+'10' === 10; // true
 </code></pre>
@@ -1340,7 +1301,7 @@ Number('010.2') === 10.2
 parseInt('010.2', 10) === 10
 </code></pre>
 
-<h3>转换为布尔型</h3>
+<h3 id="section-59">转换为布尔型</h3>
 
 <p>通过使用否操作符两次，可以把一个值转换为布尔型。</p>
 
@@ -1353,7 +1314,7 @@ parseInt('010.2', 10) === 10
 !!true;    // true
 </code></pre>
 
-<h2>﻿<code>setTimeout</code> 和 <code>setInterval</code></h2>
+<h2 id="settimeout--setinterval">﻿<code>setTimeout</code> 和 <code>setInterval</code></h2>
 
 <p>由于 JavaScript 是异步的，可以使用 <code>setTimeout</code> 和 <code>setInterval</code> 来计划执行函数。</p>
 
@@ -1382,7 +1343,7 @@ new Foo();
 
 <p>注意:<code>setTimeout</code> 的第一个参数是函数对象，一个常犯的错误是这样的<code>setTimeout(foo(), 1000)</code>， 这里回调函数是 <code>foo</code>的返回值，而不是<code>foo</code>本身。大部分情况下，这是一个潜在的错误，因为如果函数返回<code>undefined</code>，<code>setTimeout</code> 也不会报错。</p>
 
-<h3><code>setInterval</code> 的堆调用</h3>
+<h3 id="setinterval-"><code>setInterval</code> 的堆调用</h3>
 
 <p><code>setTimeout</code> 只会执行回调函数一次，不过 <code>setInterval</code> - 正如名字建议的 - 会每隔 <code>X</code> 毫秒执行函数一次。 但是却不鼓励使用这个函数。</p>
 
@@ -1398,7 +1359,7 @@ setInterval(foo, 1000);
 
 <p>在 <code>foo</code> 被阻塞的时候，<code>setInterval</code> 仍然在组织将来对回调函数的调用。因此，当第一次 <code>foo</code> 函数调用结束时，已经有10次函数调用在等待执行。</p>
 
-<h3>处理可能的阻塞调用</h3>
+<h3 id="section-60">处理可能的阻塞调用</h3>
 
 <p>最简单也是最容易控制的方案，是在回调函数内部使用 <code>setTimeout</code> 函数。</p>
 
@@ -1411,7 +1372,7 @@ foo();
 
 <p>这样不仅封装了 <code>setTimeout</code> 回调函数，而且阻止了调用指令的堆积，可以有更多的控制。 <code>foo</code>函数现在可以控制是否继续执行还是终止执行。</p>
 
-<h3>手工清空定时器</h3>
+<h3 id="section-61">手工清空定时器</h3>
 
 <p>可以通过将定时时产生的 ID 标识传递给 <code>clearTimeout</code> 或者 <code>clearInterval</code> 函数来清除定时， 至于使用哪个函数取决于调用的时候使用的是 <code>setTimeout</code> 还是 <code>setInterval</code>。</p>
 
@@ -1419,7 +1380,7 @@ foo();
 clearTimeout(id);
 </code></pre>
 
-<h3>清除所有定时器</h3>
+<h3 id="section-62">清除所有定时器</h3>
 
 <p>由于没有内置的清除所有定时器的方法，可以采用一种暴力的方式来达到这一目的。</p>
 
@@ -1431,7 +1392,7 @@ for(var i = 1; i &lt; 1000; i++) {
 
 <p>可能还有些定时器不会在上面代码中被清除（译者注：如果定时器调用时返回的 ID 值大于 1000）， 因此我们可以事先保存所有的定时器 ID，然后一把清除。</p>
 
-<h3>隐藏使用 <code>eval</code></h3>
+<h3 id="eval">隐藏使用 <code>eval</code></h3>
 
 <p><code>setTimeout</code> 和 <code>setInterval</code> 也接受第一个参数为字符串的情况。这个特性绝对不要使用，因为它在内部使用了 <code>eval</code>。</p>
 
@@ -1467,72 +1428,88 @@ setTimeout(function() {
 
 <p>注意:虽然也可以使用这样的语法 <code>setTimeout(foo, 1000, a, b, c)</code>，但是不推荐这么做，因为在使用对象的属性方法时可能会出错。（译者注：这里说的是属性方法内，<code>this</code> 的指向错误）</p>
 
-<h3>结论</h3>
+<h3 id="section-63">结论</h3>
 
 <p>绝对不要使用字符串作为 <code>setTimeout</code> 或者 <code>setInterval</code> 的第一个参数，这么写的代码明显质量很差。当需要向回调函数传递参数时，可以创建一个匿名函数，在函数内执行真实的回调函数。</p>
 
 <p>另外，应该避免使用 <code>setInterval</code>，因为它的定时执行不会被 JavaScript 阻塞。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-07-01" datetime="2013-07-01" pubdate>
-							<span class="year">2013-07-01</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
 
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.csser.com/board/4f571b71431e7d0155000ac2" target="_blank">http://www.csser.com/board/4f571b71431e7d0155000ac2</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/07/01/javascript-common-traps-and-special-usage.html">http://http://uwebs.tk/archives/2013/07/01/javascript-common-traps-and-special-usage.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

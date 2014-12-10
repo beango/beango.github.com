@@ -1,77 +1,38 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>jQuery选择器大全</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='jQuery选择器大全'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="jquery,javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / jQuery选择器大全</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">jQuery选择器大全</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>选择器是jQuery最基础的东西，本文中列举的选择器基本上囊括了所有的jQuery选择器，也许各位通过这篇文章能够加深对jQuery选择器的理解，它们本身用法就非常简单，我更希望的是它能够提升个人编写jQuery代码的效率。本文配合截图、代码和简单的概括对所有jQuery选择器进行了介绍，也列举出了一些需要注意和区分的地方。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / jQuery选择器大全</div>
 
-<h3>一、基本选择器</h3>
+<article>
+	<h1><a href="/archives/2012/06/07/jquery-selector.html">jQuery选择器大全</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-06-07</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	<p>选择器是jQuery最基础的东西，本文中列举的选择器基本上囊括了所有的jQuery选择器，也许各位通过这篇文章能够加深对jQuery选择器的理解，它们本身用法就非常简单，我更希望的是它能够提升个人编写jQuery代码的效率。本文配合截图、代码和简单的概括对所有jQuery选择器进行了介绍，也列举出了一些需要注意和区分的地方。</p>
+
+<h3 id="section">一、基本选择器</h3>
 
 <ul>
-<li>id选择器（指定id元素）</li>
+  <li>id选择器（指定id元素）</li>
 </ul>
 
-
-<p>将id="one"的元素背景色设置为黑色。（id选择器返单个元素）</p>
+<p>将id=”one”的元素背景色设置为黑色。（id选择器返单个元素）  </p>
 
 <pre><code>$(document).ready(function () {  
     $('#one').css('background', '#000');  
@@ -79,11 +40,10 @@
 </code></pre>
 
 <ul>
-<li>class选择器（遍历css类元素）</li>
+  <li>class选择器（遍历css类元素）</li>
 </ul>
 
-
-<p>将class="cube"的元素背景色设为黑色</p>
+<p>将class=”cube”的元素背景色设为黑色  </p>
 
 <pre><code>$(document).ready(function () {  
     $('.cube').css('background', '#000');  
@@ -91,11 +51,10 @@
 </code></pre>
 
 <ul>
-<li>element选择器（遍历html元素）</li>
+  <li>element选择器（遍历html元素）</li>
 </ul>
 
-
-<p>将p元素的文字大小设置为12px</p>
+<p>将p元素的文字大小设置为12px  </p>
 
 <pre><code>$(document).ready(function () {  
     $('p').css('font-size', '12px');  
@@ -103,9 +62,8 @@
 </code></pre>
 
 <ul>
-<li>* 选择器（遍历所有元素）</li>
+  <li>* 选择器（遍历所有元素）</li>
 </ul>
-
 
 <p>遍历form下的所有元素，将字体颜色设置为红色</p>
 
@@ -115,23 +73,21 @@
 </code></pre>
 
 <ul>
-<li>并列选择器</li>
+  <li>并列选择器  </li>
 </ul>
 
-
-<p>将p元素和div元素的margin设为0</p>
+<p>将p元素和div元素的margin设为0  </p>
 
 <pre><code>$(document).ready(function () {  
     $('p, div').css('margin', '0');  
 });
 </code></pre>
 
-<h3>二、 层次选择器</h3>
+<h3 id="section-1">二、 层次选择器</h3>
 
 <ul>
-<li>parent > child（直系子元素）</li>
+  <li>parent &gt; child（直系子元素） </li>
 </ul>
-
 
 <p>选取div下的第一代span元素，将字体颜色设为红色</p>
 
@@ -151,9 +107,8 @@
 </code></pre>
 
 <ul>
-<li>prev + next（下一个兄弟元素，等同于next()方法）</li>
+  <li>prev + next（下一个兄弟元素，等同于next()方法）  </li>
 </ul>
-
 
 <p>选取class为item的下一个div兄弟元素，两种写法都可以</p>
 
@@ -163,7 +118,7 @@
 });
 </code></pre>
 
-<p>下面的代码，只有123和789会变色</p>
+<p>下面的代码，只有123和789会变色  </p>
 
 <pre><code>&lt;p class="item"&gt;&lt;/p&gt;  
 &lt;div&gt;123&lt;/div&gt;  
@@ -173,9 +128,8 @@
 </code></pre>
 
 <ul>
-<li>prev ~ siblings（prev元素的所有兄弟元素，等同于nextAll()方法）</li>
+  <li>prev ~ siblings（prev元素的所有兄弟元素，等同于nextAll()方法） </li>
 </ul>
-
 
 <p>选取class为inside之后的所有div兄弟元素，两种写法都可以</p>
 
@@ -185,7 +139,7 @@
 });
 </code></pre>
 
-<p>下面的代码，G2和G4会变色</p>
+<p>下面的代码，G2和G4会变色  </p>
 
 <pre><code>&lt;div class="inside"&gt;G1&lt;/div&gt;  
 &lt;div&gt;G2&lt;/div&gt;  
@@ -193,14 +147,9 @@
 &lt;div&gt;G4&lt;/div&gt;
 </code></pre>
 
-<h3>三、 过滤选择器</h3>
+<h3 id="section-2">三、 过滤选择器</h3>
 
-<ul>
-<li>:first和:last（取第一个元素或最后一个元素）</li>
-</ul>
-
-
-<p><span></span></p>
+<p><strong>:first和:last（取第一个元素或最后一个元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('span:first').css('color', '#FF0000');  
@@ -215,12 +164,7 @@
 &lt;span&gt;G3&lt;/span&gt;
 </code></pre>
 
-<ul>
-<li>:not（取非元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:not（取非元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('div:not(.wrap)').css('color', '#FF0000');  
@@ -241,14 +185,9 @@
 &lt;/div&gt;
 </code></pre>
 
-<p>当G1所在div和G2所在div是父子关系时，G1和G2都会变色。</p>
+<p>当G1所在div和G2所在div是父子关系时，G1和G2都会变色。  </p>
 
-<ul>
-<li>:even和:odd（取偶数索引或奇数索引元素，索引从0开始，even表示偶数，odd表示奇数）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:even和:odd（取偶数索引或奇数索引元素，索引从0开始，even表示偶数，odd表示奇数）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('tr:even').css('background', '#EEE'); // 偶数行颜色  
@@ -258,7 +197,7 @@
 
 <p>A、C行颜色#EEE（第一行的索引为0），B、D行颜色#DADADA</p>
 
-<p><a href="/assets/files/2012-06/201206022030141021.png"><img src="/assets/files/2012-06/201206022030155067.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030141021.png"><img src="/assets/files/2012-06/201206022030155067.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;table width="200" cellpadding="0" cellspacing="0"&gt;  
     &lt;tbody&gt;  
@@ -271,11 +210,10 @@
 </code></pre>
 
 <ul>
-<li>:eq(x) （取指定索引的元素）</li>
+  <li>:eq(x) （取指定索引的元素）</li>
 </ul>
 
-
-<p><a href="/assets/files/2012-06/201206022030158348.png"><img src="/assets/files/2012-06/201206022030166854.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030158348.png"><img src="/assets/files/2012-06/201206022030166854.png" alt="image" title="image" /></a></p>
 
 <pre><code>$(document).ready(function () {  
     $('tr:eq(2)').css('background', '#FF0000');  
@@ -284,12 +222,7 @@
 
 <p>更改第三行的背景色，在上面的代码中C的背景会变色。</p>
 
-<ul>
-<li>:gt(x)和:lt(x)（取大于x索引或小于x索引的元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:gt(x)和:lt(x)（取大于x索引或小于x索引的元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('ul li:gt(2)').css('color', '#FF0000');  
@@ -299,7 +232,7 @@
 
 <p>L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色</p>
 
-<p><a href="/assets/files/2012-06/201206022030173723.png"><img src="/assets/files/2012-06/201206022030182228.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030173723.png"><img src="/assets/files/2012-06/201206022030182228.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;ul&gt;  
     &lt;li&gt;L1&lt;/li&gt;  
@@ -310,21 +243,16 @@
 &lt;/ul&gt;
 </code></pre>
 
-<ul>
-<li>:header（取H1~H6标题元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:header（取H1~H6标题元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $(':header').css('background', '#EFEFEF');  
 });
 </code></pre>
 
-<p>下面的代码，H1~H6的背景色都会变</p>
+<p>下面的代码，H1~H6的背景色都会变  </p>
 
-<p><a href="/assets/files/2012-06/201206022030191573.png"><img src="/assets/files/2012-06/20120602203020917.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030191573.png"><img src="/assets/files/2012-06/20120602203020917.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;h1&gt;H1&lt;/h1&gt;  
 &lt;h2&gt;H2&lt;/h2&gt;  
@@ -334,12 +262,7 @@
 &lt;h6&gt;H6&lt;/h6&gt;
 </code></pre>
 
-<ul>
-<li>:contains(text)（取包含text文本的元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:contains(text)（取包含text文本的元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     //dd元素中包含"jQuery"文本的会变色  
@@ -359,24 +282,14 @@
 &lt;/dl&gt;
 </code></pre>
 
-<ul>
-<li>:empty（取不包含子元素或文本为空的元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:empty（取不包含子元素或文本为空的元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('dd:empty').html('没有内容');  
 });
 </code></pre>
 
-<ul>
-<li>:has(selector)（取选择器匹配的元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:has(selector)（取选择器匹配的元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     //为包含span元素的div添加边框  
@@ -386,7 +299,7 @@
 
 <p>即使span不是div的直系子元素，也会生效</p>
 
-<p><a href="/assets/files/2012-06/20120602203024488.png"><img src="/assets/files/2012-06/201206022030258994.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/20120602203024488.png"><img src="/assets/files/2012-06/201206022030258994.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;div&gt;  
     &lt;h2&gt;  
@@ -396,12 +309,7 @@
 &lt;/div&gt; 
 </code></pre>
 
-<ul>
-<li>:parent（取包含子元素或文本的元素）</li>
-</ul>
-
-
-<p><label/></p>
+<p><strong>:parent（取包含子元素或文本的元素）</strong></p>
 
 <pre><code>$(document).ready(function () {  
     $('ol li:parent').css('border', '1px solid #000');  
@@ -410,7 +318,7 @@
 
 <p>下面的代码，A和D所在的li会有边框</p>
 
-<p><a href="/assets/files/2012-06/201206022030269451.png"><img src="/assets/files/2012-06/201206022030266320.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030269451.png"><img src="/assets/files/2012-06/201206022030266320.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;ol&gt;  
     &lt;li&gt;&lt;/li&gt;  
@@ -421,17 +329,16 @@
 </code></pre>
 
 <ul>
-<li>:hidden（取不可见的元素）</li>
+  <li>:hidden（取不可见的元素）</li>
 </ul>
 
-
-<p>jQuery至1.3.2之后的:hidden选择器仅匹配display:none或&lt;input type="hidden" />的元素，而不匹配visibility:hidden或opacity:0的元素。这也意味着hidden只匹配那些“隐藏的”并且不占空间的元素，像visibility:hidden或opactity:0的元素占据了空间，会被排除在外。</p>
+<p>jQuery至1.3.2之后的:hidden选择器仅匹配display:none或&lt;input type=”hidden” /&gt;的元素，而不匹配visibility:hidden或opacity:0的元素。这也意味着hidden只匹配那些“隐藏的”并且不占空间的元素，像visibility:hidden或opactity:0的元素占据了空间，会被排除在外。</p>
 
 <p>参照：<a href="http://www.jquerysdk.com/api/hidden-selector">http://www.jquerysdk.com/api/hidden-selector</a></p>
 
-<p>下面的代码，先弹出"hello"对话框，然后hid-1会显示，hid-2仍然是不可见的。</p>
+<p>下面的代码，先弹出”hello”对话框，然后hid-1会显示，hid-2仍然是不可见的。</p>
 
-<p><a href="/assets/files/2012-06/2012060220302892.png"><img src="/assets/files/2012-06/201206022030299088.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/2012060220302892.png"><img src="/assets/files/2012-06/201206022030299088.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;  
 &lt;head runat="server"&gt;  
@@ -468,13 +375,12 @@
 </code></pre>
 
 <ul>
-<li>:visible（取可见的元素）</li>
+  <li>:visible（取可见的元素）  </li>
 </ul>
-
 
 <p>下面的代码，最后一个div会有背景色</p>
 
-<p><img src="/assets/files/2012-06/201206022030314463.png" title="image" alt="image" /></p>
+<p><img src="/assets/files/2012-06/201206022030314463.png" alt="image" title="image" /></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;  
     $(document).ready(function() {  
@@ -489,16 +395,15 @@
 &lt;/div&gt;
 </code></pre>
 
-<h3>4. 属性过滤选择器</h3>
+<h3 id="section-3">4. 属性过滤选择器</h3>
 
 <ul>
-<li>[attribute]（取拥有attribute属性的元素）</li>
+  <li>[attribute]（取拥有attribute属性的元素）</li>
 </ul>
-
 
 <p>下面的代码，最后一个a标签没有title属性，所以它仍然会带下划线</p>
 
-<p><a href="/assets/files/2012-06/201206022030329347.png"><img src="/assets/files/2012-06/20120602203033643.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030329347.png"><img src="/assets/files/2012-06/20120602203033643.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -516,13 +421,12 @@
 </code></pre>
 
 <ul>
-<li>[attribute = value]和[attribute != value]（取attribute属性值等于value或不等于value的元素）</li>
+  <li>[attribute = value]和[attribute != value]（取attribute属性值等于value或不等于value的元素）</li>
 </ul>
 
+<p>分别为class=”item”和class!=item的a标签指定文字颜色</p>
 
-<p>分别为class="item"和class!=item的a标签指定文字颜色</p>
-
-<p><a href="/assets/files/2012-06/201206022030343576.png"><img src="/assets/files/2012-06/201206022030352921.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030343576.png"><img src="/assets/files/2012-06/201206022030352921.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -533,13 +437,12 @@
 </code></pre>
 
 <ul>
-<li>[attribute ^= value], [attribute $= value]和[attribute *= value]（attribute属性值以value开始，以value结束，或包含value值）</li>
+  <li>[attribute ^= value], [attribute $= value]和[attribute *= value]（attribute属性值以value开始，以value结束，或包含value值）</li>
 </ul>
 
+<p>在属性选择器中，^$符号和正则表达式的开始结束符号表示的含义是一致的，*模糊匹配，类似于sql中的like’%str%’。</p>
 
-<p>在属性选择器中，<sup>$符号和正则表达式的开始结束符号表示的含义是一致的，*模糊匹配，类似于sql中的like'%str%'。</sup></p>
-
-<p><a href="/assets/files/2012-06/201206022030364217.png"><img src="/assets/files/2012-06/201206022030377150.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030364217.png"><img src="/assets/files/2012-06/201206022030377150.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     // 识别大小写，输入字符串时可以输入引号，[title^=jQuery]和[title^="jQuery"]是一样的
@@ -550,11 +453,10 @@
 </code></pre>
 
 <ul>
-<li>[selector1][selector2]（复合型属性过滤器，同时满足多个条件）</li>
+  <li>[selector1][selector2]（复合型属性过滤器，同时满足多个条件）</li>
 </ul>
 
-
-<p>将title以"jQuery"开始，并且class="item"的a标签隐藏，那么&lt;a href="#" title="jQuery事件大全" class="item">jQuery事件大全&lt;/a>会被隐藏</p>
+<p>将title以”jQuery”开始，并且class=”item”的a标签隐藏，那么&lt;a href=”#” title=”jQuery事件大全” class=”item”&gt;jQuery事件大全&lt;/a&gt;会被隐藏</p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -563,12 +465,11 @@
 &lt;/script&gt;  
 </code></pre>
 
-<h3>5. 子元素过滤选择器</h3>
+<h3 id="section-4">5. 子元素过滤选择器</h3>
 
 <ul>
-<li>:first-child和:last-child</li>
+  <li>:first-child和:last-child</li>
 </ul>
-
 
 <p>:first-child表示第一个子元素，:last-child表示最后一个子元素。</p>
 
@@ -598,7 +499,7 @@
 </code></pre>
 
 <p>也许你觉得这个答案，是不是太简单了？len1 = 2, len2 =2。但实际确并不是，它们俩都等于3。
-把上面的代码稍微修改一下：</p>
+把上面的代码稍微修改一下：  </p>
 
 <pre><code>&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;  
 &lt;head runat="server"&gt;  
@@ -624,13 +525,12 @@ $(document).ready(function() {
 &lt;/html&gt;
 </code></pre>
 
-<p>结果却是弹出三个alert，只不过最后一个alert里面是空白的。<br/>
-<a href="/assets/files/2012-06/201206022030416753.png"><img src="/assets/files/2012-06/201206022030416753.png" title="image" alt="image" /></a></p>
+<p>结果却是弹出三个alert，只不过最后一个alert里面是空白的。<br />
+<a href="/assets/files/2012-06/201206022030416753.png"><img src="/assets/files/2012-06/201206022030416753.png" alt="image" title="image" /></a></p>
 
 <ul>
-<li>:only-child</li>
+  <li>:only-child</li>
 </ul>
-
 
 <p>当某个元素有且仅有一个子元素时，:only-child才会生效。</p>
 
@@ -656,67 +556,59 @@ $(document).ready(function() {
 
 <p>这里:only-child也是三个元素，从最后一个很粗的红色边框（实际是两个元素的边框重叠了）也可以看出来。</p>
 
-<p><a href="/assets/files/2012-06/201206022030431539.png"><img src="/assets/files/2012-06/201206022030443325.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030431539.png"><img src="/assets/files/2012-06/201206022030443325.png" alt="image" title="image" /></a></p>
 
 <ul>
-<li>:nth-child</li>
+  <li>:nth-child</li>
 </ul>
 
-
-<p>看到这个就想起英文单词里的，fourth, fifth,sixth……，nth表示第n个，:nth-child就表示第n个child元素。要注意的是，这儿的n不像eq(x)、gt(x)或lt(x)是从0开始的，它是从1开始的，英文里好像也没有zeroth这样的序号词吧。<br/>
+<p>看到这个就想起英文单词里的，fourth, fifth,sixth……，nth表示第n个，:nth-child就表示第n个child元素。要注意的是，这儿的n不像eq(x)、gt(x)或lt(x)是从0开始的，它是从1开始的，英文里好像也没有zeroth这样的序号词吧。<br />
 :nth-child有三种用法：
-1) :nth-child(x)，获取第x个子元素<br/>
-2) :nth-child(even)和:nth-child(odd)，从1开始，获取第偶数个元素或第奇数个元素<br/>
-​3) :nth-child(xn+y)，x>=0，y>=0。例如x = 3, y = 0时就是3n，表示取第3n个元素（n>=0）。实际上xn+y是上面两种的通项式。（当x=0,y>=0时，等同于:hth-child(x)；当x=2,y=0时，等同于nth-child(even)；当x=2,y=1时，等同于:nth-child(odd)）</p>
+1) :nth-child(x)，获取第x个子元素<br />
+2) :nth-child(even)和:nth-child(odd)，从1开始，获取第偶数个元素或第奇数个元素<br />
+​3) :nth-child(xn+y)，x&gt;=0，y&gt;=0。例如x = 3, y = 0时就是3n，表示取第3n个元素（n&gt;=0）。实际上xn+y是上面两种的通项式。（当x=0,y&gt;=0时，等同于:hth-child(x)；当x=2,y=0时，等同于nth-child(even)；当x=2,y=1时，等同于:nth-child(odd)）  </p>
 
-<p>下面的两个例子是针对2)和3)的，1)的例子我就不列举了。</p>
+<p>下面的两个例子是针对2)和3)的，1)的例子我就不列举了。  </p>
 
 <p>例2：</p>
 
-<p><a href="/assets/files/2012-06/201206022030467894.png"><img src="/assets/files/2012-06/201206022030482123.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030467894.png"><img src="/assets/files/2012-06/201206022030482123.png" alt="image" title="image" /></a></p>
 
-<p><html xmlns="http://www.w3.org/1999/xhtml" >
-<head runat="server"></p>
-
-<pre><code>&lt;title&gt;&lt;/title&gt;
-&lt;style type="text/css"&gt;
-    td {
-        width: 200px;
-        height: 32px;
-        line-height: 32px;
-    }
-&lt;/style&gt;
-&lt;script type="text/javascript" src="js/jquery.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-    $(document).ready(function() {
-        //偶数行背景红色
-        $('tr:nth-child(even)').css('background', '#FF0000');
-        //奇数行背景蓝色
-        $('tr:nth-child(odd)').css('background', '#0000FF');
-    });
-&lt;/script&gt;
+<pre><code>&lt;html xmlns="http://www.w3.org/1999/xhtml" &gt;
+&lt;head runat="server"&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type="text/css"&gt;
+        td {
+            width: 200px;
+            height: 32px;
+            line-height: 32px;
+        }
+    &lt;/style&gt;
+    &lt;script type="text/javascript" src="js/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        $(document).ready(function() {
+            //偶数行背景红色
+            $('tr:nth-child(even)').css('background', '#FF0000');
+            //奇数行背景蓝色
+            $('tr:nth-child(odd)').css('background', '#0000FF');
+        });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;table&gt;
+        &lt;tr&gt;&lt;td&gt;1. NBA 2012季后赛&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;2. NBA 2011季后赛&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;3. NBA 2010季后赛&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;4. NBA 2009季后赛&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;5. NBA 2008季后赛&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr&gt;&lt;td&gt;6. NBA 2007季后赛&lt;/td&gt;&lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 </code></pre>
 
-<p></head>
-<body></p>
-
-<pre><code>&lt;table&gt;
-    &lt;tr&gt;&lt;td&gt;1. NBA 2012季后赛&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;2. NBA 2011季后赛&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;3. NBA 2010季后赛&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;4. NBA 2009季后赛&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;5. NBA 2008季后赛&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;6. NBA 2007季后赛&lt;/td&gt;&lt;/tr&gt;
-&lt;/table&gt;
-</code></pre>
-
-<p></body>
-</html></p>
-
-<p>例3（html代码和例2是一样的）：<br/>
-<a href="/assets/files/2012-06/201206022030495056.png"><img src="/assets/files/2012-06/20120602203050812.png" title="SNAGHTMLd6d414" alt="SNAGHTMLd6d414" /></a></p>
-
-<p><label/></p>
+<p>例3（html代码和例2是一样的）：<br />
+<a href="/assets/files/2012-06/201206022030495056.png"><img src="/assets/files/2012-06/20120602203050812.png" alt="SNAGHTMLd6d414" title="SNAGHTMLd6d414" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -725,16 +617,15 @@ $(document).ready(function() {
 &lt;/script&gt;
 </code></pre>
 
-<h3>6. 表单对象属性过滤选择器</h3>
+<h3 id="section-5">6. 表单对象属性过滤选择器</h3>
 
 <ul>
-<li>:enabled和:disabled（取可用或不可用元素）</li>
+  <li>:enabled和:disabled（取可用或不可用元素）</li>
 </ul>
-
 
 <p>:enabled和:diabled的匹配范围包括input, select, textarea。</p>
 
-<p><a href="/assets/files/2012-06/201206022030515697.png"><img src="/assets/files/2012-06/20120602203052265.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030515697.png"><img src="/assets/files/2012-06/20120602203052265.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -760,13 +651,12 @@ $(document).ready(function() {
 </code></pre>
 
 <ul>
-<li>:checked（取选中的单选框或复选框元素）</li>
+  <li>:checked（取选中的单选框或复选框元素）</li>
 </ul>
-
 
 <p>下面的代码，更改边框或背景色仅在IE下有效果，chrome和firefox不会改变，但是alert都会弹出来。</p>
 
-<p><a href="/assets/files/2012-06/201206022030537974.png"><img src="/assets/files/2012-06/20120602203054906.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030537974.png"><img src="/assets/files/2012-06/20120602203054906.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -787,11 +677,10 @@ $(document).ready(function() {
 </code></pre>
 
 <ul>
-<li>:selected（取下拉列表被选中的元素）</li>
+  <li>:selected（取下拉列表被选中的元素）</li>
 </ul>
 
-
-<p><a href="/assets/files/2012-06/201206022030566281.png"><img src="/assets/files/2012-06/2012060220305753.png" title="SNAGHTML14414ae" alt="SNAGHTML14414ae" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030566281.png"><img src="/assets/files/2012-06/2012060220305753.png" alt="SNAGHTML14414ae" title="SNAGHTML14414ae" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
     $(document).ready(function() {
@@ -805,23 +694,21 @@ $(document).ready(function() {
 &lt;/select&gt;
 </code></pre>
 
-<h3>四、表单选择器</h3>
+<h3 id="section-6">四、表单选择器</h3>
 
 <ul>
-<li>:input（取input,textarea,select,button元素）</li>
+  <li>:input（取input,textarea,select,button元素）</li>
 </ul>
-
 
 <p>:input元素这里就不再多说了，前面的一些例子中也已经囊括了。</p>
 
 <ul>
-<li>:text（取单行文本框元素）和:password（取密码框元素）</li>
+  <li>:text（取单行文本框元素）和:password（取密码框元素）</li>
 </ul>
 
+<p>这两个选择器分别和属性选择器$(‘input[type=text]’)、$(‘input[type=password]’)等同。</p>
 
-<p>这两个选择器分别和属性选择器$('input[type=text]')、$('input[type=password]')等同。</p>
-
-<p><a href="/assets/files/2012-06/201206022030582985.png"><img src="/assets/files/2012-06/201206022030599506.png" title="image" alt="image" /></a></p>
+<p><a href="/assets/files/2012-06/201206022030582985.png"><img src="/assets/files/2012-06/201206022030599506.png" alt="image" title="image" /></a></p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
    $(document).ready(function() {
@@ -845,11 +732,10 @@ $(document).ready(function() {
 </code></pre>
 
 <ul>
-<li>:radio（取单选框元素）</li>
+  <li>:radio（取单选框元素）</li>
 </ul>
 
-
-<p>:radio选择器和属性选择器$('input[type=radio]')等同</p>
+<p>:radio选择器和属性选择器$(‘input[type=radio]’)等同</p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
 $(document).ready(function() {
@@ -871,11 +757,10 @@ $(document).ready(function() {
 </code></pre>
 
 <ul>
-<li>:checkbox（取复选框元素）</li>
+  <li>:checkbox（取复选框元素）</li>
 </ul>
 
-
-<p>:checkbox选择器和属性选择器$('input[type=checkbox]')等同</p>
+<p>:checkbox选择器和属性选择器$(‘input[type=checkbox]’)等同</p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
 $(document).ready(function() {
@@ -911,80 +796,103 @@ $(':checked').each(function() {
 </code></pre>
 
 <ul>
-<li><p>:submit（取提交按钮元素）<br/>
-:submit选择器和属性选择器$('input[type=submit]')等同</p></li>
-<li><p>:reset（取重置按钮元素）<br/>
-:reset选择器和属性选择器$('input[type=reset]')等同</p></li>
-<li><p>:button（取按钮元素）<br/>
-:button选择器和属性选择器$('input[type=button]')等同</p></li>
-<li><p>:file（取上传域元素）<br/>
-:file选择器和属性选择器$('input[type=file]')等同</p></li>
-<li><p>:hidden（取不可见元素）<br/>
-:hidden选择器和属性选择器$('input[type=hidden]')等同</p></li>
+  <li>
+    <p>:submit（取提交按钮元素）<br />
+:submit选择器和属性选择器$(‘input[type=submit]’)等同</p>
+  </li>
+  <li>
+    <p>:reset（取重置按钮元素）<br />
+:reset选择器和属性选择器$(‘input[type=reset]’)等同</p>
+  </li>
+  <li>
+    <p>:button（取按钮元素）<br />
+:button选择器和属性选择器$(‘input[type=button]’)等同</p>
+  </li>
+  <li>
+    <p>:file（取上传域元素）<br />
+:file选择器和属性选择器$(‘input[type=file]’)等同</p>
+  </li>
+  <li>
+    <p>:hidden（取不可见元素）<br />
+:hidden选择器和属性选择器$(‘input[type=hidden]’)等同</p>
+  </li>
 </ul>
 
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-06-07" datetime="2012-06-07" pubdate>
-							<span class="year">2012-06-07</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="jquery"><a href="/tags.html#jquery-ref">jquery</a></li>
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/06/07/jquery-selector.html">http://http://uwebs.tk/archives/2012/06/07/jquery-selector.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

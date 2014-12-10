@@ -23,7 +23,6 @@ redirecturl: http://blog.jobbole.com/44608/
 
 ### 样例代码
 
-<label />
     type Gopher struct {
         Name     string
         Age      int32
@@ -48,7 +47,6 @@ redirecturl: http://blog.jobbole.com/44608/
 
 ### 避免嵌套的处理错误
 
-<label />
     func (g *Gopher) DumpBinary(w io.Writer) error {
         err := binary.Write(w, binary.LittleEndian, int32(len(g.Name)))
         if err != nil {
@@ -95,7 +93,6 @@ redirecturl: http://blog.jobbole.com/44608/
 
 ### 使用类型推断来处理特殊情况
 
-<label />
     // Write writes a value into its writer using little endian.
     func (w *binWriter) Write(v interface{}) {
         if w.err != nil {
@@ -121,7 +118,6 @@ redirecturl: http://blog.jobbole.com/44608/
 
 ### 类型推断的变量声明要短
 
-<label />
     // Write write the given value into the writer using little endian.
     func (w *binWriter) Write(v interface{}) {
         if w.err != nil {
@@ -138,7 +134,6 @@ redirecturl: http://blog.jobbole.com/44608/
 
 ### 函数适配器
 
-<label />
     func init() {
         http.HandleFunc("/", handler)
     }
@@ -294,7 +289,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 
 ### 让独立的包彼此独立
 
-<label />
     import (
         "code.google.com/p/go.talks/2013/bestpractices/funcdraw/drawer"
         "code.google.com/p/go.talks/2013/bestpractices/funcdraw/parser"
@@ -317,7 +311,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 
 ### 解析
 
-<label />
     type ParsedFunc struct {
         text string
         eval func(float64) float64
@@ -336,7 +329,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 
 ### 描绘
 
-<label />
     import (
         "image"
      
@@ -383,8 +375,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
         // Verify obtained image.
 
 ### 在接口中避免并发
-
-<label />
 
     func doConcurrently(job string, err chan error) {
         go func() {
@@ -479,7 +469,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 
 ### 使用带缓存的chan，来避免goroutine内存泄漏
 
-<label />
     func sendMsg(msg, addr string) error {
         conn, err := net.Dial("tcp", addr)
         if err != nil {
@@ -524,28 +513,27 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 -   goroutine保存了一个chan的引用
 -   chan永远不会垃圾回收
 
-    func broadcastMsg(msg string, addrs []string) error {
-        errc := make(chan error, len(addrs))
-        for _, addr := range addrs {
-            go func(addr string) {
-                errc <- sendMsg(msg, addr)
-                fmt.Println("done")
-            }(addr)
-        }
-     
-        for _ = range addrs {
-            if err := <-errc; err != nil {
-                return err
+        func broadcastMsg(msg string, addrs []string) error {
+            errc := make(chan error, len(addrs))
+            for _, addr := range addrs {
+                go func(addr string) {
+                    errc <- sendMsg(msg, addr)
+                    fmt.Println("done")
+                }(addr)
             }
+         
+            for _ = range addrs {
+                if err := <-errc; err != nil {
+                    return err
+                }
+            }
+            return nil
         }
-        return nil
-    }
 
 如果我们不能预测channel的容量呢?
 
 ### 使用quit chan避免goroutine内存泄漏
 
-<label />
     func broadcastMsg(msg string, addrs []string) error {
         errc := make(chan error)
         quit := make(chan struct{})
@@ -586,8 +574,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
  11. 使用goroutine管理状态  
  12. 避免goroutine内存泄漏
 
-### 
-
 ### 一些链接
 
 资源
@@ -601,8 +587,6 @@ Import 声明，相关的包连起来构成组，组与组之间用空行隔开�
 -   并发不是并行 [video](http://vimeo.com/49718712)
 -   Go并发模式 [video](http://www.youtube.com/watch?v=f6kdp27TYZs)
 -   Go高级并发模式 [video](http://www.youtube.com/watch?v=QDDwwePbDtw)
-
-### 
 
 ### 谢谢
 

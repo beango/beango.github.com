@@ -91,7 +91,7 @@ Happens-before用来指明Go程序里的内存操作的局部顺序。如果一�
 
 在单个Goroutine里，因为肯定没有并发，上面两种情况是等价的。对变量v的读操作可以读到最近一次写操作的值（这个应该很容易理解）。但在多个Goroutine里如果要访问一个共享变量，我们就必须使用同步工具来建立happens-before条件，来保证对该变量的读操作能读到期望的修改值。
 
-**要保证并行执行体对共享变量的顺序访问方法就是用锁**。Java和Go在这点上是一致的。
+要保证并行执行体对共享变量的顺序访问方法就是用锁**。Java和Go在这点上是一致的。
 
 以下是具体的可被利用的Go语言的happens-before规则，从本质上来讲，happens-before规则确定了CPU缓冲和主存的同步时间点（通过[内存屏障](http://hugozhu.myalert.info/2013/03/28/22-memory-barriers-or-fences.html)等指令），从而使得对变量的读写顺序可被确定–也就是我们通常说的“同步”。
 
@@ -99,14 +99,13 @@ Happens-before用来指明Go程序里的内存操作的局部顺序。如果一�
 
 <h2 id="toc_5">初始化</h2>
 
-1.  **如果package p 引用了package q，q的init()方法 happens-before p**（Java工程师可以对比一下[final变量的happens-before规则](http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&utm_medium=related_content_link&utm_campaign=relatedContent_articles_clk)）
-2.  **main.main()方法 happens-after所有package的init()方法结束。**
+如果package p 引用了package q，q的init()方法 happens-before p（Java工程师可以对比一下[final变量的happens-before规则](http://www.infoq.com/cn/articles/java-memory-model-6?utm_source=infoq&utm_medium=related_content_link&utm_campaign=relatedContent_articles_clk)）
+main.main()方法 happens-after所有package的init()方法结束。
 
 <h2 id="toc_6">创建Goroutine</h2>
 
-1.  **go语句创建新的goroutine happens-before 该goroutine执行**（这个应该很容易理解）
+go语句创建新的goroutine happens-before 该goroutine执行（这个应该很容易理解）
 
-<br>
     package main
     import (
         "log"
@@ -137,9 +136,8 @@ Happens-before用来指明Go程序里的内存操作的局部顺序。如果一�
 
 <h2 id="toc_7">销毁Goroutine</h2>
 
-1.  **Goroutine的退出并不保证happens-before任何事件**。
+Goroutine的退出并不保证happens-before任何事件。
 
-<br>
     var a string
     func hello() {
         go func() { a = "hello" }()
@@ -154,11 +152,10 @@ Goroutine对变量的修改需要让对其它Goroutine可见，除了使用锁�
 
 在Go编程中，Channel是被推荐的执行体间通信的方法，Go的编译器和运行态都会尽力对其优化。
 
-1.  **对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成**
-2.  **关闭一个Channel happens-before 从该Channel接收到最后的返回值0**
-3.  **不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成**
+* 对一个Channel的发送操作(send) happens-before 相应Channel的接收操作完成
+* 关闭一个Channel happens-before 从该Channel接收到最后的返回值0
+* 不带缓冲的Channel的接收操作（receive） happens-before 相应Channel的发送操作完成
 
-<br>
     var c = make(chan int, 10)
     var a string
     func f() {
@@ -198,9 +195,8 @@ Goroutine对变量的修改需要让对其它Goroutine可见，除了使用锁�
 
 其happens-before规则和Java的也类似：
 
-1.  **任何sync.Mutex或sync.RWMutex 变量（l），定义 n \< m， 第n次`l.Unlock()` happens-before 第m次`l.lock()`调用返回。**
+任何sync.Mutex或sync.RWMutex 变量（l），定义 n \< m， 第n次`l.Unlock()` happens-before 第m次`l.lock()`调用返回。
 
-<br>
     var l sync.Mutex
     var a string
     func f() {
@@ -220,9 +216,8 @@ Goroutine对变量的修改需要让对其它Goroutine可见，除了使用锁�
 
 `sync`包还提供了一个安全的初始化工具Once。还记得Java的Singleton设计模式，double-check，甚至triple-check的各种单例初始化方法吗？Go则提供了一个标准的方法。
 
-1.  **`once.Do(f)`中的`f()` happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。**
+`once.Do(f)`中的`f()` happens-before 任何多个once.Do(f)调用的返回，且f()有且只有一次调用。
 
-<br>
     var a string
     var once sync.Once
     func setup() {

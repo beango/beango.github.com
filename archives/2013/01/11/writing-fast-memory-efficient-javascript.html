@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>编写高效的JavaScript程序</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='编写高效的JavaScript程序'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 编写高效的JavaScript程序</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">编写高效的JavaScript程序</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p><strong>英文原文：</strong><a href="http://coding.smashingmagazine.com/2012/11/05/writing-fast-memory-efficient-javascript/" title="Read 'Writing Fast, Memory-Efficient JavaScript'">Writing Fast, Memory-Efficient JavaScript</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 编写高效的JavaScript程序</div>
+
+<article>
+	<h1><a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">编写高效的JavaScript程序</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-01-11</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p><strong>英文原文：</strong><a href="http://coding.smashingmagazine.com/2012/11/05/writing-fast-memory-efficient-javascript/" title="Read 'Writing Fast, Memory-Efficient JavaScript'">Writing Fast, Memory-Efficient JavaScript</a></p>
 
 <p>Addy Osmani是谷歌公司Chrome团队中的一名程序开发工程师。他是一位JavaScript爱好者，曾经编写过一本开放源码方面的书籍《<a href="http://addyosmani.com/resources/essentialjsdesignpatterns/book/">Learning
 JavaScript Design Patterns</a>》以及《Developing Backbone
@@ -78,40 +41,38 @@ V8（Chrome，Node）都是专为快速执行大型JavaScript程序而设计的�
 <p>　　我们应该时不时地询问自己：</p>
 
 <ul>
-<li>我还能做些什么使代码更加有效？</li>
-<li>主流的JavaScript引擎做了哪些优化？</li>
-<li>什么是引擎无法优化的，我能期待利用垃圾回收进行清洁吗？</li>
+  <li>我还能做些什么使代码更加有效？</li>
+  <li>主流的JavaScript引擎做了哪些优化？</li>
+  <li>什么是引擎无法优化的，我能期待利用垃圾回收进行清洁吗？</li>
 </ul>
 
-
-<p><img src="/assets/files/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg" alt="" /></p>
+<p><img src="/assets/files/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg" alt="" /> </p>
 
 <p>　　快速的加载Web网页就如同汽车一样，需要使用特殊工具。</p>
 
 <p>　　当涉及到编写高效的内存和快速创建代码时总会出现一些常见的弊端，在这篇文章中我们将探索高效编写代码的测试验证方法。</p>
 
-<h2>一、JavaScript如何在V8中工作？</h2>
+<h2 id="javascriptv8">一、JavaScript如何在V8中工作？</h2>
 
 <p>　　如果你对JS引擎没有较深的了解，开发一个大型Web应用也没啥问题，就好比会开车的人也只是看过引擎盖而没有看过车盖内的引擎一样（这里将Web网页比如成汽车）。Chrome浏览器是我的优先选择，这里我将谈下V8的核心组件：</p>
 
 <ul>
-<li><strong>一个基本的编译器</strong>，在代码执行前分析JavaScript、生成本地机器代码而非执行字节代码或是简单的解释，该段代码之初不是高度优化的。</li>
-<li><strong>V8用对象模型“表述”对象。</strong>在JavaScript中，对象是一个关联数组，但是V8中，对象被“表述”为隐藏类，这种隐藏类是V8的内部类型，用于优化后的查找。</li>
-<li><strong>运行时分析器</strong>监视正在运行的系统并优化“hot”（活跃）函数。（比如，终结运行已久的代码）</li>
-<li>通过运行时分析器把<strong>优化编译器</strong>重新编译和被运行时分析器标识为“hot”的代码
+  <li><strong>一个基本的编译器</strong>，在代码执行前分析JavaScript、生成本地机器代码而非执行字节代码或是简单的解释，该段代码之初不是高度优化的。</li>
+  <li><strong>V8用对象模型“表述”对象。</strong>在JavaScript中，对象是一个关联数组，但是V8中，对象被“表述”为隐藏类，这种隐藏类是V8的内部类型，用于优化后的查找。</li>
+  <li><strong>运行时分析器</strong>监视正在运行的系统并优化“hot”（活跃）函数。（比如，终结运行已久的代码）</li>
+  <li>通过运行时分析器把<strong>优化编译器</strong>重新编译和被运行时分析器标识为“hot”的代码
 ，这是一种有效的编译优化技术,（例如用被调用者的主体替换函数调用的位置）。</li>
-<li><strong>V8支持去优化</strong>，也就是说当你发现一些假设的优化代码太过乐观，优化编译器可以退出已生成的代码。</li>
-<li><strong>垃圾回收</strong>，了解它是如何工作的，如同优化JavaScript一样同等重要。</li>
+  <li><strong>V8支持去优化</strong>，也就是说当你发现一些假设的优化代码太过乐观，优化编译器可以退出已生成的代码。</li>
+  <li><strong>垃圾回收</strong>，了解它是如何工作的，如同优化JavaScript一样同等重要。</li>
 </ul>
 
-
-<h2>二、垃圾回收</h2>
+<h2 id="section">二、垃圾回收</h2>
 
 <p>　　垃圾回收是内存管理的一种形式，它试图通过将不再使用的对象修复从而释放内存占用率。垃圾回收语言（比如JavaScript）是指在JavaScript这种垃圾回收语言中，应用程序中仍在被引用的对象不会被清除。手动消除对象引用在大多数情况下是没有必要的。通过简单地把变量放在需要它们的地方（理想情况下，尽可能是局部作用域，即它们被使用的函数里而不是函数外层），一切将运作地很好。</p>
 
 <p><img src="/assets/files/2013-01/30222814-1daecc2610464207ace4ff0b55bf6478.jpg" alt="" /></p>
 
-<p>　　<div style="text-align:center;">垃圾回收清除内存</div></p>
+<p>　　&lt;div style="text-align:center;"&gt;垃圾回收清除内存&lt;/div&gt;</p>
 
 <p>　　在JavaScript中强制执行垃圾回收是不可取的，当然，你也不会想这么做，因为垃圾回收进程被运行时控制着，它知道什么时候才是适合清理代码的最好时机。</p>
 
@@ -147,11 +108,10 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 <p>　　为了给垃圾回收创造机会，尽可能早的收集对象，尽量不要隐藏不使用的对象。这一点主要是自动发生，这里有几点需要谨记：</p>
 
 <ol>
-<li>正如之前我们提到的，手动引用在合适的范围内使用变量是个更好的选择，而不是将全局变量清空，只需使用不再需要的局部函数变量。也就是说我们不要为清洁代码而担心。</li>
-<li>确保移除不再需要的事件侦听器，尤其是当DOM对象将要被移除时。</li>
-<li>如果你正在使用本地数据缓存，请务必清洁该缓存或使用老化机制来避免存储那些不再使用的大量数据。</li>
+  <li>正如之前我们提到的，手动引用在合适的范围内使用变量是个更好的选择，而不是将全局变量清空，只需使用不再需要的局部函数变量。也就是说我们不要为清洁代码而担心。</li>
+  <li>确保移除不再需要的事件侦听器，尤其是当DOM对象将要被移除时。</li>
+  <li>如果你正在使用本地数据缓存，请务必清洁该缓存或使用老化机制来避免存储那些不再使用的大量数据。</li>
 </ol>
-
 
 <p><strong>2. 函数（Functions）</strong></p>
 
@@ -242,7 +202,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 <pre><code>myObj = null; 
 </code></pre>
 
-<h2>三、当心性能陷阱</h2>
+<h2 id="section-1">三、当心性能陷阱</h2>
 
 <p>　　除非你真正需要，否则永远不要优化代码。在V8中你能轻易的看到一些细微的基准测试显示比如N比M更佳，但是在真实的模块代码中或是在实际的应用程序中测试，这些优化所带来的影响要比你想象中要小的多。</p>
 
@@ -251,11 +211,10 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 <p><strong>创建一个模块，这里有三点：</strong></p>
 
 <ol>
-<li>采用本地的数据源包含ID数值</li>
-<li>绘制一个包含这些数据的表格</li>
-<li>添加事件处理程序，当用户点击的任何单元格时切换单元格的css class</li>
+  <li>采用本地的数据源包含ID数值</li>
+  <li>绘制一个包含这些数据的表格</li>
+  <li>添加事件处理程序，当用户点击的任何单元格时切换单元格的css class</li>
 </ol>
-
 
 <p>　　如何存储数据？如何高效的绘制表格并追加到DOM？怎样处理表单上的事件？</p>
 
@@ -288,7 +247,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 
 <p>　　很简单，但是却能把工作完成的很好。</p>
 
-<p> 　　请注意，直接使用DocumentFragment和本地DOM方法生成表格比使用jQuery更佳，事件委托通常比单独绑定每个td更具备高性能。jQuery一般在内部使用DocumentFragment，但是在这个例子中，通过内循环调用代码append()
+<p>　　请注意，直接使用DocumentFragment和本地DOM方法生成表格比使用jQuery更佳，事件委托通常比单独绑定每个td更具备高性能。jQuery一般在内部使用DocumentFragment，但是在这个例子中，通过内循环调用代码append()
 ，因此，无法在这个例子中进行优化，但愿这不是一个诟病，但请务必将代码进行基准测试。</p>
 
 <p>　　这里，我们通过opting for
@@ -349,7 +308,7 @@ documentFragment提高性能，事件代理对简单的绑定是一种改进，�
 
 <p>　　事实证明，选择模板和原型并没有给我们带来多大好处。</p>
 
-<h2>四、V8引擎优化技巧：</h2>
+<h2 id="v8">四、V8引擎优化技巧：</h2>
 
 <p>　　特定的模式会导致V8优化产生故障。很多函数无法得到优化，你可以在V8平台使用–trace-opt
 file.js搭配d8实用程序。</p>
@@ -391,80 +350,78 @@ monomorphic)，确保变量（包括属性，数组和函数参数）只适应�
 <p>　　在模块模式中使用缓存功能也许在性能方面会有所提升。请参阅下面的例子，通过jsPerf
 test测试。注，使用这种方法比依靠原型模式更佳。</p>
 
-<p><img src="/assets/files/2013-01/30222814-2290aec479784183a360e757fbc3677c.png" title="Performance Improvements When Using The Module And Prototypal Patterns" alt="Performance improvements" /></p>
+<p><img src="/assets/files/2013-01/30222814-2290aec479784183a360e757fbc3677c.png" alt="Performance improvements" title="Performance Improvements When Using The Module And Prototypal Patterns" /></p>
 
-<p>　　推荐：<a href="http://jsperf.com/prototypal-performance/12">这是测试原型与模块模式性能代码</a></p>
-
-<pre><code>  // Prototypal pattern  
-  Klass1 = function () {}  
-  Klass1.prototype.foo = function () {  
-      log('foo');  
-  }  
-  Klass1.prototype.bar = function () {  
-      log('bar');  
-  }  
-  // Module pattern  
-  Klass2 = function () {  
-      var foo = function () {  
-          log('foo');  
-      },  
-      bar = function () {  
-          log('bar');  
-      };  
-      return {  
-          foo: foo,  
-          bar: bar  
-      }  
-  }  
-  // Module pattern with cached functions  
-  var FooFunction = function () {  
-      log('foo');  
-  };  
-  var BarFunction = function () {  
-      log('bar');  
-  };  
-   Klass3 = function () {  
-      return {  
-          foo: FooFunction,  
-          bar: BarFunction  
-      }  
-  }  
-  // Iteration tests  
-  // Prototypal  
-  var i = 1000,  
-      objs = [];  
-  while (i--) {  
-      var o = new Klass1()  
-      objs.push(new Klass1());  
-      o.bar;  
-      o.foo;  
-  }  
-  // Module pattern  
-  var i = 1000,  
-      objs = [];  
-  while (i--) {  
-      var o = Klass2()  
-      objs.push(Klass2());  
-      o.bar;  
-      o.foo;  
-  }  
-  // Module pattern with cached functions  
-  var i = 1000,  
-      objs = [];  
-  while (i--) {  
-      var o = Klass3()  
-      objs.push(Klass3());  
-      o.bar;  
-      o.foo;  
-  }  
-  // See the test for full details
-</code></pre>
+<p>　　推荐：<a href="http://jsperf.com/prototypal-performance/12">这是测试原型与模块模式性能代码</a>
+      // Prototypal pattern<br />
+      Klass1 = function () {}<br />
+      Klass1.prototype.foo = function () {<br />
+          log(‘foo’);<br />
+      }<br />
+      Klass1.prototype.bar = function () {<br />
+          log(‘bar’);<br />
+      }<br />
+      // Module pattern<br />
+      Klass2 = function () {<br />
+          var foo = function () {<br />
+              log(‘foo’);<br />
+          },<br />
+          bar = function () {<br />
+              log(‘bar’);<br />
+          };<br />
+          return {<br />
+              foo: foo,<br />
+              bar: bar<br />
+          }<br />
+      }<br />
+      // Module pattern with cached functions<br />
+      var FooFunction = function () {<br />
+          log(‘foo’);<br />
+      };<br />
+      var BarFunction = function () {<br />
+          log(‘bar’);<br />
+      };<br />
+       Klass3 = function () {<br />
+          return {<br />
+              foo: FooFunction,<br />
+              bar: BarFunction<br />
+          }<br />
+      }<br />
+      // Iteration tests<br />
+      // Prototypal<br />
+      var i = 1000,<br />
+          objs = [];<br />
+      while (i–) {<br />
+          var o = new Klass1()<br />
+          objs.push(new Klass1());<br />
+          o.bar;<br />
+          o.foo;<br />
+      }<br />
+      // Module pattern<br />
+      var i = 1000,<br />
+          objs = [];<br />
+      while (i–) {<br />
+          var o = Klass2()<br />
+          objs.push(Klass2());<br />
+          o.bar;<br />
+          o.foo;<br />
+      }<br />
+      // Module pattern with cached functions<br />
+      var i = 1000,<br />
+          objs = [];<br />
+      while (i–) {<br />
+          var o = Klass3()<br />
+          objs.push(Klass3());<br />
+          o.bar;<br />
+          o.foo;<br />
+      }<br />
+      // See the test for full details</p>
 
 <p><strong>4. 数组使用技巧：</strong></p>
 
 <p>　　一般情况下，我们不要删除数组元素。它是使数组过渡到较慢的内部表现形式。当密钥集变得稀疏时，V8最终将切换到字典模式，这是变慢的原因之一。</p>
 
-<h2>五、应用优化技巧</h2>
+<h2 id="section-2">五、应用优化技巧</h2>
 
 <p><strong>　　在Web应用领域里，速度就是一切。</strong></p>
 
@@ -473,11 +430,10 @@ test测试。注，使用这种方法比依靠原型模式更佳。</p>
 <p>　　理解和提升性能方面是非常有用的，但它也有一定的难度。这里推荐几个步骤来帮你解决：</p>
 
 <ol>
-<li>测试：在应用程序中找到慢的节点 (~45%)</li>
-<li>理解：查找问题所在(~45%)</li>
-<li>修复:(~10%)</li>
+  <li>测试：在应用程序中找到慢的节点 (~45%)</li>
+  <li>理解：查找问题所在(~45%)</li>
+  <li>修复:(~10%)</li>
 </ol>
-
 
 <p>　　当然，还有许多工具或是技术方案帮助解决以上这些问题：</p>
 
@@ -523,11 +479,10 @@ Geisendörfer的这篇<a href="http://lostechies.com/derickbailey/2012/03/19/bac
 <p><strong>当开发应用时，可以使用下面的V8 flags：</strong></p>
 
 <ul>
-<li>trace-opt –日志名称的优化功能，显示优化跳过的代码</li>
-<li>trace-deopt –记录运行时将要“去优化”的代码。</li>
-<li>trace-gc – 对每次垃圾回收时进行跟踪</li>
+  <li>trace-opt –日志名称的优化功能，显示优化跳过的代码</li>
+  <li>trace-deopt –记录运行时将要“去优化”的代码。</li>
+  <li>trace-gc – 对每次垃圾回收时进行跟踪</li>
 </ul>
-
 
 <p><strong>结束语：</strong></p>
 
@@ -535,66 +490,82 @@ Geisendörfer的这篇<a href="http://lostechies.com/derickbailey/2012/03/19/bac
 
 <p>　　因此，测试它、理解它、修复它，如此往复！</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-01-11" datetime="2013-01-11" pubdate>
-							<span class="year">2013-01-11</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
 
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.csdn.net/article/2012-11-20/2811887-writing-fast-memory-efficient-javascript" target="_blank">http://www.csdn.net/article/2012-11-20/2811887-writing-fast-memory-efficient-javascript</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">http://http://uwebs.tk/archives/2013/01/11/writing-fast-memory-efficient-javascript.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

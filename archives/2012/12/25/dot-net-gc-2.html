@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>.Net垃圾回收机制原理（二）</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='.Net垃圾回收机制原理（二）'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content=".net" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / .Net垃圾回收机制原理（二）</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">.Net垃圾回收机制原理（二）</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985011(en-us).aspx">Jeffrey Richter</a>，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/25/dot_net_GC_2.html">赵玉开</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / .Net垃圾回收机制原理（二）</div>
+
+<article>
+	<h1><a href="/archives/2012/12/25/dot-net-gc-2.html">.Net垃圾回收机制原理（二）</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-12-25</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985011\(en-us\).aspx">Jeffrey Richter</a>，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/25/dot_net_GC_2.html">赵玉开</a></p>
 
 <p><a href="/archives/2012/12/13/dot-net-gc-1.html">上一篇文章</a>介绍了.Net垃圾回收的基本原理和垃圾回收执行Finalize方法的内部机制；这一篇我们看下弱引用对象，代，多线程垃圾回收，大对象处理以及和垃圾回收相关的性能计数器。</p>
 
@@ -79,9 +42,9 @@
     Object o = new Object(); 
     // 用一个短弱引用对象弱引用o.
     WeakReference wr = new WeakReference(o);
-
+ 
     o = null; // 移除对象的强引用
-
+ 
     o = wr.Target; //尝试从弱引用对象中获得对象的强引用
     if (o == null) {
         // 如果对象为空说明对象已经被垃圾回收器回收掉了
@@ -155,20 +118,20 @@ WeakReference(object target, bool trackResurrection);
 
 <p>在程序初始化时，托管堆上没有对象。这时候新添到托管堆上的对象是的代是0.如下图所示，0代对象是最年轻的对象，他们从来没有经过垃圾回收器的检查。</p>
 
-<p><a href="/assets/files/2011-11/NET-GC-07.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-07.gif" title=".Net 垃圾回收机制原理（二）" alt=".Net垃圾回收机制原理（二）" /></a></p>
+<p><a href="/assets/files/2011-11/NET-GC-07.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-07.gif" alt=".Net垃圾回收机制原理（二）" title=".Net 垃圾回收机制原理（二）" /></a></p>
 
 <p>图1 托管堆上的0代对象</p>
 
 <p>现在如果堆上添加了更多的对象，堆填满时就会触发垃圾回收。当垃圾回收器分析托管堆时，会构建一个垃圾对象（图2中浅紫色块）和非垃圾对象的图。所有没有被回收的对象会被移动压缩到堆的最底端。这些没有被回收掉的对象就成为了1代对象，如图2所示</p>
 
-<p><a href="/assets/files/2011-11/NET-GC-08.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-08.gif" title=".Net 垃圾回收机制原理（二）" alt=".Net垃圾回收机制原理（二）" /></a></p>
+<p><a href="/assets/files/2011-11/NET-GC-08.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-08.gif" alt=".Net垃圾回收机制原理（二）" title=".Net 垃圾回收机制原理（二）" /></a></p>
 
 <p>图2 托管堆上的0代1代对象</p>
 
 <p>当堆上分配了更多的对象时，新对象被放在了0代区。如果0代堆填满了，就会触发一次垃圾回收。这时候活下来的对象成为1代对象被移动到堆的底部；再此发生垃圾回收后1代对象中存活下来的对象会提升为2代对象并被移动压缩。如图3所示：</p>
 
-<p><a href="/assets/files/2011-11/NET-GC-09.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-09.gif" title=".Net 垃圾回收机制原理（二）" alt=".Net
-垃圾回收机制原理（二）" /></a></p>
+<p><a href="/assets/files/2011-11/NET-GC-09.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-09.gif" alt=".Net
+垃圾回收机制原理（二）" title=".Net 垃圾回收机制原理（二）" /></a></p>
 
 <p>图3 托管堆上的0、1、2代对象</p>
 
@@ -195,7 +158,7 @@ WeakReference(object target, bool trackResurrection);
 <p>你可以调用GC.Collect()方法强制垃圾回收器做垃圾回收，Collect方法有两个重载：</p>
 
 <pre><code>void GC.Collect(Int32 generation)
-
+ 
 void GC.Collect()
 </code></pre>
 
@@ -218,42 +181,42 @@ void GC.Collect()
 <pre><code>private static void GenerationDemo() {
   // Let's see how many generations the GCH supports (we know it's 2)
   Display("Maximum GC generations: " + GC.MaxGeneration);
-
+ 
   // Create a new BaseObj in the heap
   GenObj obj = new GenObj("Generation");
-
+ 
   // Since this object is newly created, it should be in generation 0
   obj.DisplayGeneration(); // Displays 0
-
+ 
   // Performing a garbage collection promotes the object's generation
   GC.Collect();
   obj.DisplayGeneration(); // Displays 1
-
+ 
   GC.Collect();
   obj.DisplayGeneration(); // Displays 2
-
+ 
   GC.Collect();
   obj.DisplayGeneration(); // Displays 2 (max generation)
-
+ 
   obj = null; // Destroy the strong reference to this object
-
+ 
   GC.Collect(0); // Collect objects in generation 0
   GC.WaitForPendingFinalizers(); // We should see nothing
-
+ 
   GC.Collect(1); // Collect objects in generation 1
   GC.WaitForPendingFinalizers(); // We should see nothing
-
+ 
   GC.Collect(2); // Same as Collect()
   GC.WaitForPendingFinalizers(); // Now, we should see the Finalize 
   // method run
-
+ 
   Display(-1, "Demo stop: Understanding Generations.", 0);
 }
 class GenObj{
   public void DisplayGeneration(){
     Console.WriteLine(“my generation is ” + GC.GetGeneration(this));
   }
-
+ 
   ~GenObj(){
     Console.WriteLine(“My Finalize method called”);
   }
@@ -293,7 +256,7 @@ class GenObj{
 进入）中就会有.Net CLR
 Memory一项，你可以从实例列表中选择某个程序进行观察，如下图所示。</p>
 
-<p><a href="/assets/files/2011-11/NET-GC-10.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-10.gif" title=".Net 垃圾回收机制原理（二）" alt=".Net 垃圾回收机制原理（二）" /></a></p>
+<p><a href="/assets/files/2011-11/NET-GC-10.gif" title=".Net 垃圾回收机制原理（二）"><img src="/assets/files/2011-11/NET-GC-10.gif" alt=".Net 垃圾回收机制原理（二）" title=".Net 垃圾回收机制原理（二）" /></a></p>
 
 <p>这些性能指标的具体含义如下：</p>
 
@@ -505,71 +468,85 @@ Memory一项，你可以从实例列表中选择某个程序进行观察，如�
 </tbody>
 </table>
 
-
-<p>这个表来自<a href="http://msdn.microsoft.com/zh-cn/library/x2tyfybc(v=vs.80">MSDN</a>.aspx)</p>
+<p>这个表来自<a href="http://msdn.microsoft.com/zh-cn/library/x2tyfybc(v=vs.80).aspx">MSDN</a></p>
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-12-25" datetime="2012-12-25" pubdate>
-							<span class="year">2012-12-25</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/25/dot_net_GC_2.html" target="_blank">http://www.cnblogs.com/yukaizhao/archive/2011/11/25/dot_net_GC_2.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/12/25/dot-net-gc-2.html">http://http://uwebs.tk/archives/2012/12/25/dot-net-gc-2.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

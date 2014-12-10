@@ -1,68 +1,15 @@
+<p>﻿—
+layout: post
+section: Archive
+category: default
+date: 2012-04-15
+title: “使用缓存的9大误区（上）”
+description: “使用缓存的9大误区（上）”
+tags: [缓存, .net]
+redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
+—</p>
 
-<!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>使用缓存的9大误区（上）</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='使用缓存的9大误区（上）'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
-</head>
-<body>
-
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">使用缓存的9大误区（上）</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
-
-			<div class="bd">
-				<div class="entry-content">
-					<p>　　如果说要对一个站点或者应用程序经常优化，可以说缓存的使用是最快也是效果最明显的方式。一般而言，我们会把一些常用的，或者需要花费大量的资源或时间而产生的数据缓存起来，使得后续的使用更加快速。</p>
+<p>　　如果说要对一个站点或者应用程序经常优化，可以说缓存的使用是最快也是效果最明显的方式。一般而言，我们会把一些常用的，或者需要花费大量的资源或时间而产生的数据缓存起来，使得后续的使用更加快速。</p>
 
 <p>　　如果真要细说缓存的好处，还真是不少，但是在实际的应用中，很多时候使用缓存的时候，总是那么的不尽人意。换句话说，假设本来采用缓存，可以使得性能提升为100（这里的数字只是一个计量符号而已，只是为了给大家一个“量”的体会），但是很多时候，提升的效果只有80,70，或者更少，甚至还会导致性能严重的下降，这个现象在使用分布式缓存的时候尤为突出。</p>
 
@@ -77,10 +24,9 @@
 <p>　　从上图中可以很清楚的看出：</p>
 
 <ul>
-<li>应用程序把数据缓存在本机的内存，需要的时候直接去本机内存进行获取。</li>
-<li>对于.NET的应用而言，在获取缓存中的数据的时候，是通过对象的引用去内存中查找数据对象的，也就说，如果我们通过引用获取了数据对象之后，我们直接修改这个对象，其实我们真正的是在修改处于内存中的那个缓存对象。</li>
+  <li>应用程序把数据缓存在本机的内存，需要的时候直接去本机内存进行获取。</li>
+  <li>对于.NET的应用而言，在获取缓存中的数据的时候，是通过对象的引用去内存中查找数据对象的，也就说，如果我们通过引用获取了数据对象之后，我们直接修改这个对象，其实我们真正的是在修改处于内存中的那个缓存对象。</li>
 </ul>
-
 
 <p>　　对于分布式的缓存，此时因为缓存的数据是放在缓存服务器中的，或者说，此时应用程序需要跨进程的去访问分布式缓存服务器，如图2：</p>
 
@@ -95,17 +41,16 @@
 <p>　　普及完了这两个概念之后，我们就进入今天的主题：使用缓存常见的9大误区：</p>
 
 <ol>
-<li><strong>太过于依赖.NET</strong><strong>默认的序列化机制</strong></li>
-<li><strong>缓存大对象</strong></li>
-<li><strong>使用缓存机制在线程间进行数据的共享</strong></li>
-<li><strong>认为调用缓存API</strong><strong>之后，数据会被立刻缓存起来</strong></li>
-<li><strong>缓存大量的数据集合，而读取其中一部分</strong></li>
-<li><strong>缓存大量具有图结构的对象导致内存浪费</strong></li>
-<li><strong>缓存应用程序的配置信息</strong></li>
-<li><strong>使用很多不同的键指向相同的缓存项</strong></li>
-<li><strong>没有及时的更新或者删除再缓存中已经过期或者失效的数据</strong></li>
+  <li><strong>太过于依赖.NET</strong><strong>默认的序列化机制</strong></li>
+  <li><strong>缓存大对象</strong></li>
+  <li><strong>使用缓存机制在线程间进行数据的共享</strong></li>
+  <li><strong>认为调用缓存API</strong><strong>之后，数据会被立刻缓存起来</strong></li>
+  <li><strong>缓存大量的数据集合，而读取其中一部分</strong></li>
+  <li><strong>缓存大量具有图结构的对象导致内存浪费</strong></li>
+  <li><strong>缓存应用程序的配置信息</strong></li>
+  <li><strong>使用很多不同的键指向相同的缓存项</strong></li>
+  <li><strong>没有及时的更新或者删除再缓存中已经过期或者失效的数据</strong></li>
 </ol>
-
 
 <p>　　下面，我们就每一点来具体的看看！</p>
 
@@ -116,10 +61,9 @@
 <p>　　另外还有三点需要注意的就是：</p>
 
 <ul>
-<li>这个序列化与反序列化的机制都是发生在应用程序服务器上的，而缓存服务器只是负责保存而已。</li>
-<li>.NET中的默认使用的序列化机制不是最优的，因为它要使用反射机制，而反射机制是是非常耗CPU的，特别是当我们缓存了比较复杂的数据对象的时候。</li>
+  <li>这个序列化与反序列化的机制都是发生在应用程序服务器上的，而缓存服务器只是负责保存而已。</li>
+  <li>.NET中的默认使用的序列化机制不是最优的，因为它要使用反射机制，而反射机制是是非常耗CPU的，特别是当我们缓存了比较复杂的数据对象的时候。</li>
 </ul>
-
 
 <p>　　基于这个问题，我们要自己选择一个比较好的序列化方法来尽可能的减少对CPU的使用。常用的方法就是让对象自己来实现ISerializable接口。</p>
 
@@ -145,7 +89,7 @@
 
 <p>　　提到大对象，这里就很有必要对其进行一个比较深入的介绍了。在.NET中，所谓的大对象，就是指的其占用的内存大于了85K的对象，下面通过一个比较将问题说清楚。</p>
 
-<p>　　如果现在有一个Person类的集合，定义为List&lt;Person>，每个Person对象占用1K的内存，如果这个Person集合中包含了100个Person对象实例，那么这个集合是否是大对象呢？</p>
+<p>　　如果现在有一个Person类的集合，定义为List&lt;Person&gt;，每个Person对象占用1K的内存，如果这个Person集合中包含了100个Person对象实例，那么这个集合是否是大对象呢？</p>
 
 <p>　　回答是：不是！</p>
 
@@ -162,11 +106,10 @@
 <p>　　上图非常明了，在图5中：</p>
 
 <ul>
-<li>垃圾回收机制不会在回收对象之后压缩大堆（小堆是压缩的）。</li>
-<li>分配对象的时候，需要去遍历大堆，去需找合适的空间，遍历是要花成本的。</li>
-<li>如果某些空间小于85K，那么就不能分配了，只能白白浪费，也导致内存碎片。</li>
+  <li>垃圾回收机制不会在回收对象之后压缩大堆（小堆是压缩的）。</li>
+  <li>分配对象的时候，需要去遍历大堆，去需找合适的空间，遍历是要花成本的。</li>
+  <li>如果某些空间小于85K，那么就不能分配了，只能白白浪费，也导致内存碎片。</li>
 </ul>
-
 
 <p>　　讲完了这些之后，我们言归正传，来看看大对象的缓存。</p>
 
@@ -217,69 +160,3 @@
 <p>　　<strong>关于作者</strong></p>
 
 <p>　　汪洋，现任惠普架构师、信息分析师《NET应用架构设计：模式、原则与实践》作者。上海益思研发管理咨询有限公司首席软件架构专家，软件咨询组副组长。</p>
-
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-04-15" datetime="2012-04-15" pubdate>
-							<span class="year">2012-04-15</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="1" title="缓存"><a href="/tags.html#缓存-ref">缓存</a></li>
-     
-    	<li value="6" title=".net"><a href="/tags.html#.net-ref">.net</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.infoq.com/cn/articles/misunderstanding-using-cache" target="_blank">http://www.infoq.com/cn/articles/misunderstanding-using-cache</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
-</article>
-
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
-		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
-
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
-</body>
-</html>
-

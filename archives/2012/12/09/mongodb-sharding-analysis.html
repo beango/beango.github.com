@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>MongoDB Sharding 机制分析</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='MongoDB Sharding 机制分析'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="mongodb" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / MongoDB Sharding 机制分析</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">MongoDB Sharding 机制分析</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>转载请注明出处：<a href="http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html" title="MongoDB Sharding 机制分析">http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / MongoDB Sharding 机制分析</div>
+
+<article>
+	<h1><a href="/archives/2012/12/09/mongodb-sharding-analysis.html">MongoDB Sharding 机制分析</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2012-12-09</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>转载请注明出处：<a href="http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html" title="MongoDB Sharding 机制分析">http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html</a></p>
 
 <p>MongoDB 是一种流行的非关系型数据库。作为一种文档型数据库，除了有无 schema 的灵活的数据结构，支持复杂、丰富的查询功能外，MongoDB 还自带了相当强大的 sharding 功能。</p>
 
@@ -79,7 +42,7 @@ sharding 了。这里，sharding可以利用上更多的硬件资源来解决了
 
 <p>MongoDB 的 sharding 有如此强大的功能，它的实现机制是怎样的呢？下图就是 MongoDB sharding 的结构图。</p>
 
-<p><img src="/assets/files/2012-12/1.png" title="1" alt="" /></p>
+<p><img src="/assets/files/2012-12/1.png" alt="" title="1" /></p>
 
 <p>从图中可以看出，MongoDB sharding 主要分为 3 大部分。shard 节点、config节点和 config 节点。对客户端来说，直接访问的是 图中绿色的 mongos 节点。背后的 config 节点和 shard 节点是客户端不能直接访问的。mongos的主要作用是数据路由。从元数据中定位数据位置，合并查询结果。另外，mongos节点还负责数据迁移和数据自动平衡，并作为 sharding 集群的管理节点。它对外的接口就和普通的 mongod 一样。因此，可以使用标准 mongodb 客户端和驱动进行访问。mongos节点是无状态的，本身不保存任何数据和元数据，因此可以任意水平扩展，这样任意一个节点发生故障都可以很容易的进行故障转移，不会造成严重影响。</p>
 
@@ -144,21 +107,21 @@ sh.shardCollection(fullName, key, unique)
 
 <p>这样就可以了。还是很简单的吧。如果 collection 里有数据，则会自动进行数据平衡。</p>
 
-<p><img src="/assets/files/2012-12/2.png" title="2" alt="" /></p>
+<p><img src="/assets/files/2012-12/2.png" alt="" title="2" /></p>
 
 <p>之前说过，mongodb 的 sharding 把数据分成了数据块（chunk）来进行管理。现在来看看 chunk 究竟是怎么回事。在mongodb sharding 中，chunk是数据迁移的基本单位。每个节点中的数据都被划分成若干个 chunk 。一个 chunk 本质上是 shard key 的一个连续区间。chunk实际上是一个逻辑划分而非物理划分。sharding 的后端就是普通的 mongod 或者replica set，并不会因为是 sharding 就对数据做特殊处理。一个 chunk 并不是实际存储的一个页或者一个文件之类，而是仅仅在 config 节点中的元数据中体现。mongodb 的sharding 策略实际上就是一个 range 模式。</p>
 
-<p><img src="/assets/files/2012-12/3.png" title="3" alt="" /></p>
+<p><img src="/assets/files/2012-12/3.png" alt="" title="3" /></p>
 
 <p>如图，第一个 chunk 的范围就是 uid 从 -∞ 到 12000 范围内的数据。第二个就是 12000 到 58000 。以此类推。对于一个刚配置为 sharding 的 collection，最开始只有一个 chunk，范围是从 -∞ 到 +∞。</p>
 
-<p><img src="/assets/files/2012-12/4.png" title="4" alt="" /></p>
+<p><img src="/assets/files/2012-12/4.png" alt="" title="4" /></p>
 
 <p>随着数据的增长，其中的数据大小超过了配置的 chunk size，默认是 64M 则这个 chunk 就会分裂成两个。因为 chunk 是逻辑单元，所以分裂操作只涉及到元数据的操作。数据的增长会让 chunk 分裂得越来越多。这时候，各个 shard 上的 chunk 数量就会不平衡。这时候，mongos 中的一个组件 balancer 就会执行自动平衡。把 chunk 从 chunk 数量最多的 shard 节点挪动到数量最少的节点。</p>
 
-<p><img src="/assets/files/2012-12/5.png" title="5" alt="" /></p>
+<p><img src="/assets/files/2012-12/5.png" alt="" title="5" /></p>
 
-<p><img src="/assets/files/2012-12/6.png" title="6" alt="" /></p>
+<p><img src="/assets/files/2012-12/6.png" alt="" title="6" /></p>
 
 <p>最后，各个 shard 节点上的 chunk 数量就会趋于平衡。当然，balance不一定会使数据完全平均，因为移动数据本身有一定成本，同时为了避免极端情况下早晨数据来回迁移，只有在两个 shard 的 chunk 数量之差达到一定阈值时才会进行。默认阈值是 8 个。也就是说，默认情况下，只有当两个节点的数据量差异达到 64M * 8 == 256M 的时候才会进行。这样就不用对刚建好的 sharding，插入了不少数据，为什么还是都在一个节点里感到奇怪了。那只是因为数据还不够多到需要迁移而已。</p>
 
@@ -168,19 +131,19 @@ sh.shardCollection(fullName, key, unique)
 
 <p>再说说数据路由功能。mongos的最主要功能就是作为数据路由，找到数据的位置，合并查询结果。来看看它是如何处理的。如果查询的条件是shard key ，那么 mongos 就能从元数据直接定位到 chunk 的位置，从目标节点找到数据。</p>
 
-<p><img src="/assets/files/2012-12/7.png" title="7" alt="" /></p>
+<p><img src="/assets/files/2012-12/7.png" alt="" title="7" /></p>
 
 <p>如果查询条件是 shard key 的范围，由于 chunk 是按 shard key的范围来划分的，所以 mongos 也可以找到数据对应 chunk 的位置，并把各个节点返回的数据合并。</p>
 
-<p><img src="/assets/files/2012-12/8.png" title="8" alt="" /></p>
+<p><img src="/assets/files/2012-12/8.png" alt="" title="8" /></p>
 
 <p>如果查询的条件不是任何一个索引，原来的全 collection 遍历仍然不可避免。但是会分发到所有节点进行。所以，还是可以起到分担负载的作用。</p>
 
-<p><img src="/assets/files/2012-12/9.png" title="9" alt="" /></p>
+<p><img src="/assets/files/2012-12/9.png" alt="" title="9" /></p>
 
 <p>如果查询的条件是一个索引，但不是 shard key，查询也会被分发到所有节点，不过在每个节点上索引仍然有效。</p>
 
-<p><img src="/assets/files/2012-12/10.png" title="10" alt="" /></p>
+<p><img src="/assets/files/2012-12/10.png" alt="" title="10" /></p>
 
 <p>如果是按查询 shard key 进行排序，同样由于 chunk 是一个 shard key 的范围，则会依次查询各 chunk 所在节点，而无需返回所有数据再排序。如果不是按 shard key 排序，则会在每个节点上执行排序操作，然后由 mongos 进行归并排序。由于是对已排序结果的归并排序，所以在 mongos 上不会有多少压力，查询结果的游标也会变成在每个节点上的游标。并不需要把所有数据都吐出来。</p>
 
@@ -196,7 +159,7 @@ sh.shardCollection(fullName, key, unique)
 
 <p>首先，mongodb 只提供了 range 模式的 sharding。这种模式虽然可以对按 shard key进行 range 查询、排序进行优化，但是也会造成使用单向增长的值时，写入集中的结果。</p>
 
-<p>第二，启用了 sharding 之后，就无法保证除 shard key 以为其他的索引的唯一性。即使设为unique，也只是保证在每个节点中唯一。有一个办法是，把索引设为 {&lt;shard_key>:1, &lt;unique_key>:1}。但是这样并不一定满足业务逻辑需求。</p>
+<p>第二，启用了 sharding 之后，就无法保证除 shard key 以为其他的索引的唯一性。即使设为unique，也只是保证在每个节点中唯一。有一个办法是，把索引设为 {&lt;shard_key&gt;:1, &lt;unique_key&gt;:1}。但是这样并不一定满足业务逻辑需求。</p>
 
 <p>第三，启用 sharding 后，无法直接使用 group() 。但是可以用 map reduce 功能作为替代。</p>
 
@@ -208,66 +171,81 @@ sh.shardCollection(fullName, key, unique)
 
 <p>P.S. 这篇东西是十月份我在 <a href="http://www.thinkinlamp.com/">thinkinlamp</a>第三届数据库大会上的 topic 的内容的整理。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2012-12-09" datetime="2012-12-09" pubdate>
-							<span class="year">2012-12-09</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://xiezhenye.com/2012/12/mongodb-sharding-%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90.html" target="_blank">http://xiezhenye.com/2012/12/mongodb-sharding-%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/12/09/mongodb-sharding-analysis.html">http://http://uwebs.tk/archives/2012/12/09/mongodb-sharding-analysis.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

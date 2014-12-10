@@ -1,72 +1,35 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>(译)深入理解Express.js</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='(译)深入理解Express.js'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="node.js" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / (译)深入理解Express.js</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">(译)深入理解Express.js</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>本文针对那些对<a href="http://nodejs.org">Node.js</a>有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / (译)深入理解Express.js</div>
 
-<p><a href="http://expressjs.org">Express.js</a>这么描述自己："轻量灵活的node.js Web应用框架"。它可以帮助你快速搭建web应用。如果你使用过Ruby里的<a href="http://www.sinatrarb.com/">Sinatra</a>,那么相信你对这个也会很快就能熟悉。</p>
+<article>
+	<h1><a href="/archives/2013/06/14/understanding-expressjs.html">(译)深入理解Express.js</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-06-14</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>本文针对那些对<a href="http://nodejs.org">Node.js</a>有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。</p>
 
-<p>和其他web框架一样，Express隐藏了代码背后的秘密，然后告诉你："别担心，你不用去理解这个部分"。它来帮你解决这些问题，所以你不用去为这个而烦恼，只用将重心集中到代码上。换句话说，它有某些魔法！</p>
+<p><a href="http://expressjs.org">Express.js</a>这么描述自己：”轻量灵活的node.js Web应用框架”。它可以帮助你快速搭建web应用。如果你使用过Ruby里的<a href="http://www.sinatrarb.com/">Sinatra</a>,那么相信你对这个也会很快就能熟悉。</p>
+
+<p>和其他web框架一样，Express隐藏了代码背后的秘密，然后告诉你：”别担心，你不用去理解这个部分”。它来帮你解决这些问题，所以你不用去为这个而烦恼，只用将重心集中到代码上。换句话说，它有某些魔法！</p>
 
 <p><a href="http://expressjs.com/applications.html">Express的wiki里介绍了一些它的使用者</a>，其中就有很多知名的公司:MySpace, Klout.</p>
 
@@ -74,7 +37,7 @@
 
 <p>那么我么首先从理解Express的最底层-Node开始。</p>
 
-<h2>底层：Node HTTP服务器</h2>
+<h2 id="node-http">底层：Node HTTP服务器</h2>
 
 <p>Node中有<a href="http://nodejs.org/api/http.html">HTTP模块</a>,它将搭建一个web服务器的过程抽象出来。你可以这样使用:</p>
 
@@ -94,7 +57,7 @@ app.listen(1337, "localhost");
 console.log("Server running at http://localhost:1337/");
 </code></pre>
 
-<p>运行这个程序(假设文件名 ​​为<code>app.js</code> ,运行<code>node app.js</code> )，你会得到"Hello world!“在浏览器访问<code>localhost:1337</code>，你会得到同样的结果。你也可以尝试访问其他地址，如<code>localhost:1337/whatever</code>，结果仍然会一样。</p>
+<p>运行这个程序(假设文件名 ​​为<code>app.js</code> ,运行<code>node app.js</code> )，你会得到”Hello world!“在浏览器访问<code>localhost:1337</code>，你会得到同样的结果。你也可以尝试访问其他地址，如<code>localhost:1337/whatever</code>，结果仍然会一样。</p>
 
 <p>分解以上代码来看。</p>
 
@@ -173,7 +136,7 @@ http.createServer(function(req, res) {
 
 <p>你可以选择优化代码，让它变得更整洁。也可以向<a href="https://github.com/isaacs/npm-www#design-philosophy">npm.org</a>的那帮家伙一样用原生的Node来编写。但是你也可以选择去创建一个框架。这就是Sencha所做的，并把这个框架称为–Connect.</p>
 
-<h2>中间件: Connect</h2>
+<h2 id="connect">中间件: Connect</h2>
 
 <p><a href="http://www.senchalabs.org/connect/">Connect</a>是Nodejs的中间件。可能你现在还并不太理解什么是中间件(middleware)，别担心，我马上会进行详细解释。</p>
 
@@ -314,7 +277,7 @@ http.createServer(app).listen(1337);
 
 <p>某些人看了Connect的代码之后觉得，“这个代码可以更简单”。于是他们创造了Express.（事实上他们好像直接盗用了<a href="http://www.sinatrarb.com/">Sinatra</a>.）</p>
 
-<h2>最顶层: Express</h2>
+<h2 id="express">最顶层: Express</h2>
 
 <p>文章进入第三部分，我们开始真正进入Express.</p>
 
@@ -332,11 +295,11 @@ var app = express();
 
 <p>中间部分才是不一样的地方。Connect为我们提供了中间件，Express则为我们提供了另外三个优秀的特性：路由分发，请求处理，视图渲染。首先从如有开始看。</p>
 
-<h3>特性一：路由</h3>
+<h3 id="section">特性一：路由</h3>
 
 <p>路由的功能就是处理不同的请求。在上面的很多例子中，我们分别有首页，关于和404页面。我们是通过<code>if</code>来判断并处理不同请求地址。</p>
 
-<p>但是Express却可以做的更好。Express提供了"routing"这个东西，也就是我们所说的路由。我觉得可读性甚至比纯文字还要好。</p>
+<p>但是Express却可以做的更好。Express提供了”routing”这个东西，也就是我们所说的路由。我觉得可读性甚至比纯文字还要好。</p>
 
 <pre><code>var express = require("express");
 var http = require("http");
@@ -366,7 +329,9 @@ http.createServer(app).listen(1337);
 
 <p>代码中的<code>app.get</code>就是Express提供的路由系统。也可以是<code>app.post</code>来处理POST请求，或者是PUT和任何的HTTP请求方式。第一个参数是路径，例如<code>/about</code>或者<code>/</code>。第二个参数类似我们之前所见过的请求handler。引用<a href="http://expressjs.com/api.html#app.VERB">Expess文档的内容</a>:</p>
 
-<blockquote><p>这些请求handler和中间件一样，唯一的区别是这些回调函数会调用<code>next('route')</code>从而能够继续执行剩下的路由回调函数。这种机制简单说来，它们和我们之前提过的中间件是一样，只不过是一些函数而已。</p></blockquote>
+<blockquote>
+  <p>这些请求handler和中间件一样，唯一的区别是这些回调函数会调用<code>next('route')</code>从而能够继续执行剩下的路由回调函数。这种机制简单说来，它们和我们之前提过的中间件是一样，只不过是一些函数而已。</p>
+</blockquote>
 
 <p>这些路由也可以更加灵活，看起来是这样：</p>
 
@@ -384,7 +349,7 @@ http.createServer(app).listen(1337);
 
 <p>但是还有更加值得我们去关注的。</p>
 
-<h3>特性二：请求处理request handling</h3>
+<h3 id="request-handling">特性二：请求处理request handling</h3>
 
 <p>Express将你传入请求的handler传入request和response对象中。原先该有的还在，但是却加入了更多新的特性。<a href="http://expressjs.com/api.html">API文档</a>里有详细解释。下面让我们来看一些例子。</p>
 
@@ -404,7 +369,7 @@ response.redirect(301, "http://xvfeng.me"); // HTTP 301 状态码
 
 <p>理论上来讲，我们要知道的东西也不是太多，Express做的只是拓展了request和response对象而已。Express所提供的方法，请参考<a href="http://expressjs.com/api.html">API文档</a>.</p>
 
-<h3>特性三：视图</h3>
+<h3 id="section-1">特性三：视图</h3>
 
 <p>Express可以渲染视图。代码如下：</p>
 
@@ -447,7 +412,7 @@ html
 
 <p>如果一起设置完毕，你会看到<a href="http://evanhahn.com/wp-content/uploads/2013/05/anime.html">这个页面</a>。<a href="https://gist.github.com/EvanHahn/5673968">完整代码</a>.</p>
 
-<h3>加分特性： 所有代码来自于Connect和Node</h3>
+<h3 id="connectnode">加分特性： 所有代码来自于Connect和Node</h3>
 
 <p>我需要再次提醒你的是Express建立与Connect和Node之上，这意味着所有的Connect中间件均可以在Express中使用。这个对与开发来讲帮助很大。例如：</p>
 
@@ -465,7 +430,7 @@ app.listen(1337);
 
 <p>如果说你从这篇文章中学到了一点什么，就是这一点。</p>
 
-<h2>实战</h2>
+<h2 id="section-2">实战</h2>
 
 <p>本文的大部分内容都是理论，但是下面我将教你如何使用它来做一点你想做的东西。我不想说的过于具体。</p>
 
@@ -475,7 +440,7 @@ app.listen(1337);
 npm install -g express
 </code></pre>
 
-<p>如果你需要帮助，输入<code>express --help</code>。它加入一些可选参数。例如，如果你想使用EJS模板引擎，LESS作为CSS引擎。应用的名称为"myApp".输入以下命令：</p>
+<p>如果你需要帮助，输入<code>express --help</code>。它加入一些可选参数。例如，如果你想使用EJS模板引擎，LESS作为CSS引擎。应用的名称为”myApp”.输入以下命令：</p>
 
 <pre><code>express --ejs --css less myApp
 </code></pre>
@@ -484,15 +449,14 @@ npm install -g express
 
 <p><a href="https://github.com/visionmedia/express/tree/master/examples">项目Github目录下</a>也有一些很有帮助的文档。</p>
 
-<h3>一些补充</h3>
+<h3 id="section-3">一些补充</h3>
 
 <ul>
-<li>如果你也和我一样喜欢使用CoffeeScript，好消息是Express完美支持CoffeeScript.你甚至不需要编译它。这样你只用<code>coffee app.coffee</code>即可启动应用。我在我的其他项目中也是这么做的。</li>
-<li>在我看到<code>app.use(app.router)</code>的时候我很疑惑：
+  <li>如果你也和我一样喜欢使用CoffeeScript，好消息是Express完美支持CoffeeScript.你甚至不需要编译它。这样你只用<code>coffee app.coffee</code>即可启动应用。我在我的其他项目中也是这么做的。</li>
+  <li>在我看到<code>app.use(app.router)</code>的时候我很疑惑：
 Express不是一直在使用router吗？简单回答是<code>app.router</code>是Express的路由中间件，在你定义路由的时候被直接添加到项目中。如果你需要在加载其他文件之前应用，也可以直接引入它。关于这么做的原因，请参考<a href="http://stackoverflow.com/a/12695813/804100">StackOverflow的这个答案</a>.</li>
-<li>本文是针对Express 3，而在<a href="https://github.com/visionmedia/express/wiki/4.x-roadmap">第四版的规划中</a>又会有很多大的改动。最明显的是，Experss可能要将会分解成一些小的模块，并吸收Connect的一些特性。这个虽然还在计划中，但是也值得一看。</li>
+  <li>本文是针对Express 3，而在<a href="https://github.com/visionmedia/express/wiki/4.x-roadmap">第四版的规划中</a>又会有很多大的改动。最明显的是，Experss可能要将会分解成一些小的模块，并吸收Connect的一些特性。这个虽然还在计划中，但是也值得一看。</li>
 </ul>
-
 
 <p>如果这个还不能满足你？你肯定是个变态！你很快就会变成像一个瘾君子，半睁着眼，耗尽你最后一点精力，写着苦逼的代码。</p>
 
@@ -504,66 +468,81 @@ Express不是一直在使用router吗？简单回答是<code>app.router</code>�
 
 <p>时间仓促，翻译错误在所难免，还请指正，转载还请注明。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-06-14" datetime="2013-06-14" pubdate>
-							<span class="year">2013-06-14</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="node.js"><a href="/tags.html#node.js-ref">node.js</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://xvfeng.me/posts/understanding-expressjs/" target="_blank">http://xvfeng.me/posts/understanding-expressjs/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/06/14/understanding-expressjs.html">http://http://uwebs.tk/archives/2013/06/14/understanding-expressjs.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

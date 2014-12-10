@@ -1,71 +1,34 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Python中list 的实现</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Python中list 的实现'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Python中list 的实现</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Python中list 的实现</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p><a href="http://www.laurentluce.com/posts/python-list-implementation/">原文链接</a><br/>
-这篇文章介绍了Python中list是如何实现的。<br/>
-在Python中list特别有用。让我们来看下list的内部是如何实现的。<br/>
-来看下面简单的程序，在list中添加一些整数并将他们打印出来。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python中list 的实现</div>
+
+<article>
+	<h1><a href="/archives/2013/08/24/python-list-implementation.html">Python中list 的实现</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-08-24</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p><a href="http://www.laurentluce.com/posts/python-list-implementation/">原文链接</a><br />
+这篇文章介绍了Python中list是如何实现的。<br />
+在Python中list特别有用。让我们来看下list的内部是如何实现的。<br />
+来看下面简单的程序，在list中添加一些整数并将他们打印出来。  </p>
 
 <pre><code>&gt;&gt;&gt; L = []
 &gt;&gt;&gt; L.append(1)
@@ -78,13 +41,10 @@
 ... 
 1
 2
-3
+3 正如你所看到的，list是可以迭代的。  
 </code></pre>
 
-<p>正如你所看到的，list是可以迭代的。</p>
-
-<h3>List对象的C结构</h3>
-
+<h3 id="listc">List对象的C结构</h3>
 <p>Python中list是用下边的C语言的结构来表示的。ob_item是用来保存元素的指针数组，allocated是ob_item预先分配的内存总容量</p>
 
 <pre><code>typedef struct {
@@ -94,8 +54,7 @@
 } PyListObject;
 </code></pre>
 
-<h3>List的初始化</h3>
-
+<h3 id="list">List的初始化</h3>
 <p>让我们来看下当初始化一个空list的时候发生了什么 L = []</p>
 
 <pre><code>arguments: size of the list = 0
@@ -109,11 +68,9 @@ PyListNew:
     return list object 
 </code></pre>
 
-<p>非常重要的是知道list申请内存空间的大小（后文用allocated代替）的大小和list实际存储元素所占空间的大小(ob_size)之间的关系，ob_size的大小和len(L)是一样的，而allocated的大小是在内存中已经申请空间大小。通常你会看到allocated的值要比ob_size的值要大。这是为了避免每次有新元素加入list时都要调用realloc进行内存分配。接下来我们会看到更多关于这些的内容。</p>
-
-<h3>Append</h3>
-
-<p>我们在list中追加一个整数:L.append(1)。发生了什么？调用了内部的C函数app1()</p>
+<p>非常重要的是知道list申请内存空间的大小（后文用allocated代替）的大小和list实际存储元素所占空间的大小(ob_size)之间的关系，ob_size的大小和len(L)是一样的，而allocated的大小是在内存中已经申请空间大小。通常你会看到allocated的值要比ob_size的值要大。这是为了避免每次有新元素加入list时都要调用realloc进行内存分配。接下来我们会看到更多关于这些的内容。
+###Append
+我们在list中追加一个整数:L.append(1)。发生了什么？调用了内部的C函数app1()</p>
 
 <pre><code>arguments: list object, new element
 returns: 0 if OK, -1 if not
@@ -135,14 +92,12 @@ list_resize:
     return 0
 </code></pre>
 
-<p>开辟了四个内存空间来存放list中的元素，存放的第一个元素是1。你可以从下图中看到L[0]指向了我们刚刚加进去的元素。虚线的框代表了申请了但是还没有使用(存储元素)的内存空间<br/>
-<img src="/assets/files/2013-08/list.png" alt="" /><br/>
-我们继续加入一个元素：L.append(2)。调用list_resize,同时n+1=2。但是因为allocated（译者注：已经申请的空间大小）是4。所以没有必要去申请新的内存空间。相同的事情发生在再次在list中添加两个元素的时候：L.append(3),L.append(4)。下图展示了到目前为止我们做了什么。<br/>
-<img src="/assets/files/2013-08/list_4.png" alt="" /></p>
-
-<h3>Insert</h3>
-
-<p>现在我们在列表的第一个位置插入一个整数5:L.insert(1, 5),看看内部发生了什么。调用了ins1()</p>
+<p>开辟了四个内存空间来存放list中的元素，存放的第一个元素是1。你可以从下图中看到L[0]指向了我们刚刚加进去的元素。虚线的框代表了申请了但是还没有使用(存储元素)的内存空间<br />
+<img src="/assets/files/2013-08/list.png" alt="" /><br />
+我们继续加入一个元素：L.append(2)。调用list_resize,同时n+1=2。但是因为allocated（译者注：已经申请的空间大小）是4。所以没有必要去申请新的内存空间。相同的事情发生在再次在list中添加两个元素的时候：L.append(3),L.append(4)。下图展示了到目前为止我们做了什么。<br />
+<img src="/assets/files/2013-08/list_4.png" alt="" /><br />
+###Insert
+现在我们在列表的第一个位置插入一个整数5:L.insert(1, 5),看看内部发生了什么。调用了ins1()</p>
 
 <pre><code>arguments: list object, where, new element
 returns: 0 if OK, -1 if not
@@ -153,13 +108,11 @@ ins1:
     return 0  
 </code></pre>
 
-<p><img src="/assets/files/2013-08/list_insert.png" alt="" /><br/>
-虚线框表示已经申请但是没有使用的内存。申请了8个内存空间但是list实际用来存储元素只使用了其中5个内存空间<br/>
-insert的时间复杂度是O(n)</p>
-
-<h3>Pop</h3>
-
-<p>当你弹出list的最后一个元素：L.pop()。调用listpop()，list_resize在函数listpop()内部被调用，如果这时ob_size（译者注：弹出元素后）小于allocated（译者注：已经申请的内存空间）的一半。这时申请的内存空间将会缩小。</p>
+<p><img src="/assets/files/2013-08/list_insert.png" alt="" /><br />
+虚线框表示已经申请但是没有使用的内存。申请了8个内存空间但是list实际用来存储元素只使用了其中5个内存空间<br />
+insert的时间复杂度是O(n)
+###Pop
+当你弹出list的最后一个元素：L.pop()。调用listpop()，list_resize在函数listpop()内部被调用，如果这时ob_size（译者注：弹出元素后）小于allocated（译者注：已经申请的内存空间）的一半。这时申请的内存空间将会缩小。</p>
 
 <pre><code>arguments: list object
 returns: element popped
@@ -171,16 +124,14 @@ listpop:
     return last element
 </code></pre>
 
-<p>Pop的时间复杂度是O(1)<br/>
-<img src="/assets/files/2013-08/list_pop.png" alt="" /><br/>
-你可以发现4号内存空间指向还指向那个数值（译者注：弹出去的那个数值），但是很重要的是ob_size现在却成了4.<br/>
-让我们再弹出一个元素。在list_resize内部，size – 1 = 4 – 1 = 3 比allocated（已经申请的空间）的一半还要小。所以list的申请空间缩小到6个，list的实际使用空间现在是3个(译者注：根据(newsize >> 3) + (newsize &lt; 9 ? 3 : 6) = 3在文章最后有详述) <br/>
-你可以发现（下图）3号和4号内存空间还存储着一些整数，但是list的实际使用(存储元素)空间却只有3个了。<br/>
-<img src="/assets/files/2013-08/list_pop_2.png" alt="" /></p>
-
-<h3>Remove</h3>
-
-<p>Python list对象有一个方法可以移除一个指定的元素。调用listremove()。</p>
+<p>Pop的时间复杂度是O(1)<br />
+<img src="/assets/files/2013-08/list_pop.png" alt="" /><br />
+你可以发现4号内存空间指向还指向那个数值（译者注：弹出去的那个数值），但是很重要的是ob_size现在却成了4.<br />
+让我们再弹出一个元素。在list_resize内部，size – 1 = 4 – 1 = 3 比allocated（已经申请的空间）的一半还要小。所以list的申请空间缩小到6个，list的实际使用空间现在是3个(译者注：根据(newsize » 3) + (newsize &lt; 9 ? 3 : 6) = 3在文章最后有详述) <br />
+你可以发现（下图）3号和4号内存空间还存储着一些整数，但是list的实际使用(存储元素)空间却只有3个了。<br />
+<img src="/assets/files/2013-08/list_pop_2.png" alt="" /><br />
+###Remove
+Python list对象有一个方法可以移除一个指定的元素。调用listremove()。  </p>
 
 <pre><code>arguments: list object, element to remove
 returns none if OK, null if not
@@ -192,7 +143,7 @@ listremove:
     return null
 </code></pre>
 
-<p>切开list和删除元素，调用了list_ass_slice()（译者注：在上文slice list between element's slot and element's slot + 1被调用），来看下list_ass_slice()是如何工作的。在这里，低位为1 高位为2（译者注：传入的参数），我们移除在1号内存空间存储的数据5</p>
+<p>切开list和删除元素，调用了list_ass_slice()（译者注：在上文slice list between element’s slot and element’s slot + 1被调用），来看下list_ass_slice()是如何工作的。在这里，低位为1 高位为2（译者注：传入的参数），我们移除在1号内存空间存储的数据5</p>
 
 <pre><code>arguments: list object, low offset, high offset
 returns: 0 if OK
@@ -203,10 +154,10 @@ list_ass_slice:
     return 0
 </code></pre>
 
-<p>Remove的时间复杂度为O(n)<br/>
+<p>Remove的时间复杂度为O(n)<br />
 <img src="/assets/files/2013-08/list_remove.png" alt="" /></p>
 
-<h3>Sort</h3>
+<h3 id="sort">Sort</h3>
 
 <p>下面以包含130个元素的list为例说明排序算法。如果list元素个数少于64，用折半插入排序足以进行快速排序，如果元素个数大于64，则需要进行归并排序。</p>
 
@@ -219,9 +170,9 @@ list_ass_slice:
 [107, 44, 97, 121, 26, 11, 24, 100, 79, 19, 109, 7, 52, 93, 70, 94, 124, 117, 92, 32, 115, 83, 9, 112, 84, 22, 65, 95, 89, 74, 64, 23, 101, 68, 119, 127, 90, 80, 91, 75, 4, 20, 114, 16, 103, 34, 96, 125, 47, 77, 81, 3, 30, 14, 25, 29, 104, 102, 98, 69, 78, 60, 33, 12, 31, 37, 76, 10, 5, 105, 35, 48, 85, 106, 63, 71, 54, 39, 8, 6, 62, 67, 42, 72, 118, 116, 27, 46, 38, 99, 126, 40, 28, 113, 43, 41, 59, 2, 56, 61, 88, 18, 45, 128, 58, 73, 1, 13, 129, 49, 0, 82, 123, 111, 57, 86, 110, 51, 15, 36, 120, 108, 66, 55, 53, 87, 122, 17, 21, 50]
 </code></pre>
 
-<p>第一步是寻找其中的自然有序列，例如： l[i] &lt;= l[i+1] &lt;= ... 或者 l[i] > l[i+1] > … 由于例子里的list随机排序, 自然有序列是比较少的。 这里我们还需要基于list长度给出的自然有序列最小长度。函数merge_compute_minrun() 将根据list的长度返回有序列的最小长度。 在本例中, 最短有序列长度为33。 对于长度小于33的自然有序列，我们用折半插入排序法将其延展为长度33的有序列。</p>
+<p>第一步是寻找其中的自然有序列，例如： l[i] &lt;= l[i+1] &lt;= … 或者 l[i] &gt; l[i+1] &gt; … 由于例子里的list随机排序, 自然有序列是比较少的。 这里我们还需要基于list长度给出的自然有序列最小长度。函数merge_compute_minrun() 将根据list的长度返回有序列的最小长度。 在本例中, 最短有序列长度为33。 对于长度小于33的自然有序列，我们用折半插入排序法将其延展为长度33的有序列。 </p>
 
-<p>本例中，l[0] >= l[1]，但是l[2] > l[1]，所以我们的第一个自然有序列是2，有些过短，但对于一个随机排序列来说也属正常。在实际运用中，自然有序列会更常见，从而使我们的排序算法比应用在这个例子上更有效率。</p>
+<p>本例中，l[0] &gt;= l[1]，但是l[2] &gt; l[1]，所以我们的第一个自然有序列是2，有些过短，但对于一个随机排序列来说也属正常。在实际运用中，自然有序列会更常见，从而使我们的排序算法比应用在这个例子上更有效率。</p>
 
 <p>第一个自然有序列长度为2，所以我们用折半插入排序将其扩展到32个元素，之后再用归并法的结构管理不同列。 做完排序的第一个自然有序列包括从l[0]到l[32]的元素，如下：  [7, 9, 11, 19, 22, 23, 24, 26, 32, 44, 52, 64, 65, 70, 74, 79, 83, 84, 89, 92, 93, 94, 95, 97, 100, 101, 107, 109, 112, 115, 117, 121, 124].</p>
 
@@ -244,81 +195,98 @@ list_ass_slice:
 
 <p>排序时间复杂度为 O(n log n).</p>
 
-<p>核心部分</p>
+<p>核心部分  </p>
 
-<blockquote><p>  我们能看到 Python 设计者的苦心。在需要的时候扩容,但又不允许过度的浪费,适当的内存回收是非常必要的。<br/>
-  这个确定调整后的空间大小算法很有意思。<br/>
-  调整后大小 (new_allocated) = 新元素数量 (newsize) + 预留空间 (new_allocated)<br/>
-  调整后的空间肯定能存储 newsize 个元素。要关注的是预留空间的增长状况。<br/>
-  将预留算法改成 Python 版就更清楚了:(newsize // 8) + (newsize &lt; 9 and 3 or 6)。<br/>
-  当 newsize >= allocated,自然按照这个新的长度 "扩容" 内存。<br/>
-  而如果 newsize &lt; allocated,且利用率低于一半呢?<br/>
-  allocated    newsize       new_size + new_allocated<br/>
-  10           4             4 + 3<br/>
-  20           9             9 + 7<br/>
-  很显然,这个新长度小于原来的已分配空间长度,自然会导致 realloc 收缩内存。(不容易啊)<br/>
-  引自《深入Python编程》</p></blockquote>
+<blockquote>
+  <p>我们能看到 Python 设计者的苦心。在需要的时候扩容,但又不允许过度的浪费,适当的内存回收是非常必要的。<br />
+  这个确定调整后的空间大小算法很有意思。<br />
+  调整后大小 (new_allocated) = 新元素数量 (newsize) + 预留空间 (new_allocated)<br />
+  调整后的空间肯定能存储 newsize 个元素。要关注的是预留空间的增长状况。<br />
+  将预留算法改成 Python 版就更清楚了:(newsize // 8) + (newsize &lt; 9 and 3 or 6)。<br />
+  当 newsize &gt;= allocated,自然按照这个新的长度 “扩容” 内存。<br />
+  而如果 newsize &lt; allocated,且利用率低于一半呢?<br />
+  allocated    newsize       new_size + new_allocated<br />
+  10           4             4 + 3<br />
+  20           9             9 + 7<br />
+  很显然,这个新长度小于原来的已分配空间长度,自然会导致 realloc 收缩内存。(不容易啊)<br />
+  引自《深入Python编程》</p>
+</blockquote>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-08-24" datetime="2013-08-24" pubdate>
-							<span class="year">2013-08-24</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="https://github.com/acmerfight/insight_python/blob/master/list_implementation.md" target="_blank">https://github.com/acmerfight/insight_python/blob/master/list_implementation.md</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/08/24/python-list-implementation.html">http://http://uwebs.tk/archives/2013/08/24/python-list-implementation.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>JavaScript核心</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='JavaScript核心'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="javascript" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / JavaScript核心</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">JavaScript核心</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>原文出处： <a href="http://dmitrysoshnikov.com/ecmascript/javascript-the-core/">Dmitry Soshnikov</a>  译文出处：<a href="http://weizhifeng.net/javascript-the-core.html">JeremyWei</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / JavaScript核心</div>
+
+<article>
+	<h1><a href="/archives/2013/11/26/javascript-the-core.html">JavaScript核心</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-11-26</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>原文出处： <a href="http://dmitrysoshnikov.com/ecmascript/javascript-the-core/">Dmitry Soshnikov</a>  译文出处：<a href="http://weizhifeng.net/javascript-the-core.html">JeremyWei</a></p>
 
 <p>这篇文章是「深入ECMA-262-3」系列的一个概览和摘要。每个部分都包含了对应章节的链接，所以你可以阅读它们以便对其有更深的理解。</p>
 
@@ -70,11 +33,13 @@
 
 <p>我们以思考对象的概念做为开始，这是ECMAScript的基础。</p>
 
-<h3><strong>对象</strong></h3>
+<h3 id="section"><strong>对象</strong></h3>
 
 <p>ECMAScript做为一个高度抽象的面向对象语言，是通过<em>对象</em>来交互的。即使ECMAScript里边也有<em>基本类型</em>，但是，当需要的时候，它们也会被转换成对象。</p>
 
-<blockquote><p>  一个对象就是一个属性集合，并拥有一个独立的prototype（原型）对象。这个prototype可以是一个对象或者null。</p></blockquote>
+<blockquote>
+  <p>一个对象就是一个属性集合，并拥有一个独立的prototype（原型）对象。这个prototype可以是一个对象或者null。</p>
+</blockquote>
 
 <p>让我们看一个关于对象的基本例子。一个对象的prototype是以内部的[[Prototype]]属性来引用的。但是，在示意图里边我们将会使用<code>__&lt;internal-property&gt;__</code>下划线标记来替代两个括号，对于prototype对象来说是：<code>__proto__</code>。</p>
 
@@ -92,11 +57,13 @@
 
 <p>这些prototype有什么用？让我们以<em>原型链</em>（prototype chain）的概念来回答这个问题。</p>
 
-<h3><strong>原型链</strong></h3>
+<h3 id="section-1"><strong>原型链</strong></h3>
 
 <p>原型对象也是简单的对象并且可以拥有它们自己的原型。如果一个原型对象的原型是一个非null的引用，那么以此类推，这就叫作<em>原型链</em>。</p>
 
-<blockquote><p>  原型链是一个用来实现继承和共享属性的有限对象链。</p></blockquote>
+<blockquote>
+  <p>原型链是一个用来实现继承和共享属性的有限对象链。</p>
+</blockquote>
 
 <p>考虑这么一个情况，我们拥有两个对象，它们之间只有一小部分不同，其他部分都相同。显然，对于一个设计良好的系统，我们将会<em>重用</em>相似的功能/代码，而不是在每个单独的对象中重复它。在基于类的系统中，这个代码<em>重用</em>风格叫作<em>类继承</em>－你把相似的功能放入类<code>A</code>中，然后类 <code>B</code>和类 <code>C</code>继承类 <code>A</code>，并且拥有它们自己的一些小的额外变动。</p>
 
@@ -110,17 +77,17 @@
     return this.x + this.y + z
   }
 };
-
+ 
 var b = {
   y: 20,
   __proto__: a
 };
-
+ 
 var c = {
   y: 30,
   __proto__: a
 };
-
+ 
 // call the inherited method
 b.calculate(30); // 60
 c.calculate(40); // 80
@@ -161,48 +128,48 @@ function Foo(y) {
   // creation own "y" property
   this.y = y;
 }
-
+ 
 // also "Foo.prototype" stores reference
 // to the prototype of newly created objects,
 // so we may use it to define shared/inherited
 // properties or methods, so the same as in
 // previous example we have:
-
+ 
 // inherited property "x"
 Foo.prototype.x = 10;
-
+ 
 // and inherited method "calculate"
 Foo.prototype.calculate = function (z) {
   return this.x + this.y + z;
 };
-
+ 
 // now create our "b" and "c"
 // objects using "pattern" Foo
 var b = new Foo(20);
 var c = new Foo(30);
-
+ 
 // call the inherited method
 b.calculate(30); // 60
 c.calculate(40); // 80
-
+ 
 // let's show that we reference
 // properties we expect
-
+ 
 console.log(
-
+ 
   b.__proto__ === Foo.prototype, // true
   c.__proto__ === Foo.prototype, // true
-
+ 
   // also "Foo.prototype" automatically creates
   // a special property "constructor", which is a
   // reference to the constructor function itself;
   // instances "b" and "c" may found it via
   // delegation and use to check their constructor
-
+ 
   b.constructor === Foo, // true
   c.constructor === Foo, // true
   Foo.prototype.constructor === Foo // true
-
+ 
   b.calculate === b.__proto__.calculate, // true
   b.__proto__.calculate === Foo.prototype.calculate // true
 );
@@ -223,18 +190,18 @@ class Foo {
   constructor(name) {
     this._name = name;
   }
-
+ 
   getName() {
     return this._name;
   }
 }
-
+ 
 class Bar extends Foo {
   getName() {
     return super.getName() + ' Doe';
   }
 }
-
+ 
 var bar = new Bar('John');
 console.log(bar.getName()); // John Doe
 </code></pre>
@@ -243,20 +210,20 @@ console.log(bar.getName()); // John Doe
 
 <p>现在，在我们知道了对象的基础之后，让我们看看<em>运行时程序的执行</em>（runtime program execution）在ECMAScript中是如何实现的。这叫作<em>执行上下文栈</em>（execution context stack），其中的每个元素也可以抽象成为一个对象。是的，ECMAScript几乎在任何地方都和对象的概念打交道;)</p>
 
-<h3><strong>执行上下文堆栈</strong></h3>
+<h3 id="section-2"><strong>执行上下文堆栈</strong></h3>
 
 <p>这里有三种类型的ECMAScript代码：<em>全局</em>代码、<em>函数</em>代码和<em>eval</em>代码。每个代码是在其<em>执行上下文</em>（execution context）中被求值的。这里只有一个全局上下文，可能有多个函数执行上下文以及<em>eval</em>执行上下文。对一个函数的每次调用，会进入到函数执行上下文中，并对函数代码类型进行求值。每次对<code>eval</code>函数进行调用，会进入<em>eval</em>执行上下文并对其代码进行求值。</p>
 
 <p>注意，一个函数可能会创建无数的上下文，因为对函数的每次调用（即使这个函数递归的调用自己）都会生成一个具有新状态的上下文：</p>
 
 <pre><code>function foo(bar) {}
-
+ 
 // call the same function,
 // generate three different
 // contexts in each call, with
 // different context state (e.g. value
 // of the "bar" argument)
-
+ 
 foo(10);
 foo(20);
 foo(30);
@@ -284,7 +251,7 @@ foo(30);
 
 <p>像我们所说的，栈中的每个执行上下文都可以用一个对象来表示。让我们来看看它的结构以及一个上下文到底需要什么<em>状态</em>（什么属性）来执行它的代码。</p>
 
-<h3><strong>执行上下文</strong></h3>
+<h3 id="section-3"><strong>执行上下文</strong></h3>
 
 <p>一个执行上下文可以抽象的表示为一个简单的对象。每一个执行上下文拥有一些属性（可以叫作<em>上下文状态</em>）用来跟踪和它相关的代码的执行过程。在下图中展示了一个上下文的结构：</p>
 
@@ -294,9 +261,11 @@ foo(30);
 
 <p>让我们详细看看上下文中的这些重要的属性。</p>
 
-<h3><strong>变量对象</strong></h3>
+<h3 id="section-4"><strong>变量对象</strong></h3>
 
-<blockquote><p>  变量对象是与执行上下文相关的数据作用域。它是一个与上下文相关的特殊对象，其中存储了在上下文中定义的变量和函数声明。</p></blockquote>
+<blockquote>
+  <p>变量对象是与执行上下文相关的数据作用域。它是一个与上下文相关的特殊对象，其中存储了在上下文中定义的变量和函数声明。</p>
+</blockquote>
 
 <p>注意，<em>函数表达式</em>（与<em>函数声明</em>相对）<em>不包含</em>在变量对象之中。</p>
 
@@ -305,15 +274,15 @@ foo(30);
 <p>让我们在全局执行上下文中考虑下面这个例子：</p>
 
 <pre><code>var foo = 10;
-
+ 
 function bar() {} // function declaration, FD
 (function baz() {}); // function expression, FE
-
+ 
 console.log(
   this.foo == foo, // true
   window.bar == bar // true
 );
-
+ 
 console.log(baz); // ReferenceError, "baz" is not defined
 </code></pre>
 
@@ -329,7 +298,7 @@ console.log(baz); // ReferenceError, "baz" is not defined
 
 <p>那么函数和它的变量对象是怎么样的？在函数上下文中，变量对象是以<em>活动对象</em>（activation object）来表示的。</p>
 
-<h3><strong>活动对象</strong></h3>
+<h3 id="section-5"><strong>活动对象</strong></h3>
 
 <p>当一个函数被caller所<em>触发</em>（被调用），一个特殊的对象，叫作<em>活动对象</em>（activation object）将会被创建。这个对象中包含<em>形参</em>和那个特殊的<code>arguments</code>对象（是对形参的一个映射，但是值是通过索引来获取）。<em>活动对象</em>之后会做为函数上下文的<em>变量对象</em>来使用。</p>
 
@@ -342,7 +311,7 @@ console.log(baz); // ReferenceError, "baz" is not defined
   function bar() {} // FD
   (function baz() {}); // FE
 }
-
+ 
 foo(10, 20);
 </code></pre>
 
@@ -358,9 +327,11 @@ foo(10, 20);
 
 <p>然后我们向下一个部分前进。众所周知，在ECMAScript中我们可以使用<em>内部函数</em>，然后在这些内部函数我们可以引用<em>父</em>函数的变量或者<em>全局</em>上下文中的变量。当我们把变量对象命名为上下文的<em>作用域对象</em>，与上面讨论的原型链相似，这里有一个叫作<em>作用域链</em>的东西。</p>
 
-<h3><strong>作用域链</strong></h3>
+<h3 id="section-6"><strong>作用域链</strong></h3>
 
-<blockquote><p>  作用域链是一个对象列表，上下文代码中出现的标识符在这个列表中进行查找。</p></blockquote>
+<blockquote>
+  <p>作用域链是一个对象列表，上下文代码中出现的标识符在这个列表中进行查找。</p>
+</blockquote>
 
 <p>这个规则还是与原型链同样简单以及相似：如果一个变量在函数自身的作用域（在自身的变量/活动对象）中没有找到，那么将会查找它父函数（外层函数）的变量对象，以此类推。</p>
 
@@ -371,7 +342,7 @@ foo(10, 20);
 <p>当<em>解析</em>（查找）一个标识符的时候，会从作用域链中的活动对象开始查找，然后（如果这个标识符在函数自身的活动对象中没有被查找到）向作用域链的上一层查找－重复这个过程，就和原型链一样。</p>
 
 <pre><code>var x = 10;
-
+ 
 (function foo() {
   var y = 20;
   (function bar() {
@@ -394,44 +365,44 @@ foo(10, 20);
 <p>对于这个例子：</p>
 
 <pre><code>Object.prototype.x = 10;
-
+ 
 var w = 20;
 var y = 30;
-
+ 
 // in SpiderMonkey global object
 // i.e. variable object of the global
 // context inherits from "Object.prototype",
 // so we may refer "not defined global
 // variable x", which is found in
 // the prototype chain
-
+ 
 console.log(x); // 10
-
+ 
 (function foo() {
-
+ 
   // "foo" local variables
   var w = 40;
   var x = 100;
-
+ 
   // "x" is found in the
   // "Object.prototype", because
   // {z: 50} inherits from it
-
+ 
   with ({z: 50}) {
     console.log(w, x, y , z); // 40, 10, 30, 50
   }
-
+ 
   // after "with" object is removed
   // from the scope chain, "x" is
   // again found in the AO of "foo" context;
   // variable "w" is also local
   console.log(x, w); // 100, 40
-
+ 
   // and that's how we may refer
   // shadowed global "w" variable in
   // the browser host environment
   console.log(window.w); // 20
-
+ 
 })();
 </code></pre>
 
@@ -443,7 +414,7 @@ console.log(x); // 10
 
 <p>由于所有父变量对象都存在，所以在内部函数中获取父函数中的数据没有什么特别－我们就是遍历作用域链去解析（搜寻）需要的变量。就像我们上边提及的，在一个上下文结束之后，它所有的状态和它自身都会被<em>销毁</em>。在同一时间父函数可能会<em>返回</em>一个<em>内部函数</em>。而且，这个返回的函数之后可能在另一个上下文中被调用。如果自由变量的上下文已经「消失」了，那么这样的调用将会发生什么？通常来说，有一个概念可以帮助我们解决这个问题，叫作<em>（词法）闭包</em>，其在ECMAScript中就是和<em>作用域链</em>的概念紧密相关的。</p>
 
-<h3><strong>闭包</strong></h3>
+<h3 id="section-7"><strong>闭包</strong></h3>
 
 <p>在ECMAScript中，函数是<em>第一级</em>（first-class）对象。这个术语意味着函数可以做为参数传递给其他函数（在那种情况下，这些参数叫作「函数类型参数」（funargs，是”functional arguments”的简称））。接收「函数类型参数」的函数叫作<em>高阶函数</em>或者，贴近数学一些，叫作高阶<em>操作符</em>。同样函数也可以从其他函数中返回。返回其他函数的函数叫作<em>以函数为值</em>（function valued）的函数（或者叫作拥有<em>函数类值</em>的函数（functions with functional value））。</p>
 
@@ -462,18 +433,18 @@ console.log(x); // 10
     console.log(x);
   };
 }
-
+ 
 // "foo" returns also a function
 // and this returned function uses
 // free variable "x"
-
+ 
 var returnedFunction = foo();
-
+ 
 // global variable "x"
 var x = 20;
-
+ 
 // execution of the returned function
-
+ 
 returnedFunction(); // 10, but not 20
 </code></pre>
 
@@ -483,32 +454,34 @@ returnedFunction(); // 10, but not 20
 
 <pre><code>// global "x"
 var x = 10;
-
+ 
 // global function
 function foo() {
   console.log(x);
 }
-
+ 
 (function (funArg) {
-
+ 
   // local "x"
   var x = 20;
-
+ 
   // there is no ambiguity,
   // because we use global "x",
   // which was statically saved in
   // [[Scope]] of the "foo" function,
   // but not the "x" of the caller's scope,
   // which activates the "funArg"
-
+ 
   funArg(); // 10, but not 20
-
+ 
 })(foo); // pass "down" foo as a "funarg"
 </code></pre>
 
 <p>我们可以断定<em>静态作用域</em>是一门语言拥有<em>闭包的必需条件</em>。但是，一些语言可能会同时提供动态和静态作用域，允许程序员做选择－什么应该包含（closure）在内和什么不应包含在内。由于在ECMAScript中只使用了静态作用域（比如我们对于<code>funarg问题</code>的两个子问题都有解决方案），所以结论是：<em>ECMAScript完全支持闭包</em>，技术上是通过函数的<code>[[Scope]]</code>属性实现的。现在我们可以给闭包下一个准确的定义：</p>
 
-<blockquote><p>  闭包是一个代码块（在ECMAScript是一个函数）和以静态方式/词法方式进行存储的所有父作用域的一个集合体。所以，通过这些存储的作用域，函数可以很容易的找到自由变量。</p></blockquote>
+<blockquote>
+  <p>闭包是一个代码块（在ECMAScript是一个函数）和以静态方式/词法方式进行存储的所有父作用域的一个集合体。所以，通过这些存储的作用域，函数可以很容易的找到自由变量。</p>
+</blockquote>
 
 <p>注意，由于<em>每个</em>（标准的）函数都在创建的时候保存了<code>[[Scope]]</code>，所以理论上来讲，ECMAScript中的<em>所有函数</em>都是<em>闭包</em>。</p>
 
@@ -521,9 +494,9 @@ function foo() {
     bar: function bar() { return --x; }
   };
 }
-
+ 
 var closures = baz();
-
+ 
 console.log(
   closures.foo(), // 2
   closures.bar()  // 1
@@ -537,13 +510,13 @@ console.log(
 <p>确切来说这个特性在循环中创建多个函数的时候会使人非常困惑。在创建的函数中使用循环计数器的时候，一些程序员经常会得到非预期的结果，所有函数中的计数器都是<em>同样</em>的值。现在是到了该揭开谜底的时候了－因为所有这些函数拥有同一个<code>[[Scope]]</code>，这个属性中的循环计数器的值是最后一次所赋的值。</p>
 
 <pre><code>var data = [];
-
+ 
 for (var k = 0; k &lt; 3; k++) {
   data[k] = function () {
     alert(k);
   };
 }
-
+ 
 data[0](); // 3, but not 0
 data[1](); // 3, but not 1
 data[2](); // 3, but not 2
@@ -552,7 +525,7 @@ data[2](); // 3, but not 2
 <p>这里有几种技术可以解决这个问题。其中一种是在作用域链中提供一个额外的对象－比如，使用额外函数：</p>
 
 <pre><code>var data = [];
-
+ 
 for (var k = 0; k &lt; 3; k++) {
   data[k] = (function (x) {
     return function () {
@@ -560,7 +533,7 @@ for (var k = 0; k &lt; 3; k++) {
     };
   })(k); // pass "k" value
 }
-
+ 
 // now it is correct
 data[0](); // 0
 data[1](); // 1
@@ -571,13 +544,17 @@ data[2](); // 2
 
 <p>然后我们移动到下个部分，考虑一下执行上下文的最后一个属性。这就是关于<code>this</code>值的概念。</p>
 
-<h3><strong>This</strong></h3>
+<h3 id="this"><strong>This</strong></h3>
 
-<blockquote><p>  this是一个与执行上下文相关的特殊对象。因此，它可以叫作上下文对象（也就是用来指明执行上下文是在哪个上下文中被触发的对象）。</p></blockquote>
+<blockquote>
+  <p>this是一个与执行上下文相关的特殊对象。因此，它可以叫作上下文对象（也就是用来指明执行上下文是在哪个上下文中被触发的对象）。</p>
+</blockquote>
 
 <p><em>任何对象</em>都可以做为上下文中的<code>this</code>的值。我想再一次澄清，在一些对ECMAScript执行上下文和部分<code>this</code>的描述中的所产生误解。<code>this</code>经常被<em>错误的</em>描述成是变量对象的一个属性。这类错误存在于比如像这本书中（即使如此，这本书的相关章节还是十分不错的）。再重复一次：</p>
 
-<blockquote><p>  this是执行上下文的一个属性，而不是变量对象的一个属性。</p></blockquote>
+<blockquote>
+  <p>this是执行上下文的一个属性，而不是变量对象的一个属性。</p>
+</blockquote>
 
 <p>这个特性非常重要，因为<em>与变量相反</em>，<em><code>this</code>从不会参与到标识符解析过程</em>。换句话说，在代码中当访问<code>this</code>的时候，它的值是<em>直接</em>从执行上下文中获取的，并<em>不需要任何作用域链查找</em>。<code>this</code>的值只在<em>进入上下文</em>的时候进行<em>一次</em>确定。</p>
 
@@ -586,7 +563,7 @@ data[2](); // 2
 <p>在全局上下文中，<code>this</code>就等于<em>全局对象本身</em>（这意味着，这里的<code>this</code>等于<em>变量对象</em>）：</p>
 
 <pre><code>var x = 10;
-
+ 
 console.log(
   x, // 10
   this.x, // 10
@@ -599,35 +576,35 @@ console.log(
 <pre><code>// the code of the "foo" function
 // never changes, but the "this" value
 // differs in every activation
-
+ 
 function foo() {
   alert(this);
 }
-
+ 
 // caller activates "foo" (callee) and
 // provides "this" for the callee
-
+ 
 foo(); // global object
 foo.prototype.constructor(); // foo.prototype
-
+ 
 var bar = {
   baz: foo
 };
-
+ 
 bar.baz(); // bar
-
+ 
 (bar.baz)(); // also bar
 (bar.baz = bar.baz)(); // but here is global object
 (bar.baz, bar.baz)(); // also global object
 (false || bar.baz)(); // also global object
-
+ 
 var otherFoo = bar.baz;
 otherFoo(); // again global object
 </code></pre>
 
 <p>为了深入理解<code>this</code>为什么（并且更本质一些－<em>如何</em>）在每个函数调用中可能会发生变化，你可以阅读第三章 This。在那里，上面所提到的情况都会有详细的讨论。</p>
 
-<h3><strong>总结</strong></h3>
+<h3 id="section-8"><strong>总结</strong></h3>
 
 <p>通过本文我们完成了对概要的综述。尽管，它看起来并不像是「概要」;)。对所有这些主题进行完全的解释需要一本完整的书。我们只是没有涉及到两个大的主题：<em>函数</em>（和不同函数之间的区别，比如，<em>函数声明</em>和<em>函数表达式</em>）和ECMAScript中所使用的<em>求值策略</em>(evaluation strategy )。这两个主题是可以ES3系列的在对应章节找到：第五章 函数和第八章 求值策略。</p>
 
@@ -635,66 +612,81 @@ otherFoo(); // again global object
 
 <p>祝学习ECMAScript好运！</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-11-26" datetime="2013-11-26" pubdate>
-							<span class="year">2013-11-26</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="12" title="javascript"><a href="/tags.html#javascript-ref">javascript</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://weizhifeng.net/javascript-the-core.html" target="_blank">http://weizhifeng.net/javascript-the-core.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/11/26/javascript-the-core.html">http://http://uwebs.tk/archives/2013/11/26/javascript-the-core.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

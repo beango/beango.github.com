@@ -1,87 +1,52 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>可伸缩系统的架构经验</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='可伸缩系统的架构经验'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="架构分析" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 可伸缩系统的架构经验</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">可伸缩系统的架构经验</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>来源：<a href="http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/">简单文本</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 可伸缩系统的架构经验</div>
+
+<article>
+	<h1><a href="/archives/2013/02/27/scalability-system-architecture-lessons.html">可伸缩系统的架构经验</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-02-27</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>来源：<a href="http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/">简单文本</a></p>
 
 <p>最近，阅读了Will Larson的文章<a href="http://lethain.com/introduction-to-architecting-systems-for-scale/">Introduction to Architecting System for Scale</a>，感觉很有价值。作者分享了他在Yahoo!与Digg收获的设计可伸缩系统的架构经验。在我过往的架构经验中，由于主要参与开发企业软件系统，这种面向企业内部的软件系统通常不会有太大的负载量，太多的并发量，因而对于系统的可伸缩性考虑较少。大体而言，只要在系统部署上考虑集群以及负载均衡即可。本文给了我很多启发，现把本文的主要内容摘译出来，并结合自己对此的理解。</p>
 
 <p>Larson首先认为，一个理想的系统，对于容量（Capacity）的增长应该与添加的硬件数是线性的关系。换言之，如果系统只有一台服务器，在增加了另一台同样的机器后，容量应该翻倍。以此类推。这种线性的容量伸缩方式，通常被称之为水平伸缩“Horizontal Scalability”。</p>
 
-<p><a href="/assets/files/2013-02/scalability.jpg" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability.jpg" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p><a href="/assets/files/2013-02/scalability.jpg" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability.jpg" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p>在设计一个健壮的系统时，自然必须首要考虑失败的情况。Larson认为，一个理想的系统是当失去其中一台服务器的时候，系统不会崩溃。当然，对应而言，失去一台服务器也会导致容量的响应线性减少。这种情况通常被称为冗余“Redundancy”。</p>
 
 <p><strong>负载均衡</strong></p>
 
-<p>无论是水平伸缩还是冗余，都可以通过负载均衡来实现。负载均衡就好似一个协调请求的调停者，它会根据集群中机器的当前负载，合理的分配发往Web服务器的请求，以达到有效利用集群中各台机器资源的目的。显然，这种均衡器应该介于客户端与Web服务器之间，如下图所示：<a href="/assets/files/2013-02/scalability01.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability01.png" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p>无论是水平伸缩还是冗余，都可以通过负载均衡来实现。负载均衡就好似一个协调请求的调停者，它会根据集群中机器的当前负载，合理的分配发往Web服务器的请求，以达到有效利用集群中各台机器资源的目的。显然，这种均衡器应该介于客户端与Web服务器之间，如下图所示：<a href="/assets/files/2013-02/scalability01.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability01.png" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p>本文提到了实现负载均衡的几种方法。其一是Smart
 Client，即将负载均衡的功能添加到数据库（以及缓存或服务）的客户端中。这是一种通过软件来实现负载均衡的方式，它的缺点是方案会比较复杂，不够健壮，也很难被重用（因为协调请求的逻辑会混杂在业务系统中）。对此，Larson在文章以排比的方式连续提出问题，以强化自己对此方案的不认可态度：</p>
 
-<blockquote><p>Is it attractive because it is the simplest solution? Usually, no. Is
+<blockquote>
+  <p>Is it attractive because it is the simplest solution? Usually, no. Is
 it seductive because it is the most robust? Sadly, no. Is it alluring
-because it’ll be easy to reuse? Tragically, no.</p></blockquote>
+because it’ll be easy to reuse? Tragically, no.</p>
+</blockquote>
 
 <p>第二种方式是采用硬件负载均衡器，例如<a href="http://www.citrix.com/English/ps2/products/product.asp?contentID=21679">Citrix NetScaler</a>。不过，购买硬件的费用不菲，通常是一些大型公司才会考虑此方案。</p>
 
@@ -116,7 +81,7 @@ else:
 
 <p><strong>CDN</strong></p>
 
-<p>提高性能，降低Web服务器负载的另一种常见做法是将静态媒体放入CDN（Content Distribution Network）中。如下图所示：<a href="/assets/files/2013-02/scalability02.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability02.png" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p>提高性能，降低Web服务器负载的另一种常见做法是将静态媒体放入CDN（Content Distribution Network）中。如下图所示：<a href="/assets/files/2013-02/scalability02.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability02.png" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p>CDN可以有效地分担Web服务器的压力，使得应用服务器可以专心致志地处理动态页面；同时，CDN还可以通过地理分布来提高响应请求的性能。在设置了CDN后，当系统接收到请求时，首先会询问CDN以获得请求中需要的静态媒体（通常会通过HTTP Header来配置CDN能够缓存的内容）。如果请求的内容不可用，CDN会查询服务器以获得该文件，并在CDN本地进行缓存，最后再提供给请求者。如果当前网站并不大，引入CDN的效果不明显时，可以考虑暂不使用CDN，在将来可以通过使用一些轻量级的HTTP服务器如<a href="http://nginx.org/">Nginx</a>，为静态媒体分出专门的子域名如static.domain.com来提供服务。</p>
 
@@ -128,7 +93,7 @@ else:
 
 <p><strong>Off-Line处理</strong></p>
 
-<p>这篇文章还提到了Off-Line的处理方式，即通过引入消息队列的方式来处理请求。事实上，在大多数企业软件系统中，这种方式也是较为常见的做法。在我撰写的文章《<a href="http://agiledon.github.com/blog/2012/12/27/distributed-architecture-based-on-message/">案例分析:基于消息的分布式架构</a>》中，较为详细地介绍了这种架构。在引入消息队列后，Web服务器会充当消息的发布者，而在消息队列的另一端可以根据需要提供消费者Consumer。如下图所示。对于Off-Line的任务是否执行完毕，通常可以通过轮询或回调的方式来获知。<a href="/assets/files/2013-02/scalability03.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability03.png" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p>这篇文章还提到了Off-Line的处理方式，即通过引入消息队列的方式来处理请求。事实上，在大多数企业软件系统中，这种方式也是较为常见的做法。在我撰写的文章《<a href="http://agiledon.github.com/blog/2012/12/27/distributed-architecture-based-on-message/">案例分析:基于消息的分布式架构</a>》中，较为详细地介绍了这种架构。在引入消息队列后，Web服务器会充当消息的发布者，而在消息队列的另一端可以根据需要提供消费者Consumer。如下图所示。对于Off-Line的任务是否执行完毕，通常可以通过轮询或回调的方式来获知。<a href="/assets/files/2013-02/scalability03.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability03.png" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p>为了更好地提高代码可读性，可以在公开的接口定义中明确地标示该任务是On-Line还是Off-Line。</p>
 
@@ -138,11 +103,11 @@ else:
 
 <p><strong>Map-Reduce</strong></p>
 
-<p>对于大数据的处理，自然可以引入Map-Reduce。为整个系统专门引入一个Map-Reduce层来处理数据是有必要的。相对于使用SQL数据库作为数据中心的方式，Map-Reduce对可伸缩性的支持更好。Map-Reduce可以与任务的定时机制结合起来。如下图所示：<a href="/assets/files/2013-02/scalability04.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability04.png" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p>对于大数据的处理，自然可以引入Map-Reduce。为整个系统专门引入一个Map-Reduce层来处理数据是有必要的。相对于使用SQL数据库作为数据中心的方式，Map-Reduce对可伸缩性的支持更好。Map-Reduce可以与任务的定时机制结合起来。如下图所示：<a href="/assets/files/2013-02/scalability04.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability04.png" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p><strong>平台层</strong></p>
 
-<p>Larson认为，大多数系统都是Web应用直接与数据库通信，但如果能加入一个平台层（Platform Layer），或许会更好。<a href="/assets/files/2013-02/scalability05.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability05.png" title="可伸缩系统的架构经验" alt="可伸缩系统的架构经验" /></a></p>
+<p>Larson认为，大多数系统都是Web应用直接与数据库通信，但如果能加入一个平台层（Platform Layer），或许会更好。<a href="/assets/files/2013-02/scalability05.png" title="可伸缩系统的架构经验"><img src="/assets/files/2013-02/scalability05.png" alt="可伸缩系统的架构经验" title="可伸缩系统的架构经验" /></a></p>
 
 <p>首先，将平台与Web应用分离，使得它们可以独立地进行伸缩。例如需要添加一个新的API，就可以添加新的平台服务器，而无需增加Web服务器。要知道，在这样一个独立的物理分层架构中，不同层次对服务器的要求是不一样的。例如，对于数据库服务器而言，由于需要频繁地对磁盘进行I/O操作，因此应保证数据库服务器的IO性能，如尽量使用固态硬盘。而对于Web服务器而言，则对CPU的要求比较高，尽可能采用多核CPU。</p>
 
@@ -152,66 +117,81 @@ else:
 
 <p> </p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-02-27" datetime="2013-02-27" pubdate>
-							<span class="year">2013-02-27</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="架构分析"><a href="/tags.html#架构分析-ref">架构分析</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/" target="_blank">http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/02/27/scalability-system-architecture-lessons.html">http://http://uwebs.tk/archives/2013/02/27/scalability-system-architecture-lessons.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

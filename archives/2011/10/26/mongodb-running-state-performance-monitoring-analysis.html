@@ -1,97 +1,59 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>MongoDB运行状态、性能监控，分析</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='MongoDB运行状态、性能监控，分析'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="mongodb" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / MongoDB运行状态、性能监控，分析</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">MongoDB运行状态、性能监控，分析</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / MongoDB运行状态、性能监控，分析</div>
 
-<h2>mongostat详解</h2>
+<article>
+	<h1><a href="/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">MongoDB运行状态、性能监控，分析</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2011-10-26</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。</p>
 
-<p><img src="/assets/files/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;">
+<h3 id="mongostat">mongostat详解</h3>
+
+<p><img src="/assets/files/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;" />
 mongostat是mongdb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。</p>
 
 <p>它的输出有以下几列：</p>
 
 <ul>
-<li>inserts/s 每秒插入次数</li>
-<li>query/s 每秒查询次数</li>
-<li>update/s 每秒更新次数</li>
-<li>delete/s 每秒删除次数</li>
-<li>getmore/s 每秒执行getmore次数</li>
-<li>command/s 每秒的命令数，比以上插入、查找、更新、删除的综合还多，还统计了别的命令</li>
-<li>flushs/s 每秒执行fsync将数据写入硬盘的次数。</li>
-<li>mapped/s 所有的被mmap的数据量，单位是MB，</li>
-<li>vsize 虚拟内存使用量，单位MB</li>
-<li>res 物理内存使用量，单位MB</li>
-<li>faults/s 每秒访问失败数（只有Linux有），数据被交换出物理内存，放到swap。不要超过100，否则就是机器内存太小，造成频繁swap写入。此时要升级内存或者扩展</li>
-<li>locked % 被锁的时间百分比，尽量控制在50%以下吧</li>
-<li>idx miss % 索引不命中所占百分比。如果太高的话就要考虑索引是不是少了</li>
-<li>q t|r|w 当Mongodb接收到太多的命令而数据库被锁住无法执行完成，它会将命令加入队列。这一栏显示了总共、读、写3个队列的长度，都为0的话表示mongo毫无压力。高并发时，一般队列值会升高。</li>
-<li>conn 当前连接数</li>
-<li>time 时间戳</li>
+  <li>inserts/s 每秒插入次数</li>
+  <li>query/s 每秒查询次数</li>
+  <li>update/s 每秒更新次数</li>
+  <li>delete/s 每秒删除次数</li>
+  <li>getmore/s 每秒执行getmore次数</li>
+  <li>command/s 每秒的命令数，比以上插入、查找、更新、删除的综合还多，还统计了别的命令</li>
+  <li>flushs/s 每秒执行fsync将数据写入硬盘的次数。</li>
+  <li>mapped/s 所有的被mmap的数据量，单位是MB，</li>
+  <li>vsize 虚拟内存使用量，单位MB</li>
+  <li>res 物理内存使用量，单位MB</li>
+  <li>faults/s 每秒访问失败数（只有Linux有），数据被交换出物理内存，放到swap。不要超过100，否则就是机器内存太小，造成频繁swap写入。此时要升级内存或者扩展</li>
+  <li>locked % 被锁的时间百分比，尽量控制在50%以下吧</li>
+  <li>idx miss % 索引不命中所占百分比。如果太高的话就要考虑索引是不是少了</li>
+  <li>q t|r|w 当Mongodb接收到太多的命令而数据库被锁住无法执行完成，它会将命令加入队列。这一栏显示了总共、读、写3个队列的长度，都为0的话表示mongo毫无压力。高并发时，一般队列值会升高。</li>
+  <li>conn 当前连接数</li>
+  <li>time 时间戳</li>
 </ul>
 
-
-<h2>使用profiler</h2>
+<h3 id="profiler">使用profiler</h3>
 
 <p>类似于MySQL的slow log, MongoDB可以监控所有慢的以及不慢的查询。</p>
 
@@ -116,30 +78,28 @@ switched to db test
 <p>3个字段的意义</p>
 
 <ul>
-<li>ts：时间戳</li>
-<li>info：具体的操作</li>
-<li>millis：操作所花时间，毫秒</li>
+  <li>ts：时间戳</li>
+  <li>info：具体的操作</li>
+  <li>millis：操作所花时间，毫秒</li>
 </ul>
-
 
 <p>不多说，此处有<a href="http://www.mongodb.org/display/DOCS/Database+Profiler">官方文档</a>。注意，造成满查询可能是索引的问题，也可能是数据不在内存造成因此磁盘读入造成。</p>
 
-<h2>使用Web控制台</h2>
+<h3 id="web">使用Web控制台</h3>
 
-<p><a href="/assets/files/2011-10/mongod-localhost.png"><img src="/assets/files/2011-10/mongod-localhost.png" title="mongodb web monitor" alt="mongodb web
-monitor" /></a>Mongodb自带了Web控制台，默认和数据服务一同开启。他的端口在Mongodb数据库服务器端口的基础上加1000，如果是默认的Mongodb数据服务端口(Which is 27017)，则相应的Web端口为28017这个页面可以看到</p>
+<p><a href="/assets/files/2011-10/mongod-localhost.png"><img src="/assets/files/2011-10/mongod-localhost.png" alt="mongodb web
+monitor" title="mongodb web monitor" /></a>Mongodb自带了Web控制台，默认和数据服务一同开启。他的端口在Mongodb数据库服务器端口的基础上加1000，如果是默认的Mongodb数据服务端口(Which is 27017)，则相应的Web端口为28017这个页面可以看到</p>
 
 <ul>
-<li>当前Mongodb的所有连接</li>
-<li>各个数据库和Collection的访问统计，包括：Reads, Writes, Queries, GetMores ,Inserts, Updates, Removes</li>
-<li>写锁的状态</li>
-<li>以及日志文件的最后几百行（CentOS+10gen yum安装的mongodb默认的日志文件位于/var/log/mongo/mongod.log)</li>
+  <li>当前Mongodb的所有连接</li>
+  <li>各个数据库和Collection的访问统计，包括：Reads, Writes, Queries, GetMores ,Inserts, Updates, Removes</li>
+  <li>写锁的状态</li>
+  <li>以及日志文件的最后几百行（CentOS+10gen yum安装的mongodb默认的日志文件位于/var/log/mongo/mongod.log)</li>
 </ul>
-
 
 <p>可以参考右边的截图</p>
 
-<h2>db.stat()</h2>
+<h2 id="dbstat">db.stat()</h2>
 
 <p>获取当前数据库的信息，比如Obj总数、数据库总大小、平均Obj大小等</p>
 
@@ -160,7 +120,7 @@ switched to db test
 }
 </code></pre>
 
-<h2>db.serverStatus()</h2>
+<h2 id="dbserverstatus">db.serverStatus()</h2>
 
 <p>获取服务器的状态</p>
 
@@ -241,13 +201,12 @@ switched to db test
 <p>需要关心的地方：</p>
 
 <ul>
-<li>connections 当前连接和可用连接数，听过一个同行介绍过，mongodb最大处理到2000个连接就不行了（要根据你的机器性能和业务来设定），所以设大了没意义。设个合理值的话，到达这个值mongodb就拒绝新的连接请求，避免被太多的连接拖垮。</li>
-<li>indexCounters:btree:misses 索引的不命中数，和hits的比例高就要考虑索引是否正确建立。你看我的”missRatio” : 3.543930204420982e-7，很健康吧。所以miss率在mongostat里面也可以看</li>
-<li>其他的都能自解释，也不是查看mongo健康状况的关键，就不说明了。</li>
+  <li>connections 当前连接和可用连接数，听过一个同行介绍过，mongodb最大处理到2000个连接就不行了（要根据你的机器性能和业务来设定），所以设大了没意义。设个合理值的话，到达这个值mongodb就拒绝新的连接请求，避免被太多的连接拖垮。</li>
+  <li>indexCounters:btree:misses 索引的不命中数，和hits的比例高就要考虑索引是否正确建立。你看我的”missRatio” : 3.543930204420982e-7，很健康吧。所以miss率在mongostat里面也可以看</li>
+  <li>其他的都能自解释，也不是查看mongo健康状况的关键，就不说明了。</li>
 </ul>
 
-
-<h2>db.currentOp()</h2>
+<h2 id="dbcurrentop">db.currentOp()</h2>
 
 <p>Mongodb
 的命令一般很快就完成，但是在一台繁忙的机器或者有比较慢的命令时，你可以通过db.currentOp()获取当前正在执行的操作。</p>
@@ -268,72 +227,87 @@ switched to db test
 <pre><code>&gt; db.killOp("shard3:466404288")
 </code></pre>
 
-<h2>MongoDB Monitoring Service</h2>
+<h2 id="mongodb-monitoring-service">MongoDB Monitoring Service</h2>
 
-<p><a href="/assets/files/2011-10/mms.png"><img src="/assets/files/2011-10/mms.png" title="mms" alt="" /></a></p>
+<p><a href="/assets/files/2011-10/mms.png"><img src="/assets/files/2011-10/mms.png" alt="" title="mms" /></a></p>
 
 <p>MongoDB Monitoring Service(MMS)是Mongodb厂商提供的监控服务，可以在网页和Android客户端上监控你的MongoDB状况。请<a href="http://blog.nosqlfan.com/html/3171.html">参考</a></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2011-10-26" datetime="2011-10-26" pubdate>
-							<span class="year">2011-10-26</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://tech.lezi.com/archives/290" target="_blank">http://tech.lezi.com/archives/290</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">http://http://uwebs.tk/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

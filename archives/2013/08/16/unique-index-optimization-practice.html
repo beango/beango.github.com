@@ -1,74 +1,37 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>唯一性索引优化实践</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='唯一性索引优化实践'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="SQL" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 唯一性索引优化实践</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">唯一性索引优化实践</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>原文出处：<a href="http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html">淘宝搜索技术博客</a></p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 唯一性索引优化实践</div>
+
+<article>
+	<h1><a href="/archives/2013/08/16/unique-index-optimization-practice.html">唯一性索引优化实践</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-08-16</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>原文出处：<a href="http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html">淘宝搜索技术博客</a></p>
 
 <p>唯一性索引（Unique Index），有时也称Primary Key索引，顾名思义就是对于这个索引字段每个doc的值都是唯一的，如各种id字段：product id，customer id, campaign id和bidword id等。这种类型的索引一般用来进行高效的查询，最典型的应用场景就是进行附表join查询，即对主表中查到的每一个doc，都在附表中查询其对应的附表doc信息。所以，对这种类型的索引进行优化会对整体查询性能有很好的提升，特别是在主表查询的结果很多的情况下。本文主要总结一下对于这种类型索引的优化实践，包括全量和实时增量的情况。</p>
 
 <p>我们知道，在全量建索引时，在内存中一般用开链的哈希表来存储Token的Hash值及其倒排链的信息。假设有N个不同的tokens，那么这个hash数组的大小一般是取第一个大于N*(5/3)的质数P。结构如下图所示：</p>
 
-<p><a href="/assets/files/2013-08/optimizing.png" title="optimizing"><img src="/assets/files/2013-08/optimizing.png" title="optimizing" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing.png" title="optimizing"><img src="/assets/files/2013-08/optimizing.png" alt="" title="optimizing" /></a></p>
 
 <p><em>图1: 全量索引在内存中的开链哈希表结构图</em></p>
 
@@ -77,11 +40,10 @@
 <p>当一个段的索引建完以后，这个内存中的Hash表里面的tokens的哈希值及包含其倒排链和occ链等元信息的keyword terms一般被转成如下的三种数据结构之一存在文件中：</p>
 
 <ol>
-<li>Closed Hash Table</li>
-<li>Skip List</li>
-<li>Tiered Dictionary</li>
+  <li>Closed Hash Table</li>
+  <li>Skip List</li>
+  <li>Tiered Dictionary</li>
 </ol>
-
 
 <p>这几种数据结构的目的都是为了在查询时先mmap了这些文件以后，能对于一个给定的query keyword，快速根据其哈希值找到其对应的keyword term，进而定位到相应的倒排链和occ链等信息。不同的数据结构在不同的场景（数据特点）下对于内存空间的使用以及查询性能的影响也是不同的。下面先简要分析一下以上这几种常用数据结构的特点，然后再谈谈对于Unique类型的索引所采用的优化数据结构。</p>
 
@@ -91,7 +53,7 @@
 
 <p>提到哈希表，不少人想到就是快，时间复杂度为O(1),其实未必如此，这个在后面的优化讨论中再深入。对于闭链hash,其大小一般也是取第一个大于N*(5/3)的质数P来申请空间，所以空间占用一般会比较大。对于以上例子，即N=100万，那么这个Hash数组大小为P，为原始keyword terms大小的3.15倍。闭链Hash表事实上就是环形数组，如下图所示：</p>
 
-<p><a href="/assets/files/2013-08/optimizing2.png" title="optimizing2"><img src="/assets/files/2013-08/optimizing2.png" title="optimizing2" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing2.png" title="optimizing2"><img src="/assets/files/2013-08/optimizing2.png" alt="" title="optimizing2" /></a></p>
 
 <p><em>图2: 闭链Hash表结构图</em></p>
 
@@ -102,26 +64,24 @@
 <p>跳表，顾名思义，是能在查找的时候能快速跳过很多元素，然后在一个相对小的范围内搜索给定的一个query keyword的hash值对应的keyword term信息。跳表的实现原理是：</p>
 
 <ol>
-<li>首先确定用一个小的数组,就叫做跳表数组吧，来存储跳表信息，这个数组的size一般取为keyword terms个数N的1/64(假设此值为M)，或者稍微大点，数组中每个元素的大小为4个字节(uint32_t)。</li>
-<li>然后，将keyword terms按token的hash值从小到大排好序存储在一个数组中，假设这个数组叫K，同时根据最大和最小的两个token的hash值将所有的hash值值域均分成M个区间。</li>
-<li>让跳表数组的第i个元素存储hash值的第i个区间里面的最小的一个hash值对应的keyword term在数组K中的下标值（哈，这句话有点绕），若hash值第i个区间里面没有值，则存一个无效的下标值-1.</li>
+  <li>首先确定用一个小的数组,就叫做跳表数组吧，来存储跳表信息，这个数组的size一般取为keyword terms个数N的1/64(假设此值为M)，或者稍微大点，数组中每个元素的大小为4个字节(uint32_t)。</li>
+  <li>然后，将keyword terms按token的hash值从小到大排好序存储在一个数组中，假设这个数组叫K，同时根据最大和最小的两个token的hash值将所有的hash值值域均分成M个区间。</li>
+  <li>让跳表数组的第i个元素存储hash值的第i个区间里面的最小的一个hash值对应的keyword term在数组K中的下标值（哈，这句话有点绕），若hash值第i个区间里面没有值，则存一个无效的下标值-1.</li>
 </ol>
-
 
 <p>所以一个跳表的结构如下图所示：</p>
 
-<p><a href="/assets/files/2013-08/optimizing3.png" title="optimizing3"><img src="/assets/files/2013-08/optimizing3.png" title="optimizing3" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing3.png" title="optimizing3"><img src="/assets/files/2013-08/optimizing3.png" alt="" title="optimizing3" /></a></p>
 
 <p><em>图3: 跳表结构图</em></p>
 
 <p>在查询的时候，执行如下步骤：</p>
 
 <ol>
-<li>先计算出query keyword的Hash值H，然后用(H-Hmin)/Step得到skip list数组中的下标i。</li>
-<li>查看下标i里面的元素值是否为-1，若为-1，则说明没有查到直接返回，若不为-1，就记录此元素值，假设为j；然后继续在skip list数组中查找i下标以后的元素中第一个不为-1的元素值，若找到则记录此元素值为k，如找不到则将k值设为N，即keyword terms数组的最后一个元素下标位置+1。</li>
-<li>最后在keyword terms数组K的[j,k]位置中二分查询hash值为H的keyword item。</li>
+  <li>先计算出query keyword的Hash值H，然后用(H-Hmin)/Step得到skip list数组中的下标i。</li>
+  <li>查看下标i里面的元素值是否为-1，若为-1，则说明没有查到直接返回，若不为-1，就记录此元素值，假设为j；然后继续在skip list数组中查找i下标以后的元素中第一个不为-1的元素值，若找到则记录此元素值为k，如找不到则将k值设为N，即keyword terms数组的最后一个元素下标位置+1。</li>
+  <li>最后在keyword terms数组K的[j,k]位置中二分查询hash值为H的keyword item。</li>
 </ol>
-
 
 <p>注意由于按Hash值的值域进行分段跳跃，所以每个哈希值区间里面的元素个数是很可能是分布不均的，故每次二分查找的区间大小是不固定的。</p>
 
@@ -130,29 +90,27 @@
 <p>Tiered dictionary的思路是分层查询定位。即，先二分查找一个小词典定位到一个大致的小范围，然后再在小范围内再继续搜索keyword term。实现的原理是：</p>
 
 <ol>
-<li>先将所有的keyword terms按它们的hash值从小打大排序后存储在一个数组中。</li>
-<li>将上面的数组分成若干个blocks，每个block包含相同个数的keyword terms，记做B个(比如说B就取128个)，当然最后一个block的元素个数可能少于B个。</li>
-<li>将上面每个block的最后一个keyword item元素的hash值抽出来依次保存在另外一个小的字典数组中。</li>
+  <li>先将所有的keyword terms按它们的hash值从小打大排序后存储在一个数组中。</li>
+  <li>将上面的数组分成若干个blocks，每个block包含相同个数的keyword terms，记做B个(比如说B就取128个)，当然最后一个block的元素个数可能少于B个。</li>
+  <li>将上面每个block的最后一个keyword item元素的hash值抽出来依次保存在另外一个小的字典数组中。</li>
 </ol>
-
 
 <p>所以，序列化好的tiered dictionary结构图如下：</p>
 
-<p><a href="/assets/files/2013-08/optimizing4.png" title="optimizing4"><img src="/assets/files/2013-08/optimizing4.png" title="optimizing4" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing4.png" title="optimizing4"><img src="/assets/files/2013-08/optimizing4.png" alt="" title="optimizing4" /></a></p>
 
 <p><em>图4: Tiered dictionary结构图</em></p>
 
 <p>那么对于任一个查询词，假设hash值为H，查找其对应的keyword term就比较简单了：</p>
 
 <ol>
-<li>先在字典数组中找到第一个大于或等于H的元素下标，若无此下标，即字典数组中的都有元素的hash值都小于H，那么说明没有查到结果，直接返回；否则，可以根据此下标定位到这个元素在keyword terms数组中所属于的block。</li>
-<li>在1确定的block中二分查找H对应的keyword term。</li>
+  <li>先在字典数组中找到第一个大于或等于H的元素下标，若无此下标，即字典数组中的都有元素的hash值都小于H，那么说明没有查到结果，直接返回；否则，可以根据此下标定位到这个元素在keyword terms数组中所属于的block。</li>
+  <li>在1确定的block中二分查找H对应的keyword term。</li>
 </ol>
-
 
 <p>相对于skip list，tiered dictionary的查询比较稳定，因为它可以保证第二次搜索总是在一个元素较少的block中查询，而skip list无法做到这一点，这个前面提到过；但是skip list有时候可以在第一步查skip list小数组的时候就可以确定这个元素不存在，而tiered dictionary一般情况下做不到这点。</p>
 
-<p><strong>全量</strong><strong>Unique</strong><strong>索引优化</strong>****</p>
+<p><strong>全量</strong><strong>Unique</strong><strong>索引优化</strong><em>**</em></p>
 
 <p>像很多数据结构的算法一样，在内存空间使用和查找时间之间往往需要一个权衡，Unique索引的优化也是这样，当然我们的目标还是在尽可能的在占用较少内存的情况下，使得查询速度更快。</p>
 
@@ -167,7 +125,7 @@
 <p>最简单的实现，就是将内存中的hash table里面的conflicting hash nodes list一条一条的序列化，内存中的主索引数组的元素分布情况不变，同时将conflicting nodes直接链在原hash主数组的后面。不过，为了链式存储，序列化好的每个keyword
 item里面会增加一个next指针和是否是每条链的最后一个节点的标记。存储好的结果如下图所示：</p>
 
-<p><a href="/assets/files/2013-08/optimizing5.png" title="optimizing5"><img src="/assets/files/2013-08/optimizing5.png" title="optimizing5" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing5.png" title="optimizing5"><img src="/assets/files/2013-08/optimizing5.png" alt="" title="optimizing5" /></a></p>
 
 <p><em>图5: 开链Hash表结构图</em></p>
 
@@ -179,7 +137,7 @@ item里面会增加一个next指针和是否是每条链的最后一个节点的
 
 <p>我们发现主hash数组里面的每个空元素也占用了一个keyword item的空间大小，但其实它们唯一的作用就是表明这个位置为空，所以我们可以用一个每个元素大小为32位(uint32_t)的数组来表明hash结果信息，其中1个bit用来表明此位置是否有hash结果，另外31个bit用来表示当有hash结果的时候，对应hash节点链在keyword items数组中的开始下标。这样就可以将整个keyword items按每条hash冲突链存储在一起了，next指针也不需要了，只需要用一个bit来标识其是否是hash冲突链的最后一个节点就可以了，一般这个flag可以从32位的doc id上面取一位来标识。故，改进后的存储结构为：</p>
 
-<p><a href="/assets/files/2013-08/optimizing6.png" title="optimizing6"><img src="/assets/files/2013-08/optimizing6.png" title="optimizing6" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing6.png" title="optimizing6"><img src="/assets/files/2013-08/optimizing6.png" alt="" title="optimizing6" /></a></p>
 
 <p><em>图6: 内存使用优化后的开链Hash表结构图</em></p>
 
@@ -187,7 +145,7 @@ item里面会增加一个next指针和是否是每条链的最后一个节点的
 
 <p>【注： (3145739*4 + 1000000*12)/((3145739+200000)*16) = 45.9%; 16是因为原来的keyword item多需要额外4个bytes的next成员】</p>
 
-<p><strong>实时增量</strong><strong>Unique</strong><strong>索引优化</strong>****</p>
+<p><strong>实时增量</strong><strong>Unique</strong><strong>索引优化</strong><em>**</em></p>
 
 <p>以上谈论的是对全量Unique索引的优化，实时增量索引是在内存中一条doc一条doc构建起来的，它不可能像全量时那样有一个完整的内存哈希表可以进行序列化存储。但是由于一个segment的总共doc数组数目是固定的，同时又是Unique索引，所以我们一般用闭链哈希表来存储实时增量的unique索引。</p>
 
@@ -196,80 +154,94 @@ item里面会增加一个next指针和是否是每条链的最后一个节点的
 <p>怎么样才能避免哈希结果集簇拥在一起了呢？一个简单有效的办法为：</p>
 
 <ol>
-<li>首先将闭链Hash数组扩大几部，比如说3倍，即3P大小。</li>
-<li>将线性哈希函数H(x) = x % P修改为：H(x) = 3 * ( x % P)。</li>
-<li>当发生冲突的时候，依次+1探测去找空的slots进行存储。</li>
+  <li>首先将闭链Hash数组扩大几部，比如说3倍，即3P大小。</li>
+  <li>将线性哈希函数H(x) = x % P修改为：H(x) = 3 * ( x % P)。</li>
+  <li>当发生冲突的时候，依次+1探测去找空的slots进行存储。</li>
 </ol>
-
 
 <p>所以，修改后的实时增量段的Unique索引的存储结构为：</p>
 
-<p><a href="/assets/files/2013-08/optimizing7.png" title="optimizing7"><img src="/assets/files/2013-08/optimizing7.png" title="optimizing7" alt="" /></a></p>
+<p><a href="/assets/files/2013-08/optimizing7.png" title="optimizing7"><img src="/assets/files/2013-08/optimizing7.png" alt="" title="optimizing7" /></a></p>
 
 <p><em>图7: 避免簇拥的闭链Hash表结构图</em></p>
 
 <p>显然，修改后的算法占用了更多的内存空间。但由于是实时增量段，这些段的doc数据量一般比较小，而且会被定期合并生成和全量时候一样的索引结构，所以多一点内存空间影响不是太大。<strong>但对于查询性能的提升是非常大的，据测试和线上效果观测，经过这样的修改，查询性能提升</strong><strong>10</strong><strong>倍以上。</strong></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-08-16" datetime="2013-08-16" pubdate>
-							<span class="year">2013-08-16</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="2" title="SQL"><a href="/tags.html#SQL-ref">SQL</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html" target="_blank">http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/08/16/unique-index-optimization-practice.html">http://http://uwebs.tk/archives/2013/08/16/unique-index-optimization-practice.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

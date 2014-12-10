@@ -1,82 +1,44 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Python程序的性能分析指南</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Python程序的性能分析指南'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="python" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Python程序的性能分析指南</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Python程序的性能分析指南</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>虽然不是所有的Python程序都需要严格的性能分析，不过知道如何利用Python生态圈里的工具来分析性能，也是不错的。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python程序的性能分析指南</div>
+
+<article>
+	<h1><a href="/archives/2013/09/11/python-performance-analysis.html">Python程序的性能分析指南</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-09-11</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>虽然不是所有的Python程序都需要严格的性能分析，不过知道如何利用Python生态圈里的工具来分析性能，也是不错的。</p>
 
 <p>分析一个程序的性能，总结下来就是要回答4个问题：</p>
 
 <ol>
-<li>它运行的有多快？</li>
-<li>它的瓶颈在哪？</li>
-<li>它占用了多少内存？</li>
-<li>哪里有内存泄漏？</li>
+  <li>它运行的有多快？</li>
+  <li>它的瓶颈在哪？</li>
+  <li>它占用了多少内存？</li>
+  <li>哪里有内存泄漏？</li>
 </ol>
-
 
 <p>接下来，我们会着手使用一些很棒的工具，来帮我们回答这些问题。</p>
 
-<h3>粗粒度的计算时间</h3>
+<h3 id="section">粗粒度的计算时间</h3>
 
 <p>我们先来用个很快的方法来给我们的代码计时：使用unix的一个很好的功能 time。</p>
 
@@ -89,11 +51,10 @@ sys     0m0.003s</p>
 <p>关于这3个测量值的具体含义可以看<a href="http://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1">StackOverflow上的帖子</a>，但是简要的说就是：</p>
 
 <ul>
-<li>real：代表实际花费的时间</li>
-<li>user:：代表cpu花费在内核外的时间</li>
-<li>sys：代表cpu花费在内核以内的时间</li>
+  <li>real：代表实际花费的时间</li>
+  <li>user:：代表cpu花费在内核外的时间</li>
+  <li>sys：代表cpu花费在内核以内的时间</li>
 </ul>
-
 
 <p>通过把sys和user时间加起来可以获得cpu在你的程序上花费的时间。</p>
 
@@ -101,20 +62,20 @@ sys     0m0.003s</p>
 
 <p> </p>
 
-<h3>用上下文管理器来细粒度的测量时间</h3>
+<h3 id="section-1">用上下文管理器来细粒度的测量时间</h3>
 
 <p>我接下来要使用的技术就是让你的代码仪器化以让你获得细粒度的时间信息。这里是一个计时方法的代码片段：</p>
 
 <pre><code>import time
-
+ 
 class Timer(object):
     def __init__(self, verbose=False):
         self.verbose = verbose
-
+ 
     def __enter__(self):
         self.start = time.time()
         return self
-
+ 
     def __exit__(self, *args):
         self.end = time.time()
         self.secs = self.end - self.start
@@ -130,11 +91,11 @@ class Timer(object):
 <pre><code>from timer import Timer
 from redis import Redis
 rdb = Redis()
-
+ 
 with Timer() as t:
     rdb.lpush("foo", "bar")
 print "=&gt; elasped lpush: %s s" % t.secs
-
+ 
 with Timer as t:
     rdb.lpop("foo")
 print "=&gt; elasped lpop: %s s" % t.secs
@@ -144,7 +105,7 @@ print "=&gt; elasped lpop: %s s" % t.secs
 
 <p> </p>
 
-<h3>用分析器一行一行地计时和记录执行频率</h3>
+<h3 id="section-2">用分析器一行一行地计时和记录执行频率</h3>
 
 <p>Robert Kern有一个很棒的项目名叫<a href="http://packages.python.org/line_profiler/">line_profiler</a>。我经常会用它来测量我的脚本里每一行代码运行的有多快和运行频率。</p>
 
@@ -181,7 +142,7 @@ def primes(n):
         m=2*i+3
     return [2]+[x for x in s if x]
 primes(100)
-
+ 
 .
 </code></pre>
 
@@ -194,11 +155,11 @@ primes(100)
 
 <pre><code>Wrote profile results to primes.py.lprof
 Timer unit: 1e-06 s
-
+ 
 File: primes.py
 Function: primes at line 2
 Total time: 0.00019 s
-
+ 
 Line #      Hits         Time  Per Hit   % Time  Line Contents
 ==============================================================
      2                                           @profile
@@ -222,7 +183,7 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
     20         4            4      1.0      2.1          i=i+1
     21         4            4      1.0      2.1          m=2*i+3
     22        50           54      1.1     28.4      return [2]+[x for x in s if x]
-
+ 
 .
 </code></pre>
 
@@ -230,7 +191,7 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 
 <p> </p>
 
-<h3>它用了多少内存？</h3>
+<h3 id="section-3">它用了多少内存？</h3>
 
 <p>现在，我们已经能很好的测量代码运行时间了，接下来就是分析代码用了多少内存了。幸运的是，Fabian
 Pedregosa已经完成了一个很好的<a href="https://github.com/fabianp/memory_profiler">memory_profiler</a>，它模仿了Robert
@@ -260,7 +221,7 @@ def primes(n):
 <p>在代码运行完之后，你就应该能看到一下的输出：</p>
 
 <pre><code>Filename: primes.py
-
+ 
 Line #    Mem usage  Increment   Line Contents
 ==============================================
      2                           @profile
@@ -284,11 +245,11 @@ Line #    Mem usage  Increment   Line Contents
     20    7.9297 MB  0.0000 MB           i=i+1
     21    7.9297 MB  0.0000 MB           m=2*i+3
     22    7.9297 MB  0.0000 MB       return [2]+[x for x in s if x]
-
+ 
 .
 </code></pre>
 
-<h3>IPython里针对line_profiler和memory_profiler的快捷方式</h3>
+<h3 id="ipythonlineprofilermemoryprofiler">IPython里针对line_profiler和memory_profiler的快捷方式</h3>
 
 <p>Line_profiler和memory_profiler共有的特性是它们都在IPython里有快捷方式。你只需要在IPython里输入以下内容：</p>
 
@@ -305,7 +266,7 @@ In [3]: %lprun -f primes primes(1000/pre&gt;
 
 <p>这个因为其不用修改你的代码，而能够节省你很多的时间和精力。</p>
 
-<h3>哪里有内存泄漏？</h3>
+<h3 id="section-4">哪里有内存泄漏？</h3>
 
 <p>C Python解释器使用引用计数的方法来作为其内存管理的主要方法。这意味着虽有对象都包含一个计数器，如果增加了一个对这个对象的引用就加1，如果引用被删除就减1。当计数器的值变成0的时候，C Python解释器就知道这个对象不再被使用便会删除这个对象并且释放它占用的内存。如果在你的程序里，尽管一个对象不再被使用了，但仍然保持对这个对象的引用，就会导致内存泄漏。找到这些内存泄漏最快的方法就是使用一个很棒的工具，名叫<a href="http://mg.pov.lt/objgraph/">objgraph</a>，由Marius Gedminas写的。这个工具能让你看到内存里的对象数量，也能在你的代码里定位保持对这些对象的引用的地方。首先是安装objgraph：</p>
 
@@ -317,13 +278,13 @@ In [3]: %lprun -f primes primes(1000/pre&gt;
 <pre><code>import pdb; pdb.set_trace()
 </code></pre>
 
-<h3>哪些对象是最常见的？</h3>
+<h3 id="section-5">哪些对象是最常见的？</h3>
 
 <p>在运行时，你可以通过运行它考察在你的代码里排前20最常见的对象：</p>
 
 <pre><code>(pdb) import objgraph
 (pdb) objgraph.show_most_common_types()
-
+ 
 MyBigFatObject             20000
 tuple                      16938
 function                   4310
@@ -337,7 +298,7 @@ getset_descriptor          451
 type                       439
 </code></pre>
 
-<h3>哪些对象被添加或者删除？</h3>
+<h3 id="section-6">哪些对象被添加或者删除？</h3>
 
 <p>我们也可以及时看到在两点之间那些对象被添加或者删除了：</p>
 
@@ -347,7 +308,7 @@ type                       439
 .
 .
 (pdb) objgraph.show_growth()   # this only shows objects that has been added or deleted since last show_growth() call
-
+ 
 traceback                4        +2
 KeyboardInterrupt        1        +1
 frame                   24        +1
@@ -355,7 +316,7 @@ list                   667        +1
 tuple                16969        +1
 </code></pre>
 
-<h3>哪里引用了有漏洞的对象</h3>
+<h3 id="section-7">哪里引用了有漏洞的对象</h3>
 
 <p>顺着这条路继续，我们也能看到哪里有对任何指定对象的引用是被保持了的。我们以下面的程序为例：</p>
 
@@ -379,15 +340,14 @@ import pdb; pdb.set_trace()
 <p>来回顾一下，<a href="http://mg.pov.lt/objgraph/">objgraph</a> 能让我们：</p>
 
 <ul>
-<li>显示我们的python程序里占用内存最多的前N个对象</li>
-<li>显示在一段时间里被添加或删除的对象</li>
-<li>显示在我们的代码里对一个给定对象的所有引用</li>
+  <li>显示我们的python程序里占用内存最多的前N个对象</li>
+  <li>显示在一段时间里被添加或删除的对象</li>
+  <li>显示在我们的代码里对一个给定对象的所有引用</li>
 </ul>
-
 
 <p> </p>
 
-<h3>成就vs 精确</h3>
+<h3 id="vs-">成就vs 精确</h3>
 
 <p>在前文中，我已经展示了如果使用几种工具来分析Python程序的性能。在有了这些工具和技术后，你应该能得到所需要的所有信息来追踪Python程序里大部分的内存泄漏和性能瓶颈。</p>
 
@@ -395,66 +355,81 @@ import pdb; pdb.set_trace()
 
 <p>原文链接： <a href="http://www.huyng.com/posts/python-performance-analysis/">Huy Nguyen</a> 翻译：<a href="http://blog.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/author/fwg1989/">贱圣OMG</a></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-09-11" datetime="2013-09-11" pubdate>
-							<span class="year">2013-09-11</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="python"><a href="/tags.html#python-ref">python</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/47619/" target="_blank">http://blog.jobbole.com/47619/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/09/11/python-performance-analysis.html">http://http://uwebs.tk/archives/2013/09/11/python-performance-analysis.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

@@ -1,103 +1,81 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Mongodb安全性初探</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='Mongodb安全性初探'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="mongodb" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / Mongodb安全性初探</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Mongodb安全性初探</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>Mongodb，这么火的玩意其实早就想好好研究一下了。之前一直没空仔细学学新的东西，总是感觉精力不足。这次趁着买了一本书，就零零散散地在VPS上搭建、测试、看实现代码。感觉也蛮有意思的一个数据库。虽然感觉它非常简单，尤其是看代码的时候更是感觉如此。但这不也是另一个KISS的典范么，还是简单但是实用的东西最能流行。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Mongodb安全性初探</div>
+
+<article>
+	<h1><a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html">Mongodb安全性初探</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-01-05</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>Mongodb，这么火的玩意其实早就想好好研究一下了。之前一直没空仔细学学新的东西，总是感觉精力不足。这次趁着买了一本书，就零零散散地在VPS上搭建、测试、看实现代码。感觉也蛮有意思的一个数据库。虽然感觉它非常简单，尤其是看代码的时候更是感觉如此。但这不也是另一个KISS的典范么，还是简单但是实用的东西最能流行。</p>
 
 <p>既然都看了其实现，也不能不产出点什么。正好多年没更新博文，就简单分析一下mongodb的安全性，凑个数先。</p>
 
-<h2>默认配置的安全情况</h2>
+<h2 id="section">默认配置的安全情况</h2>
 
 <p>在默认情况下，mongod是监听在0.0.0.0之上的。而任何客户端都可以直接连接27017，且没有认证。好处是，开发人员或dba可以即时上手，不用担心被一堆配置弄的心烦意乱。坏处是，显而易见，如果你直接在公网服务器上如此搭建mongodb，那么所有人都可以直接访问并修改你的数据库数据了。</p>
 
-<p>默认情况下，mongod也是没有管理员账户的。因此除非你在admin数据库中使用db.addUser()命令添加了管理员帐号，且使用--auth参数启动mongod，否则在数据库中任何人都可以无需认证执行所有命令。包括delete和shutdown。</p>
+<p>默认情况下，mongod也是没有管理员账户的。因此除非你在admin数据库中使用db.addUser()命令添加了管理员帐号，且使用–auth参数启动mongod，否则在数据库中任何人都可以无需认证执行所有命令。包括delete和shutdown。</p>
 
-<p>此外，mongod还会默认监听28017端口，同样是绑定所有ip。这是<a href="http://www.mongodb.org/display/DOCS/Http+Interface">一个mongod自带的web监控界面</a>。从中可以获取到数据库当前连接、log、状态、运行系统等信息。如果你开启了--rest参数，甚至可以直接通过web界面查询数据，执行mongod命令。</p>
+<p>此外，mongod还会默认监听28017端口，同样是绑定所有ip。这是<a href="http://www.mongodb.org/display/DOCS/Http+Interface">一个mongod自带的web监控界面</a>。从中可以获取到数据库当前连接、log、状态、运行系统等信息。如果你开启了–rest参数，甚至可以直接通过web界面查询数据，执行mongod命令。</p>
 
 <p>我试着花了一个晚上扫描了国内一个B段，国外一个B段。结果是国外开了78个mongodb，而国内有60台。其中我随意挑选了10台尝试连接，而只有一台机器加了管理员账户做了认证，其他则全都是不设防的城市。可见其问题还是比较严重的。</p>
 
 <p>其实Mongodb本身有非常<a href="http://www.mongodb.org/display/DOCS/Security+and+Authentication">详细的安全配置准则</a>，显然他也是想到了，然而他是将安全的任务推给用户去解决，这本身的策略就是偏向易用性的，对于安全性，则得靠边站了。</p>
 
-<h2><strong>用户信息保存及认证过程</strong></h2>
+<h2 id="section-1"><strong>用户信息保存及认证过程</strong></h2>
 
-<p><strong>
-</strong>类似MySQL将系统用户信息保存在mysql.user表。mongodb也将系统用户的username、pwd保存在admin.system.users集合中。其中<a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L71">pwd
-= md5(username + ":mongo:" +
+<p>**
+**类似MySQL将系统用户信息保存在mysql.user表。mongodb也将系统用户的username、pwd保存在admin.system.users集合中。其中<a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L71">pwd
+= md5(username + “:mongo:” +
 real_password)</a>。这本身并没有什么问题。username和:mongo:相当于对原密码加了一个salt值，即使攻击者获取了数据库中保存的md5
 hash，也没法简单的从彩虹表中查出原始密码。</p>
 
 <p>我们再来看看mongodb对客户端的认证交互是如何实现的。mongo
 client和server交互都是基于明文的，因此很容易被网络嗅探等方式抓取。这里我们使用数据库自带的<a href="http://www.mongodb.org/display/DOCS/mongosniff">mongosniff</a>，可以直接dump出客户端和服务端的所有交互数据包：</p>
 
-<p>Liquid error: No such file or directory - pygmentize</p>
+<div class="highlight"><pre><code class="perl"><span class="p">[</span><span class="n">root</span><span class="nv">@localhost</span> <span class="n">bin</span><span class="p">]</span><span class="c1"># ./mongosniff --source NET lo</span>
+<span class="n">sniffing</span> <span class="mi">27017</span> 
+
+ <span class="sr">//</span> <span class="err">省略开头的数据包，直接看看认证流程。以下就是当用户输入</span><span class="n">db</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">real_passwd</span><span class="p">)</span><span class="err">后发生的交互。</span>
+
+<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>  <span class="o">--&gt;&gt;</span> <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span> <span class="n">admin</span><span class="o">.</span><span class="nv">$cmd</span>  <span class="mi">62</span> <span class="n">bytes</span>  <span class="n">id:8</span>        <span class="mi">8</span>
+        <span class="n">query:</span> <span class="p">{</span> <span class="n">getnonce:</span> <span class="mf">1.0</span> <span class="p">}</span>  <span class="n">ntoreturn:</span> <span class="o">-</span><span class="mi">1</span> <span class="n">ntoskip:</span> <span class="mi">0</span>
+<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span>  <span class="o">&lt;&lt;--</span>  <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>   <span class="mi">81</span> <span class="n">bytes</span>  <span class="n">id:7</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">8</span>
+        <span class="n">reply</span> <span class="n">n:1</span> <span class="n">cursorId:</span> <span class="mi">0</span>
+        <span class="p">{</span> <span class="n">nonce:</span> <span class="s">&quot;df97182fb47bd6d0&quot;</span><span class="p">,</span> <span class="n">ok:</span> <span class="mf">1.0</span> <span class="p">}</span>
+<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>  <span class="o">--&gt;&gt;</span> <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span> <span class="n">admin</span><span class="o">.</span><span class="nv">$cmd</span>  <span class="mi">152</span> <span class="n">bytes</span>  <span class="n">id:9</span>       <span class="mi">9</span>
+        <span class="n">query:</span> <span class="p">{</span> <span class="n">authenticate:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">user:</span> <span class="s">&quot;admin&quot;</span><span class="p">,</span> <span class="n">nonce:</span> <span class="s">&quot;df97182fb47bd6d0&quot;</span><span class="p">,</span> <span class="n">key:</span> <span class="s">&quot;3d839522b547931057284b6e1cd3a567&quot;</span> <span class="p">}</span>  <span class="n">ntoreturn:</span> <span class="o">-</span><span class="mi">1</span> <span class="n">ntoskip:</span> <span class="mi">0</span>
+<span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">27017</span>  <span class="o">&lt;&lt;--</span>  <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">34142</span>   <span class="mi">53</span> <span class="n">bytes</span>  <span class="n">id:8</span> <span class="mi">8</span> <span class="o">-</span> <span class="mi">9</span>
+        <span class="n">reply</span> <span class="n">n:1</span> <span class="n">cursorId:</span> <span class="mi">0</span>
+        <span class="p">{</span> <span class="n">ok:</span> <span class="mf">1.0</span> <span class="p">}</span>
+</code></pre>
+</div>
 
 <ol>
-<li><strong>第一步，client向server发送一个命令getnonce，向server申请一个随机值nonce。</strong></li>
-<li><strong>server返回一个16位的nonce。这里每次返回的值都不相同。</strong></li>
-<li><strong>第二步，client将用户输入的明文密码通过算法生成一个key，即 <a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L90">key = md5(nonce + username + md5(username + ":mongo:" + real_passwd))</a>，并将之连同用户名、nonce一起返回给server</strong></li>
-<li><strong>server收到数据，首先比对nonce是否为上次生成的nonce，然后比对key == md5(nonce + username + pwd)。如果相同，则<a href="https://github.com/mongodb/mongo/blob/r1.9.1/db/security_commands.cpp#L71">验证通过</a>。</strong></li>
+  <li><strong>第一步，client向server发送一个命令getnonce，向server申请一个随机值nonce。</strong></li>
+  <li><strong>server返回一个16位的nonce。这里每次返回的值都不相同。</strong></li>
+  <li><strong>第二步，client将用户输入的明文密码通过算法生成一个key，即 <a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/db.js#L90">key = md5(nonce + username + md5(username + “:mongo:” + real_passwd))</a>，并将之连同用户名、nonce一起返回给server</strong></li>
+  <li><strong>server收到数据，首先比对nonce是否为上次生成的nonce，然后比对key == md5(nonce + username + pwd)。如果相同，则<a href="https://github.com/mongodb/mongo/blob/r1.9.1/db/security_commands.cpp#L71">验证通过</a>。</strong></li>
 </ol>
-
 
 <p>由于至始至终没有密码hash在网络上传输，而是使用了类似挑战的机制，且每一次nonce的值都不同，因此即使攻击者截取到key的值，也没用办法通过重放攻击通过认证。</p>
 
@@ -110,18 +88,18 @@ hash当作了真正的密码去验证，并没有基于原文密码验证。在�
 <p><img src="/assets/files/2013-01/mongodb.png" alt="" /></p>
 
 <p>然而在Web的监控界面的认证中则有一些不同。当client来源不是localhost，这里的用户认证过程是基于HTTP
-401的。其过程与mongo认证大同小异。但是一个主要区别是：这里的nonce并没有随机化，而是<a href="https://github.com/mongodb/mongo/blob/r1.9.2/db/dbwebserver.cpp#L130">每次都是默认为"abc"</a>。</p>
+401的。其过程与mongo认证大同小异。但是一个主要区别是：这里的nonce并没有随机化，而是<a href="https://github.com/mongodb/mongo/blob/r1.9.2/db/dbwebserver.cpp#L130">每次都是默认为”abc”</a>。</p>
 
 <p>利用这个特点，如果攻击者抓取了管理员一次成功的登录，那么他就可以重放这个数据包，直接进入Web监控页面。</p>
 
 <p>同样，攻击者还可以通过此接口直接暴力破解mongo的用户名密码。实际上27017和28017都没有对密码猜解做限制，但Web由于无需每次获取nonce，因此将会更为简便。</p>
 
-<h2>JavaScript的执行与保护</h2>
+<h2 id="javascript">JavaScript的执行与保护</h2>
 
 <p>Mongodb本身最大的特点之一，就是他是使用javascript语言作为命令驱动的。黑客会比较关注这一点，因为其命令的支持程度，就是获取mongodb权限之后是否能进一步渗透的关键。</p>
 
 <p>Javascript本身的标准库其实相当弱。无论是spidermonkey或者是v8引擎，其实都没有系统操作、文件操作相关的支持。对此，<a href="https://github.com/mongodb/mongo/blob/r1.9.1/shell/shell_utils.cpp#L890">mongodb做了一定的扩展</a>。可以看到，ls/cat/cd/hostname甚至runProgram都已经在Javascript的上下文中有实现。看到这里是不是已经迫不及待了？mongo
-shell中试一下输入ls("./")，看看返回。</p>
+shell中试一下输入ls(“./”)，看看返回。</p>
 
 <p>等等？结果怎么这么熟悉？哈哈，没错，其实这些api都是在client的上下文中实现的。一个小小玩笑:)</p>
 
@@ -132,66 +110,81 @@ code})——可以在server端执行我们的js代码。</p>
 
 <p>一劳永逸解决服务端js执行带来的问题可以使用<a href="http://www.mongodb.org/display/DOCS/Command+Line+Parameters">noscripting</a>参数。直接禁止server-side的js代码执行功能。</p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-01-05" datetime="2013-01-05" pubdate>
-							<span class="year">2013-01-05</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="11" title="mongodb"><a href="/tags.html#mongodb-ref">mongodb</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html" target="_blank">http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/01/05/mongodb-secuirty-anaylze.html">http://http://uwebs.tk/archives/2013/01/05/mongodb-secuirty-anaylze.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-

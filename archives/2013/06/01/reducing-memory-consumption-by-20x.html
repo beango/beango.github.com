@@ -1,68 +1,31 @@
-
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>优化技巧分享：把内存消耗降低至原来的1/20</title>
-	<meta property='og:locale' content='zh_CN'/>
-	<meta property='og:title' content='优化技巧分享：把内存消耗降低至原来的1/20'/>
-	<meta property='og:url' content='http://beango.github.com'/>
-	<meta property='og:site_name' content='程序员 - 博客 - HuangDing'/>
-	<meta property='og:type' content='article'/>
-	<link href='/assets/themes/the-program/css/style.css' rel="stylesheet" media="all" />
-	<link href='/assets/default.css' rel="stylesheet" media="all" />
-	<link href="/assets/highlight/google-code-prettify/prettify.css" rel="stylesheet" type="text/css" media="all">
+<meta charset="utf-8" />
+<meta name="author" content="HuangDing" />
+<meta name="keywords" content="java,jvm" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>程序员 - 博客 - HuangDing / 优化技巧分享：把内存消耗降低至原来的1/20</title>
+<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
 </head>
-<body>
 
-<div id="page" class="hentry">
-	<header class="the-header">
-		<div class="unit-head">
-			<div class="unit-inner unit-head-inner">
-				<nav class="nav-global">
-					<ul>
-						<li class="logo"><a href="/">HuangDing</a></li>
-						<li class="code"><a href="/code.html">code</a></li>
-						<li class="archive"><a href="/archive.html">archive</a></li>
-						<li class="archive"><a href="/category.html">category</a></li>
-						<li class="about"><a href="/info.html">about</a></li>
-					</ul>
-				</nav>
-				<nav id="sub-nav" class="alignright">
-					<div class="social">
-					<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-					</div>
-					<form class="search" action="http://google.com/search" method="get">
-						<input class="" type="text" name="q">
-						<input type="hidden" name="q" value="site:http://beango.github.com">
-					</form>
-				</nav>
-			</div><!-- unit-inner -->
-		</div><!-- unit-head -->
-	</header>
-	<div class="body" role="main">
-		<div class="unit-body">
-			<div class="unit-inner unit-body-inner">
-				<div class="entry-content">
-					
-<article class="unit-article layout-post">
-	<div class="unit-inner unit-article-inner">
-		<div class="content">
-			<header>
-				<div class="unit-head">
-					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">优化技巧分享：把内存消耗降低至原来的1/20</h1>
-					</div><!-- unit-inner -->
-				</div><!-- unit-head -->
-			</header>
+<body class="page-type-post">
 
-			<div class="bd">
-				<div class="entry-content">
-					<p>这是最近发生的又一起内存相关的事件了。这个案例是从一个最近的客户报告中提取出来，一个异常运行的应用在其产品中反复报告内存耗尽。</p>
+<div class="main">
+	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 优化技巧分享：把内存消耗降低至原来的1/20</div>
+
+<article>
+	<h1><a href="/archives/2013/06/01/reducing-memory-consumption-by-20x.html">优化技巧分享：把内存消耗降低至原来的1/20</a></h1>
+	
+	<p class="meta">
+	<span class="datetime">2013-06-01</span> posted in [<a href="/category/default" class="category">转载</a>]
+</p>
+	
+<p>这是最近发生的又一起内存相关的事件了。这个案例是从一个最近的客户报告中提取出来，一个异常运行的应用在其产品中反复报告内存耗尽。</p>
 
 <p>这个症状是由我们的一个实验性功能发现，它主要用来监测某一类数据结构的使用情况。它提供了一个信号探针，结果会指向问题源代码的某一位置。为了保护客户的隐私，我们人为重建了该例子并保持它同原真实场景在技术层面的一致性。你可以免费在此处<a href="http://www.plumbr.eu/files/plumbr-optimization-sample.zip">下载到源码</a>。</p>
 
@@ -101,9 +64,9 @@ public class Person {
 
 <p>跑一组测试用例后，发现1.3M个基于XMLBean的生成的实例需要消耗大概1.5GB的堆空间。我们当时想这肯定可以做的更好。</p>
 
-<p>第一个改进是显而易见的，外部同系统内部集成的实现细节是不应该把影响传递给系统的每一个角落的。所以我们把缓存改成了使用简单的<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html">java.util.HashMap&lt;Long,Person></a>。ID是键，Person是值。我们发现内存的消耗立即降低到了214MB。但这还不能令我们满意。</p>
+<p>第一个改进是显而易见的，外部同系统内部集成的实现细节是不应该把影响传递给系统的每一个角落的。所以我们把缓存改成了使用简单的<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html">java.util.HashMap&lt;Long,Person&gt;</a>。ID是键，Person是值。我们发现内存的消耗立即降低到了214MB。但这还不能令我们满意。</p>
 
-<p>由于Map中的键是一个数，我们有十足的理由使用<a href="http://trove.starlight-systems.com/">Trove Collections</a>来进一步降低它的内存消耗。这在实现上的改动很快，我们只需把<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html">HashMap</a>改成<a href="http://trove4j.sourceforge.net/javadocs/gnu/trove/map/hash/TLongObjectHashMap.html">TLongObjectHashMap&lt;Person></a>，堆的消耗进一步降低到了143MB。</p>
+<p>由于Map中的键是一个数，我们有十足的理由使用<a href="http://trove.starlight-systems.com/">Trove Collections</a>来进一步降低它的内存消耗。这在实现上的改动很快，我们只需把<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html">HashMap</a>改成<a href="http://trove4j.sourceforge.net/javadocs/gnu/trove/map/hash/TLongObjectHashMap.html">TLongObjectHashMap&lt;Person&gt;</a>，堆的消耗进一步降低到了143MB。</p>
 
 <p>活干到这个程度我们已经可以收工了，但是工程师的好奇心驱使我们要更进一步。不由自主的我们发现了系统的数据存在着大量的重复信息。例如Date Of Birth其实已经在ID中编码了，所以Date Of Birth可以直接从ID中得到，而不必使用额外的空间去它。</p>
 
@@ -121,86 +84,98 @@ public class Person {
 
 <p>该应用在64位的机器上使用老的JDK6。默认情况下，这么做不能<a href="https://wikis.oracle.com/display/HotSpotInternals/CompressedOops">压缩普通对象</a>的指针的。通过参数”<a href="https://wikis.oracle.com/display/HotSpotInternals/CompressedOops">-XX:UseCompressedOops</a>“切换到压缩模式使我们获得了额外的收获，现在我们的内存消耗降低到了73MB。</p>
 
-<p><a href="/assets/files/2013-06/comparing-heap-consumption.png" title="comparing-heap-consumption"><img src="/assets/files/2013-06/comparing-heap-consumption.png" title="comparing-heap-consumption" alt="" /></a></p>
+<p><a href="/assets/files/2013-06/comparing-heap-consumption.png" title="comparing-heap-consumption"><img src="/assets/files/2013-06/comparing-heap-consumption.png" alt="" title="comparing-heap-consumption" /></a></p>
 
 <p>当然，我们还能走的更远。比如基于键值建立B-tree，但这已经开始影响到了代码的可读性，所以我们决定到此为止。降低21.5倍的堆内存应该已经是一个足够好的结果了。</p>
 
 <p><strong>让我们在重复一下学到了什么</strong></p>
 
 <ul>
-<li>别把同外部模块的整合影响到系统的每一个角落</li>
-<li>冗余的数据可能带来开销。在可能的情况下尽量消除它</li>
-<li>基本数据类型是你最经常打交道的朋友，务必知道些关于它们的工具，如果还没玩过<a href="http://trove.starlight-systems.com/">Trove</a>请立刻开始吧</li>
-<li>JVM自带的优化技术不可忽视</li>
+  <li>别把同外部模块的整合影响到系统的每一个角落</li>
+  <li>冗余的数据可能带来开销。在可能的情况下尽量消除它</li>
+  <li>基本数据类型是你最经常打交道的朋友，务必知道些关于它们的工具，如果还没玩过<a href="http://trove.starlight-systems.com/">Trove</a>请立刻开始吧</li>
+  <li>JVM自带的优化技术不可忽视</li>
 </ul>
-
 
 <p>如果你对这个实验很好奇，请在此处<a href="http://www.plumbr.eu/files/plumbr-optimization-sample.zip">下载相关的代码</a>。使用到的的测量工具和其具体描述可以在这篇<a href="http://plumbr.eu/blog/how-much-memory-do-i-need-part-3-measure-dont-guess">博文</a>找到。</p>
 
 <p>原文链接： <a href="http://plumbr.eu/blog/reducing-memory-consumption-by-20x">Nikita Salnikov-Tarnovski</a></p>
 
-					<div class="meta asset-footer">
-						<ul class="date-publish list-linear">
-							<li>Published: </li>
-							<li><date class="date-pub" title="2013-06-01" datetime="2013-06-01" pubdate>
-							<span class="year">2013-06-01</span>
-							</date></li>
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head">tags: </li>
-							
-							
-
-
-  
-     
-    	<li value="9" title="java"><a href="/tags.html#java-ref">java</a></li>
-     
-    	<li value="1" title="jvm"><a href="/tags.html#jvm-ref">jvm</a></li>
-    
-  
-
-
-
-						</ul>
-						<ul class="list-tag list-linear">
-							<li class="list-head" style="display:block;">版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh">Creative Commons BY-NC-ND 3.0</a></li>
-							<li class="list-head" style="display:block;">原文网址：<a href="http://blog.jobbole.com/40666/" target="_blank">http://blog.jobbole.com/40666/</a></li>
-
-						</ul>
-					</div><!-- meta -->
-				</div><!-- entry-content -->
-				<div class="misc-content">
-					<div class="comment">
-					
-					</div>
-				</div><!-- misc-content -->
-			</div><!-- bd -->
-
-		</div><!-- content -->
-	</div><!-- unit-inner -->
+	
+	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/06/01/reducing-memory-consumption-by-20x.html">http://http://uwebs.tk/archives/2013/06/01/reducing-memory-consumption-by-20x.html</a></p>-->
 </article>
+<div id="disqus_thread" class="comments"></div>
 
-				</div>
-			</div><!-- unit-inner -->
-		</div><!-- unit-body -->
-		<p class="licence">
-			Theme: <a href="http://themes.jekyllbootstrap.com/">the_program</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
-			Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.<!--<script src="http://s21.cnzz.com/stat.php?id=4827427&web_id=4827427&show=pic" language="JavaScript"></script>-->
+
+	<footer>
+		<p>&copy; Since 2012</p>
+	</footer>
+</div>
+
+<aside>
+	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
+	
+	<nav class="block">
+		<ul>
+		<li class="default"><a href="/category/default/">转载</a></li>
+		<li class="code"><a href="/category/code/">笔记</a></li>
+		
+		</ul>
+	</nav>
+	
+	<form action="/search/" class="block block-search">
+		<h3>Search</h3>
+		<p><input type="search" name="q" placeholder="Search" /></p>
+	</form>
+	
+	<div class="block block-about">
+		<h3>About</h3>
+		<figure>
+			
+			<figcaption><strong>HuangDing</strong></figcaption>
+		</figure>
+		<p>dotnet, mvc, python</p>
+	</div>
+	
+	<div class="block block-license">
+		<h3>Copyright</h3>
+		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
+	</div>
+	
+	
+	<div class="block block-fork">
+		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+	</div>
+	
+	
+	<div class="block block-thank">
+		<h3>Powered by</h3>
+		<p>
+			<a href="http://disqus.com/" target="_blank">Disqus</a>,
+			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
+			<a href="https://github.com/" target="_blank">GitHub</a>,
+			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
+			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
+			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
+			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
+			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
 		</p>
-	</div><!-- body -->
-</div><!-- page -->
-<!--
-<script>
-/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
-(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
-</script>
--->
+	</div>
+</aside>
 
-<script src="http://libs.baidu.com/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/highlight/google-code-prettify/prettify.js"></script>
-<script src="/assets/modernizr.min.js"></script>
-<script src='/assets/default.js'></script>
+<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+
+<script src="/assets/js/site.js"></script>
+
+<script>
+site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
+site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+
+site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
+site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
+site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
+site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+</script>
 </body>
 </html>
-
