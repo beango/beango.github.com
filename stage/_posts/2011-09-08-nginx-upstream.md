@@ -55,9 +55,9 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
       hash_method crc32;
     }
 
-<label></label>
+定义负载均衡设备的Ip及设备状态
 
-    upstream resinserver{ #定义负载均衡设备的Ip及设备状态
+    upstream resinserver{ 
       ip_hash;
       server 127.0.0.1:8000 down;
       server 127.0.0.1:8080 weight=2;
@@ -69,7 +69,6 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
 
     proxy_pass http://resinserver/;
 
-
 每个设备的状态设置为:  
 1.down 表示单前的server暂时不参与负载  
 2.weight 默认为1.weight越大，负载的权重就越大。  
@@ -78,4 +77,4 @@ redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
 5.backup：其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。  
 nginx支持同时设置多组的负载均衡，用来给不用的server来使用。
 
-client_body_in_file_only 设置为On 可以讲client post过来的数据记录到文件中用来做debug client_body_temp_path 设置记录文件的目录 可以设置最多3层目录location 对URL进行匹配.可以进行重定向或者进行新的代理 负载均衡
+client_body_in_file_only 设置为On 可以讲client post过来的数据记录到文件中用来做debug client_body_temp_path 设置记录文件的目录 可以设置最多3层目录location 对URL进行匹配.可以进行重定向或者进行新的代理负载均衡
