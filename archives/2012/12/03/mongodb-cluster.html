@@ -70,49 +70,7 @@ process,全部运行在一个测试的服务器上，具体配置步骤如下：
 是表示以sharding模式启动Mongodb服务器，Mongodb数据同步方式参见我写的另外一篇文章“<a href="http://www.javabloger.com/article/mongodb-master-slave-replication.html">MongoDB
 主(Master)/从(Slave)数据同步</a>”</p>
 
-<div class="highlight"><pre><code class="perl"><span class="nv">$</span> <span class="nv">mkdir</span> <span class="sr">/data/</span><span class="n">db</span><span class="o">/</span><span class="n">a</span>
-<span class="nv">$</span> <span class="nv">mkdir</span> <span class="sr">/data/</span><span class="n">db</span><span class="o">/</span><span class="n">b</span>
-<span class="nv">$</span> <span class="nv">mkdir</span> <span class="sr">/data/</span><span class="n">db</span><span class="o">/</span><span class="n">config</span>
-<span class="nv">$</span> <span class="err">./</span><span class="nv">mongod</span> <span class="err">–</span><span class="n">shardsvr</span> <span class="err">–</span><span class="n">dbpath</span> <span class="sr">/data/</span><span class="n">db</span><span class="sr">/a –port 10000 &gt; /</span><span class="n">tmp</span><span class="o">/</span><span class="n">sharda</span><span class="o">.</span><span class="nb">log</span> <span class="o">&amp;</span>
-<span class="nv">$</span> <span class="nv">cat</span> <span class="sr">/tmp/s</span><span class="n">harda</span><span class="o">.</span><span class="nb">log</span>
-<span class="nv">$</span> <span class="err">./</span><span class="nv">mongod</span> <span class="err">–</span><span class="n">shardsvr</span> <span class="err">–</span><span class="n">dbpath</span> <span class="sr">/data/</span><span class="n">db</span><span class="sr">/b –port 10001 &gt; /</span><span class="n">tmp</span><span class="o">/</span><span class="n">shardb</span><span class="o">.</span><span class="nb">log</span> <span class="o">&amp;</span>
-<span class="nv">$</span> <span class="nv">cat</span> <span class="sr">/tmp/s</span><span class="n">hardb</span><span class="o">.</span><span class="nb">log</span>
-<span class="nv">$</span> <span class="err">./</span><span class="nv">mongod</span> <span class="err">–</span><span class="n">configsvr</span> <span class="err">–</span><span class="n">dbpath</span> <span class="sr">/data/</span><span class="n">db</span><span class="sr">/config –port 20000 &gt; /</span><span class="n">tmp</span><span class="o">/</span><span class="n">configdb</span><span class="o">.</span><span class="nb">log</span> <span class="o">&amp;</span>
-<span class="nv">$</span> <span class="nv">cat</span> <span class="sr">/tmp/co</span><span class="n">nfigdb</span><span class="o">.</span><span class="nb">log</span>
-<span class="nv">$</span> <span class="err">./</span><span class="nv">mongos</span> <span class="err">–</span><span class="n">configdb</span> <span class="n">localhost:20000</span> <span class="o">&gt;</span> <span class="sr">/tmp/mo</span><span class="n">ngos</span><span class="o">.</span><span class="nb">log</span> <span class="o">&amp;</span>
-<span class="nv">$</span> <span class="nv">cat</span> <span class="sr">/tmp/mo</span><span class="n">ngos</span><span class="o">.</span><span class="nb">log</span>
-
-<span class="nv">$</span> <span class="err">#</span> <span class="nv">we</span> <span class="nb">connect</span> <span class="n">to</span> <span class="n">mongos</span> <span class="n">process</span>
-<span class="nv">$</span> <span class="err">./</span><span class="nv">mongo</span>
-<span class="n">MongoDB</span> <span class="n">shell</span> <span class="n">version:</span> <span class="mf">1.1.0</span><span class="o">-</span>
-<span class="n">url:</span> <span class="n">test</span>
-<span class="n">connecting</span> <span class="n">to:</span> <span class="n">test</span>
-<span class="n">type</span> <span class="s">&quot;help&quot;</span> <span class="k">for</span> <span class="n">help</span>
-<span class="o">&gt;</span> <span class="k">use</span> <span class="n">admin</span>
-<span class="n">switched</span> <span class="n">to</span> <span class="n">db</span> <span class="n">admin</span>
-<span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">runCommand</span><span class="p">(</span> <span class="p">{</span> <span class="n">addshard</span> <span class="p">:</span> <span class="s">&quot;localhost:10000&quot;</span><span class="p">,</span> <span class="n">allowLocal</span> <span class="p">:</span> <span class="n">true</span> <span class="p">}</span> <span class="p">)</span>
-<span class="p">{</span><span class="s">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s">&quot;added&quot;</span> <span class="p">:</span> <span class="s">&quot;localhost:10000&quot;</span><span class="p">}</span>
-<span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">runCommand</span><span class="p">(</span> <span class="p">{</span> <span class="n">addshard</span> <span class="p">:</span> <span class="s">&quot;localhost:10001&quot;</span><span class="p">,</span> <span class="n">allowLocal</span> <span class="p">:</span> <span class="n">true</span> <span class="p">}</span> <span class="p">)</span>
-<span class="p">{</span><span class="s">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s">&quot;added&quot;</span> <span class="p">:</span> <span class="s">&quot;localhost:10001&quot;</span><span class="p">}</span>
-
-<span class="o">&gt;</span> <span class="n">config</span> <span class="o">=</span> <span class="nb">connect</span><span class="p">(</span><span class="s">&quot;localhost:20000&quot;</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getSisterDB</span><span class="p">(</span><span class="s">&quot;config&quot;</span><span class="p">)</span>
-
-<span class="o">&gt;</span> <span class="n">test</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">getSisterDB</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">test</span>
-
-<span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">runCommand</span><span class="p">(</span> <span class="p">{</span> <span class="n">enablesharding</span> <span class="p">:</span> <span class="s">&quot;test&quot;</span> <span class="p">}</span> <span class="p">)</span>
-<span class="p">{</span><span class="s">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">runCommand</span><span class="p">(</span> <span class="p">{</span> <span class="n">shardcollection</span> <span class="p">:</span> <span class="s">&quot;test.people&quot;</span><span class="p">,</span> <span class="n">key</span> <span class="p">:</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span> <span class="p">}</span> <span class="p">)</span>
-<span class="p">{</span><span class="s">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-
-<span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">runCommand</span><span class="p">({</span><span class="n">listshards:1</span><span class="p">})</span>
-<span class="p">{</span><span class="s">&quot;servers&quot;</span> <span class="p">:</span> <span class="p">[{</span><span class="s">&quot;_id&quot;</span> <span class="p">:</span>  <span class="n">ObjectId</span><span class="p">(</span> <span class="s">&quot;4a9d40c981ba1487ccfaa634&quot;</span><span class="p">)</span>  <span class="p">,</span> <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;localhost:10000&quot;</span><span class="p">},</span>
-<span class="p">{</span><span class="s">&quot;_id&quot;</span> <span class="p">:</span>  <span class="n">ObjectId</span><span class="p">(</span> <span class="s">&quot;4a9d40df81ba1487ccfaa635&quot;</span><span class="p">)</span>  <span class="p">,</span> <span class="s">&quot;host&quot;</span> <span class="p">:</span> <span class="s">&quot;localhost:10001&quot;</span><span class="p">}]</span> <span class="p">,</span>
-<span class="s">&quot;ok&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="o">&gt;</span>
-</code></pre>
-</div>
+<p>Liquid error: Bad file descriptor</p>
 
 <p><strong>BTW：</strong></p>
 
