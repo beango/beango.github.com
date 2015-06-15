@@ -24,7 +24,12 @@ redirecturl: http://blog.jobbole.com/87531/
 备份配置文件，然后根据你的需要进行配置：
 
     cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
+
+* * *
+
     vim /etc/nginx/nginx.conf
+
+* * *
 
     # This number should be, at maximum, the number of CPU cores on your system.
     # (since nginx doesn't benefit from more than one worker per CPU.)
@@ -141,7 +146,11 @@ redirecturl: http://blog.jobbole.com/87531/
 
     yum -y install netperf iperf
 
+* * *
+
     vim /etc/sysctl.conf
+
+* * *
 
     # Increase system IP port limits to allow for more connections
     # 调高系统的 IP 以及端口数据限制，从可以接受更多的连接
