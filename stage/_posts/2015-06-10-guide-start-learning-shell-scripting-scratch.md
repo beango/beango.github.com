@@ -9,8 +9,7 @@ redirecturl: http://blog.jobbole.com/87465/
 ---
 {% include JB/setup %}
 
-原文出处： [Petras
-Liumparas](http://linoxide.com/linux-shell-script/guide-start-learning-shell-scripting-scratch/)   译文出处：[GOLinux](https://linux.cn/article-5591-1.html)   欢迎分享原创到[伯乐头条](http://top.jobbole.com/?utm_source=jobboleblog-article)
+原文出处： [Petras Liumparas](http://linoxide.com/linux-shell-script/guide-start-learning-shell-scripting-scratch/)   译文出处：[GOLinux](https://linux.cn/article-5591-1.html)   欢迎分享原创到[伯乐头条](http://top.jobbole.com/?utm_source=jobboleblog-article)
 
 ![]({{ site.JB.FILE_PATH }}/2015-06/5e4d414cgw1esy2aafka3j20dw0afdgj.jpg "5e4d414cgw1esy2aafka3j20dw0afdgj")
 
@@ -125,7 +124,7 @@ shell脚本语言就跟和几个人聊天类似。你只需把所有命令想象
 
 看着这些组合的输出，我们可以将其说明为：首先，rm命令试着将folder2删除，而它不会成功，因为linux要求-r键来允许rm命令删除文件夹，而第二个file2会被删除。通过为rm提供-v（详情）键，我们让rm命令告诉我们每个被删除的文件或文件夹。
 
-这些就是你需要知道的，关于重定向的几乎所有内容了。我是说几乎，因为还有一个更为重要的重定向工具，它称之为“管道”。通过使用|（管道）符号，我们通常重定向stdout流。
+这些就是你需要知道的，关于重定向的几乎所有内容了。我是说几乎，因为还有一个更为重要的重定向工具，它称之为“管道”。通过使用\|（管道）符号，我们通常重定向stdout流。
 
 比如说，我们有这样一个文本文件：
 
