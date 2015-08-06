@@ -3,7 +3,7 @@
 	<title>程序员 - 博客 - HuangDing</title>
 	<link href="http://http://uwebs.tk/atom.xml" rel="self" />
 	<link href="http://http://uwebs.tk/" />
-	<updated>2015-06-24T11:23:08+08:00</updated>
+	<updated>2015-08-06T10:43:16+08:00</updated>
 	<id>http://http://uwebs.tk/</id>
 	<author>
 		<name>HuangDing</name>
@@ -32,14 +32,10 @@
 <p>备份配置文件，然后根据你的需要进行配置：</p>
 
 <pre><code>cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
+vim /etc/nginx/nginx.conf
 </code></pre>
 
-<hr />
-
-<pre><code>vim /etc/nginx/nginx.conf
-</code></pre>
-
-<hr />
+<p></p>
 
 <pre><code># This number should be, at maximum, the number of CPU cores on your system.
 # (since nginx doesn't benefit from more than one worker per CPU.)
@@ -160,12 +156,12 @@ tsung start
 <pre><code>yum -y install netperf iperf
 </code></pre>
 
-<hr />
+<p></p>
 
 <pre><code>vim /etc/sysctl.conf
 </code></pre>
 
-<hr />
+<p></p>
 
 <pre><code># Increase system IP port limits to allow for more connections
 # 调高系统的 IP 以及端口数据限制，从可以接受更多的连接
