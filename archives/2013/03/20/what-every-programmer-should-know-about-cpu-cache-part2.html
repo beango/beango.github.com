@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="程序员" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 每个程序员都应该了解的CPU高速缓存</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>每个程序员都应该了解的CPU高速缓存</title>
+  <meta name="description" content="英文原文：Memory part 2: CPU caches 来源：oschina">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 每个程序员都应该了解的CPU高速缓存</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html">每个程序员都应该了解的CPU高速缓存</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-03-20</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>英文原文：<a href="http://lwn.net/Articles/252125/">Memory part 2: CPU caches</a> 来源：<a href="http://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2">oschina</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">每个程序员都应该了解的CPU高速缓存</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>英文原文：<a href="http://lwn.net/Articles/252125/">Memory part 2: CPU caches</a> 来源：<a href="http://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2">oschina</a></p>
 
 <p style="color:#888888;">[编者按：这是Ulrich Drepper写“[程序员](http://blog.jobbole.com/821/ "程序员的本质")都该知道存储器”的第二部。那些没有读过[*第一部 *](http://blog.jobbole.com/34303/)的读者可能希望从这一部开始。这本书写的非常好，并且感谢Ulrich授权我们出版。</p>
 
@@ -314,11 +359,12 @@
 
 <p>　　用于测试程序的数据可以模拟一个任意大小的工作集：包括读、写访问，随机、连续访问。在图3.4中我们可以看到，程序为工作集创建了一个与其大小和元素类型相同的数组：</p>
 
-<pre><code>struct l {
+<div class="highlighter-rouge"><pre class="highlight"><code>struct l {
   struct l *n;
   long int pad[NPAD];
 };
 </code></pre>
+</div>
 
 <p>　　n字段将所有节点随机得或者顺序的加入到环形链表中，用指针从当前节点进入到下一个节点。pad字段用来存储数据，其可以是任意大小。在一些测试程序中，pad字段是可以修改的,在其他程序中，pad字段只可以进行读操作。</p>
 
@@ -789,7 +835,7 @@ Invalid，变更的、独占的、共享的、无效的)。协议的名称来自
 
 <p>　　问题是，处理器指令用的虚拟地址，而且需要在内存管理单元(MMU)的协助下将它们翻译成物理地址。这并不是一个很小的操作。在执行指令的管线(pipeline)中，物理地址只能在很后面的阶段才能得到。这意味着，缓存逻辑需要在很短的时间里判断地址是否已被缓存过。而如果可以使用虚拟地址，缓存查找操作就可以更早地发生，一旦命中，就可以马上使用内存的内容。结果就是，使用虚拟内存后，可以让管线把更多内存访问的开销隐藏起来。</p>
 
-<p>　　处理器的设计人员们现在使用虚拟地址来标记第一级缓存。这些缓存很小，很容易被清空。在进程页表树发生变更的情况下，至少是需要清空部分缓存的。如果处理器拥有指定变更地址范围的指令，那么可以避免缓存的完全刷新。由于一级缓存L1i及L1d的时延都很小(\~3周期)，基本上必须使用虚拟地址。</p>
+<p>　　处理器的设计人员们现在使用虚拟地址来标记第一级缓存。这些缓存很小，很容易被清空。在进程页表树发生变更的情况下，至少是需要清空部分缓存的。如果处理器拥有指定变更地址范围的指令，那么可以避免缓存的完全刷新。由于一级缓存L1i及L1d的时延都很小(~3周期)，基本上必须使用虚拟地址。</p>
 
 <p>　　对于更大的缓存，包括L2和L3等，则需要以物理地址作为标签。因为这些缓存的时延比较大，虚拟到物理地址的映射可以在允许的时间里完成，而且由于主存时延的存在，重新填充这些缓存会消耗比较长的时间，刷新的代价比较昂贵。</p>
 
@@ -967,81 +1013,42 @@ Invalid，变更的、独占的、共享的、无效的)。协议的名称来自
 
 <p>　　如今，一些英特尔的处理器，支持前端总线(FSB)的速度高达1,333MHz，这意味着速度有另外60％的提升。将来还会出现更高的速度。速度是很重要的，工作集会更大，快速的RAM和高FSB速度的内存肯定是值得投资的。我们必须小心使用它，因为即使处理器可以支持更高的前端总线速度，但是主板的北桥芯片可能不会。使用时，检查它的规范是至关重要的。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html">http://http://uwebs.tk/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

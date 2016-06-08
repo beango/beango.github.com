@@ -1,40 +1,86 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="jquery,javascript" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / jQuery最佳实践</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>jQuery最佳实践</title>
+  <meta name="description" content="1. 使用最新版本的jQuery">
+
+  <link rel="canonical" href="127.0.0.1/archives/2011/08/11/jquery-best-practices.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / jQuery最佳实践</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2011/08/11/jquery-best-practices.html">jQuery最佳实践</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2011-08-11</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><strong>1. 使用最新版本的jQuery</strong></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">jQuery最佳实践</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><strong>1. 使用最新版本的jQuery</strong></p>
 
 <p>jQuery的版本更新很快，你应该总是使用最新的版本。因为新版本会改进性能，还有很多新功能。</p>
 
 <p>下面就来看看，不同版本的jQuery性能差异有多大。这里是三条最常见的jQuery选择语句：</p>
 
-<pre><code>$('.elem')
+<div class="highlighter-rouge"><pre class="highlight"><code>$('.elem')
 $('.elem', context)
 context.find('.elem')
 </code></pre>
+</div>
 
 <p>我们用1.4.2、1.4.4、1.6.2三个版本的jQuery<a href="http://jsperf.com/jquery-1-4-2-vs-1-6-2-comparisons">测试</a>，看看浏览器在1秒内能够执行多少次。结果如下：</p>
 
@@ -52,10 +98,11 @@ context.find('.elem')
 
 <p>举例来说，下面的语句性能最佳：</p>
 
-<pre><code>$('#id')
+<div class="highlighter-rouge"><pre class="highlight"><code>$('#id')
 $('form')
 $('input')
 </code></pre>
+</div>
 
 <p>遇到这些选择器的时候，jQuery内部会自动调用浏览器的原生方法（比如getElementById()），所以它们的执行速度快。</p>
 
@@ -69,13 +116,15 @@ $('input')
 
 <p>先来看例子。找出网页中所有的隐藏元素，就要用到伪类选择器：</p>
 
-<pre><code>$(':hidden')
+<div class="highlighter-rouge"><pre class="highlight"><code>$(':hidden')
 </code></pre>
+</div>
 
 <p>属性选择器的例子则是：</p>
 
-<pre><code>$('[attribute=value]')
+<div class="highlighter-rouge"><pre class="highlight"><code>$('[attribute=value]')
 </code></pre>
+</div>
 
 <p>这两种语句是最慢的，因为浏览器没有针对它们的原生方法。但是，一些浏览器的新版本，增加了querySelector()和querySelectorAll()方法，因此会使这类选择器的性能有大幅提高。</p>
 
@@ -89,13 +138,14 @@ $('input')
 
 <p>下面六个选择器，都是从父元素中选择子元素。你知道哪个速度最快，哪个速度最慢吗？</p>
 
-<pre><code>$('.child', $parent)
+<div class="highlighter-rouge"><pre class="highlight"><code>$('.child', $parent)
 $parent.find('.child')
 $parent.children('.child')
 $('#parent &gt; .child')
 $('#parent .child')
 $('.child', $('#parent'))
 </code></pre>
+</div>
 
 <p>我们一句句来看。</p>
 
@@ -135,19 +185,21 @@ $('.child', $('#parent'))
 
 <p>再来看一个例子，为a元素绑定一个处理点击事件的函数：</p>
 
-<pre><code>$('a').click(function(){
+<div class="highlighter-rouge"><pre class="highlight"><code>$('a').click(function(){
 　　alert($(this).attr('id'));
 });
 </code></pre>
+</div>
 
 <p>这段代码的意思是，点击a元素后，弹出该元素的id属性。为了获取这个属性，必须连续两次调用jQuery，第一次是$(this)，第二次是attr(‘id’)。</p>
 
 <p>事实上，这种处理完全不必要。更正确的写法是，直接采用javascript原生方法，调用this.id：</p>
 
-<pre><code>$('a').click(function(){
+<div class="highlighter-rouge"><pre class="highlight"><code>$('a').click(function(){
 　　alert(this.id);
 });
 </code></pre>
+</div>
 
 <p>根据<a href="http://jsperf.com/el-attr-id-vs-el-id/2">测试</a>，this.id的速度比$(this).attr(‘id’)快了20多倍。</p>
 
@@ -157,16 +209,18 @@ $('.child', $('#parent'))
 
 <p>比如，下面这样的写法就是糟糕的写法：</p>
 
-<pre><code>jQuery('#top').find('p.classA');
+<div class="highlighter-rouge"><pre class="highlight"><code>jQuery('#top').find('p.classA');
 jQuery('#top').find('p.classB');
 </code></pre>
+</div>
 
 <p>更好的写法是：</p>
 
-<pre><code>var cached = jQuery('#top');
+<div class="highlighter-rouge"><pre class="highlight"><code>var cached = jQuery('#top');
 cached.find('p.classA');
 cached.find('p.classB');
 </code></pre>
+</div>
 
 <p>根据<a href="http://jsperf.com/ns-jq-cached">测试</a>，缓存比不缓存，快了2-3倍。</p>
 
@@ -174,8 +228,9 @@ cached.find('p.classB');
 
 <p>jQuery的一大特点，就是允许使用链式写法。</p>
 
-<pre><code>$('div').find('h3').eq(2).html('Hello');
+<div class="highlighter-rouge"><pre class="highlight"><code>$('div').find('h3').eq(2).html('Hello');
 </code></pre>
+</div>
 
 <p>采用链式写法时，jQuery自动缓存每一步的结果，因此比非链式写法要快。根据<a href="http://jsperf.com/jquery-chaining">测试</a>，链式写法比（不使用缓存的）非链式写法，大约快了25%。</p>
 
@@ -185,31 +240,35 @@ cached.find('p.classB');
 
 <p>利用这一点，可以大大简化事件的绑定。比如，有一个表格（table元素），里面有100个格子（td元素），现在要求在每个格子上面绑定一个点击事件（click），请问是否需要将下面的命令执行100次？</p>
 
-<pre><code>$("td").on("click", function(){
+<div class="highlighter-rouge"><pre class="highlight"><code>$("td").on("click", function(){
 　　$(this).toggleClass("click");
 });
 </code></pre>
+</div>
 
 <p>回答是不需要，我们只要把这个事件绑定在table元素上面就可以了，因为td元素发生点击事件之后，这个事件会”冒泡”到父元素table上面，从而被监听到。</p>
 
 <p>因此，这个事件只需要在父元素绑定1次即可，而不需要在子元素上绑定100次，从而大大提高性能。这就叫事件的”委托处理”，也就是子元素”委托”父元素处理这个事件。</p>
 
-<pre><code>$("table").on("click", "td", function(){
+<div class="highlighter-rouge"><pre class="highlight"><code>$("table").on("click", "td", function(){
 　　$(this).toggleClass("click");
 });
 </code></pre>
+</div>
 
 <p>更好的写法，则是把事件绑定在document对象上面。</p>
 
-<pre><code>$(document).on("click", "td", function(){
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).on("click", "td", function(){
     $(this).toggleClass("click");
 });
 </code></pre>
+</div>
 
 <p>如果要取消事件的绑定，就使用off()方法。</p>
 
-<pre><code>$(document).off("click", "td");
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).off("click", "td");
 </code></pre>
+</div>
 
 <p><strong>8. 少改动DOM结构</strong></p>
 
@@ -221,15 +280,17 @@ cached.find('p.classB');
 
 <p>（3）如果你要在DOM元素上储存数据，不要写成下面这样：</p>
 
-<pre><code>var elem = $('#elem');
+<div class="highlighter-rouge"><pre class="highlight"><code>var elem = $('#elem');
 elem.data(key,value);
 </code></pre>
+</div>
 
 <p>而要写成</p>
 
-<pre><code>var elem = $('#elem');
+<div class="highlighter-rouge"><pre class="highlight"><code>var elem = $('#elem');
 $.data(elem[0],key,value);
 </code></pre>
+</div>
 
 <p>根据<a href="http://jsperf.com/jquery-data-vs-jqueryselection-data/11">测试</a>，后一种写法要比前一种写法，快了将近10倍。因为elem.data()方法是定义在jQuery函数的prototype对象上面的，而$.data()方法是定义jQuery函数上面的，调用的时候不从复杂的jQuery对象上调用，所以速度快得多。（此处可以参阅下面第10点。）</p>
 
@@ -249,15 +310,17 @@ $.data(elem[0],key,value);
 
 <p>你既可以使用针对jQuery对象的版本：</p>
 
-<pre><code>var $text = $("#text");
+<div class="highlighter-rouge"><pre class="highlight"><code>var $text = $("#text");
 var $ts = $text.text();
 </code></pre>
+</div>
 
 <p>也可以使用针对jQuery函数的版本：</p>
 
-<pre><code>var $text = $("#text");
+<div class="highlighter-rouge"><pre class="highlight"><code>var $text = $("#text");
 var $ts = $.text($text);
 </code></pre>
+</div>
 
 <p>由于后一种针对jQuery函数的版本不通过jQuery对象操作，所以相对开销较小，速度<a href="http://jsperf.com/jquery-text-vs-html/5">比较快</a>。</p>
 
@@ -269,19 +332,21 @@ var $ts = $.text($text);
 
 <p>请看下面两段代码，第一段代码是读取全局变量：</p>
 
-<pre><code>var a = 0;
+<div class="highlighter-rouge"><pre class="highlight"><code>var a = 0;
 function x(){
 　　a += 1;
 }
 </code></pre>
+</div>
 
 <p>第二段代码是读取局部变量：</p>
 
-<pre><code>function y(){
+<div class="highlighter-rouge"><pre class="highlight"><code>function y(){
 　　var a = 0;
 　　a += 1;
 }
 </code></pre>
+</div>
 
 <p>第二段代码读取变量a的时候，不用前往上一层作用域，所以要比第一段代码<a href="http://jsperf.com/global/2">快五六倍</a>。</p>
 
@@ -289,17 +354,19 @@ function x(){
 
 <p>prototype模式：</p>
 
-<pre><code>var X = function(name){ this.name = name; }
+<div class="highlighter-rouge"><pre class="highlight"><code>var X = function(name){ this.name = name; }
 X.prototype.get_name = function() { return this.name; };
 </code></pre>
+</div>
 
 <p>closure模式：</p>
 
-<pre><code>var Y = function(name) {
+<div class="highlighter-rouge"><pre class="highlight"><code>var Y = function(name) {
 　　var y = { name: name };
   　return { 'get_name': function() { return y.name; } };
 };
 </code></pre>
+</div>
 
 <p>同样是get_name()方法，closure模式<a href="http://jsperf.com/prototype-vs-closures/20">更快</a>。</p>
 
@@ -307,25 +374,27 @@ X.prototype.get_name = function() { return this.name; };
 
 <p>当发生某个事件后，如果要连续执行多个操作，最好不要写成下面这样：</p>
 
-<pre><code>function doSomthing{
+<div class="highlighter-rouge"><pre class="highlight"><code>function doSomthing{
 　　doSomethingElse();
 　　doOneMoreThing();
 }
 </code></pre>
+</div>
 
 <p>而要改用事件触发的形式：</p>
 
-<pre><code>function doSomething{
+<div class="highlighter-rouge"><pre class="highlight"><code>function doSomething{
 　　$.trigger("DO_SOMETHING_DONE");
 }
 $(document).on("DO_SOMETHING_DONE", function(){
 　　doSomethingElse(); }
 );
 </code></pre>
+</div>
 
 <p>还可以考虑使用<a href="http://www.ruanyifeng.com/blog/2011/08/a_detailed_explanation_of_jquery_deferred_object.html">deferred对象</a>。</p>
 
-<pre><code>function doSomething(){
+<div class="highlighter-rouge"><pre class="highlight"><code>function doSomething(){
 　　var dfd = new \$.Deferred();
 　　//Do something async, then... 
     //dfd.resolve();
@@ -335,84 +404,46 @@ function doSomethingElse(){
 　　$.when(doSomething()).then(//The next thing);
 }
 </code></pre>
+</div>
 
 <p>（完）</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2011/08/11/jquery-best-practices.html">http://http://uwebs.tk/archives/2011/08/11/jquery-best-practices.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

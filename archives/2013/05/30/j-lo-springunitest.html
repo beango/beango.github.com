@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="java,spring" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 使用 Spring 进行单元测试</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>使用 Spring 进行单元测试</title>
+  <meta name="description" content="原文出处： IBM developerworks">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/05/30/j-lo-springunitest.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 使用 Spring 进行单元测试</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/05/30/j-lo-springunitest.html">使用 Spring 进行单元测试</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-05-30</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>原文出处： <a href="http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.html">IBM developerworks</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">使用 Spring 进行单元测试</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>原文出处： <a href="http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.html">IBM developerworks</a></p>
 
 <p><a href="http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.html#author1">赵才文</a>,技术经理</p>
 
@@ -103,7 +148,7 @@
 
 <p>此类代表账号的基本信息，提供 getter 和 setter 方法。</p>
 
-<pre><code>package domain; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package domain; 
  
 public class Account { 
     public static final String SEX_MALE = "male"; 
@@ -151,6 +196,7 @@ public class Account {
     } 
 }
 </code></pre>
+</div>
 
 <p>注意上面的 Account 类有一个 toString() 方法和一个静态的 getAccount 方法，getAccount 方法用于快速获取 Account 测试对象。</p>
 
@@ -158,7 +204,7 @@ public class Account {
 
 <p>这个 DAO 我们这里为了简单起见，采用 Spring Jdbc Template 来实现。</p>
 
-<pre><code>package DAO; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package DAO; 
  
 import Java.sql.ResultSet; 
 import Java.sql.SQLException; 
@@ -209,6 +255,7 @@ public class AccountDao extends NamedParameterJdbcDaoSupport {
  
 }
 </code></pre>
+</div>
 
 <p>AccountDao 定义了几个账号对象的数据库访问方法：</p>
 
@@ -219,7 +266,7 @@ public class AccountDao extends NamedParameterJdbcDaoSupport {
 
 <p><strong>清单 3. AccountService.Java</strong></p>
 
-<pre><code>package service; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package service; 
  
 import org.apache.commons.logging.Log; 
 import org.apache.commons.logging.LogFactory; 
@@ -249,6 +296,7 @@ public class AccountService {
  
 }
 </code></pre>
+</div>
 
 <p>AccountService 包括下列方法：</p>
 
@@ -263,7 +311,7 @@ public class AccountService {
 
 <p>上述几个类的依赖关系是通过 Spring 进行管理的，配置文件如下：</p>
 
-<pre><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns:context="http://www.Springframework.org/schema/context"
      xsi:schemaLocation="http://www.Springframework.org/schema/beans 
@@ -287,6 +335,7 @@ public class AccountService {
      &lt;/bean&gt; 
  &lt;/beans&gt;
 </code></pre>
+</div>
 
 <p>注意其中的“&lt;context:annotation-config/&gt;”的作用，这个配置启用了 Spring 对 Annotation 的支持，这样在我们的测试类中 @Autowired 注释才会起作用（如果用了 Spring 测试框架，则不需要这样的配置项，稍后会演示）。另外还有一个 accountDao 依赖的 initer bean, 这个 bean 的作用是加载 log4j 日志环境，不是必须的。</p>
 
@@ -296,7 +345,7 @@ public class AccountService {
 
 <p><strong>清单 5. AccountServiceOldTest.Java</strong></p>
 
-<pre><code>package service; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package service; 
  
 import static org.Junit.Assert.assertEquals; 
  
@@ -332,6 +381,7 @@ public class AccountServiceOldTest {
     } 
 }
 </code></pre>
+</div>
 
 <p>注意上面的 Junit4 注释标签，第一个注释标签 @BeforeClass，用来执行整个测试类需要一次性初始化的环境，这里我们用 Spring 的 ClassPathXmlApplicationContext 从 XML 文件中加载了上面定义的 Spring 配置文件，并从中获得了 accountService 的实例。第二个注释标签 @Test 用来进行实际的测试。</p>
 
@@ -360,7 +410,7 @@ public class AccountServiceOldTest {
 
 <p><strong>清单 6. Spring-db1.xml</strong></p>
 
-<pre><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://www.Springframework.org/schema/beans 
      http://www.Springframework.org/schema/beans/Spring-beans-3.2.xsd"&gt;
@@ -383,12 +433,13 @@ public class AccountServiceOldTest {
      &lt;/bean&gt; 
  &lt;/beans&gt;
 </code></pre>
+</div>
 
 <p>其中的 transactionManager 是 Spring test 框架用来做事务管理的管理器。</p>
 
 <p><strong>清单 7. AccountServiceTest1.Java</strong></p>
 
-<pre><code>package service; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package service; 
 import static org.Junit.Assert.assertEquals; 
  
 import org.Junit.Test; 
@@ -416,6 +467,7 @@ Account acct = Account.getAccount(1, "user01", 18, "M");
     } 
 }
 </code></pre>
+</div>
 
 <p>对这个类解释一下：</p>
 
@@ -469,7 +521,7 @@ Account acct = Account.getAccount(1, "user01", 18, "M");
 
 <p><strong>清单 8. SpringDb2Config.Java</strong></p>
 
-<pre><code>package config; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package config; 
  
 import org.Springframework.beans.factory.annotation.Autowired; 
 import org.Springframework.context.annotation.Bean; 
@@ -501,6 +553,7 @@ return new AccountService();
     } 
 }
 </code></pre>
+</div>
 
 <p>注意上面的注释标签：</p>
 
@@ -514,7 +567,7 @@ return new AccountService();
 
 <p><strong>清单 9. Spring-db2.xml</strong></p>
 
-<pre><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns:context="http://www.Springframework.org/schema/context"
      xsi:schemaLocation="http://www.Springframework.org/schema/beans 
@@ -536,13 +589,15 @@ return new AccountService();
  &lt;bean/&gt; 
  &lt;/beans&gt;
 </code></pre>
+</div>
 
 <p>注意里面的 context 命名空间的定义，如代码中黑体字所示。另外还必须有 &lt;context:annotaiton-config/&gt; 的定义，这个定义允许采用注释标签的方式来控制 Spring 的容器，最后我们看到 beans 已经没有 initer、accountDao 和 accountService 这些 bean 的定义，取而代之的是一个 SpringDb2Config bean 的定义，注意这个 bean 没有名称，因为不需要被引用。</p>
 
 <p>现在有了这些配置，我们的测试类只要稍稍修改一下，即可实现加载配置类的效果，如下：</p>
 
-<pre><code>@ContextConfiguration("/config/Spring-db2.xml")
+<div class="highlighter-rouge"><pre class="highlight"><code>@ContextConfiguration("/config/Spring-db2.xml")
 </code></pre>
+</div>
 
 <p>通过上面的配置，测试用例就可以实现加载 Spring 配置类，运行结果也是成功的 green bar。</p>
 
@@ -569,7 +624,7 @@ return new AccountService();
 
 <p>此注释标签的含义是，这是一个测试，期待一个异常的发生，期待的异常通过 xxx.class 标识。例如，我们修改 AccountService.Java 的 insertIfNotExist 方法，对于传入的参数如果为空，则抛出 IllegalArgumentException，如下：</p>
 
-<pre><code>public void insertIfNotExist(Account account) { 
+<div class="highlighter-rouge"><pre class="highlight"><code>public void insertIfNotExist(Account account) { 
     if(account==null) 
         throw new IllegalArgumentException("account is null"); 
     Account acct = accountDao.getAccountById(account.getId()); 
@@ -580,14 +635,16 @@ return new AccountService();
     acct = null; 
 }
 </code></pre>
+</div>
 
 <p>然后，在测试类中增加一个测试异常的方法，如下：</p>
 
-<pre><code>@Test(expected=IllegalArgumentException.class) 
+<div class="highlighter-rouge"><pre class="highlight"><code>@Test(expected=IllegalArgumentException.class) 
 public void testInsertException() { 
     service.insertIfNotExist(null); 
 }
 </code></pre>
+</div>
 
 <p>运行结果是 green bar。</p>
 
@@ -597,21 +654,23 @@ public void testInsertException() {
 
 <p>比如在 AccountService 中增加如下方法：</p>
 
-<pre><code>public void doSomeHugeJob() { 
+<div class="highlighter-rouge"><pre class="highlight"><code>public void doSomeHugeJob() { 
     try { 
         Thread.sleep(2*1000); 
     } catch (InterruptedException e) { 
     } 
 }
 </code></pre>
+</div>
 
 <p>上述方法模拟任务执行时间 2 秒，则测试方法如下：</p>
 
-<pre><code>@Test(timeout=3000) 
+<div class="highlighter-rouge"><pre class="highlight"><code>@Test(timeout=3000) 
 public void testHugeJob() { 
     service.doSomeHugeJob(); 
 }
 </code></pre>
+</div>
 
 <p>上述测试方法期待 service.doSomeHugeJob 方法能在 3 秒内结束，执行测试结果是 green bar。</p>
 
@@ -619,12 +678,13 @@ public void testHugeJob() {
 
 <p>通过 @Repeat，您可以轻松的多次执行测试用例，而不用自己写 for 循环，使用方法：</p>
 
-<pre><code>@Repeat(3) 
+<div class="highlighter-rouge"><pre class="highlight"><code>@Repeat(3) 
 @Test(expected=IllegalArgumentException.class) 
 public void testInsertException() { 
     service.insertIfNotExist(null); 
 }
 </code></pre>
+</div>
 
 <p>这样，testInsertException 就能被执行 3 次。</p>
 
@@ -634,7 +694,7 @@ public void testInsertException() {
 
 <p><strong>清单 10. Spring-db.xml</strong></p>
 
-<pre><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;beans xmlns="http://www.Springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://www.Springframework.org/schema/beans 
      http://www.Springframework.org/schema/beans/Spring-beans-3.2.xsd"&gt;
@@ -673,6 +733,7 @@ public void testInsertException() {
     &lt;/beans&gt; 
 &lt;/beans&gt;
 </code></pre>
+</div>
 
 <p>上面的定义，我们看到：</p>
 
@@ -684,7 +745,7 @@ public void testInsertException() {
 
 <p><strong>清单 11. AccountServiceTest.Java</strong></p>
 
-<pre><code>@RunWith(SpringJUnit4ClassRunner.class) 
+<div class="highlighter-rouge"><pre class="highlight"><code>@RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration("/config/Spring-db.xml") 
 @Transactional
 @ActiveProfiles("test") 
@@ -692,6 +753,7 @@ public class AccountServiceTest {
 ... 
 }
 </code></pre>
+</div>
 
 <p>注意上面的 @ActiveProfiles，可以指定一个或者多个 profile，这样我们的测试类就仅仅加载这些名字的 profile 中定义的 bean 实例。</p>
 
@@ -714,7 +776,7 @@ public class AccountServiceTest {
 
 <p><strong>清单 12. AccountServiceTestNGTest.Java</strong></p>
 
-<pre><code>package testng; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package testng; 
  
 import static org.Junit.Assert.assertEquals; 
  
@@ -745,6 +807,7 @@ AbstractTransactionalTestNGSpringContextTests {
     } 
 }
 </code></pre>
+</div>
 
 <p>执行测试，我们将看到测试成功。</p>
 
@@ -795,81 +858,42 @@ AbstractTransactionalTestNGSpringContextTests {
 <p>总之，如果您的程序中使用了 Spring，且对用 Junit 或者 testNG 来对他们进行单元测试感到力不从心，可以考虑使用 Spring test framework，它将使您的应用程序的质量上一个新的台阶。</p>
 
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/05/30/j-lo-springunitest.html">http://http://uwebs.tk/archives/2013/05/30/j-lo-springunitest.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

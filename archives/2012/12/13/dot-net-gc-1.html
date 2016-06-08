@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content=".net" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / .Net垃圾回收机制原理（一）</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.Net垃圾回收机制原理（一）</title>
+  <meta name="description" content="英文原文：Jeffrey Richter ，编译：赵玉开">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/12/13/dot-net-gc-1.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / .Net垃圾回收机制原理（一）</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2012/12/13/dot-net-gc-1.html">.Net垃圾回收机制原理（一）</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2012-12-13</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985010\(en-us\).aspx">Jeffrey Richter</a> ，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html">赵玉开</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">.Net垃圾回收机制原理（一）</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>英文原文：<a href="http://msdn.microsoft.com/zh-cn/magazine/bb985010\(en-us\).aspx">Jeffrey Richter</a> ，编译：<a href="http://www.cnblogs.com/yukaizhao/archive/2011/11/23/dot_net_GC_1.html">赵玉开</a></p>
 
 <p>有了Microsoft.Net clr中的垃圾回收机制<a href="http://blog.jobbole.com/821/" title="程序员的本质">程序员</a>不需要再关注什么时候释放内存，释放内存这件事儿完全由GC做了，对程序员来说是透明的。尽管如此，作为一个.Net程序员很有必要理解垃圾回收是如何工作的。这篇文章我们就来看下.Net是如何分配和管理托管内存的，之后再一步一步描述垃圾回收器工作的算法机制。</p>
 
@@ -108,7 +153,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>下面的代码说明了对象是如何被创建管理的：</p>
 
-<pre><code>class Application {
+<div class="highlighter-rouge"><pre class="highlight"><code>class Application {
 	public static int Main(String[] args) {
  
 	  // ArrayList object created in heap, myArray is now a root
@@ -137,6 +182,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
    }
 }
 </code></pre>
+</div>
 
 <p>也许你会问，GC这么好，为什么ANSI C++中没有它呢？
 原因是垃圾回收器必须能找到应用程序的根对象列表，必须找到对象的指针。而在C++中对象的指针之间是可以相互转换的，没有办法知道指针指向的是一个什么对象的指针。在CLR中，托管堆知道对象的实际类型。而元数据（metadata）信息可以用来判断对象引用了什么成员对象。</p>
@@ -149,12 +195,13 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>Finalize方法是object对象的一个虚方法，如果需要你可以重写这个方法，但是这个方法只能通过类似c++析构函数的方式重写。例如：</p>
 
-<pre><code>{
-	~Foo(){
-		Console.WriteLine(“Foo Finalize”);
-	}
-}
-</code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="err">~Foo(){</span><span class="w">
+		</span><span class="err">Console.WriteLine(“Foo</span><span class="w"> </span><span class="err">Finalize”);</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="err">}</span><span class="w">
+</span></code></pre>
+</div>
 
 <p>这里用过C++的程序员要特别注意，Finalize方法的写法和C++的析构函数完全一样，但是，.Net中的Finalize方法和析构函数的却是不一样的，托管对象是不能被析构的，只能通过垃圾回收回收。</p>
 
@@ -223,7 +270,7 @@ clr把所有的引用对象都分配到托管堆上。这一点很像c-runtime�
 
 <p>如下复活演示代码：</p>
 
-<pre><code>public class Foo {
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Foo {
   ~Foo(){
   Application.ObjHolder = this;
   }
@@ -233,6 +280,7 @@ class Application{
   static public Object ObjHolder = null;
 }
 </code></pre>
+</div>
 
 <p>在这种情况下，当对象的Finalize方法执行之后，对象被Application的静态字段ObjHolder强引用，成为根对象。这个对象就复活了，而这个对象引用的对象也就复活了，但是这些对象的Finalize方法可能已经执行过了，可能会有意想不到的错误发生。</p>
 
@@ -243,13 +291,14 @@ class Application{
 <p>复活只有有限的几种用处，你应该尽可能避免使用复活。尽管如此，当使用复活时，最好重新将对象添加到终结队列中，GC提供了静态方法ReRegisterForFinalize方法做这件事：
  如下代码:</p>
 
-<pre><code>public class Foo{
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Foo{
   ~Foo(){
   Application.ObjHolder = this;
   GC.ReRegisterForFinalize(this);
   }
 }
 </code></pre>
+</div>
 
 <p>当对象复活时，重新将对象添加到复活队列中。需要注意的时如果一个对象已经在终结队列中，然后又调用了GC.ReRegisterForFinalize(obj)方法会导致此对象的Finalize方法重复执行。</p>
 
@@ -259,81 +308,42 @@ class Application{
 
 <p> </p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2012/12/13/dot-net-gc-1.html">http://http://uwebs.tk/archives/2012/12/13/dot-net-gc-1.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

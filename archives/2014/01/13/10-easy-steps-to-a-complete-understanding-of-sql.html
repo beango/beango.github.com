@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="sql" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 十步完全理解SQL</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>十步完全理解SQL</title>
+  <meta name="description" content="很多程序员视 SQL 为洪水猛兽。SQL 是一种为数不多的声明性语言，它的运行方式完全不同于我们所熟知的命令行语言、面向对象的程序语言、甚至是函数语言（尽管有些人认为 SQL 语言也是一种函数式语言）。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 十步完全理解SQL</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html">十步完全理解SQL</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2014-01-13</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>很多程序员视 SQL 为洪水猛兽。SQL 是一种为数不多的声明性语言，它的运行方式完全不同于我们所熟知的命令行语言、面向对象的程序语言、甚至是函数语言（尽管有些人认为 SQL 语言也是一种函数式语言）。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">十步完全理解SQL</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>很多程序员视 SQL 为洪水猛兽。SQL 是一种为数不多的声明性语言，它的运行方式完全不同于我们所熟知的命令行语言、面向对象的程序语言、甚至是函数语言（尽管有些人认为 SQL 语言也是一种函数式语言）。</p>
 
 <p>我们每天都在写 SQL 并且应用在开源软件 jOOQ 中。于是我想把 SQL 之美介绍给那些仍然对它头疼不已的朋友，所以本文是为了以下读者而特地编写的：</p>
 
@@ -47,8 +92,9 @@
 
 <p>（译者注：简单地说，SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的内容来从数据库中挑选出符合声明的数据，而不是像传统编程思维去指示计算机如何操作。）</p>
 
-<pre><code>SELECT first_name, last_name FROM employees WHERE salary &gt; 100000
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT first_name, last_name FROM employees WHERE salary &gt; 100000
 </code></pre>
+</div>
 
 <p>上面的例子很容易理解，我们不关心这些雇员记录从哪里来，我们所需要的只是那些高薪者的数据（译者注：salary&gt;100000 ）。</p>
 
@@ -91,17 +137,19 @@ SQL 语句的语法顺序和其执行顺序完全不一样，就以上述语句�
 
 <p>2、 SELECT 是在大部分语句执行了之后才执行的，严格的说是在 FROM 和 GROUP BY 之后执行的。理解这一点是非常重要的，这就是你不能在 WHERE 中使用在 SELECT 中设定别名的字段作为判断条件的原因。</p>
 
-<pre><code>SELECT A.x + A.y AS z
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT A.x + A.y AS z
 FROM A
 WHERE z = 10 -- z 在此处不可用，因为SELECT是最后执行的语句！
 </code></pre>
+</div>
 
 <p>如果你想重用别名z，你有两个选择。要么就重新写一遍 z 所代表的表达式：</p>
 
-<pre><code>SELECT A.x + A.y AS z
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT A.x + A.y AS z
 FROM A
 WHERE (A.x + A.y) = 10
 </code></pre>
+</div>
 
 <p>…或者求助于衍生表、通用数据表达式或者视图，以避免别名重用。请看下文中的例子。</p>
 
@@ -121,13 +169,15 @@ WHERE (A.x + A.y) = 10
 
 <p>根据 SQL 标准，FROM 语句被定义为：</p>
 
-<pre><code>&lt;from clause&gt; ::= FROM &lt;table reference&gt; [ { &lt;comma&gt; &lt;table reference&gt; }... ]
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;from clause&gt; ::= FROM &lt;table reference&gt; [ { &lt;comma&gt; &lt;table reference&gt; }... ]
 </code></pre>
+</div>
 
 <p>FROM 语句的“输出”是一张联合表，来自于所有引用的表在某一维度上的联合。我们们慢慢来分析：</p>
 
-<pre><code>FROM a, b
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
 </code></pre>
+</div>
 
 <p>上面这句 FROM 语句的输出是一张联合表，联合了表 a 和表 b 。如果 a 表有三个字段， b 表有 5 个字段，那么这个“输出表”就有 8 （ =5+3）个字段。</p>
 
@@ -145,26 +195,30 @@ WHERE (A.x + A.y) = 10
 
 <p>灵活引用表能使 SQL 语句变得更强大。一个简单的例子就是 JOIN 的使用。严格的说 JOIN 语句并非是 SELECT 中的一部分，而是一种特殊的表引用语句。 SQL 语言标准中表的连接定义如下：</p>
 
-<pre><code>&lt;table reference&gt; ::=
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;table reference&gt; ::=
     &lt;table name&gt;
   | &lt;derived table&gt;
   | &lt;joined table&gt;
 </code></pre>
+</div>
 
 <p>就拿之前的例子来说：</p>
 
-<pre><code>FROM a, b
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
 </code></pre>
+</div>
 
 <p>a 可能输如下表的连接：</p>
 
-<pre><code>a1 JOIN a2 ON a1.id = a2.id
+<div class="highlighter-rouge"><pre class="highlight"><code>a1 JOIN a2 ON a1.id = a2.id
 </code></pre>
+</div>
 
 <p>将它放到之前的例子中就变成了：</p>
 
-<pre><code>FROM a1 JOIN a2 ON a1.id = a2.id, b
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a1 JOIN a2 ON a1.id = a2.id, b
 </code></pre>
+</div>
 
 <p>尽管将一个连接表用逗号跟另一张表联合在一起并不是常用作法，但是你的确可以这么做。结果就是，最终输出的表就有了 a1+a2+b 个字段了。</p>
 
@@ -182,19 +236,21 @@ WHERE (A.x + A.y) = 10
 
 <p>我们先看看刚刚这句话：</p>
 
-<pre><code>FROM a, b
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
 </code></pre>
+</div>
 
 <p>高级 SQL 程序员也许学会给你忠告：尽量不要使用逗号来代替 JOIN 进行表的连接，这样会提高你的 SQL 语句的可读性，并且可以避免一些错误。</p>
 
 <p>利用逗号来简化 SQL 语句有时候会造成思维上的混乱，想一下下面的语句：</p>
 
-<pre><code>FROM a, b, c, d, e, f, g, h
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b, c, d, e, f, g, h
 WHERE a.a1 = b.bx
 AND a.a2 = c.c1
 AND d.d1 = b.bc
 -- etc...
 </code></pre>
+</div>
 
 <p>我们不难看出使用 JOIN 语句的好处在于：</p>
 
@@ -234,7 +290,7 @@ AND d.d1 = b.bc
 
 <p>用例子最容易说明其中区别：</p>
 
-<pre><code>-- This table reference contains authors and their books.
+<div class="highlighter-rouge"><pre class="highlight"><code>-- This table reference contains authors and their books.
 -- There is one record for each book and its author.
 -- authors without books are NOT included
 author JOIN book ON author.id = book.author_id
@@ -245,12 +301,13 @@ author JOIN book ON author.id = book.author_id
 -- ("empty" meaning that all book columns are NULL)
 author LEFT OUTER JOIN book ON author.id = book.author_id
 </code></pre>
+</div>
 
 <p><strong>SEMI JOIN</strong></p>
 
 <p>这种连接关系在 SQL 中有两种表现方式：使用 IN，或者使用 EXISTS。“ SEMI ”在拉丁文中是“半”的意思。这种连接方式是只连接目标表的一部分。这是什么意思呢？再想一下上面关于作者和书名的连接。我们想象一下这样的情况：我们不需要作者 / 书名这样的组合，只是需要那些在书名表中的书的作者信息。那我们就能这么写：</p>
 
-<pre><code>-- Using IN
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Using IN
 FROM author
 WHERE author.id IN (SELECT book.author_id FROM book)
  
@@ -258,6 +315,7 @@ WHERE author.id IN (SELECT book.author_id FROM book)
 FROM author
 WHERE EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
 </code></pre>
+</div>
 
 <p>尽管没有严格的规定说明你何时应该使用 IN ，何时应该使用 EXISTS ，但是这些事情你还是应该知道的：</p>
 
@@ -275,11 +333,12 @@ WHERE EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
 
 <p>因为使用 INNER JOIN 也能得到书名表中书所对应的作者信息，所以很多初学者机会认为可以通过 DISTINCT 进行去重，然后将 SEMI JOIN 语句写成这样：</p>
 
-<pre><code>-- Find only those authors who also have books
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Find only those authors who also have books
 SELECT DISTINCT first_name, last_name
 FROM author
 JOIN book ON author.id = book.author_id
 </code></pre>
+</div>
 
 <p>这是一种很糟糕的写法，原因如下：</p>
 
@@ -300,7 +359,7 @@ JOIN book ON author.id = book.author_id
 
 <p>这种连接的关系跟 SEMI JOIN 刚好相反。在 IN 或者 EXISTS 前加一个 NOT 关键字就能使用这种连接。举个例子来说，我们列出书名表里没有书的作者：</p>
 
-<pre><code>-- Using IN
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Using IN
 FROM author
 WHERE author.id NOT IN (SELECT book.author_id FROM book)
  
@@ -308,6 +367,7 @@ WHERE author.id NOT IN (SELECT book.author_id FROM book)
 FROM author
 WHERE NOT EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
 </code></pre>
+</div>
 
 <p>关于性能、可读性、表达性等特性也完全可以参考 SEMI JOIN。</p>
 
@@ -319,9 +379,10 @@ WHERE NOT EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
 
 <p>这个连接过程就是两个连接的表的乘积：即将第一张表的每一条数据分别对应第二张表的每条数据。我们之前见过，这就是逗号在 FROM 语句中的用法。在实际的应用中，很少有地方能用到 CROSS JOIN，但是一旦用上了，你就可以用这样的 SQL语句表达：</p>
 
-<pre><code>-- Combine every author with every book
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Combine every author with every book
 author CROSS JOIN book
 </code></pre>
+</div>
 
 <p><strong>DIVISION</strong></p>
 
@@ -345,19 +406,21 @@ author CROSS JOIN book
 
 <p>说白了，所谓的派生表就是在括号之中的子查询：</p>
 
-<pre><code>-- A derived table
+<div class="highlighter-rouge"><pre class="highlight"><code>-- A derived table
 FROM (SELECT * FROM author)
 </code></pre>
+</div>
 
 <p>需要注意的是有些时候我们可以给派生表定义一个相关名（即我们所说的别名）。</p>
 
-<pre><code>-- A derived table with an alias
+<div class="highlighter-rouge"><pre class="highlight"><code>-- A derived table with an alias
 FROM (SELECT * FROM author) a
 </code></pre>
+</div>
 
 <p>派生表可以有效的避免由于 SQL 逻辑而产生的问题。举例来说：如果你想重用一个用 SELECT 和 WHERE 语句查询出的结果，这样写就可以（以 Oracle 为例）：</p>
 
-<pre><code>-- Get authors' first and last names, and their age in days
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Get authors' first and last names, and their age in days
 SELECT first_name, last_name, age
 FROM (
   SELECT first_name, last_name, current_date - date_of_birth age
@@ -366,10 +429,11 @@ FROM (
 -- If the age is greater than 10000 days
 WHERE age &gt; 10000
 </code></pre>
+</div>
 
 <p>需要我们注意的是：在有些数据库，以及 SQL ： 1990 标准中，派生表被归为下一级——通用表语句（ common table experssion）。这就允许你在一个 SELECT 语句中对派生表多次重用。上面的例子就（几乎）等价于下面的语句：</p>
 
-<pre><code>WITH a AS (
+<div class="highlighter-rouge"><pre class="highlight"><code>WITH a AS (
   SELECT first_name, last_name, current_date - date_of_birth age
   FROM author
 )
@@ -377,6 +441,7 @@ SELECT *
 FROM a
 WHERE age &gt; 10000
 </code></pre>
+</div>
 
 <p>当然了，你也可以给“ a ”创建一个单独的视图，这样你就可以在更广泛的范围内重用这个派生表了。更多信息可以阅读下面的文章</p>
 
@@ -390,13 +455,15 @@ WHERE age &gt; 10000
 
 <p>让我们再回想一下之前的 FROM 语句：</p>
 
-<pre><code>FROM a, b
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
 </code></pre>
+</div>
 
 <p>现在，我们将 GROUP BY 应用到上面的语句中：</p>
 
-<pre><code>GROUP BY A.x, A.y, B.z
+<div class="highlighter-rouge"><pre class="highlight"><code>GROUP BY A.x, A.y, B.z
 </code></pre>
+</div>
 
 <p>上面语句的结果就是产生出了一个包含三个字段的新的表的引用。我们来仔细理解一下这句话：当你应用 GROUP BY 的时候， SELECT 后没有使用聚合函数的列，都要出现在 GROUP BY 后面。（译者注：原文大意为“当你是用 GROUP BY 的时候，你能够对其进行下一级逻辑操作的列会减少，包括在 SELECT 中的列”）。</p>
 
@@ -510,81 +577,42 @@ SQL</a></li>
 
 <p>[ <strong>转载必须在正文中标注并保留原文链接、译文链接和译者等信息。</strong>]</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html">http://http://uwebs.tk/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

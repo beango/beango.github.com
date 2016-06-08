@@ -1,39 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Python编码和Unicode</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python编码和Unicode</title>
+  <meta name="description" content="我确定有很多关于Unicode和Python的说明，但为了方便自己的理解使用，我还是打算再写一些关于它们的东西。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/09/25/python-encodings-and-unicode.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python编码和Unicode</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/09/25/python-encodings-and-unicode.html">Python编码和Unicode</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-09-25</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>我确定有很多关于Unicode和Python的说明，但为了方便自己的理解使用，我还是打算再写一些关于它们的东西。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Python编码和Unicode</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>我确定有很多关于Unicode和Python的说明，但为了方便自己的理解使用，我还是打算再写一些关于它们的东西。</p>
 
 <h3 id="vs-unicode">字节流 vs Unicode对象</h3>
 
 <p>我们先来用Python定义一个字符串。当你使用string类型时，实际上会储存一个字节串。</p>
 
-<pre><code>[  a ][  b ][  c ] = "abc"
+<div class="highlighter-rouge"><pre class="highlight"><code>[  a ][  b ][  c ] = "abc"
 [ 97 ][ 98 ][ 99 ] = "abc"
 </code></pre>
+</div>
 
 <p>在这个例子里，abc这个字符串是一个字节串。97.，98,，99是ASCII码。Python 2.x版本的一个不足之处就是默认将所有的字符串当做ASCII来对待。不幸的是，ASCII在拉丁式字符集里是最不常见的标准。</p>
 
@@ -41,13 +87,14 @@
 
 <p>当你的字符串里有字节的值大于126的时候就会出现问题了。我们来看一个用windows-1252编码的字符串。Windows-1252里的字符映射是8位的字符映射，那么总共就会有256个字符。前127个跟ASCII是一样的，接下来的127个是由windows-1252定义的其他字符。</p>
 
-<pre><code>A windows-1252 encoded string looks like this:
+<div class="highlighter-rouge"><pre class="highlight"><code>A windows-1252 encoded string looks like this:
 [ 97 ] [ 98 ] [ 99 ] [ 150 ] = "abc–"
 </code></pre>
+</div>
 
 <p>Windows-1252仍然是一个字节串，但你有没有看到最后一个字节的值是大于126的。如果Python试着用默认的ASCII标准来解码这个字节流，它就会报错。我们来看当Python解码这个字符串的时候会发生什么：</p>
 
-<pre><code>&gt;&gt;&gt; x = "abc" + chr(150)
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; x = "abc" + chr(150)
 &gt;&gt;&gt; print repr(x)
 'abc\x96'
 &gt;&gt;&gt; u"Hello" + x
@@ -55,17 +102,19 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in ?
 UnicodeDecodeError: 'ASCII' codec can't decode byte 0x96 in position 3: ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>我们来用UTF-8来编码另一个字符串：</p>
 
-<pre><code>A UTF-8 encoded string looks like this:
+<div class="highlighter-rouge"><pre class="highlight"><code>A UTF-8 encoded string looks like this:
 [ 97 ] [ 98 ] [ 99 ] [ 226 ] [ 128 ] [ 147 ] = "abc–"
 [0x61] [0x62] [0x63] [0xe2]  [ 0x80] [ 0x93] = "abc-"
 </code></pre>
+</div>
 
 <p>如果你拿起看你熟悉的Unicode编码表，你会发现英文的破折号对应的Unicode编码点为8211（0×2013）。这个值大于ASCII最大值127。大于一个字节能够存储的值。因为8211（0×2013）是两个字节，UTF-8必须利用一些技巧告诉系统存储一个字符需要三个字节。我们再来看当Python准备用默认的ASCII来编码一个里面有字符的值大于126的UTF-8编码字符串。</p>
 
-<pre><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93"
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93"
 &gt;&gt;&gt; print repr(x)
 'abc\xe2\x80\x93'
 &gt;&gt;&gt; u"Hello" + x
@@ -73,6 +122,7 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in ?
 UnicodeDecodeError: 'ASCII' codec can't decode byte 0xe2 in position 3: ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>你可以看到，Python一直是默认使用ASCII编码。当它处理第4个字符的时候，因为它的值为226大于126，所以Python抛出了错误。这就是混合编码所带来的问题。</p>
 
@@ -88,7 +138,7 @@ UnicodeDecodeError: 'ASCII' codec can't decode byte 0xe2 in position 3: ordinal 
 
 <p>你最好是尽早的将字节流解码为Unicode。</p>
 
-<pre><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93"
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93"
 &gt;&gt;&gt; x = x.decode("utf-8")
 &gt;&gt;&gt; print type(x)
 &lt;type 'unicode'&gt;
@@ -98,6 +148,7 @@ UnicodeDecodeError: 'ASCII' codec can't decode byte 0xe2 in position 3: ordinal 
 &gt;&gt;&gt; print x + y
 abc–abc–
 </code></pre>
+</div>
 
 <p> </p>
 
@@ -105,7 +156,7 @@ abc–abc–
 
 <p>Unicode对象是一个文本的编码不可知论的代表。你不能简单地输出一个Unicode对象。它必须在输出前被变成一个字节串。Python会很适合做这样的工作，尽管Python将Unicode编码为字节流时默认是适用ASCII，这个默认的行为会成为很多让人头疼的问题的原因。</p>
 
-<pre><code>&gt;&gt;&gt; u = u"abc\u2013"
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; u = u"abc\u2013"
 &gt;&gt;&gt; print u
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
@@ -113,6 +164,7 @@ UnicodeEncodeError: 'ascii' codec can't encode character u'\u2013' in position 3
 &gt;&gt;&gt; print u.encode("utf-8")
 abc–
 </code></pre>
+</div>
 
 <p> </p>
 
@@ -122,11 +174,12 @@ abc–
 
 <p>试试这个：</p>
 
-<pre><code>&gt;&gt;&gt; import codecs
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; import codecs
 &gt;&gt;&gt; fh = codecs.open("/tmp/utf-8.txt", "w", "utf-8")
 &gt;&gt;&gt; fh.write(u"\u2013")
 &gt;&gt;&gt; fh.close()
 </code></pre>
+</div>
 
 <p>它所做的就是拿到一个Unicode对象然后将它以utf-8编码写入到文件。你也可以在其他的情况下这么使用它。</p>
 
@@ -136,7 +189,7 @@ abc–
 
 <p>我们接着上面的例子，这次使用urllib流。</p>
 
-<pre><code>&gt;&gt;&gt; stream = urllib.urlopen("http://www.google.com")
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; stream = urllib.urlopen("http://www.google.com")
 &gt;&gt;&gt; Reader = codecs.getreader("utf-8")
 &gt;&gt;&gt; fh = Reader(stream)
 &gt;&gt;&gt; type(fh.read(1))
@@ -144,16 +197,18 @@ abc–
 &gt;&gt;&gt; Reader
 &lt;class encodings.utf_8.StreamReader at 0xa6f890&gt;
 </code></pre>
+</div>
 
 <p>单行版本：</p>
 
-<pre><code>&gt;&gt;&gt; fh = codecs.getreader("utf-8")(urllib.urlopen("http://www.google.com"))
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; fh = codecs.getreader("utf-8")(urllib.urlopen("http://www.google.com"))
 &gt;&gt;&gt; type(fh.read(1))
 </code></pre>
+</div>
 
 <p>你必须对codecs模块十分小心。你传进去的东西必须是一个Unicode对象，否则它会自动将字节流作为ASCII进行解码。</p>
 
-<pre><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93" # our "abc-" utf-8 string
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; x = "abc\xe2\x80\x93" # our "abc-" utf-8 string
 &gt;&gt;&gt; fh = codecs.open("/tmp/foo.txt", "w", "utf-8")
 &gt;&gt;&gt; fh.write(x)
 Traceback (most recent call last):
@@ -164,6 +219,7 @@ File "/usr/lib/python2.5/codecs.py", line 303, in write
   data, consumed = self.encode(object, self.errors)
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 3: ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>哎呦我去，Python又开始用ASCII来解码一切了。</p>
 
@@ -174,33 +230,37 @@ UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 3: ordinal 
 <p>因为一个UTF-8编码串是一个字节列表，len(
 )和切片操作无法正常工作。首先用我们之前用的字符串。</p>
 
-<pre><code>[ 97 ] [ 98 ] [ 99 ] [ 226 ] [ 128 ] [ 147 ] = "abc–"
+<div class="highlighter-rouge"><pre class="highlight"><code>[ 97 ] [ 98 ] [ 99 ] [ 226 ] [ 128 ] [ 147 ] = "abc–"
 </code></pre>
+</div>
 
 <p>接下来做以下的：</p>
 
-<pre><code>&gt;&gt;&gt; my_utf8 = "abc–"
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; my_utf8 = "abc–"
 &gt;&gt;&gt; print len(my_utf8)
 6
 </code></pre>
+</div>
 
 <p>神马？它看起来是4个字符，但是len的结果说是6。因为len计算的是字节数而不是字符数。</p>
 
-<pre><code>&gt;&gt;&gt; print repr(my_utf8)
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; print repr(my_utf8)
 'abc\xe2\x80\x93'
 </code></pre>
+</div>
 
 <p>现在我们来切分这个字符串。</p>
 
-<pre><code>&gt;&gt;&gt; my_utf8[-1] # Get the last char
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; my_utf8[-1] # Get the last char
 '\x93'
 </code></pre>
+</div>
 
 <p>我去，切分结果是最后一字节，不是最后一个字符。</p>
 
 <p>为了正确的切分UTF-8，你最好是解码字节流创建一个Unicode对象。然后就能安全的操作和计数了。</p>
 
-<pre><code>&gt;&gt;&gt; my_unicode = my_utf8.decode("utf-8")
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; my_unicode = my_utf8.decode("utf-8")
 &gt;&gt;&gt; print repr(my_unicode)
 u'abc\u2013'
 &gt;&gt;&gt; print len(my_unicode)
@@ -208,6 +268,7 @@ u'abc\u2013'
 &gt;&gt;&gt; print my_unicode[-1]
 –
 </code></pre>
+</div>
 
 <p> </p>
 
@@ -217,33 +278,36 @@ u'abc\u2013'
 
 <p>第一个案例是当它试着将Unicode和字节串合并在一起的时候。</p>
 
-<pre><code>&gt;&gt;&gt; u"" + u"\u2019".encode("utf-8")
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; u"" + u"\u2019".encode("utf-8")
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 0:   ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>在合并列表的时候会发生同样的情况。Python在列表里有string和Unicode对象的时候会自动地将字节串解码为Unicode。</p>
 
-<pre><code>&gt;&gt;&gt; ",".join([u"This string\u2019s unicode", u"This string\u2019s utf-8".encode("utf-8")])
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; ",".join([u"This string\u2019s unicode", u"This string\u2019s utf-8".encode("utf-8")])
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 11:  ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>或者当试着格式化一个字节串的时候：</p>
 
-<pre><code>&gt;&gt;&gt; "%s\n%s" % (u"This string\u2019s unicode", u"This string\u2019s  utf-8".encode("utf-8"),)
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; "%s\n%s" % (u"This string\u2019s unicode", u"This string\u2019s  utf-8".encode("utf-8"),)
 Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 11: ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>基本上当你把Unicode和字节串混在一起用的时候，就会导致出错。</p>
 
 <p>在这个例子里面，你创建一个utf-8文件，然后往里面添加一些Unicode对象的文本。就会报UnicodeDecodeError错误。</p>
 
-<pre><code>&gt;&gt;&gt; buffer = []
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; buffer = []
 &gt;&gt;&gt; fh = open("utf-8-sample.txt")
 &gt;&gt;&gt; buffer.append(fh.read())
 &gt;&gt;&gt; fh.close()
@@ -255,10 +319,11 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
 UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 9: ordinal not in range(128)
 </code></pre>
+</div>
 
 <p>你可以使用codecs模块把文件作为Unicode加载来解决这个问题。</p>
 
-<pre><code>&gt;&gt;&gt; import codecs
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; import codecs
 &gt;&gt;&gt; buffer = []
 &gt;&gt;&gt; fh = open("utf-8-sample.txt", "r", "utf-8")
 &gt;&gt;&gt; buffer.append(fh.read())
@@ -271,6 +336,7 @@ This file’s got utf-8 in it
  
 This string’s unicode
 </code></pre>
+</div>
 
 <p>正如你看到的，由codecs.open 创建的流在当数据被读取的时候自动地将比特串转化为Unicode。</p>
 
@@ -302,107 +368,72 @@ This string’s unicode
 
 <p>利用UTF-8，任何在127和255之间的字节是特别的。这些字节告诉系统这些字节是多字节序列的一部分。</p>
 
-<pre><code>Our UTF-8 encoded string looks like this:
+<div class="highlighter-rouge"><pre class="highlight"><code>Our UTF-8 encoded string looks like this:
 [ 97 ] [ 98 ] [ 99 ] [ 226 ] [ 128 ] [ 147 ] = "abc–"
 </code></pre>
+</div>
 
 <p>最后3字节是一个UTF-8多字节序列。如果你把这三个字节里的第一个转化为2进制可以看到以下的结果：</p>
 
-<pre><code>11100010
+<div class="highlighter-rouge"><pre class="highlight"><code>11100010
 </code></pre>
+</div>
 
 <p>前3比特告诉系统它开始了一个3字节序列226，128，147。</p>
 
 <p>那么完整的字节序列。</p>
 
-<pre><code>11100010 10000000 10010011
+<div class="highlighter-rouge"><pre class="highlight"><code>11100010 10000000 10010011
 </code></pre>
+</div>
 
 <p>然后你对三字节序列运用下面的掩码。（详见<a href="http://en.wikipedia.org/wiki/UTF-8#Description">这里</a>）</p>
 
-<pre><code>1110xxxx 10xxxxxx 10xxxxxx
+<div class="highlighter-rouge"><pre class="highlight"><code>1110xxxx 10xxxxxx 10xxxxxx
 XXXX0010 XX000000 XX010011 Remove the X's
 0010       000000   010011 Collapse the numbers
 00100000 00010011          Get Unicode number 0x2013, 8211 The "–"
 </code></pre>
+</div>
 
 <p>这里仅仅是关于UTF-8的一些入门的基本知识，如果想知道更多的细节，可以去看UTF-8的维基页面。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/09/25/python-encodings-and-unicode.html">http://http://uwebs.tk/archives/2013/09/25/python-encodings-and-unicode.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

@@ -1,45 +1,91 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="SQL" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / SQL联合语句的视觉解释</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SQL联合语句的视觉解释</title>
+  <meta name="description" content="我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/05/30/a-visual-explanation-of-sql-joins.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / SQL联合语句的视觉解释</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/05/30/a-visual-explanation-of-sql-joins.html">SQL联合语句的视觉解释</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-05-30</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">SQL联合语句的视觉解释</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。</p>
 
 <p>不过我还是喜欢这个观点，所以我们来看看能不能用上韦恩图。假设我们有下面两张表。表A在左边，表B在右边。我们给它们各四条记录。</p>
 
-<pre><code>id name       id  name
+<div class="highlighter-rouge"><pre class="highlight"><code>id name       id  name
 -- ----       --  ----
 1  Pirate     1   Rutabaga
 2  Monkey     2   Pirate
 3  Ninja      3   Darth Vader
 4  Spaghetti  4   Ninja
 </code></pre>
+</div>
 
 <p>我们用过name字段用几种不同方式把这些表联合起来，看能否得到和那些漂亮的韦恩图在概念上的匹配。</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 INNER JOIN TableB
 ON TableA.name = TableB.name
  
@@ -48,6 +94,7 @@ id  name       id   name
 1   Pirate     2    Pirate
 3   Ninja      4    Ninja
 </code></pre>
+</div>
 
 <p>内联合（inner join）只生成同时匹配表A和表B的记录集。（如下图）</p>
 
@@ -55,7 +102,7 @@ id  name       id   name
 
 <p>——————————————————————————-</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 FULL OUTER JOIN TableB
 ON TableA.name = TableB.name
  
@@ -68,6 +115,7 @@ id    name       id    name
 null  null       1     Rutabaga       
 null  null       3     Darth Vader
 </code></pre>
+</div>
 
 <p>全外联合（full outer join）生成表A和表B里的记录全集，包括两边都匹配的记录。如果有一边没有匹配的，缺失的这一边为null。（如下图）</p>
 
@@ -75,7 +123,7 @@ null  null       3     Darth Vader
 
 <p>——————————————————————————-</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 LEFT OUTER JOIN TableB
 ON TableA.name = TableB.name
  
@@ -86,6 +134,7 @@ id  name       id    name
 3   Ninja      4     Ninja
 4   Spaghetti  null  null
 </code></pre>
+</div>
 
 <p>左外联合（left outer join）生成表A的所有记录，包括在表B里匹配的记录。如果没有匹配的，右边将是null。（如下图）</p>
 
@@ -93,7 +142,7 @@ id  name       id    name
 
 <p>——————————————————————————-</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 LEFT OUTER JOIN TableB
 ON TableA.name = TableB.name
 WHERE TableB.id IS null
@@ -103,6 +152,7 @@ id  name       id     name
 2   Monkey     null   null
 4   Spaghetti  null   null
 </code></pre>
+</div>
 
 <p>为了生成只在表A里而不在表B里的记录集，我们用同样的左外联合，然后用where语句排除我们不想要的记录。（如下图）</p>
 
@@ -110,7 +160,7 @@ id  name       id     name
 
 <p>——————————————————————————-</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 FULL OUTER JOIN TableB
 ON TableA.name = TableB.name
 WHERE TableA.id IS null 
@@ -123,6 +173,7 @@ id    name       id    name
 null  null       1     Rutabaga
 null  null       3     Darth Vader
 </code></pre>
+</div>
 
 <p>为了生成对于表A和表B唯一的记录集，我们用同样的全外联合，然后用where语句排除两边都不想要的记录。（如下图）</p>
 
@@ -134,89 +185,51 @@ null  null       3     Darth Vader
 
 <p>还有一种笛卡尔积或者<strong>交叉联合（cross join）</strong>，据我所知不能用韦恩图表示：</p>
 
-<pre><code>SELECT * FROM TableA
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
 CROSS JOIN TableB
 </code></pre>
+</div>
 
 <p>这个把“所有”联接到“所有”，产生4乘4=16行，远多于原始的集合。如果你学过数学，你便知道为什么这个联合遇上大型的表很危险。</p>
 
 <p>英文原文；<a href="http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html">Jeff Atwood</a>，编译：<a href="http://www.jobbole.com" title="伯乐在线">伯乐</a>在线 – @<a href="http://weibo.com/deepfish2567" title="奇风余谷">奇风余谷</a></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/05/30/a-visual-explanation-of-sql-joins.html">http://http://uwebs.tk/archives/2013/05/30/a-visual-explanation-of-sql-joins.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 理解 Python 中的线程</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>理解 Python 中的线程</title>
+  <meta name="description" content="郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/11/25/understanding-threads-in-python.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 理解 Python 中的线程</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/11/25/understanding-threads-in-python.html">理解 Python 中的线程</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-11-25</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><em>郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/</em></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">理解 Python 中的线程</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><em>郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/</em></p>
 
 <p>我们将会看到一些在Python中使用线程的实例和如何避免线程之间的竞争。</p>
 
@@ -38,7 +83,7 @@
 
 <h5 id="section-1">单线程</h5>
 
-<pre><code>import time
+<div class="highlighter-rouge"><pre class="highlight"><code>import time
 import urllib2
 
 def get_responses():
@@ -58,25 +103,27 @@ def get_responses():
 
 get_responses()
 </code></pre>
+</div>
 
 <p>输出是：</p>
 
-<pre><code>http://www.google.com 200
+<div class="highlighter-rouge"><pre class="highlight"><code>http://www.google.com 200
 http://www.amazon.com 200
 http://www.ebay.com 200
 http://www.alibaba.com 200
 http://www.reddit.com 200
 Elapsed time: 3.0814409256
 </code></pre>
+</div>
 
 <p>解释：<br />
 *   url顺序的被请求<br />
 *   除非cpu从一个url获得了回应，否则不会去请求下一个url<br />
-*   网络请求会花费较长的时间，所以cpu在等待网络请求的返回时间内一直处于闲置状态。  </p>
+*   网络请求会花费较长的时间，所以cpu在等待网络请求的返回时间内一直处于闲置状态。</p>
 
 <h5 id="section-2">多线程</h5>
 
-<pre><code>import urllib2
+<div class="highlighter-rouge"><pre class="highlight"><code>import urllib2
 import time
 from threading import Thread
 
@@ -109,39 +156,41 @@ def get_responses():
 
 get_responses()
 </code></pre>
+</div>
 
-<p>输出:  </p>
+<p>输出:</p>
 
-<pre><code>http://www.reddit.com 200
+<div class="highlighter-rouge"><pre class="highlight"><code>http://www.reddit.com 200
 http://www.google.com 200
 http://www.amazon.com 200
 http://www.alibaba.com 200
 http://www.ebay.com 200
 Elapsed time: 0.689890861511
 </code></pre>
+</div>
 
 <p>解释：
 *   意识到了程序在执行时间上的提升
 *   我们写了一个多线程程序来减少cpu的等待时间，当我们在等待一个线程内的网络请求返回时，这时cpu可以切换到其他线程去进行其他线程内的网络请求。
 *   我们期望一个线程处理一个url，所以实例化线程类的时候我们传了一个url。
-*   线程运行意味着执行类里的<code>run()</code>方法。
-*   无论如何我们想每个线程必须执行<code>run()</code>。
-*   为每个url创建一个线程并且调用<code>start()</code>方法，这告诉了cpu可以执行线程中的<code>run()</code>方法了。
-*   我们希望所有的线程执行完毕的时候再计算花费的时间，所以调用了<code>join()</code>方法。
-*   <code>join()</code>可以通知主线程等待这个线程结束后，才可以执行下一条指令。
-*   每个线程我们都调用了<code>join()</code>方法，所以我们是在所有线程执行完毕后计算的运行时间。</p>
+*   线程运行意味着执行类里的<code class="highlighter-rouge">run()</code>方法。
+*   无论如何我们想每个线程必须执行<code class="highlighter-rouge">run()</code>。
+*   为每个url创建一个线程并且调用<code class="highlighter-rouge">start()</code>方法，这告诉了cpu可以执行线程中的<code class="highlighter-rouge">run()</code>方法了。
+*   我们希望所有的线程执行完毕的时候再计算花费的时间，所以调用了<code class="highlighter-rouge">join()</code>方法。
+*   <code class="highlighter-rouge">join()</code>可以通知主线程等待这个线程结束后，才可以执行下一条指令。
+*   每个线程我们都调用了<code class="highlighter-rouge">join()</code>方法，所以我们是在所有线程执行完毕后计算的运行时间。</p>
 
 <p>关于线程：<br />
-*   cpu可能不会在调用<code>start()</code>后马上执行<code>run()</code>方法。
-*   你不能确定<code>run()</code>在不同线程建间的执行顺序。
-*   对于单独的一个线程，可以保证<code>run()</code>方法里的语句是按照顺序执行的。
+*   cpu可能不会在调用<code class="highlighter-rouge">start()</code>后马上执行<code class="highlighter-rouge">run()</code>方法。
+*   你不能确定<code class="highlighter-rouge">run()</code>在不同线程建间的执行顺序。
+*   对于单独的一个线程，可以保证<code class="highlighter-rouge">run()</code>方法里的语句是按照顺序执行的。
 *   这就是因为线程内的url会首先被请求，然后打印出返回的结果。</p>
 
 <h4 id="section-3">实例2</h4>
 
-<p>我们将会用一个程序演示一下多线程间的资源竞争，并修复这个问题。  </p>
+<p>我们将会用一个程序演示一下多线程间的资源竞争，并修复这个问题。</p>
 
-<pre><code>from threading import Thread
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread
 
 
 #define a global variable
@@ -170,8 +219,9 @@ def use_increment_thread():
 
 use_increment_thread()
 </code></pre>
+</div>
 
-<p>多次运行这个程序，你会看到多种不同的结果。  </p>
+<p>多次运行这个程序，你会看到多种不同的结果。</p>
 
 <p>解释：
 *   有一个全局变量，所有的线程都想修改它。
@@ -179,16 +229,16 @@ use_increment_thread()
 *   有50个线程，最后这个数值应该变成50，但是它却没有。</p>
 
 <p>为什么没有达到50？<br />
-*   在<code>some_var</code>是<code>15</code>的时候，线程<code>t1</code>读取了<code>some_var</code>，这个时刻cpu将控制权给了另一个线程<code>t2</code>。
-*   <code>t2</code>线程读到的<code>some_var</code>也是<code>15</code>
-*   <code>t1</code>和<code>t2</code>都把<code>some_var</code>加到<code>16</code>
-*   当时我们期望的是<code>t1</code> <code>t2</code>两个线程使<code>some_var + 2</code>变成<code>17</code>
+*   在<code class="highlighter-rouge">some_var</code>是<code class="highlighter-rouge">15</code>的时候，线程<code class="highlighter-rouge">t1</code>读取了<code class="highlighter-rouge">some_var</code>，这个时刻cpu将控制权给了另一个线程<code class="highlighter-rouge">t2</code>。
+*   <code class="highlighter-rouge">t2</code>线程读到的<code class="highlighter-rouge">some_var</code>也是<code class="highlighter-rouge">15</code>
+*   <code class="highlighter-rouge">t1</code>和<code class="highlighter-rouge">t2</code>都把<code class="highlighter-rouge">some_var</code>加到<code class="highlighter-rouge">16</code>
+*   当时我们期望的是<code class="highlighter-rouge">t1</code> <code class="highlighter-rouge">t2</code>两个线程使<code class="highlighter-rouge">some_var + 2</code>变成<code class="highlighter-rouge">17</code>
 *   在这里就有了资源竞争。
-*   相同的情况也可能发生在其它的线程间，所以出现了最后的结果小于<code>50</code>的情况。</p>
+*   相同的情况也可能发生在其它的线程间，所以出现了最后的结果小于<code class="highlighter-rouge">50</code>的情况。</p>
 
 <p>解决资源竞争</p>
 
-<pre><code>from threading import Lock, Thread
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Lock, Thread
 lock = Lock()
 some_var = 0 
 
@@ -218,21 +268,22 @@ def use_increment_thread():
 
 use_increment_thread()
 </code></pre>
+</div>
 
-<p>再次运行这个程序，达到了我们预期的结果。  </p>
+<p>再次运行这个程序，达到了我们预期的结果。</p>
 
 <p>解释：<br />
 *   Lock 用来防止竞争条件
-*   如果在执行一些操作之前，线程<code>t1</code>获得了锁。其他的线程在<code>t1</code>释放Lock之前，不会执行相同的操作
-*   我们想要确定的是一旦线程<code>t1</code>已经读取了<code>some_var</code>，直到<code>t1</code>完成了修改<code>some_var</code>，其他的线程才可以读取<code>some_var</code>
-*   这样读取和修改<code>some_var</code>成了逻辑上的原子操作。</p>
+*   如果在执行一些操作之前，线程<code class="highlighter-rouge">t1</code>获得了锁。其他的线程在<code class="highlighter-rouge">t1</code>释放Lock之前，不会执行相同的操作
+*   我们想要确定的是一旦线程<code class="highlighter-rouge">t1</code>已经读取了<code class="highlighter-rouge">some_var</code>，直到<code class="highlighter-rouge">t1</code>完成了修改<code class="highlighter-rouge">some_var</code>，其他的线程才可以读取<code class="highlighter-rouge">some_var</code>
+*   这样读取和修改<code class="highlighter-rouge">some_var</code>成了逻辑上的原子操作。</p>
 
 <h4 id="section-4">实例3</h4>
 <p>让我们用一个例子来证明一个线程不能影响其他线程内的变量（非全局变量）。</p>
 
 <p>time.sleep()可以使一个线程挂起，强制线程切换发生。</p>
 
-<pre><code>from threading import Thread
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread
 import time
 
 class CreateListThread(Thread):
@@ -250,12 +301,13 @@ def use_create_list_thread():
 
 use_create_list_thread()
 </code></pre>
+</div>
 
-<p>运行几次后发现并没有打印出争取的结果。当一个线程正在打印的时候，cpu切换到了另一个线程，所以产生了不正确的结果。我们需要确保<code>print self.entries</code>是个逻辑上的原子操作，以防打印时被其他线程打断。</p>
+<p>运行几次后发现并没有打印出争取的结果。当一个线程正在打印的时候，cpu切换到了另一个线程，所以产生了不正确的结果。我们需要确保<code class="highlighter-rouge">print self.entries</code>是个逻辑上的原子操作，以防打印时被其他线程打断。</p>
 
 <p>我们使用了Lock()，来看下边的例子。</p>
 
-<pre><code>from threading import Thread, Lock
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread, Lock
 import time
 
 lock = Lock()
@@ -277,85 +329,47 @@ def use_create_list_thread():
 
 use_create_list_thread()
 </code></pre>
+</div>
 
 <p>这次我们看到了正确的结果。证明了一个线程不可以修改其他线程内部的变量（非全局变量）</p>
 
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/11/25/understanding-threads-in-python.html">http://http://uwebs.tk/archives/2013/11/25/understanding-threads-in-python.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

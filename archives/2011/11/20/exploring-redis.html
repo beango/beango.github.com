@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="redis" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Redis系统性介绍</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Redis系统性介绍</title>
+  <meta name="description" content="虽然Redis已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2011/11/20/exploring-redis.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Redis系统性介绍</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2011/11/20/exploring-redis.html">Redis系统性介绍</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2011-11-20</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>虽然<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Redis系统性介绍</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>虽然<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。</p>
 
 <h3 id="section">1.介绍</h3>
 
@@ -53,24 +98,26 @@ Redis的所有操作都是原子性的，同时Redis还支持对几个操作全�
 
 <p>Redis能存储二进制安全的字符串，最大长度为1GB</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; GET name
 "John Doe"
 </code></pre>
+</div>
 
 <p>String类型还支持批量的读写操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; MSET age 30 sex "male"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; MSET age 30 sex "male"
 OK
 redis 127.0.0.1:6379&gt; MGET age sex
 1) "30"
 2) "male"
 </code></pre>
+</div>
 
 <p>String类型其实也可以用来存储数字，并支持对数字的加减操作。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; INCR age
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; INCR age
 (integer) 31
 redis 127.0.0.1:6379&gt; INCRBY age 4
 (integer) 35
@@ -83,10 +130,11 @@ redis 127.0.0.1:6379&gt; DECRBY age 4
 redis 127.0.0.1:6379&gt; GET age
 "30"
 </code></pre>
+</div>
 
 <p>String类型还支持对其部分的修改和获取操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; APPEND name " Mr."
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; APPEND name " Mr."
 (integer) 12
 redis 127.0.0.1:6379&gt; GET name
 "John Doe Mr."
@@ -95,12 +143,13 @@ redis 127.0.0.1:6379&gt; STRLEN name
 redis 127.0.0.1:6379&gt; SUBSTR name 0 3
 "John"
 </code></pre>
+</div>
 
 <h4 id="list">2.2 List类型</h4>
 
 <p>Redis能够将数据存储成一个链表，并能对这个链表进行丰富的操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; LPUSH students "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; LPUSH students "John Doe"
 (integer) 1
 redis 127.0.0.1:6379&gt; LPUSH students "Captain Kirk"
 (integer) 2
@@ -126,10 +175,11 @@ redis 127.0.0.1:6379&gt; LLEN students
 redis 127.0.0.1:6379&gt; LRANGE students 0 0
 1) "Captain Kirk"
 </code></pre>
+</div>
 
 <p>Redis也支持很多修改操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; LINSERT students BEFORE "Captain Kirk" "Dexter Morgan"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; LINSERT students BEFORE "Captain Kirk" "Dexter Morgan"
 (integer) 3
 redis 127.0.0.1:6379&gt; LRANGE students 0 2
 1) "Dexter Morgan"
@@ -157,12 +207,13 @@ redis 127.0.0.1:6379&gt; LLEN students
 redis 127.0.0.1:6379&gt; LRANGE students 0 1
 1) "Captain Kirk"
 </code></pre>
+</div>
 
 <h4 id="sets">2.3 集合（Sets）类型</h4>
 
 <p>Redis能够将一系列不重复的值存储成一个集合</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SADD birds crow
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SADD birds crow
 (integer) 1
 redis 127.0.0.1:6379&gt; SADD birds pigeon
 (integer) 1
@@ -183,10 +234,11 @@ redis 127.0.0.1:6379&gt; SMEMBERS mammals
 2) "cat"
 3) "dog"
 </code></pre>
+</div>
 
 <p>Sets结构也支持相应的修改操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SREM mammals cat
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SREM mammals cat
 (integer) 1
 redis 127.0.0.1:6379&gt; SMEMBERS mammals
 1) "bat"
@@ -198,10 +250,11 @@ redis 127.0.0.1:6379&gt; SMEMBERS mammals
 2) "human"
 3) "dog"
 </code></pre>
+</div>
 
 <p>Redis还支持对集合的子交并补等操作</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SINTER birds mammals
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SINTER birds mammals
 1) "bat"
 redis 127.0.0.1:6379&gt; SUNION birds mammals
 1) "crow"
@@ -213,13 +266,14 @@ redis 127.0.0.1:6379&gt; SDIFF birds mammals
 1) "crow"
 2) "pigeon"
 </code></pre>
+</div>
 
 <h4 id="sorted-sets">2.4 有序集合（Sorted Sets）类型</h4>
 
 <p>Sorted Sets和Sets结构相似，不同的是存在Sorted
 Sets中的数据会有一个score属性，并会在写入时就按这个score排好序。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; ZADD days 0 mon
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; ZADD days 0 mon
 (integer) 1
 redis 127.0.0.1:6379&gt; ZADD days 1 tue
 (integer) 1
@@ -253,12 +307,13 @@ redis 127.0.0.1:6379&gt; ZRANGEBYSCORE days 3 6
 3) "sat"
 4) "sun"
 </code></pre>
+</div>
 
 <h4 id="hash">2.5 Hash类型</h4>
 
 <p>Redis能够存储key对多个属性的数据（比如user1.uname user1.passwd）</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; HKEYS student
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; HKEYS student
 1) "name"
 2) "age"
 3) "sex"
@@ -281,16 +336,18 @@ redis 127.0.0.1:6379&gt; HGETALL student
 3) "age"
 4) "30"
 </code></pre>
+</div>
 
 <p>Hash数据结构能够批量修改和获取</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; HMSET kid name Akshi age 2 sex Female
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; HMSET kid name Akshi age 2 sex Female
 OK
 redis 127.0.0.1:6379&gt; HMGET kid name age sex
 1) "Akshi"
 2) "2"
 3) "Female"
 </code></pre>
+</div>
 
 <h3 id="publishsubscribe">3.Publish/Subscribe</h3>
 
@@ -300,24 +357,26 @@ redis 127.0.0.1:6379&gt; HMGET kid name age sex
 
 <p>用一个客户端订阅管道</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
 Reading messages... (press Ctrl-C to quit)
 1) "subscribe"
 2) "channelone"
 3) (integer) 1
 </code></pre>
+</div>
 
 <p>另一个客户端往这个管道推送信息</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
 (integer) 1
 redis 127.0.0.1:6379&gt; PUBLISH channelone world
 (integer) 1
 </code></pre>
+</div>
 
 <p>然后第一个客户端就能获取到推送的信息</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SUBSCRIBE channelone
 Reading messages... (press Ctrl-C to quit)
 1) "subscribe"
 2) "channelone"
@@ -329,29 +388,32 @@ Reading messages... (press Ctrl-C to quit)
 2) "channelone"
 3) "world"
 </code></pre>
+</div>
 
 <h4 id="section-3">3.2 按一定模式批量订阅</h4>
 
 <p>用下面的命令订阅所有channel开头的信息通道</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
 Reading messages... (press Ctrl-C to quit)
 1) "psubscribe"
 2) "channel*"
 3) (integer) 1
 </code></pre>
+</div>
 
 <p>在另一个客户端对两个推送信息</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; PUBLISH channelone hello
 (integer) 1
 redis 127.0.0.1:6379&gt; PUBLISH channeltwo world
 (integer) 1
 </code></pre>
+</div>
 
 <p>然后在第一个客户端就能收到推送的信息</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; PSUBSCRIBE channel*
 Reading messages... (press Ctrl-C to quit)
 1) "psubscribe"
 2) "channel*"
@@ -365,6 +427,7 @@ Reading messages... (press Ctrl-C to quit)
 3) "channeltwo"
 4) "world"
 </code></pre>
+</div>
 
 <h3 id="section-4">4.数据过期设置</h3>
 
@@ -372,48 +435,52 @@ Reading messages... (press Ctrl-C to quit)
 
 <p>用TTL命令可以获取某个key值的过期时间（-1表示永不过期）</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; TTL name
 (integer) -1
 </code></pre>
+</div>
 
 <p>下面命令先用EXISTS命令查看key值是否存在，然后设置了5秒的过期时间</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; EXISTS name
 (integer) 1
 redis 127.0.0.1:6379&gt; EXPIRE name 5
 (integer) 1
 </code></pre>
+</div>
 
 <p>5秒后再查看</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; EXISTS name
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; EXISTS name
 (integer) 0
 redis 127.0.0.1:6379&gt; GET name
 (nil)
 </code></pre>
+</div>
 
 <p>这个值已经没有了。</p>
 
 <p>上在是直接设置多少秒后过期，你也可以设置在某个时间点过期，下面例子是设置2011-09-24
 00:40:00过期。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; EXPIREAT name 1316805000
 (integer) 1
 redis 127.0.0.1:6379&gt; EXISTS name
 (integer) 0
 </code></pre>
+</div>
 
 <h3 id="section-5">5.事务性</h3>
 
 <p>Redis本身支持一些简单的组合型的命令，比如以NX结尾命令都是判断在这个值没有时才进行某个命令。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; SETNX name "Dexter Morgan"
 (integer) 0
@@ -425,10 +492,11 @@ redis 127.0.0.1:6379&gt; GETSET name "Dexter Morgan"
 redis 127.0.0.1:6379&gt; GET name
 "Dexter Morgan"
 </code></pre>
+</div>
 
 <p>当然，Redis还支持自定义的命令组合，通过MULTI和EXEC，将几个命令组合起来执行</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET counter 0
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET counter 0
 OK
 redis 127.0.0.1:6379&gt; MULTI
 OK
@@ -445,10 +513,11 @@ redis 127.0.0.1:6379&gt; EXEC
 redis 127.0.0.1:6379&gt; GET counter
 "3"
 </code></pre>
+</div>
 
 <p>你还可以用DICARD命令来中断执行中的命令序列</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET newcounter 0
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET newcounter 0
 OK
 redis 127.0.0.1:6379&gt; MULTI
 OK
@@ -463,6 +532,7 @@ OK
 redis 127.0.0.1:6379&gt; GET newcounter
 "0"
 </code></pre>
+</div>
 
 <h3 id="section-6">6.持久化</h3>
 
@@ -472,7 +542,7 @@ redis 127.0.0.1:6379&gt; GET newcounter
 
 <p>数据快照的原理是将整个Redis中存的所有数据遍历一遍存到一个扩展名为rdb的数据文件中。通过SAVE命令可以调用这个过程。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; SAVE
 OK
@@ -481,23 +551,26 @@ OK
 redis 127.0.0.1:6379&gt; BGSAVE
 Background saving started
 </code></pre>
+</div>
 
 <p>如果你是使用的brew在Mac OSX上安全的Redis，那么rdb文件会存在如下路径</p>
 
-<pre><code>/usr/local/var/db/redis/dump.rdb
+<div class="highlighter-rouge"><pre class="highlight"><code>/usr/local/var/db/redis/dump.rdb
 </code></pre>
+</div>
 
 <h4 id="append-only-file">6.2 Append-Only File（追加式的操作日志记录）</h4>
 
 <p>Redis还支持一种追加式的操作日志记录，叫append only
 file，其日志文件以aof结局，我们一般各为aof文件。要开启aof日志的记录，你需要在配置文件中进行如下设置：</p>
 
-<pre><code>appendonly yes
+<div class="highlighter-rouge"><pre class="highlight"><code>appendonly yes
 </code></pre>
+</div>
 
 <p>这时候你所有的操作都会记录在aof日志文件中</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; GET name
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; GET name
 (nil)
 redis 127.0.0.1:6379&gt; SET name "Ganesh Gunasegaran"
 OK
@@ -517,12 +590,13 @@ name
 $18
 Ganesh Gunasegaran
 </code></pre>
+</div>
 
 <h3 id="section-8">7.管理命令</h3>
 
 <p>Redis支持多个DB，默认是16个，你可以设置将数据存在哪一个DB中，不同DB间的数据具有隔离性。也可以在多个DB间移动数据。</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SELECT 0
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SELECT 0
 OK
 redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
@@ -539,10 +613,11 @@ OK
 redis 127.0.0.1:6379[1]&gt; GET name
 "John Doe"
 </code></pre>
+</div>
 
 <p>Redis还能进行一些如下操作，获取一些运行信息</p>
 
-<pre><code>redis 127.0.0.1:6379[1]&gt; DBSIZE
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379[1]&gt; DBSIZE
 (integer) 1
 redis 127.0.0.1:6379[1]&gt; INFO
 redis_version:2.2.13
@@ -552,10 +627,11 @@ arch_bits:64
 multiplexing_api:kqueue
 ......
 </code></pre>
+</div>
 
 <p>Redis还支持对某个DB数据进行清除（当然清空所有数据的操作也是支持的）</p>
 
-<pre><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
+<div class="highlighter-rouge"><pre class="highlight"><code>redis 127.0.0.1:6379&gt; SET name "John Doe"
 OK
 redis 127.0.0.1:6379&gt; DBSIZE
 (integer) 1
@@ -580,6 +656,7 @@ OK
 redis 127.0.0.1:6379[1]&gt; DBSIZE
 (integer) 0
 </code></pre>
+</div>
 
 <h3 id="section-9">8.客户端</h3>
 
@@ -601,81 +678,42 @@ up</a></li>
 
 <p>来源：<a href="http://itsgg.com/2011/09/24/exploring-redis/">itsgg.com</a></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2011/11/20/exploring-redis.html">http://http://uwebs.tk/archives/2011/11/20/exploring-redis.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

@@ -1,36 +1,81 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Python中list 的实现</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python中list 的实现</title>
+  <meta name="description" content="原文链接这篇文章介绍了Python中list是如何实现的。在Python中list特别有用。让我们来看下list的内部是如何实现的。来看下面简单的程序，在list中添加一些整数并将他们打印出来。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/08/24/python-list-implementation.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python中list 的实现</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/08/24/python-list-implementation.html">Python中list 的实现</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-08-24</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><a href="http://www.laurentluce.com/posts/python-list-implementation/">原文链接</a><br />
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Python中list 的实现</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><a href="http://www.laurentluce.com/posts/python-list-implementation/">原文链接</a><br />
 这篇文章介绍了Python中list是如何实现的。<br />
 在Python中list特别有用。让我们来看下list的内部是如何实现的。<br />
-来看下面简单的程序，在list中添加一些整数并将他们打印出来。  </p>
+来看下面简单的程序，在list中添加一些整数并将他们打印出来。</p>
 
-<pre><code>&gt;&gt;&gt; L = []
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; L = []
 &gt;&gt;&gt; L.append(1)
 &gt;&gt;&gt; L.append(2)
 &gt;&gt;&gt; L.append(3)
@@ -43,21 +88,23 @@
 2
 3 正如你所看到的，list是可以迭代的。  
 </code></pre>
+</div>
 
-<h3 id="listc">List对象的C结构</h3>
-<p>Python中list是用下边的C语言的结构来表示的。ob_item是用来保存元素的指针数组，allocated是ob_item预先分配的内存总容量</p>
+<p>###List对象的C结构<br />
+Python中list是用下边的C语言的结构来表示的。ob_item是用来保存元素的指针数组，allocated是ob_item预先分配的内存总容量</p>
 
-<pre><code>typedef struct {
+<div class="highlighter-rouge"><pre class="highlight"><code>typedef struct {
     PyObject_VAR_HEAD
     PyObject **ob_item;
     Py_ssize_t allocated;
 } PyListObject;
 </code></pre>
+</div>
 
-<h3 id="list">List的初始化</h3>
-<p>让我们来看下当初始化一个空list的时候发生了什么 L = []</p>
+<p>###List的初始化
+让我们来看下当初始化一个空list的时候发生了什么 L = []</p>
 
-<pre><code>arguments: size of the list = 0
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: size of the list = 0
 returns: list object = []
 PyListNew:
     nbytes = size * size of global Python object = 0
@@ -67,12 +114,13 @@ PyListNew:
     set list's allocated var to 0 = 0 slots
     return list object 
 </code></pre>
+</div>
 
 <p>非常重要的是知道list申请内存空间的大小（后文用allocated代替）的大小和list实际存储元素所占空间的大小(ob_size)之间的关系，ob_size的大小和len(L)是一样的，而allocated的大小是在内存中已经申请空间大小。通常你会看到allocated的值要比ob_size的值要大。这是为了避免每次有新元素加入list时都要调用realloc进行内存分配。接下来我们会看到更多关于这些的内容。
 ###Append
 我们在list中追加一个整数:L.append(1)。发生了什么？调用了内部的C函数app1()</p>
 
-<pre><code>arguments: list object, new element
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object, new element
 returns: 0 if OK, -1 if not
 app1:
     n = size of list
@@ -80,10 +128,11 @@ app1:
     list[n] = list[0] = new element
     return 0
 </code></pre>
+</div>
 
 <p>来让我们看下list_resize()。list_resize()会申请多余的空间以避免调用多次list_resize()函数，list增长的模型是:0, 4, 8, 16, 25, 35, 46, 58, 72, 88, …</p>
 
-<pre><code>arguments: list object, new size
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object, new size
 returns: 0 if OK, -1 if not
 list_resize:
     new_allocated = (newsize &gt;&gt; 3) + (newsize &lt; 9 ? 3 : 6) = 3
@@ -91,6 +140,7 @@ list_resize:
     resize ob_item (list of pointers) to size new_allocated
     return 0
 </code></pre>
+</div>
 
 <p>开辟了四个内存空间来存放list中的元素，存放的第一个元素是1。你可以从下图中看到L[0]指向了我们刚刚加进去的元素。虚线的框代表了申请了但是还没有使用(存储元素)的内存空间<br />
 <img src="/assets/files/2013-08/list.png" alt="" /><br />
@@ -99,7 +149,7 @@ list_resize:
 ###Insert
 现在我们在列表的第一个位置插入一个整数5:L.insert(1, 5),看看内部发生了什么。调用了ins1()</p>
 
-<pre><code>arguments: list object, where, new element
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object, where, new element
 returns: 0 if OK, -1 if not
 ins1:
     resize list to size n+1 = 5 -&gt; 4 more slots will be allocated
@@ -107,6 +157,7 @@ ins1:
     set new element at offset where
     return 0  
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-08/list_insert.png" alt="" /><br />
 虚线框表示已经申请但是没有使用的内存。申请了8个内存空间但是list实际用来存储元素只使用了其中5个内存空间<br />
@@ -114,7 +165,7 @@ insert的时间复杂度是O(n)
 ###Pop
 当你弹出list的最后一个元素：L.pop()。调用listpop()，list_resize在函数listpop()内部被调用，如果这时ob_size（译者注：弹出元素后）小于allocated（译者注：已经申请的内存空间）的一半。这时申请的内存空间将会缩小。</p>
 
-<pre><code>arguments: list object
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object
 returns: element popped
 listpop:
     if list empty:
@@ -123,6 +174,7 @@ listpop:
     set list object size to 4
     return last element
 </code></pre>
+</div>
 
 <p>Pop的时间复杂度是O(1)<br />
 <img src="/assets/files/2013-08/list_pop.png" alt="" /><br />
@@ -131,9 +183,9 @@ listpop:
 你可以发现（下图）3号和4号内存空间还存储着一些整数，但是list的实际使用(存储元素)空间却只有3个了。<br />
 <img src="/assets/files/2013-08/list_pop_2.png" alt="" /><br />
 ###Remove
-Python list对象有一个方法可以移除一个指定的元素。调用listremove()。  </p>
+Python list对象有一个方法可以移除一个指定的元素。调用listremove()。</p>
 
-<pre><code>arguments: list object, element to remove
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object, element to remove
 returns none if OK, null if not
 listremove:
     loop through each list element:
@@ -142,10 +194,11 @@ listremove:
         return none
     return null
 </code></pre>
+</div>
 
 <p>切开list和删除元素，调用了list_ass_slice()（译者注：在上文slice list between element’s slot and element’s slot + 1被调用），来看下list_ass_slice()是如何工作的。在这里，低位为1 高位为2（译者注：传入的参数），我们移除在1号内存空间存储的数据5</p>
 
-<pre><code>arguments: list object, low offset, high offset
+<div class="highlighter-rouge"><pre class="highlight"><code>arguments: list object, low offset, high offset
 returns: 0 if OK
 list_ass_slice:
     copy integer 5 to recycle list to dereference it
@@ -153,24 +206,26 @@ list_ass_slice:
     resize list to 5 slots
     return 0
 </code></pre>
+</div>
 
 <p>Remove的时间复杂度为O(n)<br />
 <img src="/assets/files/2013-08/list_remove.png" alt="" /></p>
 
-<h3 id="sort">Sort</h3>
+<p>###Sort</p>
 
 <p>下面以包含130个元素的list为例说明排序算法。如果list元素个数少于64，用折半插入排序足以进行快速排序，如果元素个数大于64，则需要进行归并排序。</p>
 
 <p>下面这段程序创建了一个元素范围从0到129的list,并随机排列。</p>
 
-<pre><code>&gt;&gt;&gt; import random
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; import random
 &gt;&gt;&gt; l = [n for n in range(130)]
 &gt;&gt;&gt; random.shuffle(l)
 &gt;&gt;&gt; l
 [107, 44, 97, 121, 26, 11, 24, 100, 79, 19, 109, 7, 52, 93, 70, 94, 124, 117, 92, 32, 115, 83, 9, 112, 84, 22, 65, 95, 89, 74, 64, 23, 101, 68, 119, 127, 90, 80, 91, 75, 4, 20, 114, 16, 103, 34, 96, 125, 47, 77, 81, 3, 30, 14, 25, 29, 104, 102, 98, 69, 78, 60, 33, 12, 31, 37, 76, 10, 5, 105, 35, 48, 85, 106, 63, 71, 54, 39, 8, 6, 62, 67, 42, 72, 118, 116, 27, 46, 38, 99, 126, 40, 28, 113, 43, 41, 59, 2, 56, 61, 88, 18, 45, 128, 58, 73, 1, 13, 129, 49, 0, 82, 123, 111, 57, 86, 110, 51, 15, 36, 120, 108, 66, 55, 53, 87, 122, 17, 21, 50]
 </code></pre>
+</div>
 
-<p>第一步是寻找其中的自然有序列，例如： l[i] &lt;= l[i+1] &lt;= … 或者 l[i] &gt; l[i+1] &gt; … 由于例子里的list随机排序, 自然有序列是比较少的。 这里我们还需要基于list长度给出的自然有序列最小长度。函数merge_compute_minrun() 将根据list的长度返回有序列的最小长度。 在本例中, 最短有序列长度为33。 对于长度小于33的自然有序列，我们用折半插入排序法将其延展为长度33的有序列。 </p>
+<p>第一步是寻找其中的自然有序列，例如： l[i] &lt;= l[i+1] &lt;= … 或者 l[i] &gt; l[i+1] &gt; … 由于例子里的list随机排序, 自然有序列是比较少的。 这里我们还需要基于list长度给出的自然有序列最小长度。函数merge_compute_minrun() 将根据list的长度返回有序列的最小长度。 在本例中, 最短有序列长度为33。 对于长度小于33的自然有序列，我们用折半插入排序法将其延展为长度33的有序列。</p>
 
 <p>本例中，l[0] &gt;= l[1]，但是l[2] &gt; l[1]，所以我们的第一个自然有序列是2，有些过短，但对于一个随机排序列来说也属正常。在实际运用中，自然有序列会更常见，从而使我们的排序算法比应用在这个例子上更有效率。</p>
 
@@ -195,7 +250,7 @@ list_ass_slice:
 
 <p>排序时间复杂度为 O(n log n).</p>
 
-<p>核心部分  </p>
+<p>核心部分</p>
 
 <blockquote>
   <p>我们能看到 Python 设计者的苦心。在需要的时候扩容,但又不允许过度的浪费,适当的内存回收是非常必要的。<br />
@@ -212,81 +267,42 @@ list_ass_slice:
   引自《深入Python编程》</p>
 </blockquote>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/08/24/python-list-implementation.html">http://http://uwebs.tk/archives/2013/08/24/python-list-implementation.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

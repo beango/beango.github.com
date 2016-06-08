@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="javascript" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 编写高效的JavaScript程序</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>编写高效的JavaScript程序</title>
+  <meta name="description" content="英文原文：[Writing Fast, Memory-Efficient JavaScript][]">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 编写高效的JavaScript程序</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">编写高效的JavaScript程序</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-01-11</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><strong>英文原文：</strong><a href="http://coding.smashingmagazine.com/2012/11/05/writing-fast-memory-efficient-javascript/" title="Read 'Writing Fast, Memory-Efficient JavaScript'">Writing Fast, Memory-Efficient JavaScript</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">编写高效的JavaScript程序</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><strong>英文原文：</strong><a href="http://coding.smashingmagazine.com/2012/11/05/writing-fast-memory-efficient-javascript/" title="Read 'Writing Fast, Memory-Efficient JavaScript'">Writing Fast, Memory-Efficient JavaScript</a></p>
 
 <p>Addy Osmani是谷歌公司Chrome团队中的一名程序开发工程师。他是一位JavaScript爱好者，曾经编写过一本开放源码方面的书籍《<a href="http://addyosmani.com/resources/essentialjsdesignpatterns/book/">Learning
 JavaScript Design Patterns</a>》以及《Developing Backbone
@@ -46,7 +91,7 @@ V8（Chrome，Node）都是专为快速执行大型JavaScript程序而设计的�
   <li>什么是引擎无法优化的，我能期待利用垃圾回收进行清洁吗？</li>
 </ul>
 
-<p><img src="/assets/files/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg" alt="" /> </p>
+<p><img src="/assets/files/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg" alt="" /></p>
 
 <p>　　快速的加载Web网页就如同汽车一样，需要使用特殊工具。</p>
 
@@ -81,25 +126,28 @@ V8（Chrome，Node）都是专为快速执行大型JavaScript程序而设计的�
 <p>　　在JavaScript中回收内存在网上引发了许多争论，虽然它可以被用来删除对象（map）中的属性（key），但有部分开发者认为它可以用来强制“消除引用”。建议尽可能避免使用delete，在下面的例子中delete
 o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢对象。</p>
 
-<pre><code>    var o = { x: 1 };       
+<div class="highlighter-rouge"><pre class="highlight"><code>    var o = { x: 1 };       
     delete o.x; // true     
     o.x; // undefined 
 </code></pre>
+</div>
 
 <p>　　目的是为了在运行时避免修改活跃对象的结构，JavaScript引擎可以删除类似“hot”对象，并试图对其进行优化。如果该对象的结果没有太大改变，超过生命周期，删除可能会导致其改变。</p>
 
 <p>　　对于null是如何工作也是有误解的。将一个对象引用设置为null，并没有使对象变“空”，只是将它的引用设置为空而已。使用o.x=null比使用delete会更好些，但可能也不是很必要。</p>
 
-<pre><code>    var o = { x: 1 };      
+<div class="highlighter-rouge"><pre class="highlight"><code>    var o = { x: 1 };      
     o = null;       
     o; // null     
     o.x // TypeError      
 </code></pre>
+</div>
 
 <p>　　如果这个引用是最后一个引用对象，那么该对象可进行垃圾回收；倘若不是，那么此方法不可行。注意，无论您的网页打开多久，全局变量不能被垃圾回收清理。</p>
 
-<pre><code>var myGlobalNamespace = {}; 
+<div class="highlighter-rouge"><pre class="highlight"><code>var myGlobalNamespace = {}; 
 </code></pre>
+</div>
 
 <p><strong>　　</strong>当你刷新新页面时，或导航到不同的页面，关闭标签页或是退出浏览器，才可进行全局清理；当作用域不存在这个函数作用域变量时，这个变量才会被清理，即该函数被退出或是没有被调用时，变量才能被清理。</p>
 
@@ -117,15 +165,16 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 
 <p>　　正如我们前面提到的垃圾回收的工作原理是对内存堆中已经死亡的或者长时间没有使用的对象进行清除和回收。下面的例子能够更好的说明这一点：</p>
 
-<pre><code>    function foo() {     
+<div class="highlighter-rouge"><pre class="highlight"><code>    function foo() {     
         var bar = new LargeObject();      
         bar.someCall();       
     }  
 </code></pre>
+</div>
 
 <p>　　当foo返回时，bar自动指向垃圾回收对象，这是因为没被调用，这里我们将做个对比：</p>
 
-<pre><code>    function foo() {       
+<div class="highlighter-rouge"><pre class="highlight"><code>    function foo() {       
         var bar = new LargeObject();      
         bar.someCall();     
     　　return bar;      
@@ -133,6 +182,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
     // somewhere else      
     var b = foo();      
 </code></pre>
+</div>
 
 <p>　　这里有个调用对象且被一直调用着直到这个调用交给b（或是超出b范围）。</p>
 
@@ -140,7 +190,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 
 <p>　　当你看到一个函数返回到内部函数，该内部函数可以访问外部函数，即使外部函数正在被执行。这基本上是一个封闭的，可以在特定的范围内设置变量的表达式。比如：</p>
 
-<pre><code>    function sum (x) {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    function sum (x) {  
         function sumIt(y) {  
             return x + y;  
         };  
@@ -151,22 +201,24 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
     var sumB = sumA(3);  
     console.log(sumB); // Returns 7 
 </code></pre>
+</div>
 
 <p>　　在sum调用上下文中生成的函数对象（sumIt）是无法被回收的，它被全局变量（sumA）所引用，并且可以通过sumA(n)调用。</p>
 
 <p>　　这里有个示例演示如何访问largeStr？</p>
 
-<pre><code>    var a = function () {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    var a = function () {  
         var largeStr = new Array(1000000).join('x');  
         return function () {  
             return largeStr;  
         };  
     }();  
 </code></pre>
+</div>
 
 <p>　　我们可以通过a()：</p>
 
-<pre><code>    var a = function () {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    var a = function () {  
         var smallStr = 'x';  
         var largeStr = new Array(1000000).join('x');  
         return function (n) {  
@@ -174,6 +226,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
         };  
     }();  
 </code></pre>
+</div>
 
 <p>　　此时，我们不能访问了，因为它是垃圾回收的候选者。</p>
 
@@ -181,7 +234,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 
 <p>　　最糟糕的莫过于在循环中泄露，或者在setTimeout()/setInterval()中，但这却是常见的问题之一。</p>
 
-<pre><code>    var myObj = {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    var myObj = {  
         callMeMaybe: function () {  
             var myRef = this;  
             var val = setTimeout(function () {  
@@ -191,16 +244,19 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
         }  
     };  
 </code></pre>
+</div>
 
 <p>　　如果我们运行：</p>
 
-<pre><code>myObj.callMeMaybe(); 
+<div class="highlighter-rouge"><pre class="highlight"><code>myObj.callMeMaybe(); 
 </code></pre>
+</div>
 
 <p>　　在计时器开始前，我们看到每一秒“时间已经不多了”，这时，我们将运行：</p>
 
-<pre><code>myObj = null; 
+<div class="highlighter-rouge"><pre class="highlight"><code>myObj = null; 
 </code></pre>
+</div>
 
 <h2 id="section-1">三、当心性能陷阱</h2>
 
@@ -220,7 +276,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 
 <p>　　注意：下面的这段代码，千万不能做：</p>
 
-<pre><code>    var moduleA = function () {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    var moduleA = function () {  
         return {  
             data: dataArrayObject,  
             init: function () {  
@@ -244,6 +300,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
         };  
     }();  
 </code></pre>
+</div>
 
 <p>　　很简单，但是却能把工作完成的很好。</p>
 
@@ -253,7 +310,7 @@ o.x 的弊大于利，因为它改变了o的隐藏类，使它成为通用的慢
 <p>　　这里，我们通过opting for
 documentFragment提高性能，事件代理对简单的绑定是一种改进，可选的DocumentFragment也起到了助推作用。</p>
 
-<pre><code>    var moduleD = function () {        
+<div class="highlighter-rouge"><pre class="highlight"><code>    var moduleD = function () {        
         return {       
             data: dataArray,         
             init: function () {  
@@ -284,10 +341,11 @@ documentFragment提高性能，事件代理对简单的绑定是一种改进，�
         };         
     }();  
 </code></pre>
+</div>
 
 <p>　　我们不妨看看其他提供性能的方法，也许你曾读过使用原型模式或是使用JavaScript模板框架进行高度优化。但是使用这些仅针对可读的代码。此外，还有预编译。我们一起来实践下：</p>
 
-<pre><code>    moduleG = function () {};         
+<div class="highlighter-rouge"><pre class="highlight"><code>    moduleG = function () {};         
     moduleG.prototype.data = dataArray;  
     moduleG.prototype.init = function () {  
         this.addTable();  
@@ -305,6 +363,7 @@ documentFragment提高性能，事件代理对简单的绑定是一种改进，�
     };  
     var modG = new moduleG();  
 </code></pre>
+</div>
 
 <p>　　事实证明，选择模板和原型并没有给我们带来多大好处。</p>
 
@@ -318,13 +377,14 @@ monomorphic)，确保变量（包括属性，数组和函数参数）只适应�
 
 <p>　　下面的代码演示了，我们不可这么做：</p>
 
-<pre><code>    function add(x, y) {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    function add(x, y) {  
        return x+y;  
     }  
     add(1, 2);  
     add('a','b');  
     add(my_custom_object, undefined);  
 </code></pre>
+</div>
 
 <p><strong>　　</strong>未初始化时不要加载和执行删除操作，因为它们并没有输出差异，这样做反而会使程序变得更慢。不要编写大量函数，函数越多越难优化。</p>
 
@@ -338,12 +398,13 @@ monomorphic)，确保变量（包括属性，数组和函数参数）只适应�
 
 <p>　　对象克隆对于应用开发者来说是一种常见的现象。虽然在V8中这是实现各种类型问题的基准，但是当你进行复制时，一定要当心。当复制较大的程序时通常很会慢，因此，尽量不要这么做。在JavaScript循环中此举是非常糟糕的。这里有个最快的技巧方案，你不妨学习下：</p>
 
-<pre><code>    function clone(original) {  
+<div class="highlighter-rouge"><pre class="highlight"><code>    function clone(original) {  
       this.foo = original.foo;  
       this.bar = original.bar;  
     }  
     var copy = new clone(original);  
 </code></pre>
+</div>
 
 <p><strong>3. 模块模式中的缓存功能</strong></p>
 
@@ -471,8 +532,9 @@ Geisendörfer的这篇<a href="http://lostechies.com/derickbailey/2012/03/19/bac
 
 <p>　　例如：</p>
 
-<pre><code>"/Applications/Google Chrome/Google Chrome" --js-flags="--trace-opt --trace-deopt" 
+<div class="highlighter-rouge"><pre class="highlight"><code>"/Applications/Google Chrome/Google Chrome" --js-flags="--trace-opt --trace-deopt" 
 </code></pre>
+</div>
 
 <p>　　Windows用户运行chrome.exe –js-flags=“–trace-opt –trace-deopt”。</p>
 
@@ -491,81 +553,42 @@ Geisendörfer的这篇<a href="http://lostechies.com/derickbailey/2012/03/19/bac
 <p>　　因此，测试它、理解它、修复它，如此往复！</p>
 
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">http://http://uwebs.tk/archives/2013/01/11/writing-fast-memory-efficient-javascript.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

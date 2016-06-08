@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / python realtime</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>python realtime</title>
+  <meta name="description" content="声明">
+
+  <link rel="canonical" href="127.0.0.1/archives/2014/08/05/python-realtime.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / python realtime</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2014/08/05/python-realtime.html">python realtime</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2014-08-05</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<h2 id="section">声明</h2>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">python realtime</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <h2 id="section">声明</h2>
 
 <p>本文是基于一篇英文文章翻译过来的。</p>
 
@@ -127,17 +172,18 @@
 <p>让我们再次回顾长轮询（long-polling）传输：</p>
 
 <ul>
-  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
-  <li>无可用数据，服务器保持连接打开并等待数据发送 </li>
-  <li>因为服务器无法处理任何其他请求，一切都被阻塞 </li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>无可用数据，服务器保持连接打开并等待数据发送</li>
+  <li>因为服务器无法处理任何其他请求，一切都被阻塞</li>
 </ul>
 
 <p>用伪代码，它会看起来像这样：</p>
 
-<pre><code>def handle_request(request):
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
     data = get_more_data(request)
     return send_response(data)
 </code></pre>
+</div>
 
 <p>如果get_more_data阻塞了，那整个服务器就会被阻塞，不能处理请求了。</p>
 
@@ -150,9 +196,9 @@
 <p>在这种情况下，长轮询（long-polling）传输将看起来像这样：</p>
 
 <ul>
-  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
-  <li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西 </li>
-  <li>当有数据要发送时，服务器发送数据然后关闭连接 </li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西</li>
+  <li>当有数据要发送时，服务器发送数据然后关闭连接</li>
 </ul>
 
 <h2 id="greenlets">Greenlets</h2>
@@ -160,7 +206,7 @@
 <p>在Python中有两种方法编写异步代码：</p>
 
 <ul>
-  <li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets） </li>
+  <li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets）</li>
   <li>使用[回调](http://en.wikipedia.org/wiki/Callback_(computer_programming)</li>
 </ul>
 
@@ -171,20 +217,21 @@
 <p>让我们再次看看长轮询（long-polling）的例子，这次基于greenlets：</p>
 
 <ul>
-  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
-  <li>服务器启动新的greenlet用来处理长轮询逻辑 </li>
-  <li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能 </li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>服务器启动新的greenlet用来处理长轮询逻辑</li>
+  <li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能</li>
   <li>当有数据要发生的时候，greenlet唤醒，发送数据然后关闭连接</li>
 </ul>
 
 <p>用伪代码，它看起来和同步版本完全一样：</p>
 
-<pre><code>def handle_request(request):
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
     # 如果这里没有数据, greenlet 就会休眠
     # 然后切换到其他greenlet执行
     data = get_more_data(request)
     return make_response(data)
 </code></pre>
+</div>
 
 <p>为什么greenlets很重要？</p>
 
@@ -205,20 +252,21 @@
 <p>做上下文切换的另一种方法是使用回调。以长轮询（long-polling）为例：</p>
 
 <ul>
-  <li>客户端打开HTTP连接到服务器，以获得更多的数据 </li>
-  <li>服务器发现有没有数据发送 </li>
-  <li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数 </li>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>服务器发现有没有数据发送</li>
+  <li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数</li>
   <li>服务器发送响应的回调函数，并关闭连接</li>
 </ul>
 
 <p>在伪代码：</p>
 
-<pre><code>def handle_request(request):
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
     get_more_data(request, callback=on_data)
 
 def on_data(request):
     send_response(request, make_response(data))
 </code></pre>
+</div>
 
 <p>正如你看到的，工作流是相似的，但代码结构有所不同。</p>
 
@@ -229,15 +277,15 @@ def on_data(request):
 <p>有不同的方法来完善使用回调的情况：</p>
 
 <ul>
-  <li>使用futures </li>
+  <li>使用futures</li>
   <li>使用generators</li>
 </ul>
 
 <p>什么是Futures？首先，Futures是一个函数的返回值，它是一个对象，它有以下几个属性：</p>
 
 <ul>
-  <li>函数执行的状态（idling, running，停止等）  </li>
-  <li>返回值（如果函数尚未执行，可能是空的）  </li>
+  <li>函数执行的状态（idling, running，停止等）</li>
+  <li>返回值（如果函数尚未执行，可能是空的）</li>
   <li>各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</li>
 </ul>
 
@@ -247,11 +295,12 @@ def on_data(request):
 
 <p>Python生成器也可让写异步程序的程序员更快乐一点。我们还是看长轮询的例子，但这次我们基于生成器（请注意，从Python 3.3开始会允许从生成器返回值）：</p>
 
-<pre><code>@coroutine
+<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
 def handle_request(request):
     data = yield get_more_data(request)
     return make_response(data)
 </code></pre>
+</div>
 
 <p>正如你可以看到，生成器允许编写的异步代码有点像同步方式。查看 <a href="http://www.python.org/dev/peps/pep-0342/">PEP 342</a> 获取的更多信息。</p>
 
@@ -259,7 +308,7 @@ def handle_request(request):
 
 <p>看下面的例子：</p>
 
-<pre><code>@coroutine
+<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
 def get_mode_data(request):
     data = yield make_db_query(request.user_id)
     return data
@@ -268,6 +317,7 @@ def process_request(request):
     data = get_more_data(request)
     return data
 </code></pre>
+</div>
 
 <p>这行代码不会得到预期的效果，在python调用生成器函数返回的生成器器对象不包含执行的内容。在这种情况下，process_request也应该变为为异步用coroutine装饰器封装并且应该从get_more_data产生。另一种方法 - 使用框架功能运行异步函数（如通过回调或Future回调）的能力。</p>
 
@@ -296,11 +346,11 @@ def process_request(request):
 <p>3,Tornado是的我最终选择的框架。有几个原因：</p>
 
 <ul>
-  <li>快 </li>
-  <li>可预测的 </li>
-  <li>更符合Python的风格 </li>
-  <li>相对较小 </li>
-  <li>开发活跃 </li>
+  <li>快</li>
+  <li>可预测的</li>
+  <li>更符合Python的风格</li>
+  <li>相对较小</li>
+  <li>开发活跃</li>
   <li>源代码很容易阅读和理解</li>
 </ul>
 
@@ -326,7 +376,7 @@ def process_request(request):
 
 <p>这里是基于sockjs-tornado的简单聊天例子：</p>
 
-<pre><code>class ChatConnection(sockjs.tornado.SockJSConnection):
+<div class="highlighter-rouge"><pre class="highlight"><code>class ChatConnection(sockjs.tornado.SockJSConnection):
     participants = set()
 
     def on_open(self, info):
@@ -340,6 +390,7 @@ def process_request(request):
         self.participants.remove(self)
         self.broadcast(self.participants, "Someone left.")
 </code></pre>
+</div>
 
 <p>为了举例，聊天不会有任何的内部协议或认证 - 它只是广播消息发送给所有的参与者。</p>
 
@@ -348,9 +399,9 @@ def process_request(request):
 <p>逻辑是非常简单的：</p>
 
 <ul>
-  <li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open </li>
-  <li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。 </li>
-  <li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者 </li>
+  <li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open</li>
+  <li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。</li>
+  <li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者</li>
   <li>如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</li>
 </ul>
 
@@ -382,7 +433,7 @@ def process_request(request):
 <p>有两种方法来整合实时部分：</p>
 
 <ul>
-  <li>在同一进程 </li>
+  <li>在同一进程</li>
   <li>不在同一进程</li>
 </ul>
 
@@ -416,7 +467,7 @@ def process_request(request):
 
 <p>这最简单的推送broker：</p>
 
-<pre><code>class BrokerConnection(sockjs.tornado.SockJSConnection):
+<div class="highlighter-rouge"><pre class="highlight"><code>class BrokerConnection(sockjs.tornado.SockJSConnection):
     participants = set()
 
     def on_open(self, info):
@@ -441,6 +492,7 @@ if __name__ == '__main__':
     # .. subscribe to key
     rclient.subscribe(v.key, BrokerConnection.pubsub)
 </code></pre>
+</div>
 
 <p>完整的 <a href="https://gist.github.com/mrjoes/3284402">例子在这里</a> 。</p>
 
@@ -470,15 +522,17 @@ if __name__ == '__main__':
 
 <p>认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：</p>
 
-<pre><code>{"msg": "auth", "token": "[encrypted-token-in-base64]"}
-</code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth"</span><span class="p">,</span><span class="w"> </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[encrypted-token-in-base64]"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
 
 <p>有效载荷是加密过的令牌，由Flask应用所产生。有一种方法来生成令牌：获得当前用户ID，用时间戳和一些使用共享密钥加密对称算法（如3DES或AES）随机添加一些东西。Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询得到任何有关用户的必要的信息。</p>
 
 <p>房间列表可以类似表示为：</p>
 
-<pre><code>{"msg": "room_list", "rooms": [{"name": "room1"}, {"name": "room2"}]}
-</code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room_list"</span><span class="p">,</span><span class="w"> </span><span class="nt">"rooms"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room1"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room2"</span><span class="p">}]}</span><span class="w">
+</span></code></pre>
+</div>
 
 <p>依此类推。</p>
 
@@ -486,7 +540,7 @@ if __name__ == '__main__':
 
 <p>Connection类看起来像这个样子（部分）：</p>
 
-<pre><code>class GameConnection(SockJSConnection):
+<div class="highlighter-rouge"><pre class="highlight"><code>class GameConnection(SockJSConnection):
     def on_open(self, info):
         self.authenticated = False
 
@@ -516,6 +570,7 @@ if __name__ == '__main__':
     def send_error(self, text):
         self.send(json.dumps({'msg': 'error', 'text': text}))
 </code></pre>
+</div>
 
 <p>房间可以存储在一个字典里，其中key是房间ID，value是房间对象。</p>
 
@@ -556,45 +611,45 @@ if __name__ == '__main__':
 
 <ul>
   <li>
-    <p>优点 </p>
+    <p>优点</p>
 
     <p>所有的事情看起来是一致的<br />
 无需担心跨域脚本问题<br />
 一般可以工作在有防火墙限制的环境</p>
   </li>
   <li>
-    <p>缺点 </p>
+    <p>缺点</p>
 
     <p>一些透明HTTP代理服务器不兼容</p>
   </li>
 </ul>
 
-<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口 </p>
+<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口</p>
 
 <ul>
   <li>
-    <p>优点 </p>
+    <p>优点</p>
 
-    <p>和透明代理更加兼容 </p>
+    <p>和透明代理更加兼容</p>
   </li>
   <li>
-    <p>缺点 </p>
+    <p>缺点</p>
 
     <p>跨域脚本问题（不是每个浏览器都支持CORS ）<br />
-很有可能被防火墙阻止 </p>
+很有可能被防火墙阻止</p>
   </li>
 </ul>
 
-<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com） </p>
+<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com）</p>
 
 <ul>
   <li>
-    <p>优点 </p>
+    <p>优点</p>
 
     <p>可以将实时部分从主站点分离出来（无需使用相同的负载均衡）</p>
   </li>
   <li>
-    <p>缺点 </p>
+    <p>缺点</p>
 
     <p>跨域脚本问题<br />
 会碰到行为古怪的透明代理</p>
@@ -643,81 +698,42 @@ if __name__ == '__main__':
 
 <p>P.S. 图表是在 <a href="http://draw.io/">draw.io</a> 上完成的-我不得不提一下这个优秀且免费的服务。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2014/08/05/python-realtime.html">http://http://uwebs.tk/archives/2014/08/05/python-realtime.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

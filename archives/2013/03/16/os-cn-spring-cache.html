@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="java,spring,cache" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 注释驱动的 Spring cache 缓存介绍</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>注释驱动的 Spring cache 缓存介绍</title>
+  <meta name="description" content="概述">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/03/16/os-cn-spring-cache.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 注释驱动的 Spring cache 缓存介绍</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/03/16/os-cn-spring-cache.html">注释驱动的 Spring cache 缓存介绍</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-03-16</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><strong>概述</strong></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">注释驱动的 Spring cache 缓存介绍</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><strong>概述</strong></p>
 
 <p>Spring 3.1引入了激动人心的基于注释（annotation）的缓存（cache）技术，它本质上不是一个具体的缓存实现方案（例如EHCache 或者OSCache），而是一个对缓存使用的抽象，通过在既有代码中添加少量它定义的各种annotation，即能够达到缓存方法的返回对象的效果。</p>
 
@@ -52,9 +97,9 @@
 <p>首先定义一个实体类：账号类，具备基本的 id 和 name 属性，且具备 getter 和 setter 方法</p>
 
 <p><strong><em>清单 1. Account.java</em></strong>
-     package cacheOfAnno; </p>
+     package cacheOfAnno;</p>
 
-<pre><code> public class Account { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public class Account { 
    private int id; 
    private String name; 
  
@@ -75,12 +120,13 @@
    } 
  }
 </code></pre>
+</div>
 
 <p>然后定义一个缓存管理器，这个管理器负责实现缓存逻辑，支持对象的增加、修改和删除，支持值对象的泛型。如下：</p>
 
 <p><strong><em>清单 2. MyCacheManager.java</em></strong></p>
 
-<pre><code> package oldcache; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package oldcache; 
  
  import java.util.Map; 
  import java.util.concurrent.ConcurrentHashMap; 
@@ -108,12 +154,13 @@
    } 
  }
 </code></pre>
+</div>
 
 <p>好，现在我们有了实体类和一个缓存管理器，还需要一个提供账号查询的服务类，此服务类使用缓存管理器来支持账号查询缓存，如下：</p>
 
 <p><strong><em>清单 3. MyAccountService.java</em></strong></p>
 
-<pre><code> package oldcache; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package oldcache; 
  
  import cacheOfAnno.Account; 
  
@@ -147,12 +194,13 @@
    } 
  }
 </code></pre>
+</div>
 
 <p>现在我们开始写一个测试类，用于测试刚才的缓存是否有效</p>
 
 <p><strong><em>清单 4. Main.java</em></strong></p>
 
-<pre><code> package oldcache; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package oldcache; 
  
  public class Main { 
  
@@ -172,17 +220,19 @@
  
  }
 </code></pre>
+</div>
 
 <p>按照分析，执行结果应该是：首先从数据库查询，然后直接返回缓存中的结果，重置缓存后，应该先从数据库查询，然后返回缓存中的结果，实际的执行结果如下：</p>
 
 <p><strong><em>清单 5. 运行结果</em></strong></p>
 
-<pre><code> real querying db...somebody// 第一次从数据库加载
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...somebody// 第一次从数据库加载
  get from cache...somebody// 第二次从缓存加载
  after reload...// 清空缓存
  real querying db...somebody// 又从数据库加载
  get from cache...somebody// 从缓存加载
 </code></pre>
+</div>
 
 <p>可以看出我们的缓存起效了，但是这种自定义的缓存方案有如下劣势：</p>
 
@@ -215,7 +265,7 @@
 
 <p><strong><em>清单 6. AccountService.java</em></strong></p>
 
-<pre><code> package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package cacheOfAnno; 
  
  import org.springframework.cache.annotation.CacheEvict; 
  import org.springframework.cache.annotation.Cacheable; 
@@ -234,6 +284,7 @@
    } 
  }
 </code></pre>
+</div>
 
 <p>注意，此类的 getAccountByName 方法上有一个注释 annotation，即@Cacheable(value=”accountCache”)，这个注释的意思是，当调用这个方法的时候，会从一个名叫accountCache的缓存中查询，如果没有，则执行实际的方法（即查询数据库），并将执行的结果存入缓存中，否则返回缓存中的对象。这里的缓存中的key 就是参数 userName，value 就是 Account 对象。“accountCache”缓存是在spring*.xml 中定义的名称。</p>
 
@@ -241,7 +292,7 @@
 
 <p><strong><em>清单 7. Spring-cache-anno.xml</em></strong></p>
 
-<pre><code> &lt;beans xmlns="http://www.springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code> &lt;beans xmlns="http://www.springframework.org/schema/beans"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:cache="http://www.springframework.org/schema/cache"
     xmlns:p="http://www.springframework.org/schema/p"
@@ -276,14 +327,15 @@ http://www.springframework.org/schema/cache/spring-cache.xsd"&gt;
    &lt;/bean&gt; 
  &lt;/beans&gt;
 </code></pre>
+</div>
 
-<p>注意这个 spring 配置文件有一个关键的支持缓存的配置项：<code>&lt;cache:annotation-driven /&gt;，</code>这个配置项缺省使用了一个名字叫 cacheManager 的缓存管理器，这个缓存管理器有一个 spring 的缺省实现，即org.springframework.cache.support.SimpleCacheManager，这个缓存管理器实现了我们刚刚自定义的缓存管理器的逻辑，它需要配置一个属性caches，即此缓存管理器管理的缓存集合，除了缺省的名字叫 default 的缓存，我们还自定义了一个名字叫 accountCache 的缓存，使用了缺省的内存存储方案 ConcurrentMapCacheFactoryBean，它是基于 java.util.concurrent.ConcurrentHashMap 的一个内存缓存实现方案。</p>
+<p>注意这个 spring 配置文件有一个关键的支持缓存的配置项：<code class="highlighter-rouge">&lt;cache:annotation-driven /&gt;，</code>这个配置项缺省使用了一个名字叫 cacheManager 的缓存管理器，这个缓存管理器有一个 spring 的缺省实现，即org.springframework.cache.support.SimpleCacheManager，这个缓存管理器实现了我们刚刚自定义的缓存管理器的逻辑，它需要配置一个属性caches，即此缓存管理器管理的缓存集合，除了缺省的名字叫 default 的缓存，我们还自定义了一个名字叫 accountCache 的缓存，使用了缺省的内存存储方案 ConcurrentMapCacheFactoryBean，它是基于 java.util.concurrent.ConcurrentHashMap 的一个内存缓存实现方案。</p>
 
 <p>OK，现在我们具备了测试条件，测试代码如下：</p>
 
 <p><strong><em>清单 8. Main.java</em></strong></p>
 
-<pre><code> package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package cacheOfAnno; 
  
  import org.springframework.context.ApplicationContext; 
  import org.springframework.context.support.ClassPathXmlApplicationContext; 
@@ -304,15 +356,17 @@ http://www.springframework.org/schema/cache/spring-cache.xsd"&gt;
    } 
  }
 </code></pre>
+</div>
 
 <p>上面的测试代码主要进行了两次查询，第一次应该会查询数据库，第二次应该返回缓存，不再查数据库，我们执行一下，看看结果</p>
 
 <p><strong><em>清单 9. 执行结果</em></strong></p>
 
-<pre><code> first query...real query account.somebody// 第一次查询
+<div class="highlighter-rouge"><pre class="highlight"><code> first query...real query account.somebody// 第一次查询
  real querying db...somebody// 对数据库进行了查询
  second query...// 第二次查询，没有打印数据库查询日志，直接返回了缓存中的结果
 </code></pre>
+</div>
 
 <p>可以看出我们设置的基于注释的缓存起作用了，而在 AccountService.java 的代码中，我们没有看到任何的缓存逻辑代码，只有一行注释：@Cacheable(value=”accountCache”)，就实现了基本的缓存方案，是不是很强大？</p>
 
@@ -329,7 +383,7 @@ http://www.springframework.org/schema/cache/spring-cache.xsd"&gt;
 
 <p><strong><em>清单 10. AccountService.java</em></strong></p>
 
-<pre><code>package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package cacheOfAnno; 
  
 import org.springframework.cache.annotation.CacheEvict; 
 import org.springframework.cache.annotation.Cacheable; 
@@ -359,10 +413,11 @@ public class AccountService {
   } 
 }
 </code></pre>
+</div>
 
 <p><strong><em>清单 11. Main.java</em></strong></p>
 
-<pre><code> package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package cacheOfAnno; 
  
  import org.springframework.context.ApplicationContext; 
  import org.springframework.context.support.ClassPathXmlApplicationContext; 
@@ -401,10 +456,11 @@ public class AccountService {
    } 
  }
 </code></pre>
+</div>
 
 <p><strong><em>清单 12. 运行结果</em></strong></p>
 
-<pre><code> first query...real querying db...somebody 
+<div class="highlighter-rouge"><pre class="highlight"><code> first query...real querying db...somebody 
  second query... 
  start testing clear cache... 
  real querying db...somebody1 
@@ -414,6 +470,7 @@ public class AccountService {
  real querying db...somebody1 
  real querying db...somebody2
 </code></pre>
+</div>
 
 <p>结果和我们期望的一致，所以，我们可以看出，spring cache 清空缓存的方法很简单，就是通过 @CacheEvict 注释来标记要清空缓存的方法，当这个方法被调用后，即会清空缓存。注意其中一个@CacheEvict(value=”accountCache”,key=”#account.getName()”)，其中的 Key是用来指定缓存的 key 的，这里因为我们保存的时候用的是 account 对象的 name 字段，所以这里还需要从参数 account 对象中获取 name 的值来作为 key，前面的# 号代表这是一个 SpEL 表达式，此表达式可以遍历方法的参数对象，具体语法可以参考 Spring 的相关文档手册。</p>
 
@@ -425,29 +482,32 @@ public class AccountService {
 
 <p><strong><em>清单 13. AccountService.java（getAccountByName 方法修订，支持条件）</em></strong></p>
 
-<pre><code> @Cacheable(value="accountCache",condition="#userName.length() &lt;= 4")// 缓存名叫 accountCache 
+<div class="highlighter-rouge"><pre class="highlight"><code> @Cacheable(value="accountCache",condition="#userName.length() &lt;= 4")// 缓存名叫 accountCache 
  public Account getAccountByName(String userName) { 
  // 方法内部实现不考虑缓存逻辑，直接实现业务
  return getFromDB(userName); 
  }
 </code></pre>
+</div>
 
 <p>注意其中的 condition=”#userName.length() &lt;=4”，这里使用了 SpEL 表达式访问了参数 userName 对象的 length() 方法，条件表达式返回一个布尔值，true/false，当条件为true，则进行缓存操作，否则直接调用方法执行的返回结果。</p>
 
 <p><strong><em>清单 14. 测试方法</em></strong></p>
 
-<pre><code> s.getAccountByName("somebody");// 长度大于 4，不会被缓存
+<div class="highlighter-rouge"><pre class="highlight"><code> s.getAccountByName("somebody");// 长度大于 4，不会被缓存
  s.getAccountByName("sbd");// 长度小于 4，会被缓存
  s.getAccountByName("somebody");// 还是查询数据库
  s.getAccountByName("sbd");// 会从缓存返回
 </code></pre>
+</div>
 
 <p><strong><em>清单 15. 运行结果</em></strong></p>
 
-<pre><code> real querying db...somebody 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...somebody 
  real querying db...sbd 
  real querying db...somebody
 </code></pre>
+</div>
 
 <p>可见对长度大于 4 的账号名 (somebody) 没有缓存，每次都查询数据库。</p>
 
@@ -457,7 +517,7 @@ public class AccountService {
 
 <p><strong><em>清单 16. Account.java（增加 password 属性）</em></strong></p>
 
-<pre><code> private String password; 
+<div class="highlighter-rouge"><pre class="highlight"><code> private String password; 
  public String getPassword() { 
    return password; 
  } 
@@ -465,23 +525,25 @@ public class AccountService {
    this.password = password; 
  }
 </code></pre>
+</div>
 
 <p><strong><em>清单 17. AccountService.java（增加 getAccount 方法，支持组合 key）</em></strong></p>
 
-<pre><code> @Cacheable(value="accountCache",key="#userName.concat(#password)") 
+<div class="highlighter-rouge"><pre class="highlight"><code> @Cacheable(value="accountCache",key="#userName.concat(#password)") 
  public Account getAccount(String userName,String password,boolean sendLog) { 
    // 方法内部实现不考虑缓存逻辑，直接实现业务
    return getFromDB(userName,password); 
  
  }
 </code></pre>
+</div>
 
 <p>注意上面的 key 属性，其中引用了方法的两个参数 userName 和 password，而
 sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 18. Main.java</em></strong></p>
 
-<pre><code> public static void main(String[] args) { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public static void main(String[] args) { 
    ApplicationContext context = new ClassPathXmlApplicationContext( 
       "spring-cache-anno.xml");// 加载 spring 配置文件
  
@@ -493,14 +555,16 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    s.getAccount("somebody", "654321", true);// 应该走缓存
  }
 </code></pre>
+</div>
 
 <p>上述测试，是采用了相同的账号，不同的密码组合进行查询，那么一共有两种组合情况，所以针对数据库的查询应该只有两次。</p>
 
 <p><strong><em>清单 19. 运行结果</em></strong></p>
 
-<pre><code> real querying db...userName=somebody password=123456 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...userName=somebody password=123456 
  real querying db...userName=somebody password=654321
 </code></pre>
+</div>
 
 <p>和我们预期的一致。</p>
 
@@ -512,7 +576,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 20. AccountService.java</em></strong></p>
 
-<pre><code> @Cacheable(value="accountCache")// 使用了一个缓存名叫 accountCache 
+<div class="highlighter-rouge"><pre class="highlight"><code> @Cacheable(value="accountCache")// 使用了一个缓存名叫 accountCache 
  public Account getAccountByName(String userName) { 
    // 方法内部实现不考虑缓存逻辑，直接实现业务
    return getFromDB(userName); 
@@ -526,10 +590,11 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    return account; 
  }
 </code></pre>
+</div>
 
 <p><strong><em>清单 21. Main.java</em></strong></p>
 
-<pre><code>public static void main(String[] args) { 
+<div class="highlighter-rouge"><pre class="highlight"><code>public static void main(String[] args) { 
    ApplicationContext context = new ClassPathXmlApplicationContext( 
       "spring-cache-anno.xml");// 加载 spring 配置文件
  
@@ -544,16 +609,18 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    System.out.println(account.getPassword()); 
 }
 </code></pre>
+</div>
 
 <p>如上面的代码所示，我们首先用 getAccountByName 方法查询一个人 someone 的账号，这个时候会查询数据库一次，但是也记录到缓存中了。然后我们修改了密码，调用了 updateAccount 方法，这个时候会执行数据库的更新操作且记录到缓存，我们再次修改密码并调用 updateAccount 方法，然后通过 getAccountByName 方法查询，这个时候，由于缓存中已经有数据，所以不会查询数据库，而是直接返回最新的数据，所以打印的密码应该是“321”</p>
 
 <p><strong><em>清单 22. 运行结果</em></strong></p>
 
-<pre><code> real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...someone 
  real updating db...someone 
  real updating db...someone 
  321
 </code></pre>
+</div>
 
 <p>和分析的一样，只查询了一次数据库，更新了两次数据库，最终的结果是最新的密码。说明 @CachePut 确实可以保证方法被执行，且结果一定会被缓存。</p>
 
@@ -698,7 +765,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 23. MyCacheManager</em></strong></p>
 
-<pre><code>package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code>package cacheOfAnno; 
 
  import java.util.Collection; 
 
@@ -721,12 +788,13 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
  } 
 </code></pre>
+</div>
 
 <p>上面的自定义的 CacheManager 实际继承了 spring 内置的 AbstractCacheManager，实际上仅仅管理 MyCache 类的实例。</p>
 
 <p><strong><em>清单 24. MyCache</em></strong></p>
 
-<pre><code> package cacheOfAnno; 
+<div class="highlighter-rouge"><pre class="highlight"><code> package cacheOfAnno; 
 
  import java.util.HashMap; 
  import java.util.Map; 
@@ -785,6 +853,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    } 
  } 
 </code></pre>
+</div>
 
 <p>上面的自定义缓存只实现了很简单的逻辑，但这是我们自己做的，也很令人激动是不是，主要看 get 和 put 方法，其中的 get 方法留了一个后门，即所有的从缓存查询返回的对象都将其 password 字段设置为一个特殊的值，这样我们等下就能演示“我们的缓存确实在起作用！”了。</p>
 
@@ -792,7 +861,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 25. Spring-cache-anno.xml</em></strong></p>
 
-<pre><code>&lt;beans xmlns="http://www.springframework.org/schema/beans"
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:cache="http://www.springframework.org/schema/cache"
    xmlns:p="http://www.springframework.org/schema/p"  
@@ -817,6 +886,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    &lt;/bean&gt; 
 &lt;/beans&gt; 
 </code></pre>
+</div>
 
 <p>注意上面配置文件的黑体字，这些配置说明了我们的 cacheManager 和我们自己的 cache 实例。</p>
 
@@ -824,7 +894,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 26. Main.java</em></strong></p>
 
-<pre><code> public static void main(String[] args) { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public static void main(String[] args) { 
    ApplicationContext context = new ClassPathXmlApplicationContext( 
       "spring-cache-anno.xml");// 加载 spring 配置文件
   
@@ -836,15 +906,17 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    System.out.println("passwd="+account.getPassword()); 
  } 
 </code></pre>
+</div>
 
 <p>上面的测试代码主要是先调用 getAccountByName 进行一次查询，这会调用数据库查询，然后缓存到 mycache 中，然后我打印密码，应该是空的；下面我再次查询 someone 的账号，这个时候会从 mycache 中返回缓存的实例，记得上面的后门么？我们修改了密码，所以这个时候打印的密码应该是一个特殊的值</p>
 
 <p><strong><em>清单 27. 运行结果</em></strong></p>
 
-<pre><code> real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...someone 
  passwd=null 
  passwd=from mycache:accountCache 
 </code></pre>
+</div>
 
 <p>结果符合预期，即第一次查询数据库，且密码为空，第二次打印了一个特殊的密码。说明我们的 myCache 起作用了。</p>
 
@@ -856,7 +928,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 28. AccountService.java</em></strong></p>
 
-<pre><code> public Account getAccountByName2(String userName) { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public Account getAccountByName2(String userName) { 
    return this.getAccountByName(userName); 
  } 
 
@@ -866,12 +938,13 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    return getFromDB(userName); 
  } 
 </code></pre>
+</div>
 
 <p>上面我们定义了一个新的方法 getAccountByName2，其自身调用了 getAccountByName 方法，这个时候，发生的是内部调用（this），所以没有走 proxy，导致 spring cache 失效</p>
 
 <p><strong><em>清单 29. Main.java</em></strong></p>
 
-<pre><code> public static void main(String[] args) { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public static void main(String[] args) { 
    ApplicationContext context = new ClassPathXmlApplicationContext( 
       "spring-cache-anno.xml");// 加载 spring 配置文件
   
@@ -882,13 +955,15 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    s.getAccountByName2("someone"); 
  } 
 </code></pre>
+</div>
 
 <p><strong><em>清单 30. 运行结果</em></strong></p>
 
-<pre><code> real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...someone 
  real querying db...someone 
  real querying db...someone 
 </code></pre>
+</div>
 
 <p>可见，结果是每次都查询数据库，缓存没起作用。要避免这个问题，就是要避免对缓存方法的内部调用，或者避免使用基于 proxy 的 AOP 模式，可以使用基于 aspectJ 的 AOP 模式来解决这个问题。</p>
 
@@ -898,17 +973,18 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 31. AccountService.java</em></strong></p>
 
-<pre><code> @CacheEvict(value="accountCache",allEntries=true)// 清空 accountCache 缓存
+<div class="highlighter-rouge"><pre class="highlight"><code> @CacheEvict(value="accountCache",allEntries=true)// 清空 accountCache 缓存
  public void reload() { 
    throw new RuntimeException(); 
  } 
 </code></pre>
+</div>
 
 <p>注意上面的代码，我们在 reload 的时候抛出了运行期异常，这会导致清空缓存失败。</p>
 
 <p><strong><em>清单 32. Main.java</em></strong></p>
 
-<pre><code> public static void main(String[] args) { 
+<div class="highlighter-rouge"><pre class="highlight"><code> public static void main(String[] args) { 
    ApplicationContext context = new ClassPathXmlApplicationContext( 
       "spring-cache-anno.xml");// 加载 spring 配置文件
   
@@ -923,24 +999,27 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
    s.getAccountByName("someone"); 
  } 
 </code></pre>
+</div>
 
 <p>上面的测试代码先查询了两次，然后reload，然后再查询一次，结果应该是只有第一次查询走了数据库，其他两次查询都从缓存，第三次也走缓存因为 reload 失败了。</p>
 
 <p><strong><em>清单 33. 运行结果</em></strong></p>
 
-<pre><code>real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code>real querying db...someone 
 </code></pre>
+</div>
 
 <p>和预期一样。那么我们如何避免这个问题呢？我们可以用 @CacheEvict 注释提供的 beforeInvocation 属性，将其设置为true，这样，在方法执行前我们的缓存就被清空了。可以确保缓存被清空。</p>
 
 <p><strong><em>清单 34. AccountService.java</em></strong></p>
 
-<pre><code> @CacheEvict(value="accountCache",allEntries=true,beforeInvocation=true)
+<div class="highlighter-rouge"><pre class="highlight"><code> @CacheEvict(value="accountCache",allEntries=true,beforeInvocation=true)
  // 清空 accountCache 缓存
  public void reload() { 
    throw new RuntimeException(); 
  } 
 </code></pre>
+</div>
 
 <p>注意上面的代码，我们在 @CacheEvict 注释中加了 beforeInvocation 属性，确保缓存被清空。</p>
 
@@ -948,9 +1027,10 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 35. 运行结果</em></strong></p>
 
-<pre><code> real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...someone 
  real querying db...someone 
 </code></pre>
+</div>
 
 <p>这样，第一次和第三次都从数据库取数据了，缓存清空有效。</p>
 
@@ -968,7 +1048,7 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 36. Spring-cache-anno.xml</em></strong></p>
 
-<pre><code> &lt;beans xmlns="http://www.springframework.org/schema/beans" 
+<div class="highlighter-rouge"><pre class="highlight"><code> &lt;beans xmlns="http://www.springframework.org/schema/beans" 
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:cache="http://www.springframework.org/schema/cache"
    xmlns:p="http://www.springframework.org/schema/p"  
@@ -1006,15 +1086,17 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
   
  &lt;/beans&gt; 
 </code></pre>
+</div>
 
 <p>注意以前的 cacheManager 变为了 simpleCacheManager，且没有配置 accountCache 实例，后面的 cacheManager 的实例是一个CompositeCacheManager，他利用了前面的 simpleCacheManager 进行查询，如果查询不到，则根据标志位 fallbackToNoOpCache 来判断是否不做任何缓存操作。</p>
 
 <p><strong><em>清单 37. 运行结果</em></strong></p>
 
-<pre><code> real querying db...someone 
+<div class="highlighter-rouge"><pre class="highlight"><code> real querying db...someone 
  real querying db...someone 
  real querying db...someone 
 </code></pre>
+</div>
 
 <p>可以看出，缓存失效。每次都查询数据库。因为我们没有配置它需要的 accountCache 实例。</p>
 
@@ -1022,12 +1104,13 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p><strong><em>清单 38. 运行结果</em></strong></p>
 
-<pre><code> Exception in thread "main" java.lang.IllegalArgumentException: 
+<div class="highlighter-rouge"><pre class="highlight"><code> Exception in thread "main" java.lang.IllegalArgumentException: 
    Cannot find cache named [accountCache] for CacheableOperation 
      [public cacheOfAnno.Account 
      cacheOfAnno.AccountService.getAccountByName(java.lang.String)]
      caches=[accountCache] | condition='' | key=''
 </code></pre>
+</div>
 
 <p>可见，在找不到 accountCache，且没有将 fallbackToNoOpCache 设置为 true 的情况下，系统会抛出异常。</p>
 
@@ -1035,81 +1118,42 @@ sendLog 属性没有考虑，因为其对缓存没有影响。</p>
 
 <p>总之，注释驱动的 spring cache 能够极大的减少我们编写常见缓存的代码量，通过少量的注释标签和配置文件，即可达到使代码具备缓存的能力。且具备很好的灵活性和扩展性。但是我们也应该看到，spring cache 由于急于 spring AOP 技术，尤其是动态的 proxy 技术，导致其不能很好的支持方法的内部调用或者非 public 方法的缓存设置，当然这都是可以解决的问题，通过学习这个技术，我们能够认识到，AOP 技术的应用还是很广泛的，如果有兴趣，我相信你也能基于 AOP 实现自己的缓存方案。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/16/os-cn-spring-cache.html">http://http://uwebs.tk/archives/2013/03/16/os-cn-spring-cache.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

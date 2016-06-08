@@ -1,43 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 使用 Python 进行稳定可靠的文件操作</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>使用 Python 进行稳定可靠的文件操作</title>
+  <meta name="description" content="原文出处：ckauhaus   译文出处：oschina">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/08/01/reliable-file-updates-with-python.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 使用 Python 进行稳定可靠的文件操作</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/08/01/reliable-file-updates-with-python.html">使用 Python 进行稳定可靠的文件操作</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-08-01</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>原文出处：<a href="http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/">ckauhaus</a>   
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">使用 Python 进行稳定可靠的文件操作</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>原文出处：<a href="http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/">ckauhaus</a>   
 译文出处：<a href="http://www.oschina.net/translate/reliable-file-updates-with-python">oschina</a></p>
 
 <p>程序需要更新文件。虽然大部分程序员知道在执行I/O的时候会发生不可预期的事情，但是我经常看到一些异常幼稚的代码。在本文中，我想要分享一些如何在Python代码中改善I/O可靠性的见解。</p>
 
 <p>考虑下述Python代码片段。对文件中的数据进行某些操作，然后将结果保存回文件中：</p>
 
-<pre><code>with open(filename) as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(filename) as f:
     input = f.read()
 output = do_something(input)
 with open(filename, 'w') as f:
     f.write(output)
 </code></pre>
+</div>
 
 <p>看起来很简单吧？可能看起来并不像乍一看这么简单。我在产品服务器中调试应用，经常会出现奇怪的行为。</p>
 
@@ -91,16 +137,17 @@ with open(filename, 'w') as f:
 
 <p>这可能是最基本的模式。在下述例子中，假设的域模型代码读数据，执行一些计算，然后以写模式重新打开存在的文件：</p>
 
-<pre><code>with open(filename, 'r') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(filename, 'r') as f:
    model.read(f)
 model.process()
 with open(filename, 'w') as f:
    model.write(f)
 </code></pre>
+</div>
 
 <p>此模式的一个变种以读写模式打开文件（Python中的“加”模式），寻找到开始的位置，显式调用truncate()，重写文件内容。</p>
 
-<pre><code>with open(filename, 'a+') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(filename, 'a+') as f:
    f.seek(0)
    model.input(f.read())
    model.compute()
@@ -108,6 +155,7 @@ with open(filename, 'w') as f:
    f.truncate()
    f.write(model.output())
 </code></pre>
+</div>
 
 <p>该变种的优势是只打开文件一次，始终保持文件打开。举例来说，这样可以简化加锁。</p>
 
@@ -115,12 +163,13 @@ with open(filename, 'w') as f:
 
 <p>另外一种广泛使用的模式是将新内容写到临时文件，之后替换原始文件：</p>
 
-<pre><code>with tempfile.NamedTemporaryFile(
+<div class="highlighter-rouge"><pre class="highlight"><code>with tempfile.NamedTemporaryFile(
       'w', dir=os.path.dirname(filename), delete=False) as tf:
    tf.write(model.output())
    tempname = tf.name
 os.rename(tempname, filename)
 </code></pre>
+</div>
 
 <p>该方法与截断-写方法相比对错误更具有鲁棒性。请看下面对原子性和一致性的讨论。很多应用使用该方法。</p>
 
@@ -130,9 +179,10 @@ os.rename(tempname, filename)
 
 <p>第三种模式就是追加新数据到已存在的文件：</p>
 
-<pre><code>with open(filename, 'a') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(filename, 'a') as f:
    f.write(model.output())
 </code></pre>
+</div>
 
 <p>这个模式用来写日志文件和其它累积处理数据的任务。从技术上讲，它的显著特点就是极其简单。一个有趣的扩展应用就是常规操作中只通过追加操作更新，然后定期重新整理文件，使之更紧凑。</p>
 
@@ -140,18 +190,20 @@ os.rename(tempname, filename)
 
 <p>这里我们将目录做为逻辑数据存储，为每条记录创建新的唯一命名的文件：</p>
 
-<pre><code>with open(unique_filename(), 'w') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(unique_filename(), 'w') as f:
    f.write(model.output())
 </code></pre>
+</div>
 
 <p>该模式与附加模式一样具有累积的特点。一个巨大的优势是我们可以在文件名中放入少量元数据。举例来说，这可以用于传达处理状态的信息。spooldir模式的一个特别巧妙的实现是maildir格式。maildirs使用附加子目录的命名方案，以可靠的、无锁的方式执行更新操作。md和gocept.filestore库为maildir操作提供了方便的封装。</p>
 
 <p>如果你的文件名生成不能保证唯一的结果，甚至有可能要求文件必须实际上是新的。那么调用具有合适标志的低等级os.open()：</p>
 
-<pre><code>fd = os.open(filename, os.O_WRONLY | os.O_CREAT| os.O_EXCL, 0o666)
+<div class="highlighter-rouge"><pre class="highlight"><code>fd = os.open(filename, os.O_WRONLY | os.O_CREAT| os.O_EXCL, 0o666)
 with os.fdopen(fd, 'w') as f:
    f.write(...)
 </code></pre>
+</div>
 
 <p>在以O_EXCL方式打开文件后，我们用os.fdopen将原始的文件描述符转化为普通的Python文件对象。</p>
 
@@ -165,25 +217,27 @@ with os.fdopen(fd, 'w') as f:
 
 <p><strong>附加</strong>模式并不是原子性的，因为有附加不完整记录的风险。但是有个技巧可以使更新具有原子性：为每个写操作标注校验和。之后读日志的时候，忽略所有没有有效校验和的记录。以这种方式，只有完整的记录才会被处理。在下面的例子中，应用做周期性的测量，每次在日志中附加一行JSON记录。我们计算记录的字节表示形式的CRC32校验和，然后附加到同一行：</p>
 
-<pre><code>with open(logfile, 'ab') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(logfile, 'ab') as f:
     for i in range(3):
         measure = {'timestamp': time.time(), 'value': random.random()}
         record = json.dumps(measure).encode()
         checksum = '{:8x}'.format(zlib.crc32(record)).encode()
         f.write(record + b' ' + checksum + b'\n')
 </code></pre>
+</div>
 
 <p>该例子代码通过每次创建随机值模拟测量。</p>
 
-<pre><code>$ cat log
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cat log
 {"timestamp": 1373396987.258189, "value": 0.9360123151217828} 9495b87a
 {"timestamp": 1373396987.25825, "value": 0.40429005476999424} 149afc22
 {"timestamp": 1373396987.258291, "value": 0.232021160265939} d229d937
 </code></pre>
+</div>
 
 <p>想要处理这个日志文件，我们每次读一行记录，分离校验和，与读到的记录比较。</p>
 
-<pre><code>with open(logfile, 'rb') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(logfile, 'rb') as f:
     for line in f:
         record, checksum = line.strip().rsplit(b' ', 1)
         if checksum.decode() == '{:8x}'.format(zlib.crc32(record)):
@@ -191,32 +245,36 @@ with os.fdopen(fd, 'w') as f:
         else:
             print('checksum error for record {}'.format(record))
 </code></pre>
+</div>
 
 <p>现在我们通过截断最后一行模拟被截断的写操作：</p>
 
-<pre><code>$ cat log
+<div class="highlighter-rouge"><pre class="highlight"><code>$ cat log
 {"timestamp": 1373396987.258189, "value": 0.9360123151217828} 9495b87a
 {"timestamp": 1373396987.25825, "value": 0.40429005476999424} 149afc22
 {"timestamp": 1373396987.258291, "value": 0.23202
 </code></pre>
+</div>
 
 <p>当读日志的时候，最后不完整的一行被拒绝：</p>
 
-<pre><code>$ read_checksummed_log.py log
+<div class="highlighter-rouge"><pre class="highlight"><code>$ read_checksummed_log.py log
 read measure: {'timestamp': 1373396987.258189, 'value': 0.9360123151217828}
 read measure: {'timestamp': 1373396987.25825, 'value': 0.40429005476999424}
 checksum error for record b'{"timestamp": 1373396987.258291, "value":'
 </code></pre>
+</div>
 
 <p>添加校验和到日志记录的方法被用于大量应用，包括很多数据库系统。</p>
 
 <p><strong>spooldir</strong>中的单个文件也可以在每个文件中添加校验和。另外一个可能更简单的方法是借用写-替换模式：首先将文件写到一边，然后移到最终的位置。设计一个保护正在被消费者处理的文件的命名方案。在下面的例子中，所有以.tmp结尾的文件都会被读取程序忽略，因此在写操作的时候可以安全的使用。</p>
 
-<pre><code>newfile = generate_id()
+<div class="highlighter-rouge"><pre class="highlight"><code>newfile = generate_id()
 with open(newfile + '.tmp', 'w') as f:
    f.write(model.output())
 os.rename(newfile + '.tmp', newfile)
 </code></pre>
+</div>
 
 <p>最后，<strong>截断-写</strong>是非原子性的。很遗憾我不能提供满足原子性的变种。在执行完截取操作后，文件是空的，还没有新内容写入。如果并发的程序现在读文件或者有异常发生，程序中止，我们既看不久的版本也看不到新的版本。</p>
 
@@ -226,23 +284,25 @@ os.rename(newfile + '.tmp', newfile)
 
 <p>写程序的例子:</p>
 
-<pre><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
    fcntl.flock(lockfile, fcntl.LOCK_EX)
    model.update(dirname)
 </code></pre>
+</div>
 
 <p>读程序的例子:</p>
 
-<pre><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(os.path.join(dirname, '.lock'), 'a+') as lockfile:
    fcntl.flock(lockfile, fcntl.LOCK_SH)
    model.readall(dirname)
 </code></pre>
+</div>
 
 <p>该方法只有控制所有读程序才生效。因为每次只有一个写程序活动（独占锁阻塞所有共享锁），所有该方法的可扩展性有限。</p>
 
 <p>更进一步，我们可以对整个目录应用<strong>写-替换</strong>模式。这涉及为每次更新创建新的目录，更新完成后改变符合链接。举例来说，镜像应用维护一个包含压缩包和列出了文件名、文件大小和校验和的索引文件的目录。当上流的镜像更新，仅仅隔离地对压缩包和索引文件进项原子性更新是不够的。相反，我们需要同时提供压缩包和索引文件以免校验和不匹配。为了解决这个问题，我们为每次生成维护一个子目录，然后改变符号链接激活该次生成。</p>
 
-<pre><code>mirror
+<div class="highlighter-rouge"><pre class="highlight"><code>mirror
 |-- 483
 |   |-- a.tgz
 |   |-- b.tgz
@@ -254,6 +314,7 @@ os.rename(newfile + '.tmp', newfile)
 |   `-- index.json
 `-- current -&gt; 483
 </code></pre>
+</div>
 
 <p>新的生成484正在被更新的过程中。当所有压缩包准备好，索引文件更新后，我们可以用一次原子调用os.symlink()来切换current符号链接。其它应用总是或者看到完全旧的或者完全新的生成。读程序需要使用os.chdir()进入current目录，很重要的是不要用完整路径名指定文件。否在当读程序打开current/index.json，然后打开current/a.tgz，但是同时符号链接已经改变时就会出现竞争条件。</p>
 
@@ -263,7 +324,7 @@ os.rename(newfile + '.tmp', newfile)
 
 <p>对<strong>截断-写</strong>更新进行加锁是容易的。仅仅在所有文件操作前获取一个独占锁就可以。下面的例子代码从文件中读取一个整数，然后递增，最后更新文件：</p>
 
-<pre><code>def update():
+<div class="highlighter-rouge"><pre class="highlight"><code>def update():
  with open(filename, 'r+') as f:
  fcntl.flock(f, fcntl.LOCK_EX)
  n = int(f.read())
@@ -272,10 +333,11 @@ os.rename(newfile + '.tmp', newfile)
  f.truncate()
 f.write('{}\n'.format(n))
 </code></pre>
+</div>
 
 <p>使用<strong>写-替换</strong>模式加锁更新就有点儿麻烦啦。像?<em>截断-写</em>那样使用锁可能导致更新冲突。某个幼稚的实现可能看起来像这样：</p>
 
-<pre><code>def update():
+<div class="highlighter-rouge"><pre class="highlight"><code>def update():
    with open(filename) as f:
       fcntl.flock(f, fcntl.LOCK_EX)
       n = int(f.read())
@@ -286,10 +348,11 @@ f.write('{}\n'.format(n))
          tempname = tf.name
       os.rename(tempname, filename)
 </code></pre>
+</div>
 
 <p>这段代码有什么问题呢？设想两个进程竞争更新某个文件。第一个进程运行在前面，但是第二个进程阻塞在fcntl.flock()调用。当第一个进程替换了文件，释放了锁，现在在第二个进程中打开的文件描述符指向了一个包含旧内容的“幽灵”文件（任意路径名都不可达）。想要避免这个冲突，我们必须检查打开的文件是否与fcntl.flock()返回的相同。所以我写了一个新的LockedOpen上下文管理器来替换内建的open上下文。来确保我们实际打开了正确的文件：</p>
 
-<pre><code>class LockedOpen(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>class LockedOpen(object):
  
     def __init__(self, filename, *args, **kwargs):
         self.filename = filename
@@ -324,6 +387,7 @@ def update(self):
             tempname = tf.name
         os.rename(tempname, filename)
 </code></pre>
+</div>
 
 <p>给<strong>追加</strong>更新上锁如同给截断-写更新上锁一样简单：需要一个排他锁，然后追加就完成了。需要长期运行的会将文件长久的打开的进程，可以在更新时释放锁，让其它进入。</p>
 
@@ -335,11 +399,12 @@ def update(self):
 
 <p>通过<strong>截断-写</strong>模式，在结束写操作以后关闭文件以前，我们需要发送一个同步信号。注意通常这还牵涉到另一个层次的写缓存。<em>glibc</em>?<em>缓存</em>?甚至会在写操作传递到内核以前，在进程内部拦住它。同样为了得到空的glibc缓存，我们需要在同步以前对它flush()：</p>
 
-<pre><code>with open(filename, 'w') as f:
+<div class="highlighter-rouge"><pre class="highlight"><code>with open(filename, 'w') as f:
    model.write(f)
    f.flush()
    os.fdatasync(f)
 </code></pre>
+</div>
 
 <p>要不，你也可以带参数<strong>-u</strong>调用Python，以此为所有的文件I/O获得未缓冲的写。</p>
 
@@ -347,11 +412,12 @@ def update(self):
 
 <p>对<strong>写-替换</strong>风格更新使用同样的技巧只是成功了一半。我们得确保在代替旧文件之前，新写入文件的内容已经写入了非易失性存储器上了，但是替换操作怎么办？我们不能保证那个目录更新是否执行的刚刚好。在网络上有很多关于<a href="http://stackoverflow.com/questions/3764822/how-to-durably-rename-a-file-in-posix/5809073#5809073">怎么让同步目录更新</a>的长篇大论。但是在我们这种情况，旧文件和新文件都在同一个目录下，我们可以使用简单的解决方案来逃避这个这题。</p>
 
-<pre><code>os.rename(tempname, filename)
+<div class="highlighter-rouge"><pre class="highlight"><code>os.rename(tempname, filename)
 dirfd = os.open(os.path.dirname(filename), os.O_DIRECTORY)
 os.fsync(dirfd)
 os.close(dirfd)
 </code></pre>
+</div>
 
 <p>我们调用底层的os.open()来打开目录(Python自带的open()方法不支持打开目录)，然后在目录文件描述符上执行os.fsync()。</p>
 
@@ -363,81 +429,42 @@ os.close(dirfd)
 
 <p>这使可靠的更新文件成为可能。我已经演示了满足ACID的四大性质。这些展示的实例代码充当一个工具箱。掌握这编程技术最大的满足你的需求。有时，你并不需要满足所有的ACID性质，可能仅仅需要一到两个。我希望这篇文章可以帮助你去做已充分了解的决定，什么该去实现以及什么该舍弃。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/08/01/reliable-file-updates-with-python.html">http://http://uwebs.tk/archives/2013/08/01/reliable-file-updates-with-python.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

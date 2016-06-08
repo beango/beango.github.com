@@ -1,354 +1,354 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python,BeautifulSoup,mongodb" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / python爬虫</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>python爬虫</title>
+  <meta name="description" content="module.py">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/12/24/python-crawl-pages.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
 
-<div class="main">
-	<article>
-	
-<h2 id="modulepy">module.py</h2>
+  <body>
 
-<pre><code>#!/usr/bin/env python  
-#coding:utf-8  
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-from mongoengine import *
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-class books(Document): 
-    bookid = IntField()
-    bookname = StringField()
-    bookurl = StringField()
-    def tostring(self):
-        return {"bookid":self.bookid,"bookname":self.bookname,"bookurl":self.bookurl}
+    <main class="blogmain">
+      <h2 id="modulepy">module.py</h2>
 
-class bookgroup(Document): 
-    groupid = IntField()
-    bookid = ObjectIdField()
-    groupname = StringField()
-    def tostring(self):
-        return {"bookid":self.bookid,"groupid":self.groupid,"groupname":self.groupname}
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python  </span>
+<span class="c">#coding:utf-8  </span>
 
-class booktitle(Document):
-    titleno = IntField()
-    bookid = ObjectIdField()
-    #groupid = ObjectIdField()
-    booktitle = StringField()
-    titleurl = StringField()
-    def tostring(self):
-        return {"titleno":self.titleno,"bookid":self.bookid,"booktitle":self.booktitle,"titleurl":self.titleurl}
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="kn">import</span> <span class="o">*</span>
 
-class charpter(Document):
-    titleno = IntField()
-    titleid = ObjectIdField()
-    content = StringField()
-    def tostring(self):
-        return {"titleno":self.titleno,"titleid":self.titleid,"content":self.content}
+<span class="k">class</span> <span class="nc">books</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span> 
+    <span class="n">bookid</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+    <span class="n">bookname</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="n">bookurl</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"bookid"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bookid</span><span class="p">,</span><span class="s">"bookname"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bookname</span><span class="p">,</span><span class="s">"bookurl"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bookurl</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">bookgroup</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span> 
+    <span class="n">groupid</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+    <span class="n">bookid</span> <span class="o">=</span> <span class="n">ObjectIdField</span><span class="p">()</span>
+    <span class="n">groupname</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"bookid"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bookid</span><span class="p">,</span><span class="s">"groupid"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">groupid</span><span class="p">,</span><span class="s">"groupname"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">groupname</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">booktitle</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="n">titleno</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+    <span class="n">bookid</span> <span class="o">=</span> <span class="n">ObjectIdField</span><span class="p">()</span>
+    <span class="c">#groupid = ObjectIdField()</span>
+    <span class="n">booktitle</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="n">titleurl</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"titleno"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">titleno</span><span class="p">,</span><span class="s">"bookid"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bookid</span><span class="p">,</span><span class="s">"booktitle"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">booktitle</span><span class="p">,</span><span class="s">"titleurl"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">titleurl</span><span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">charpter</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="n">titleno</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+    <span class="n">titleid</span> <span class="o">=</span> <span class="n">ObjectIdField</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">"titleno"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">titleno</span><span class="p">,</span><span class="s">"titleid"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">titleid</span><span class="p">,</span><span class="s">"content"</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">}</span>
 </code></pre>
+</div>
 
 <h2 id="crawlpy">crawl.py</h2>
 
-<pre><code>#!/usr/bin/env python  
-#coding:utf-8  
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/usr/bin/env python  </span>
+<span class="c">#coding:utf-8  </span>
 
-import re
-import sys
-from time import sleep, ctime
-import time
-import Queue
-import gridfs
-import thread, threading
-import urllib, urllib2  
-from bs4 import BeautifulSoup  
-from pymongo import Connection
-from module import *
-from bson import ObjectId
-config = {  
-            'input':sys.stdin,   
-            'output':'./samples',   
-            'location':'xxx',   
-            'has-fn':False,   
-            'options':{'connect.timeout':60, 'timeout':3600},   
-            'log':file('logs.txt', 'w'),   
-        }  
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">ctime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">Queue</span>
+<span class="kn">import</span> <span class="nn">gridfs</span>
+<span class="kn">import</span> <span class="nn">thread</span><span class="o">,</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">urllib</span><span class="o">,</span> <span class="nn">urllib2</span>  
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>  
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">Connection</span>
+<span class="kn">from</span> <span class="nn">module</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">bson</span> <span class="kn">import</span> <span class="n">ObjectId</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>  
+            <span class="s">'input'</span><span class="p">:</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span>   
+            <span class="s">'output'</span><span class="p">:</span><span class="s">'./samples'</span><span class="p">,</span>   
+            <span class="s">'location'</span><span class="p">:</span><span class="s">'xxx'</span><span class="p">,</span>   
+            <span class="s">'has-fn'</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span>   
+            <span class="s">'options'</span><span class="p">:{</span><span class="s">'connect.timeout'</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span> <span class="s">'timeout'</span><span class="p">:</span><span class="mi">3600</span><span class="p">},</span>   
+            <span class="s">'log'</span><span class="p">:</span><span class="nb">file</span><span class="p">(</span><span class="s">'logs.txt'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">),</span>   
+        <span class="p">}</span>  
 
-hosts = ["http://www.58xs.com/html/75/75623/index.html",
-         "http://www.58xs.com/html/180/180531/index.html",
-         "http://www.58xs.com/html/177/177945/index.html",
-         "http://www.58xs.com/html/195/195623/index.html",
-         "http://www.58xs.com/html/187/187344/index.html",
-         "http://www.58xs.com/html/196/196689/index.html",
-         "http://www.58xs.com/html/117/117423/index.html",
-         ]  
+<span class="n">hosts</span> <span class="o">=</span> <span class="p">[</span><span class="s">"http://www.58xs.com/html/75/75623/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/180/180531/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/177/177945/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/195/195623/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/187/187344/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/196/196689/index.html"</span><span class="p">,</span>
+         <span class="s">"http://www.58xs.com/html/117/117423/index.html"</span><span class="p">,</span>
+         <span class="p">]</span>  
 
-class ThreadUrl(threading.Thread):
-    """Threaded Url Grab"""
-    def __init__(self, queue_url, queue_charpter, bucket):
-        threading.Thread.__init__(self)
-        self.queue_url = queue_url
-        self.queue_charpter = queue_charpter
-        self.bucket = bucket
-    def run(self):
-        while not self.queue_url.empty():
-            try:
-                #grabs host from queue
-                host = self.queue_url.get(False)
+<span class="k">class</span> <span class="nc">ThreadUrl</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="s">"""Threaded Url Grab"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue_url</span><span class="p">,</span> <span class="n">queue_charpter</span><span class="p">,</span> <span class="n">bucket</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span> <span class="o">=</span> <span class="n">queue_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span> <span class="o">=</span> <span class="n">queue_charpter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c">#grabs host from queue</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
 
-                #grabs urls of hosts and then grabs chunk of webpage
-                url = urllib2.urlopen(host)
-                chunk = url.read()
+                <span class="c">#grabs urls of hosts and then grabs chunk of webpage</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-                #parse the chunk
-                soup = BeautifulSoup(chunk,from_encoding="utf8")#"&lt;head&gt;&lt;title&gt;1vca23&lt;/title&gt;&lt;/head&gt;"  
-                bookid = int(re.split("(/)",host)[-3:-2][0])
-                title = soup.h1.string.encode("utf-8").strip().replace("最新章节","")
+                <span class="c">#parse the chunk</span>
+                <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span><span class="n">from_encoding</span><span class="o">=</span><span class="s">"utf8"</span><span class="p">)</span><span class="c">#"&lt;head&gt;&lt;title&gt;1vca23&lt;/title&gt;&lt;/head&gt;"  </span>
+                <span class="n">bookid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">"(/)"</span><span class="p">,</span><span class="n">host</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">h1</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"最新章节"</span><span class="p">,</span><span class="s">""</span><span class="p">)</span>
 
-                oldbook = db.books.find_one({"bookid":bookid})
-                if oldbook is None:
-                    book1 = books(bookid=bookid, bookname=title, bookurl=host)
-                    bookid = db.books.insert(book1.tostring())
-                else:
-                    bookid = ObjectId(oldbook["_id"])
+                <span class="n">oldbook</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">books</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"bookid"</span><span class="p">:</span><span class="n">bookid</span><span class="p">})</span>
+                <span class="k">if</span> <span class="n">oldbook</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">book1</span> <span class="o">=</span> <span class="n">books</span><span class="p">(</span><span class="n">bookid</span><span class="o">=</span><span class="n">bookid</span><span class="p">,</span> <span class="n">bookname</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">bookurl</span><span class="o">=</span><span class="n">host</span><span class="p">)</span>
+                    <span class="n">bookid</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">books</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">book1</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bookid</span> <span class="o">=</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">oldbook</span><span class="p">[</span><span class="s">"_id"</span><span class="p">])</span>
 
-                #print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+": "+str(bookid)
+                <span class="c">#print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+": "+str(bookid)</span>
                 
-                content = soup.find("table","t")
-                grouptitle = content.find_all("td")  
-                i = 0
-                j = 1
-                groupid=1
-                for g in grouptitle:
-                    if 'class' not in g.attrs:
-                        if not g.a or g.a["href"].find("http://")==0:
-                            continue
-                        else:
-                            self.queue_charpter.put([bookid,host,g])
-                self.queue_url.task_done()
-            except Exception:
-                self.bucket.put(sys.exc_info())
+                <span class="n">content</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"table"</span><span class="p">,</span><span class="s">"t"</span><span class="p">)</span>
+                <span class="n">grouptitle</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">"td"</span><span class="p">)</span>  
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">groupid</span><span class="o">=</span><span class="mi">1</span>
+                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grouptitle</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s">'class'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="o">.</span><span class="n">a</span> <span class="ow">or</span> <span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="s">"href"</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"http://"</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="n">bookid</span><span class="p">,</span><span class="n">host</span><span class="p">,</span><span class="n">g</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">queue_url</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+            <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
                     
 
-class ThreadCharpter(threading.Thread):
-    """Threaded Url Grab"""
-    def __init__(self, queue_charpter, bucket):
-        threading.Thread.__init__(self)
-        self.queue_charpter = queue_charpter
-        self.bucket = bucket
-    def run(self):
-        while not self.queue_charpter.empty():
-            try:
-                #grabs host from queue
-                _item = self.queue_charpter.get(False)
-                bookid = _item[0]
-                host = _item[1]
-                g = _item[2]
+<span class="k">class</span> <span class="nc">ThreadCharpter</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="s">"""Threaded Url Grab"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue_charpter</span><span class="p">,</span> <span class="n">bucket</span><span class="p">):</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span> <span class="o">=</span> <span class="n">queue_charpter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c">#grabs host from queue</span>
+                <span class="n">_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+                <span class="n">bookid</span> <span class="o">=</span> <span class="n">_item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">_item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">_item</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-                charpterurl = "".join(re.split('(/)',host)[0:-1])+g.a["href"]
-                titleno = int("".join(re.split('(\.)',"".join(re.split('(/)',charpterurl)[-1:]))[0:1]),0)
-                oldtitle = db.booktitle.find_one({"titleno":titleno,"bookid":bookid})
-                if oldtitle is None:
-                    title1 = booktitle(titleno=titleno, bookid=bookid, booktitle=g.string.strip(), titleurl=charpterurl)
-                    titleid = db.booktitle.insert(title1.tostring())#title1.save()["id"]
-                else:
-                    titleid = ObjectId(oldtitle["_id"])
-                try:
-                    charid = re.split('(\.)',re.split('(/)',charpterurl)[-1:][0])[0]
-                    oldchar = db.charpter.find_one({"titleno":int(charid,0)})
-                    if oldchar is None:
-                        url2 = urllib2.urlopen(charpterurl)  
-                        chunk2 = url2.read()
-                        soup2 = BeautifulSoup(chunk2)
-                        content = soup2.find("div",id="content")
+                <span class="n">charpterurl</span> <span class="o">=</span> <span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(/)'</span><span class="p">,</span><span class="n">host</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="s">"href"</span><span class="p">]</span>
+                <span class="n">titleno</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(</span><span class="err">\</span><span class="s">.)'</span><span class="p">,</span><span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(/)'</span><span class="p">,</span><span class="n">charpterurl</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]))[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]),</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">oldtitle</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">booktitle</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"titleno"</span><span class="p">:</span><span class="n">titleno</span><span class="p">,</span><span class="s">"bookid"</span><span class="p">:</span><span class="n">bookid</span><span class="p">})</span>
+                <span class="k">if</span> <span class="n">oldtitle</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">title1</span> <span class="o">=</span> <span class="n">booktitle</span><span class="p">(</span><span class="n">titleno</span><span class="o">=</span><span class="n">titleno</span><span class="p">,</span> <span class="n">bookid</span><span class="o">=</span><span class="n">bookid</span><span class="p">,</span> <span class="n">booktitle</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">titleurl</span><span class="o">=</span><span class="n">charpterurl</span><span class="p">)</span>
+                    <span class="n">titleid</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">booktitle</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">title1</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span><span class="c">#title1.save()["id"]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">titleid</span> <span class="o">=</span> <span class="n">ObjectId</span><span class="p">(</span><span class="n">oldtitle</span><span class="p">[</span><span class="s">"_id"</span><span class="p">])</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">charid</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(</span><span class="err">\</span><span class="s">.)'</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(/)'</span><span class="p">,</span><span class="n">charpterurl</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">:][</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">oldchar</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">charpter</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s">"titleno"</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">charid</span><span class="p">,</span><span class="mi">0</span><span class="p">)})</span>
+                    <span class="k">if</span> <span class="n">oldchar</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">url2</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">charpterurl</span><span class="p">)</span>  
+                        <span class="n">chunk2</span> <span class="o">=</span> <span class="n">url2</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                        <span class="n">soup2</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">chunk2</span><span class="p">)</span>
+                        <span class="n">content</span> <span class="o">=</span> <span class="n">soup2</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"div"</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="s">"content"</span><span class="p">)</span>
                         
-                        obj = content.find("fieldset")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"fieldset"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        obj = content.find("table")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"table"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        obj = content.find("script")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"script"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        obj = content.find("script")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"script"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        obj = content.find("div")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"div"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        obj = content.find("div")
-                        if obj:
-                            obj.replaceWith("")
+                        <span class="n">obj</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">"div"</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">obj</span><span class="p">:</span>
+                            <span class="n">obj</span><span class="o">.</span><span class="n">replaceWith</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
 
-                        charptercontent = content.prettify().replace("58xs.com","")
-                        charpter1 = charpter(titleno=titleno,titleid=titleid,charpterid=int(charid,0), content=charptercontent)
-                        charid = db.charpter.insert(charpter1.tostring())
+                        <span class="n">charptercontent</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"58xs.com"</span><span class="p">,</span><span class="s">""</span><span class="p">)</span>
+                        <span class="n">charpter1</span> <span class="o">=</span> <span class="n">charpter</span><span class="p">(</span><span class="n">titleno</span><span class="o">=</span><span class="n">titleno</span><span class="p">,</span><span class="n">titleid</span><span class="o">=</span><span class="n">titleid</span><span class="p">,</span><span class="n">charpterid</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">charid</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">content</span><span class="o">=</span><span class="n">charptercontent</span><span class="p">)</span>
+                        <span class="n">charid</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">charpter</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">charpter1</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
                         
-                        for img in soup2.find_all("img"):
-                            u = urllib2.urlopen(img["src"])
-                            r = u.read()
-                            imgfile = "".join(re.split('(/)',img["src"])[-1:])
-                            oid = fs.put(r, filename=imgfile, charpterid=charid)
-                except IOError:
-                    print charpterurl
-                except:
-                    print charpterurl
-                    raise
-                self.queue_charpter.task_done()
-            except Queue.Empty:
-                pass
-            except Exception:
-                self.bucket.put(sys.exc_info())
+                        <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">soup2</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">"img"</span><span class="p">):</span>
+                            <span class="n">u</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="s">"src"</span><span class="p">])</span>
+                            <span class="n">r</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                            <span class="n">imgfile</span> <span class="o">=</span> <span class="s">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'(/)'</span><span class="p">,</span><span class="n">img</span><span class="p">[</span><span class="s">"src"</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">:])</span>
+                            <span class="n">oid</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">imgfile</span><span class="p">,</span> <span class="n">charpterid</span><span class="o">=</span><span class="n">charid</span><span class="p">)</span>
+                <span class="k">except</span> <span class="nb">IOError</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="n">charpterurl</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="n">charpterurl</span>
+                    <span class="k">raise</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">queue_charpter</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
             
-start = time.time()
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-conn = Connection("192.168.1.200")
-db = conn.book
-fs = gridfs.GridFS(db, collection='charpter')
+<span class="n">conn</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">(</span><span class="s">"192.168.1.200"</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">book</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">gridfs</span><span class="o">.</span><span class="n">GridFS</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="s">'charpter'</span><span class="p">)</span>
 
-def main():
-    bucket = Queue.Queue()
-    queue_url = Queue.Queue()
-    queue_charpter = Queue.Queue()
-    '''
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">queue_url</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">queue_charpter</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="s">'''
     db.books.drop()
     db.bookgroup.drop()
     db.booktitle.drop()
     db.charpter.drop()
     db.charpter.files.drop()
     db.charpter.chunks.drop()
-    '''
-    threadsize=10
+    '''</span>
+    <span class="n">threadsize</span><span class="o">=</span><span class="mi">10</span>
 
-    for host in hosts:
-        queue_url.put(host)
-    threads = [] 
+    <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">hosts</span><span class="p">:</span>
+        <span class="n">queue_url</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span> 
     
-    while threadsize&gt;0:
-        t = ThreadUrl(queue_url, queue_charpter, bucket)
-        t.start()
-        threads.append(t)
-        threadsize -= 1
+    <span class="k">while</span> <span class="n">threadsize</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">ThreadUrl</span><span class="p">(</span><span class="n">queue_url</span><span class="p">,</span> <span class="n">queue_charpter</span><span class="p">,</span> <span class="n">bucket</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">threadsize</span> <span class="o">-=</span> <span class="mi">1</span>
    
-    threadjoin(bucket,threads)
+    <span class="n">threadjoin</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span><span class="n">threads</span><span class="p">)</span>
     
-    threadsize = 10
-    while threadsize&gt;0:
-        ct = ThreadCharpter(queue_charpter, bucket)
-        ct.start()
-        threads.append(ct)
-        threadsize -= 1
+    <span class="n">threadsize</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">while</span> <span class="n">threadsize</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">ct</span> <span class="o">=</span> <span class="n">ThreadCharpter</span><span class="p">(</span><span class="n">queue_charpter</span><span class="p">,</span> <span class="n">bucket</span><span class="p">)</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+        <span class="n">threadsize</span> <span class="o">-=</span> <span class="mi">1</span>
 
-    threadjoin(bucket,threads)
+    <span class="n">threadjoin</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span><span class="n">threads</span><span class="p">)</span>
 
-def threadjoin(bucket,threads):
-    end = True
-    while True:
-        try:
-            exc = bucket.get(block=False)
-            raise Exception(exc)
-        except Queue.Empty:
-            pass
-        for t in threads:
-            if t.isAlive(): 
-                end = False; 
-                break;
-        if end: 
-            break; 
-        else:
-            end = True
-            continue
-main()
-print "Elapsed Time: %s" % (time.time() - start)
+<span class="k">def</span> <span class="nf">threadjoin</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span><span class="n">threads</span><span class="p">):</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">exc</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="nb">Exception</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span> 
+                <span class="n">end</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span> 
+                <span class="k">break</span><span class="p">;</span>
+        <span class="k">if</span> <span class="n">end</span><span class="p">:</span> 
+            <span class="k">break</span><span class="p">;</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">continue</span>
+<span class="n">main</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">"Elapsed Time: </span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
 </code></pre>
-
-
-</article>
-
-
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
 </div>
 
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
 
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+    </main>
 
-<script src="/assets/js/site.js"></script>
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+  </body>
+
 </html>

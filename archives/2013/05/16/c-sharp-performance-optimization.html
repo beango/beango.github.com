@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content=".net" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / C#性能优化实践</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>C#性能优化实践</title>
+  <meta name="description" content="性能主要指两个方面：内存消耗和执行速度。性能优化简而言之，就是在不影响系统运行正确性的前提下，使之运行地更快，完成特定功能所需的时间更短。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/05/16/c-sharp-performance-optimization.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / C#性能优化实践</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/05/16/c-sharp-performance-optimization.html">C#性能优化实践</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-05-16</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>性能主要指两个方面：内存消耗和执行速度。性能优化简而言之，就是在不影响系统运行正确性的前提下，使之运行地更快，完成特定功能所需的时间更短。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">C#性能优化实践</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>性能主要指两个方面：内存消耗和执行速度。性能优化简而言之，就是在不影响系统运行正确性的前提下，使之运行地更快，完成特定功能所需的时间更短。</p>
 
 <p>本文以.NET平台下的控件产品MultiRow为例，描述C#性能优化的实践。</p>
 
@@ -51,7 +96,7 @@
 
 <p>以下代码可以获取某个操作的内存消耗。</p>
 
-<pre><code>long start = GC.GetTotalMemory(true);
+<div class="highlighter-rouge"><pre class="highlight"><code>long start = GC.GetTotalMemory(true);
 // 在这里写需要被测试内存消耗的代码，例如，创建一个GcMultiRow
 var gcMulitRow1 = new GcMultiRow();
 GC.Collect();
@@ -60,12 +105,13 @@ GC.WaitForFullGCComplete();
 long end = GC.GetTotalMemory(true);
 long useMemory = end - start;  
 </code></pre>
+</div>
 
 <p>· <strong>如何获取时间消耗</strong></p>
 
 <p>以下代码可以获取某个操作时间消耗。</p>
 
-<pre><code>System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+<div class="highlighter-rouge"><pre class="highlight"><code>System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
 watch.Start();
 for (int i = 0; i &lt; 1000; i++)
 {
@@ -74,6 +120,7 @@ for (int i = 0; i &lt; 1000; i++)
 watch.Stop();
 var useTime = (double)watch.ElapsedMilliseconds / 1000;
 </code></pre>
+</div>
 
 <p>为了获得更加稳定的时间消耗，这里把一个操作循环执行了1000次，取时间消耗的平均值以排除不稳定数据。</p>
 
@@ -108,26 +155,28 @@ WPF产品同样支持百万级的数据量，但是又不能给每个单元格�
 
 <p>使用缓存的情况比较多。最简单的情况就是缓存到一个Field或临时变量里。</p>
 
-<pre><code>for（int i = 0; i &lt; gcMultiRow.RowCount; i++）
+<div class="highlighter-rouge"><pre class="highlight"><code>for（int i = 0; i &lt; gcMultiRow.RowCount; i++）
 { 
 // Do something; 
 } 
 </code></pre>
+</div>
 
 <p>以上代码一般情况下是没有问题的，但是，如果GcMultiRow的行数比较大。而RowCount属性的取值又比较慢的时候，就需要使用缓存来做性能优化。</p>
 
-<pre><code>int rowCount = gcMultiRow.RowCount;
+<div class="highlighter-rouge"><pre class="highlight"><code>int rowCount = gcMultiRow.RowCount;
 for (int i = 0; i &lt; rowCount; i++)
 {
 // Do something;
 }
 </code></pre>
+</div>
 
 <p>使用对象池也是一个常见的缓存方案，比使用Field或临时变量稍微复杂一点。例如，在MultiRow中，画边线，画背景，需要用到大量的Brush和Pen。这些GDI对象每次用之前要创建，用完后要销毁。创建和销毁的过程是比较慢的。GcMultiRow使用的方案是创建一个GDIPool。本质上是一些Dictionary，使用颜色做Key。所以只有第一次取的时候需要创建，以后就直接使用以前创建好的。</p>
 
 <p>以下是GDIPool的代码：</p>
 
-<pre><code>public static class GDIPool 
+<div class="highlighter-rouge"><pre class="highlight"><code>public static class GDIPool 
 { 
     Dictionary&lt;Color, Brush &gt; _cacheBrush = new Dictionary&lt;Color, Brush&gt;(); 
     Dictionary&lt;Color, Pen&gt; _cachePen = new Dictionary&lt;Color, Pen&gt;(); 
@@ -144,6 +193,7 @@ for (int i = 0; i &lt; rowCount; i++)
     } 
 }
 </code></pre>
+</div>
 
 <p>· <strong>懒构造</strong></p>
 
@@ -151,17 +201,18 @@ for (int i = 0; i &lt; rowCount; i++)
 
 <p>举例来说，对象A需要内部创建对象B。对象B的构造时间比较长。 一般做法：</p>
 
-<pre><code>public class A
+<div class="highlighter-rouge"><pre class="highlight"><code>public class A
 {
     public B _b = new B();
 }
 </code></pre>
+</div>
 
 <p>一般做法下，由于构造对象A的同时要构造对象B，导致A的构造速度也变慢了。</p>
 
 <p>优化做法：</p>
 
-<pre><code>public class A
+<div class="highlighter-rouge"><pre class="highlight"><code>public class A
 {
     private B _b;
     public B BProperty
@@ -177,6 +228,7 @@ for (int i = 0; i &lt; rowCount; i++)
     }
 }
 </code></pre>
+</div>
 
 <p>优化后，构造A的时候就不需要创建B对象，有效的提高了A的构造性能。</p>
 
@@ -277,20 +329,22 @@ Dictionary和List是最常用的两种集合类。选择正确的集合类可以
 
 <p>​3. TryGetValue: 对于Dictionary的取值，比较直接的方法是如下代码：</p>
 
-<pre><code>if(_dic.ContainKey("Key")
+<div class="highlighter-rouge"><pre class="highlight"><code>if(_dic.ContainKey("Key")
 {
     return _dic["Key"];
 }      
 </code></pre>
+</div>
 
 <p>当需要大量取值的时候，这样的取法会带来性能问题。优化方法如下：</p>
 
-<pre><code>object value;
+<div class="highlighter-rouge"><pre class="highlight"><code>object value;
 if(_dic.TryGetValue("Key", out value))
 {
 return value;
 }
 </code></pre>
+</div>
 
 <p>后一种用法要比前一种用法取值性能提高一倍。</p>
 
@@ -300,11 +354,12 @@ Dictionary的取值性能很大情况下取决于做Key的对象的Equals和GetH
 
 <p>​5. List的Sort和BinarySearch性能很好，如果能满足功能需求，推荐直接使用。</p>
 
-<pre><code>List&lt;int&gt; list = new List&lt;int&gt;{3, 10, 15}; 
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;int&gt; list = new List&lt;int&gt;{3, 10, 15}; 
 list.BinarySearch(10); // 对于存在的值，结果是1 
 list.BinarySearch(8); // 对于不存在的值，会使用负数表示位置， 
 // 如查找8时，结果是-2， 查找0结果是-1，查找100结果是-4. 
 </code></pre>
+</div>
 
 <p>· <strong>通过异步提升响应时间</strong></p>
 
@@ -314,7 +369,7 @@ list.BinarySearch(8); // 对于不存在的值，会使用负数表示位置，�
 
 <p>代码如下:</p>
 
-<pre><code>public CalcParser()
+<div class="highlighter-rouge"><pre class="highlight"><code>public CalcParser()
 {
  if (_functions == null)
   {
@@ -340,6 +395,7 @@ list.BinarySearch(8); // 对于不存在的值，会使用负数表示位置，�
      } 
     } 
 </code></pre>
+</div>
 
 <p>这里比较慢的操作就是EnsureFunctions函数，是在另一个线程里执行的，不会影响主线程的响应。当然，使用多线程是一个比较有难度的方案，需要充分考虑跨线程访问和死锁的问题。</p>
 
@@ -362,81 +418,42 @@ list.BinarySearch(8); // 对于不存在的值，会使用负数表示位置，�
 <p>有时候，以上提到的方案都没有办法快速响应用户操作。进度条、一直转圈圈的图片、提示性文字（如”你的操作可能需要较长时间，请耐心等待”）等，都可以有效的提升用户体验，可以作为最后方案来考虑。</p>
 
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/05/16/c-sharp-performance-optimization.html">http://http://uwebs.tk/archives/2013/05/16/c-sharp-performance-optimization.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

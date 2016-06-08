@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="javascript" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 使用面向对象技术创建高级Web应用程序</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>使用面向对象技术创建高级Web应用程序</title>
+  <meta name="description" content="英文原文：Create Advanced Web Applications With Object-Oriented Techniques">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 使用面向对象技术创建高级Web应用程序</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html">使用面向对象技术创建高级Web应用程序</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-06-22</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p><em>英文原文：<a href="http://msdn.microsoft.com/en-us/magazine/cc163419.aspx">Create Advanced Web Applications With Object-Oriented Techniques</a></em></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">使用面向对象技术创建高级Web应用程序</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p><em>英文原文：<a href="http://msdn.microsoft.com/en-us/magazine/cc163419.aspx">Create Advanced Web Applications With Object-Oriented Techniques</a></em></p>
 
 <p>最近，我面试了一位具有5年Web应用开发经验的软件开发人员。她有4年半的JavaScript编程经验，自认为自己具有非常优秀的JavaScript技能，可是，随后我很快发现，实际上她对JavaScript却知之甚少。然而，我并不是要为此而责怪她。JavaScript就是这么不可思议。有很多人（也包括我自己，这种情况直到最近才有所改观）都自以为是，觉得因为他们懂C/C++/C#或者具有编程经验，便以为他们非常擅长JavaScript这门语言。</p>
 
@@ -39,23 +84,26 @@
 
 <p>在C++或C#中，当谈及对象时，我们指的是类或者结构的实例。对象根据实例化出它的模版（也即，类）的不同而具有不同的属性和方法。JavaScript对象不是这样的。在JavaScript中，对象仅仅是name/value对的集合，我们可以把JavaScript对象看作字典，字典中的键为字符串。我们可以用我们熟悉的”.”(点)操作符或者一般用于字典的”[]”操作符，来获取或者设置对象的属性。下面的代码片段</p>
 
-<pre><code>var userObject = new Object();
+<div class="highlighter-rouge"><pre class="highlight"><code>var userObject = new Object();
 userObject.lastLoginTime = new Date();
 alert(userObject.lastLoginTime);
 </code></pre>
+</div>
 
 <p>同这段代码所做的完全是同样的事情：</p>
 
-<pre><code>var userObject = {}; // equivalent to new Object()
+<div class="highlighter-rouge"><pre class="highlight"><code>var userObject = {}; // equivalent to new Object()
 userObject["lastLoginTime"] = new Date();
 alert(userObject["lastLoginTime"]);
 </code></pre>
+</div>
 
 <p>我们还可以用这样的方式，直接在userObject的定义中定义lastLoginTime属性：</p>
 
-<pre><code>var userObject = { "lastLoginTime": new Date() };
+<div class="highlighter-rouge"><pre class="highlight"><code>var userObject = { "lastLoginTime": new Date() };
 alert(userObject.lastLoginTime);
 </code></pre>
+</div>
 
 <p>请注意这同C#3.0的对象初始化表达式是多么的相似。另外，熟悉Python的读者会发现，在第二段和第三段代码中，我们实例化userObject的方式就是Python中指定字典的方式。这里唯一的区别的就是，JavaScript中的对象/字典只接受字符串作为键，而Python中字典则无此限制。</p>
 
@@ -67,31 +115,34 @@ alert(userObject.lastLoginTime);
 
 <p>在许多编程语言中，函数和对象一般都认为是两种不同的东西。可在JavaScript中，它们之间的区别就没有那么明显了 —— JavaScript中的函数实际上就是对象，只不过这个对象具有同其相关联的一段可执行代码。请看下面这段再普通不过的代码：</p>
 
-<pre><code>function func(x) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function func(x) {
     alert(x);
 }
 func("blah");
 </code></pre>
+</div>
 
 <p>这是JavaScript中定义函数最常用的方式了。但是，你还可以先创建一个匿名函数对象再将该对象赋值给变量func，也即，象下面那样，定义出完全相同的函数</p>
 
-<pre><code>var func = function(x) {
+<div class="highlighter-rouge"><pre class="highlight"><code>var func = function(x) {
     alert(x);
 };
 func("blah2");
 </code></pre>
+</div>
 
 <p>或者甚至通过使用Function构造器，向下面这样来定义它：</p>
 
-<pre><code>var func = new Function("x", "alert(x);");
+<div class="highlighter-rouge"><pre class="highlight"><code>var func = new Function("x", "alert(x);");
 func("blah3");
 </code></pre>
+</div>
 
 <p>这表明，函数实际上就是一个支持函数调用操作的对象。最后这种使用Function构造器来定义函数的方式并不常用，但却为我们带来很多很有趣的可能，其原因可能你也已经发现了，在这种函数定义的方式中，函数体只是Function构造器的一个字符串型的参数。这就意味着，你可以在JavaScript运行的时候构造出任意的函数。</p>
 
 <p>要进一步证明函数是对象，你可以就象为任何其它JavaScript对象一样，为函数设置或添加属性：</p>
 
-<pre><code>function sayHi(x) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function sayHi(x) {
     alert("Hi, " + x + "!");
 }
 
@@ -101,12 +152,13 @@ sayHi["text2"] = "Hello World... again.";
 alert(sayHi["text"]); // displays "Hello World!"
 alert(sayHi.text2); // displays "Hello World... again."
 </code></pre>
+</div>
 
 <p>作为对象，函数还可以赋值给变量、作为参数传递给其它函数、作为其它函数的返回值、保存为对象的属性或数组中的一员等等。<strong>图1</strong>所示为其中一例。</p>
 
 <p>图1 <strong>函数在JavaScript具有首要地位</strong></p>
 
-<pre><code>// assign an anonymous function to a variable
+<div class="highlighter-rouge"><pre class="highlight"><code>// assign an anonymous function to a variable
 var greet = function(x) {
     alert("Hello, " + x);
 };
@@ -150,10 +202,11 @@ var obj = { "toString" : function() { return "This is an object."; } };
 // calls obj.toString()
 alert(obj);
 </code></pre>
+</div>
 
 <p>记住这一点后，为对象添加方法就简单了，只要选择一个函数名并把一个函数赋值为这个函数名即可。接下来我通过将三个匿名函数分别赋值给各自相应的方法名，为一个对象定义了三个方法：</p>
 
-<pre><code>var myDog = {
+<div class="highlighter-rouge"><pre class="highlight"><code>var myDog = {
     "name" : "Spot",
     "bark" : function() { alert("Woof!"); },
     "displayFullName" : function() {
@@ -168,12 +221,13 @@ alert(obj);
 myDog.displayFullName(); 
 myDog.bark(); // Woof!
 </code></pre>
+</div>
 
 <p>函数displayFullName中”this”关键字的用法对C++/C#开发者来说并不陌生 —— 该方法是通过哪个对象调用的，它指的就是哪个对象（使用Visual Basic的开发者也应该熟悉这种用法 —— 只不过”this”在Visual Basic称作”Me”）。因此在上面的例子中，displayFullName中”this”的值指的就是myDog对象。但是，”this”的值不是静态的。如果通过别的对象对函数进行调用，”this”的值也会随之指向这个别的对象，如<strong>图2</strong>所示。</p>
 
 <p>图2 <strong>“this”随着对象的改变而改变</strong></p>
 
-<pre><code>function displayQuote() {
+<div class="highlighter-rouge"><pre class="highlight"><code>function displayQuote() {
     // the value of "this" will change; depends on 
     // which object it is called through
     alert(this.memorableQuote);    
@@ -209,12 +263,13 @@ markTwain.sayIt(); // he didn’t know where to play golf
 
 displayQuote.call(oscarWilde); // ouch!
 </code></pre>
+</div>
 
 <p><strong>图2</strong>最后一行的代码是将函数作为一个对象的方法进行调用的另外一种方式。别忘了，JavaScript中的函数是对象。每个函数对象都有一个叫做call的方法，这个方法会将函数作为该方法的第一个参数的方法进行调用。也就是说，无论将哪个对象作为第一个参数传递给call方法，它都会成为此次函数调用中”this”的值。后面我们就会看到，这个技术在调用基类构造器时会非常有用。</p>
 
 <p>有一点要记住，那就是永远不要调用不属于任意对象却包含有”this”的函数。如果调用了的话，就会搅乱全局命名空间。这是因为在这种调用中，”this”将指向Global对象，此举将严重损害你的应用。例如，下面的脚本将会改变JavaScript的全局函数isNaN的行为。我们不推荐这么干。</p>
 
-<pre><code>alert("NaN is NaN: " + isNaN(NaN));
+<div class="highlighter-rouge"><pre class="highlight"><code>alert("NaN is NaN: " + isNaN(NaN));
 
 function x() {
     this.isNaN = function() { 
@@ -227,6 +282,7 @@ x();
 
 alert("NaN is NaN: " + isNaN(NaN));
 </code></pre>
+</div>
 
 <p>到此我们已经看过了创建对象并为其添加熟悉和方法的几种方式。但是，如果你仔细看了以上所举的所以代码片段就会发现，所有的熟悉和方法都是在对象的定义之中通过硬性编码定义的。要是你需要对对象的创建进行更加严格的控制，那该怎么办？例如，你可能会需要根据某些参数对对象属性中的值进行计算，或者你可能需要将对象的属性初始化为只有到代码运行时才会得到的值，你还有可能需要创建一个对象的多个实例，这些要求也是非常常见的。</p>
 
@@ -236,12 +292,13 @@ alert("NaN is NaN: " + isNaN(NaN));
 
 <p>JavaScript中的OOP最奇怪的事，如前所述，就是JavaScript没有C#和C++中所具有的类。在C#中，通过如下这样的代码</p>
 
-<pre><code>Dog spot = new Dog();
+<div class="highlighter-rouge"><pre class="highlight"><code>Dog spot = new Dog();
 </code></pre>
+</div>
 
 <p>能够得到一个对象，这个对象就是Dog类的一个实例。但在JavaScript中根本就没有类。要想得到同类最近似的效果，可以象下面这样定义一个构造器函数：</p>
 
-<pre><code>function DogConstructor(name) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function DogConstructor(name) {
     this.name = name;
     this.respondTo = function(name) {
         if(this.name == name) {
@@ -254,23 +311,26 @@ var spot = new DogConstructor("Spot");
 spot.respondTo("Rover"); // nope
 spot.respondTo("Spot"); // yeah!
 </code></pre>
+</div>
 
 <p>好吧，这里都发生了什么？先请不要管DogConstructor函数的定义，仔细看看这行代码：</p>
 
-<pre><code>var spot = new DogConstructor("Spot");
+<div class="highlighter-rouge"><pre class="highlight"><code>var spot = new DogConstructor("Spot");
 </code></pre>
+</div>
 
 <p>“new”操作符所做的事情很简单。首先，它会创建出一个新的空对象。然后，紧跟其后的函数调用就会得到执行，并且会将那个新建的空对象设置为该函数中”this”的值。换句话说，这行带有”new”操作符的代码可以看作等价于下面这两行代码：</p>
 
-<pre><code>// create an empty object
+<div class="highlighter-rouge"><pre class="highlight"><code>// create an empty object
 var spot = {}; 
 // call the function as a method of the empty object
 DogConstructor.call(spot, "Spot");
 </code></pre>
+</div>
 
 <p>在DogConstructor的函数体中可以看出，调用该函数就会对调用中关键字”this”所指的对象进行初始化。采用这种方式，你就可以为对象创建模版了！无论何时当你需要创建类似的对象时，你就可以用”new”来调用该构造器函数，然后你就能够得到一个完全初始化好的对象。这和类看上去非常相似，不是吗？实际上，JavaScript中构造器函数的名字往往就是你想模拟的类的名字，所以上面例子中的构造函数你就可以直接命名为Dog：</p>
 
-<pre><code>// Think of this as class Dog
+<div class="highlighter-rouge"><pre class="highlight"><code>// Think of this as class Dog
 function Dog(name) {
     // instance variable 
     this.name = name;
@@ -285,10 +345,11 @@ function Dog(name) {
 
 var spot = new Dog("Spot");
 </code></pre>
+</div>
 
 <p>上面在Dog的定义中，我定义了一个叫做name的实例变量。将Dog作为构造器函数使用而创建的每个对象都有自己的一份叫做name的实例变量（如前所述，name就是该对象的字典入口）。这符合我们的期望；毕竟每个对象都需属于自己的一份实例变量，只有这样才能保存它自己的状态。但是如果你再看接下来的那行代码，就会发现Dog的每个实例都有自己的一份respondTo方法，这可是个浪费；respondTo的实例你只需要一个，只有将这一个实例在所有的Dog实例间共享即可！你可以把respondTo的定义从Dog中拿出来，这样就可以克服此问题了，就向下面这样：</p>
 
-<pre><code>function respondTo() {
+<div class="highlighter-rouge"><pre class="highlight"><code>function respondTo() {
     // respondTo definition
 }
 
@@ -298,6 +359,7 @@ function Dog(name) {
     this.respondTo = respondTo;
 }
 </code></pre>
+</div>
 
 <p>这样一来，Dog的所有实例（也即，用构造器函数Dog创建的所有实例）都可以共享respondTo方法的同一个实例了。但是，随着方法数量的增加，这种方式维护起来会越来越困难。最后你的代码库中会堆积大量的全局函数，而且，随着“类”的数量不断增加，特别是这些类的方法具有类似的方法名时，情况会变得更加糟糕。这里还有一个更好的办法，就是使用原型对象，这就是下一个小节要讨论的内容。</p>
 
@@ -305,8 +367,9 @@ function Dog(name) {
 
 <p>原型对象是JavaScript面向对象编程中的一个核心概念。原型这个名称来自于这样一个概念：在JavaScript中，所有对象都是通过对已有的样本（也即，原型）对象进行拷贝而创建的。该原型对象的所有属性和方法都会成为通过使用该原型的构造函数生成的对象的属性和方法。你可以认为，这些对象从它们的原型中继承了相应的属性和方法。当你象这样来创建一个新的Dog对象时</p>
 
-<pre><code>var buddy = new Dog("Buddy");
+<div class="highlighter-rouge"><pre class="highlight"><code>var buddy = new Dog("Buddy");
 </code></pre>
+</div>
 
 <p>buddy所引用的对象将从它的原型中继承到相应的属性和方法，虽然仅从上面这一行代码可能会很难看出来其原型来自哪里。buddy对象的原型来自来自构造器函数（在此例中指的就是函数Dog）的一个属性。</p>
 
@@ -318,7 +381,7 @@ function Dog(name) {
 
 <p>图4 <strong>对象同样也具有它们原型的属性</strong></p>
 
-<pre><code>var spot = new Dog("Spot");
+<div class="highlighter-rouge"><pre class="highlight"><code>var spot = new Dog("Spot");
 
 // Dog.prototype is the prototype of spot
 alert(Dog.prototype.isPrototypeOf(spot));
@@ -336,6 +399,7 @@ alert(spot.hasOwnProperty("constructor"));
 // The line below displays "true"
 alert(Dog.prototype.hasOwnProperty("constructor"));
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-06/20151041_UD0W.gif" alt="" /> 图5<strong> 继承自它们的原型的实例</strong></p>
 
@@ -343,8 +407,9 @@ alert(Dog.prototype.hasOwnProperty("constructor"));
 
 <p>在这个例子中，请记住Dog.prototype也是一个对象。它也是通过对Object的构造函数进行调用后生成的，虽然这一点在代码中并不直接出现：</p>
 
-<pre><code>Dog.prototype = new Object();
+<div class="highlighter-rouge"><pre class="highlight"><code>Dog.prototype = new Object();
 </code></pre>
+</div>
 
 <p>所以，就如同Dog的实例继承自Dog.prototype一样，Dog.prototype继承自Object.prototype。这就使得Dog的所有实例也都会继承Object.prototype的方法和实例。</p>
 
@@ -358,7 +423,7 @@ alert(Dog.prototype.hasOwnProperty("constructor"));
 
 <p>图7  <strong>从原型中进行继承</strong></p>
 
-<pre><code>function GreatDane() { }
+<div class="highlighter-rouge"><pre class="highlight"><code>function GreatDane() { }
 
 var rover = new GreatDane();
 var spot = new GreatDane();
@@ -384,13 +449,14 @@ alert(spot.getBreed());
 // it only happens in the spot object
 alert(rover.getBreed());
 </code></pre>
+</div>
 
 <h2 id="section-1">静态属性和方法</h2>
 
 <p>有些时候你会需要同类而不是实例捆绑到一起的属性或方法 ——
 也即，静态属性和静态方法。在JavaScript中这很容易就能做到，因为函数就是对象，所以可以随心所欲为其设置属性和方法。既然构造器函数在JavaScript代表了类这个概念，所以你可以通过在构造器函数中设置属性和昂奋来为一个类添加静态方法和属性，就象这样：</p>
 
-<pre><code>function DateTime() { }
+<div class="highlighter-rouge"><pre class="highlight"><code>function DateTime() { }
 
 // set static method now()
 DateTime.now = function() {
@@ -399,6 +465,7 @@ DateTime.now = function() {
 
 alert(DateTime.now());
 </code></pre>
+</div>
 
 <p>在JavaScript调用静态方法的语法实际上和C#完全相同。既然构造器函数就是类的名字，所以这也不应该有什么奇怪的。这样你就有了类、共有属性/方法以及静态属性/方法。你还需要什么呢？当然，还需要私有成员。但是，JavaScript并不直接支持私有成员（这方面它也不支持protected成员）。对象的所以属性和方法所有人都可以访问得到。这里有一种在类中定义出私有成员的方法，但要完成这个任务就需要首先对闭包有所了解。 </p>
 
@@ -412,7 +479,7 @@ alert(DateTime.now());
 
 <p>图8 <strong>基于谓词（Predicate）对元素进行过滤</strong></p>
 
-<pre><code>function filter(pred, arr) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function filter(pred, arr) {
 
     var len = arr.length;
     var filtered = []; // shorter version of new Array();
@@ -437,30 +504,34 @@ var numbersGreaterThan100 = filter(
 // displays 234, 236, 632
 alert(numbersGreaterThan100);
 </code></pre>
+</div>
 
 <p>但是现在你想新建一个不同的过滤标准，比方说，这次只有大于300的数字才能留下。你可以这么做：</p>
 
-<pre><code>var greaterThan300 = filter(
+<div class="highlighter-rouge"><pre class="highlight"><code>var greaterThan300 = filter(
     function(x) { return (x &amp;gt; 300) ? true : false; }, 
     someRandomNumbers);
 </code></pre>
+</div>
 
 <p>可能还需要留下大于50、25、10、600等等的数字，然而，你是如此聪明，很快就会发现它们使用的都是“大于”这同一个谓词，所不同的只是其中的数字。所以，你可以把具体的数字拿掉，编写出这么一个函数：</p>
 
-<pre><code>function makeGreaterThanPredicate(lowerBound) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function makeGreaterThanPredicate(lowerBound) {
     return function(numberToCheck) {
         return (numberToCheck &amp;gt; lowerBound) ? true : false;
     };
 }
 </code></pre>
+</div>
 
 <p>有了这个函数你就可以象下面这样做了：</p>
 
-<pre><code>var greaterThan10 = makeGreaterThanPredicate(10);
+<div class="highlighter-rouge"><pre class="highlight"><code>var greaterThan10 = makeGreaterThanPredicate(10);
 var greaterThan100 = makeGreaterThanPredicate(100);
 alert(filter(greaterThan10, someRandomNumbers));
 alert(filter(greaterThan100, someRandomNumbers));
 </code></pre>
+</div>
 
 <p>请注意makeGreaterThanPredicate函数所返回的内部匿名函数。该匿名内部函数使用了lowerBound，它是传递给makeGreaterThanPredicate的一个参数。根据通常的变量范围规则，当makeGreater­ThanPredicate函数退出后，lowerBound就离开了它的作用范围！但是在此种情况下，内部匿名函数仍然还携带着它，即使make­GreaterThanPredicate早就退出了也还是这样。这就是我们称之为闭包的东西 ——— 因为内部函数关闭着它的定义所在的环境（也即，外部函数的参数和局部变量）。</p>
 
@@ -470,17 +541,18 @@ alert(filter(greaterThan100, someRandomNumbers));
 
 <p>好的，现在让我们来看看在闭包的帮助下怎样才能模拟出私有成员。函数中的私有变量通常在函数之外是访问不到的。在函数执行结束后，实际上局部变量就会永远消失。然而，如果内部函数捕获了局部变量的话，这样的局部变量就会继续存活下去。 这个实情就是在JavaScript中模拟出私有属性的关键所在。请看下面的Person类：</p>
 
-<pre><code>function Person(name, age) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function Person(name, age) {
     this.getName = function() { return name; };
     this.setName = function(newName) { name = newName; };
     this.getAge = function() { return age; };
     this.setAge = function(newAge) { age = newAge; };
 }
 </code></pre>
+</div>
 
 <p>参数name和age对构造器函数Person来说就是局部变量。一旦Person函数返回之后，name和age就应该被认为永远消失了。然而，这两个参数被4个内部函数捕获，这些内部函数被赋值为Person实例的方法了，因此这样一来就使得name和age能够继续存活下去，但却被很严格地限制为只有通过这4个方法才能访问到它们。所以，你可以这样做：</p>
 
-<pre><code>var ray = new Person("Ray", 31);
+<div class="highlighter-rouge"><pre class="highlight"><code>var ray = new Person("Ray", 31);
 alert(ray.getName());
 alert(ray.getAge());
 ray.setName("Younger Ray");
@@ -490,10 +562,11 @@ ray.setAge(22);
 alert(ray.getName() + " is now " + ray.getAge() + 
       " years old.");
 </code></pre>
+</div>
 
 <p>不必在构造器中进行初始化的私有成员可以声明为构造器函数的局部变量，就象这样：</p>
 
-<pre><code>function Person(name, age) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function Person(name, age) {
     var occupation;
     this.getOccupation = function() { return occupation; };
     this.setOccupation = function(newOcc) { occupation = 
@@ -501,16 +574,18 @@ alert(ray.getName() + " is now " + ray.getAge() +
     // accessors for name and age    
 }
 </code></pre>
+</div>
 
 <p>要注意的是，这样的私有成员同我们所认为的C#中的私有成员稍有不同。在C#中，类的公开方法可以直接访问类的私有成员。但是在JavaScript中，私有成员只有通过在闭包中包含有这些私有成员的方法来访问（这样的方法通常称为特权方法，因为它们不同于普通的公开方法）。因此，在Person的公开方法中，你依然可以通过Person的特权方法方法来访问私有成员：</p>
 
-<pre><code>Person.prototype.somePublicMethod = function() {
+<div class="highlighter-rouge"><pre class="highlight"><code>Person.prototype.somePublicMethod = function() {
     // doesn’t work!
     // alert(this.name);
     // this one below works
     alert(this.getName());
 };
 </code></pre>
+</div>
 
 <p>大家广泛认为，Douglas Crockford是第一个发现（或者可能说发表更合适）使用闭包来模拟私有成员的人。他的网站，<a href="http://javascript.crockford.com/">javascript.crockford.com</a>，包含了JavaScript方面的大量信息 —— 对JavaScript感兴趣的开发人员都应该去他的网站看看。</p>
 
@@ -522,7 +597,7 @@ alert(ray.getName() + " is now " + ray.getAge() +
 
 <p><img src="/assets/files/2013-06/20151043_zqob.gif" alt="" /> 图9<strong> 类 </strong></p>
 
-<pre><code>// class Pet
+<div class="highlighter-rouge"><pre class="highlight"><code>// class Pet
 function Pet(name) {
     this.getName = function() { return name; };
     this.setName = function(newName) { name = newName; };
@@ -536,12 +611,13 @@ Pet.prototype.toString = function() {
 var parrotty = new Pet("Parrotty the Parrot");
 alert(parrotty);
 </code></pre>
+</div>
 
 <p>那该如何定义派生自Pet类的Dog类呢？从<strong>图9</strong>中可看出，Dog类具有一个额外的属性，breed,，并且它还重载了Pet的toString方法（请注意，avaScript中的方法和属性命名惯例采用的是驼峰式大小写方式，即camel case；而C#推荐使用的是Pascal大小写方式）。<strong>图10</strong>所示即为Pet类的定义实现方法：</p>
 
 <p>图10 <strong>继承Pet类</strong></p>
 
-<pre><code>// class Dog : Pet 
+<div class="highlighter-rouge"><pre class="highlight"><code>// class Dog : Pet 
 // public Dog(string name, string breed)
 function Dog(name, breed) {
     // think Dog : base(name) 
@@ -585,6 +661,7 @@ alert(dog instanceof Pet);
 // (dog is Object)? yes
 alert(dog instanceof Object);
 </code></pre>
+</div>
 
 <p>通过正确设置原型链这个小把戏，就可以同在C#中所期望的那样，使得instanceof测试在JavaScript中也能够正常进行。而且如你所愿，特权方法也能够正常得以运行。</p>
 
@@ -592,17 +669,18 @@ alert(dog instanceof Object);
 
 <p>在C++和C#中，命名空间用来将命名冲突的可能性减小到最小的程度。例如，在.NET框架中，命名空间可以帮助我们区分出Microsoft.Build.Task.Message和Sys­tem.Messaging.Message这两个类。JavaScript并没有明确的语言特性来支持命名空间，但使用对象可以非常容易的模拟出命名空间。比如说你想创建一个JavaScript代码库。不想在全局中定义函数和类，你就可以将你的函数和类封装到如下这样的命名空间之中：</p>
 
-<pre><code>var MSDNMagNS = {};
+<div class="highlighter-rouge"><pre class="highlight"><code>var MSDNMagNS = {};
 
 MSDNMagNS.Pet = function(name) { // code here };
 MSDNMagNS.Pet.prototype.toString = function() { // code };
 
 var pet = new MSDNMagNS.Pet("Yammer");
 </code></pre>
+</div>
 
 <p>只有一层命名空间可能会出现不唯一的请看，所以你可以创建嵌套的命名空间：</p>
 
-<pre><code>var MSDNMagNS = {};
+<div class="highlighter-rouge"><pre class="highlight"><code>var MSDNMagNS = {};
 
 // nested namespace "Examples"
 MSDNMagNS.Examples = {}; 
@@ -612,16 +690,18 @@ MSDNMagNS.Examples.Pet.prototype.toString = function() { // code };
 
 var pet = new MSDNMagNS.Examples.Pet("Yammer");
 </code></pre>
+</div>
 
 <p>不难想象，每次都键入这些很长的嵌套命名空间很快就会让人厌烦。幸运的是，你的代码库的用户可以很容易地为你的命名空间起一个比较简洁的别名：</p>
 
-<pre><code>// MSDNMagNS.Examples and Pet definition...
+<div class="highlighter-rouge"><pre class="highlight"><code>// MSDNMagNS.Examples and Pet definition...
 // think "using Eg = MSDNMagNS.Examples;" 
 var Eg = MSDNMagNS.Examples;
 var pet = new Eg.Pet("Yammer");
 
 alert(pet);
 </code></pre>
+</div>
 
 <p>你要是看一眼Microsoft AJAX代码库的源代码的话，就会发现该库的编写者也使用了类似的技巧来实现命名空间（请看静态方法Type.registerNamespace的实现代码)。这方面更详细的信息可参见”OOP and ASP.NET AJAX”的侧边栏。</p>
 
@@ -631,12 +711,13 @@ alert(pet);
 
 <p>你已经了解在JavaScript中是对象继承自对象（而非类继承自类）。所以，让大量的类使用静态的继承层次结构可能不是JavaScript之道。可能就象Douglas Crockford在他的这篇文章”<a href="http://javascript.crockford.com/prototypal.html">Prototypal Inheritance in JavaScript</a>“中所说的那样，JavaScript的编程之道就是创建原型对象，并使用下面这样的简单的对象函数来创建继承自原对象的新对象：</p>
 
-<pre><code>function object(o) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function object(o) {
     function F() {}
     F.prototype = o;
     return new F();
 }
 </code></pre>
+</div>
 
 <p>然后，既然JavaScript对象可塑性很强，你就可以在对象生成之后，通过为它添加必要的新字段和新方法来增强对象。</p>
 
@@ -664,15 +745,16 @@ alert(pet);
 
 <p>要在ASP.NET AJAX中定义一个类，你需要将该类的构造器函数赋值给一个变量（要注意构造器函数是如何调用基类的方法的）：</p>
 
-<pre><code>MyNamespace.MyClass = function() {
+<div class="highlighter-rouge"><pre class="highlight"><code>MyNamespace.MyClass = function() {
     MyNamespace.MyClass.initializeBase(this);
     this._myProperty = null;
 }
 </code></pre>
+</div>
 
 <p>然后，你需要在它的原型中定义该类的成员：</p>
 
-<pre><code>MyNamespace.MyClass.prototype = {
+<div class="highlighter-rouge"><pre class="highlight"><code>MyNamespace.MyClass.prototype = {
     get_myProperty: function() { return this._myProperty;},
     set_myProperty: function(value) { this._myProperty = value; },
     doSomething: function() {
@@ -681,91 +763,54 @@ alert(pet);
     }
 }
 </code></pre>
+</div>
 
 <p>最后，你要对这个类进行注册：</p>
 
-<pre><code>MyNamespace.MyClass.registerClass(
+<div class="highlighter-rouge"><pre class="highlight"><code>MyNamespace.MyClass.registerClass(
     "MyNamespace.MyClass ", MyNamespace.BaseClass);
 </code></pre>
+</div>
 
 <p>构造器和原型的继承层次结构就不需要你管了，因为registerClass函数会为你完成此项任务。</p>
 
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html">http://http://uwebs.tk/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

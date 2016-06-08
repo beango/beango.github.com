@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Oracle与SQLServer语法区别</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Oracle与SQLServer语法区别</title>
+  <meta name="description" content="  Oracle:nvl SqlServer:isnull">
+
+  <link rel="canonical" href="127.0.0.1/archives/2014/06/18/oracle-and-sqlserver.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
 
-<div class="main">
-	<article>
-	<ul>
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      <ul>
   <li>
-    <p>Oracle:nvl SqlServer:isnull </p>
+    <p>Oracle:nvl SqlServer:isnull</p>
   </li>
   <li>
     <p>insert，update，delete等用分号隔开的sql语句，必须前加begin，后加commit;end;并且去掉中间所有的\r\n。<br />
 select时，一个sql语句中不能包含多个select语句</p>
 
-    <pre><code> /// &lt;summary&gt;  
+    <div class="highlighter-rouge"><pre class="highlight"><code> /// &lt;summary&gt;  
  /// 将在SqlServer中，用分号隔开的多句sql语句，改为在Oracle中执行的Sql  
  /// 前面加begin，后面加end，去掉所有的\r\n  
  /// &lt;/summary&gt;  
@@ -43,12 +88,14 @@ select时，一个sql语句中不能包含多个select语句</p>
      return _sqlserverSql;  
  }
 </code></pre>
+    </div>
   </li>
   <li>
     <p>当数据类型为nvarchar2时，最好前面加N，例如</p>
 
-    <pre><code>  insert into a(nvarchar2field) values(N'中文')
+    <div class="highlighter-rouge"><pre class="highlight"><code>  insert into a(nvarchar2field) values(N'中文')
 </code></pre>
+    </div>
 
     <p>查询时where子句也如此，例如where name = N’张三’</p>
   </li>
@@ -56,85 +103,96 @@ select时，一个sql语句中不能包含多个select语句</p>
     <p>sql语句中的+，改为||</p>
   </li>
   <li>
-    <p>Oracle中做除法时，需要进行以下操作，否则c#中会算术溢出 </p>
+    <p>Oracle中做除法时，需要进行以下操作，否则c#中会算术溢出</p>
 
-    <pre><code>round(count(*)/(cast(3 as float)), 28) 
+    <div class="highlighter-rouge"><pre class="highlight"><code>round(count(*)/(cast(3 as float)), 28) 
 </code></pre>
+    </div>
 
     <p>cast(3 as float)是为了和sqlserver保持一致，28是最大精度，不能大于28</p>
   </li>
   <li>
-    <p>日期在SqlServer中可以按照字符串操作，但在Oracle中不行 </p>
+    <p>日期在SqlServer中可以按照字符串操作，但在Oracle中不行</p>
 
     <p>Oracle中插入时也必须做如下转换</p>
 
-    <pre><code>Oracle:to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS')    
+    <div class="highlighter-rouge"><pre class="highlight"><code>Oracle:to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS')    
 </code></pre>
-
-    <p>SqlServer插入或者where子句中都可以直接使用字符串，但where子句中使用字符串，会加快查询速度 </p>
-
-    <pre><code>SqlServer:convert(datetime,''2010-12-21 12:02:30') 
-</code></pre>
-  </li>
-  <li>
-    <p>想要保存一个时间的毫秒数，Oracle中的字段类型必须为timestamp，不能为date，因为date只保存时间值到秒。 </p>
-
-    <p>Oracle中插入时也必须做如下转换 </p>
-
-    <pre><code>to_timestamp('2010-12-21 12:02:30.230940','YYYY-MM-DD HH24:MI:SS.FF')  
-</code></pre>
+    </div>
 
     <p>SqlServer插入或者where子句中都可以直接使用字符串，但where子句中使用字符串，会加快查询速度</p>
 
-    <pre><code>SqlServer:Convert(datetime,'2010-12-21 12:02:30.230940') 
+    <div class="highlighter-rouge"><pre class="highlight"><code>SqlServer:convert(datetime,''2010-12-21 12:02:30') 
 </code></pre>
+    </div>
+  </li>
+  <li>
+    <p>想要保存一个时间的毫秒数，Oracle中的字段类型必须为timestamp，不能为date，因为date只保存时间值到秒。</p>
+
+    <p>Oracle中插入时也必须做如下转换</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>to_timestamp('2010-12-21 12:02:30.230940','YYYY-MM-DD HH24:MI:SS.FF')  
+</code></pre>
+    </div>
+
+    <p>SqlServer插入或者where子句中都可以直接使用字符串，但where子句中使用字符串，会加快查询速度</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>SqlServer:Convert(datetime,'2010-12-21 12:02:30.230940') 
+</code></pre>
+    </div>
   </li>
   <li>
     <p>sql中日期想减得到秒的方法</p>
 
     <p>Oracle：</p>
 
-    <pre><code>CAST((sysdate- to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'))*24*60*60  as float)    
+    <div class="highlighter-rouge"><pre class="highlight"><code>CAST((sysdate- to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'))*24*60*60  as float)    
 </code></pre>
+    </div>
 
     <p>SqlServer:</p>
 
-    <pre><code>CONVERT(float, datediff(second, to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'), getdate()))
+    <div class="highlighter-rouge"><pre class="highlight"><code>CONVERT(float, datediff(second, to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'), getdate()))
 </code></pre>
+    </div>
   </li>
   <li>
-    <p>Oracle中字段不允许存入’‘，即空字符串，只有null值，所以where子句中判断空值方法为： </p>
+    <p>Oracle中字段不允许存入’‘，即空字符串，只有null值，所以where子句中判断空值方法为：</p>
 
-    <pre><code>    Oracle：字段名 is null  
+    <div class="highlighter-rouge"><pre class="highlight"><code>    Oracle：字段名 is null  
     SqlServer：(字段名 is null or 字段名 = '')    
 </code></pre>
+    </div>
 
-    <p>判断不为空值的方法 </p>
+    <p>判断不为空值的方法</p>
 
-    <pre><code>Oracle：字段名 is not null  
+    <div class="highlighter-rouge"><pre class="highlight"><code>Oracle：字段名 is not null  
 SqlServer：(字段名 is not null and 字段名 != '')
 </code></pre>
+    </div>
   </li>
   <li>
-    <p>Oracle中Top N的写法：  </p>
+    <p>Oracle中Top N的写法：</p>
 
-    <p>注意：Order by要写在子查询里，rownum是从1开始的 </p>
+    <p>注意：Order by要写在子查询里，rownum是从1开始的</p>
 
-    <pre><code>select * from 
+    <div class="highlighter-rouge"><pre class="highlight"><code>select * from 
 (
     select * from c_itcomp order by d_controladderss
 ) where rownum&lt;100    
 </code></pre>
+    </div>
 
-    <p>排序后从第4条记录取至第9条记录  </p>
+    <p>排序后从第4条记录取至第9条记录</p>
 
-    <pre><code>select * from (    
+    <div class="highlighter-rouge"><pre class="highlight"><code>select * from (    
     select rownum as num, t.* from   
     (
         select a.* from a order by b   
     ) t 
 ) where num&gt; 3 and num&lt; 10 
 </code></pre>
+    </div>
   </li>
   <li>
     <p>Oracle中，给表定义别名的时候不能加as  例如：select * from 表名 as 别名！！！！<br />
@@ -146,91 +204,46 @@ SqlServer：(字段名 is not null and 字段名 != '')
 注意，这是错误的，正确的应该是 select 字段名 as 别名 from dual</p>
   </li>
   <li>
-    <p>Oracle中没有select sysdate as nowDate的写法，正确的应该是加个虚表dual </p>
+    <p>Oracle中没有select sysdate as nowDate的写法，正确的应该是加个虚表dual</p>
 
-    <pre><code>select sysdate as nowDate from dual
+    <div class="highlighter-rouge"><pre class="highlight"><code>select sysdate as nowDate from dual
 </code></pre>
+    </div>
   </li>
   <li>
     <p>Oracle中，字段名都是大写的，即使select语句中是小写，得到的结果也是大写。因此，select到DataTable中后，binding到wpf时如果大小写不同，会绑定失败。在DataTable中分组和排序，也会失败。因此，尽量将DataTable中的字段名 称改为大写。</p>
   </li>
   <li>
-    <p>Oracle中的Integer类型，在C#中是Decimal，因此，在C#中从DataTable取值进行类型转换时： 若要转成Int类型，需使用Convert.ToInt32，而不能使用(int)，否则会报错  若要转成Bool类型，需使用Convert.ToBoolean，而不能使用(bool)，否则会报错 </p>
+    <p>Oracle中的Integer类型，在C#中是Decimal，因此，在C#中从DataTable取值进行类型转换时： 若要转成Int类型，需使用Convert.ToInt32，而不能使用(int)，否则会报错  若要转成Bool类型，需使用Convert.ToBoolean，而不能使用(bool)，否则会报错</p>
   </li>
 </ul>
 
-</article>
+    </main>
 
-
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+  </body>
+
 </html>

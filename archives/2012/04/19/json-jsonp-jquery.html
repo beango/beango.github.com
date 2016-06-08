@@ -59,7 +59,7 @@ redirecturl: http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jque
 
 <p><strong>JSON实例：</strong></p>
 
-<pre><code>// 描述一个人
+<div class="highlighter-rouge"><pre class="highlight"><code>// 描述一个人
 var person = {
     "Name": "Bob",
     "Age": 32,
@@ -126,6 +126,7 @@ var conference = {
 // 读取参会者Henry是否工程师
 var henryIsAnEngineer = conference.Members[2].Engineer;
 </code></pre>
+</div>
 
 <p>关于JSON，就说这么多，更多细节请在开发过程中查阅资料深入学习。</p>
 
@@ -159,22 +160,24 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>远程服务器remoteserver.com根目录下有个remote.js文件代码如下：</p>
 
-<pre><code>alert('我是远程文件');
+<div class="highlighter-rouge"><pre class="highlight"><code>alert('我是远程文件');
 </code></pre>
+</div>
 
 <p>本地服务器localserver.com下有个jsonp.html页面代码如下：</p>
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-    &lt;title&gt;&lt;/title&gt;
-    &lt;script type="text/javascript" src="http://remoteserver.com/remote.js"&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/1999/xhtml"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"http://remoteserver.com/remote.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
  
-&lt;/body&gt;
-&lt;/html&gt;
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>毫无疑问，页面将会弹出一个提示窗体，显示跨域调用成功。</p>
 
@@ -182,27 +185,29 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>jsonp.html页面代码如下：</p>
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-    &lt;title&gt;&lt;/title&gt;
-    &lt;script type="text/javascript"&gt;
-    var localHandler = function(data){
-        alert('我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：' + data.result);
-    };
-    &lt;/script&gt;
-    &lt;script type="text/javascript" src="http://remoteserver.com/remote.js"&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/1999/xhtml"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="kd">var</span> <span class="nx">localHandler</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s1">'我是本地函数，可以被跨域的remote.js文件调用，远程js带来的数据是：'</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">result</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"http://remoteserver.com/remote.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
  
-&lt;/body&gt;
-&lt;/html&gt;
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>remote.js文件代码如下：</p>
 
-<pre><code>localHandler({"result":"我是远程js带来的数据"});
+<div class="highlighter-rouge"><pre class="highlight"><code>localHandler({"result":"我是远程js带来的数据"});
 </code></pre>
+</div>
 
 <p>运行之后查看结果，页面成功弹出提示窗口，显示本地函数被跨域的远程js调用成功，并且还接收到了远程js带来的数据。很欣喜，跨域远程获取数据的目的基本实现了，但是又一个问题出现了，我怎么让远程js知道它应该调用的本地函数叫什么名字呢？毕竟是jsonp的服务者都要面对很多服务对象，而这些服务对象各自的本地函数都不相同啊？我们接着往下看。</p>
 
@@ -210,29 +215,30 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>看jsonp.html页面的代码：</p>
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-    &lt;title&gt;&lt;/title&gt;
-    &lt;script type="text/javascript"&gt;
-    // 得到航班信息查询结果后的回调函数
-    var flightHandler = function(data){
-        alert('你查询的航班结果是：票价 ' + data.price + ' 元，' + '余票 ' + data.tickets + ' 张。');
-    };
-    // 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）
-    var url = "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler";
-    // 创建script标签，设置其属性
-    var script = document.createElement('script');
-    script.setAttribute('src', url);
-    // 把script标签加入head，此时调用开始
-    document.getElementsByTagName('head')[0].appendChild(script);
-    &lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/1999/xhtml"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+    <span class="c1">// 得到航班信息查询结果后的回调函数</span>
+    <span class="kd">var</span> <span class="nx">flightHandler</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="s1">'你查询的航班结果是：票价 '</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">price</span> <span class="o">+</span> <span class="s1">' 元，'</span> <span class="o">+</span> <span class="s1">'余票 '</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">tickets</span> <span class="o">+</span> <span class="s1">' 张。'</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="c1">// 提供jsonp服务的url地址（不管是什么类型的地址，最终生成的返回值都是一段javascript代码）</span>
+    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998&amp;callback=flightHandler"</span><span class="p">;</span>
+    <span class="c1">// 创建script标签，设置其属性</span>
+    <span class="kd">var</span> <span class="nx">script</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+    <span class="nx">script</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">'src'</span><span class="p">,</span> <span class="nx">url</span><span class="p">);</span>
+    <span class="c1">// 把script标签加入head，此时调用开始</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'head'</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">script</span><span class="p">);</span>
+    <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
  
-&lt;/body&gt;
-&lt;/html&gt;
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>这次的代码变化比较大，不再直接把远程js文件写死，而是编码实现动态查询，而这也正是jsonp客户端实现的核心部分，本例中的重点也就在于如何完成jsonp调用的全过程。</p>
 
@@ -240,12 +246,13 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>OK，服务器很聪明，这个叫做flightResult.aspx的页面生成了一段这样的代码提供给jsonp.html（服务端的实现这里就不演示了，与你选用的语言无关，说到底就是拼接字符串）：</p>
 
-<pre><code>flightHandler({
+<div class="highlighter-rouge"><pre class="highlight"><code>flightHandler({
     "code": "CA1998",
     "price": 1780,
     "tickets": 5
 });
 </code></pre>
+</div>
 
 <p>我们看到，传递给flightHandler函数的是一个json，它描述了航班的基本信息。运行一下页面，成功弹出提示窗口，jsonp的执行全过程顺利完成！</p>
 
@@ -253,34 +260,35 @@ var henryIsAnEngineer = conference.Members[2].Engineer;
 
 <p>什么？你用的是jQuery，想知道jQuery如何实现jsonp调用？好吧，那我就好人做到底，再给你一段jQuery使用jsonp的代码（我们依然沿用上面那个航班信息查询的例子，假定返回jsonp结果不变）：</p>
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
- &lt;html xmlns="http://www.w3.org/1999/xhtml" &gt;
- &lt;head&gt;
-     &lt;title&gt;Untitled Page&lt;/title&gt;
-      &lt;script type="text/javascript" src=jquery.min.js"&gt;&lt;/script&gt;
-      &lt;script type="text/javascript"&gt;
-     jQuery(document).ready(function(){
-        $.ajax({
-             type: "get",
-             async: false,
-             url: "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998",
-             dataType: "jsonp",
-             jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
-             jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
-             success: function(json){
-                 alert('您查询到航班信息：票价： ' + json.price + ' 元，余票： ' + json.tickets + ' 张。');
-             },
-             error: function(){
-                 alert('fail');
-             }
-         });
-     });
-     &lt;/script&gt;
-     &lt;/head&gt;
-  &lt;body&gt;
-  &lt;/body&gt;
- &lt;/html&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span>
+ <span class="nt">&lt;html</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/1999/xhtml"</span> <span class="nt">&gt;</span>
+ <span class="nt">&lt;head&gt;</span>
+     <span class="nt">&lt;title&gt;</span>Untitled Page<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">jquery.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+     <span class="nx">jQuery</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+             <span class="na">type</span><span class="p">:</span> <span class="s2">"get"</span><span class="p">,</span>
+             <span class="na">async</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+             <span class="na">url</span><span class="p">:</span> <span class="s2">"http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998"</span><span class="p">,</span>
+             <span class="na">dataType</span><span class="p">:</span> <span class="s2">"jsonp"</span><span class="p">,</span>
+             <span class="na">jsonp</span><span class="p">:</span> <span class="s2">"callback"</span><span class="p">,</span><span class="c1">//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)</span>
+             <span class="na">jsonpCallback</span><span class="p">:</span><span class="s2">"flightHandler"</span><span class="p">,</span><span class="c1">//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据</span>
+             <span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">json</span><span class="p">){</span>
+                 <span class="nx">alert</span><span class="p">(</span><span class="s1">'您查询到航班信息：票价： '</span> <span class="o">+</span> <span class="nx">json</span><span class="p">.</span><span class="nx">price</span> <span class="o">+</span> <span class="s1">' 元，余票： '</span> <span class="o">+</span> <span class="nx">json</span><span class="p">.</span><span class="nx">tickets</span> <span class="o">+</span> <span class="s1">' 张。'</span><span class="p">);</span>
+             <span class="p">},</span>
+             <span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+                 <span class="nx">alert</span><span class="p">(</span><span class="s1">'fail'</span><span class="p">);</span>
+             <span class="p">}</span>
+         <span class="p">});</span>
+     <span class="p">});</span>
+     <span class="nt">&lt;/script&gt;</span>
+     <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+ <span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>是不是有点奇怪？为什么我这次没有写flightHandler这个函数呢？而且竟然也运行成功了！哈哈，这就是jQuery的功劳了，jquery在处理jsonp类型的ajax时（还是忍不住吐槽，虽然jquery也把jsonp归入了ajax，但其实它们真的不是一回事儿），自动帮你生成回调函数并把数据取出来供success属性方法来调用，是不是很爽呀？</p>
 

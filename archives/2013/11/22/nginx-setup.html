@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="ngnix" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Nginx 战斗准备 —— 优化指南</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nginx 战斗准备 —— 优化指南</title>
+  <meta name="description" content="原文出处：zachorr 译文出处：oschina -Garfielt, yale8848, tnjin">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/11/22/nginx-setup.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Nginx 战斗准备 —— 优化指南</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/11/22/nginx-setup.html">Nginx 战斗准备 —— 优化指南</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-11-22</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>原文出处：<a href="http://blog.zachorr.com/nginx-setup/">zachorr</a> 译文出处：<a href="http://www.oschina.net/translate/nginx-setup?print">oschina -Garfielt, yale8848, tnjin</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Nginx 战斗准备 —— 优化指南</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>原文出处：<a href="http://blog.zachorr.com/nginx-setup/">zachorr</a> 译文出处：<a href="http://www.oschina.net/translate/nginx-setup?print">oschina -Garfielt, yale8848, tnjin</a></p>
 
 <p>大多数的Nginx安装指南告诉你如下基础知识——通过apt-get安装，修改这里或那里的几行配置，好了，你已经有了一个Web服务器了！而且，在大多数情况下，一个常规安装的nginx对你的网站来说已经能很好地工作了。然而，如果你真的想挤压出nginx的性能，你必须更深入一些。在本指南中，我将解释Nginx的那些设置可以微调，以优化处理大量客户端时的性能。需要注意一点，这不是一个全面的微调指南。这是一个简单的预览——那些可以通过微调来提高性能设置的概述。你的情况可能不同。</p>
 
@@ -37,11 +82,12 @@
 
 <p>nginx.conf文件中，Nginx中有少数的几个高级配置在模块部分之上。</p>
 
-<pre><code>user www-data;
+<div class="highlighter-rouge"><pre class="highlight"><code>user www-data;
 pid /var/run/nginx.pid;
 worker_processes auto;
 worker_rlimit_nofile 100000;
 </code></pre>
+</div>
 
 <p><strong>user</strong>和<strong>pid</strong>应该按默认设置 – 我们不会更改这些内容，因为更改与否没有什么不同。</p>
 
@@ -53,16 +99,17 @@ worker_rlimit_nofile 100000;
 
 <p>events模块中包含nginx中所有处理连接的设置。</p>
 
-<pre><code>events {
+<div class="highlighter-rouge"><pre class="highlight"><code>events {
   worker_connections 2048;
   multi_accept on;
   use epoll;
 }
 </code></pre>
+</div>
 
 <p><strong>worker_connections</strong>设置可由一个worker进程同时打开的最大连接数。如果设置了上面提到的worker_rlimit_nofile，我们可以将这个值设得很高。</p>
 
-<p>记住，最大客户数也由系统的可用socket连接数限制（\~64K），所以设置不切实际的高没什么好处。</p>
+<p>记住，最大客户数也由系统的可用socket连接数限制（~64K），所以设置不切实际的高没什么好处。</p>
 
 <p><strong>multi_accept </strong>告诉nginx收到一个新连接通知后接受尽可能多的连接。</p>
 
@@ -74,7 +121,7 @@ worker_rlimit_nofile 100000;
 
 <p>HTTP模块控制着nginx http处理的所有核心特性。因为这里只有很少的配置，所以我们只节选配置的一小部分。所有这些设置都应该在http模块中，甚至你不会特别的注意到这段设置。</p>
 
-<pre><code>http {
+<div class="highlighter-rouge"><pre class="highlight"><code>http {
   server_tokens off;
   sendfile on;
   tcp_nopush on;
@@ -82,6 +129,7 @@ worker_rlimit_nofile 100000;
   ...
 }
 </code></pre>
+</div>
 
 <p><strong>server_tokens </strong>并不会让nginx执行的速度更快，但它可以关闭在错误页面中的nginx版本数字，这样对于安全性是有好处的。</p>
 
@@ -91,20 +139,22 @@ worker_rlimit_nofile 100000;
 
 <p><strong>tcp_nodelay</strong> 告诉nginx不要缓存数据，而是一段一段的发送–当需要及时发送数据时，就应该给应用设置这个属性，这样发送一小块数据信息时就不能立即得到返回值。</p>
 
-<pre><code>access_log off;
+<div class="highlighter-rouge"><pre class="highlight"><code>access_log off;
 error_log /var/log/nginx/error.log crit;
 </code></pre>
+</div>
 
 <p><strong>access_log</strong>设置nginx是否将存储访问日志。关闭这个选项可以让读取磁盘IO操作更快(aka,YOLO)</p>
 
 <p><strong>error_log </strong>告诉nginx只能记录严重的错误</p>
 
-<pre><code>keepalive_timeout 10;
+<div class="highlighter-rouge"><pre class="highlight"><code>keepalive_timeout 10;
 client_header_timeout 10;
 client_body_timeout 10;
 reset_timedout_connection on;
 send_timeout 10;
 </code></pre>
+</div>
 
 <p><strong>keepalive_timeout</strong> 给客户端分配keep-alive链接超时时间。服务器将在这个超时时间过后关闭链接。我们将它设置低些可以让ngnix持续工作的时间更长。</p>
 
@@ -114,16 +164,18 @@ send_timeout 10;
 
 <p>send_timeout指定客户端的响应超时时间。这个设置不会用于整个转发器，而是在两次客户端读取操作之间。如果在这段时间内，客户端没有读取任何数据，nginx就会关闭连接。</p>
 
-<pre><code>limit_conn_zone $binary_remote_addr zone=addr:5m;
+<div class="highlighter-rouge"><pre class="highlight"><code>limit_conn_zone $binary_remote_addr zone=addr:5m;
 limit_conn addr 100;
 </code></pre>
+</div>
 
 <p>limit_conn_zone设置用于保存各种key（比如当前连接数）的共享内存的参数。5m就是5兆字节，这个值应该被设置的足够大以存储（32K*5）32byte状态或者（16K*5）64byte状态。limit_conn为给定的key设置最大连接数。这里key是addr，我们设置的值是100，也就是说我们允许每一个IP地址最多同时打开有100个连接。</p>
 
-<pre><code>include /etc/nginx/mime.types;
+<div class="highlighter-rouge"><pre class="highlight"><code>include /etc/nginx/mime.types;
 default_type text/html;
 charset UTF-8;
 </code></pre>
+</div>
 
 <p>include只是一个在当前文件中包含另一个文件内容的指令。这里我们使用它来加载稍后会用到的一系列的MIME类型。</p>
 
@@ -133,7 +185,7 @@ charset UTF-8;
 
 <p>以下两点对于性能的提升在伟大的WebMasters StackExchange中有解释。</p>
 
-<pre><code>gzip on;
+<div class="highlighter-rouge"><pre class="highlight"><code>gzip on;
 gzip_disable "msie6";
 # gzip_static on;
 gzip_proxied any;
@@ -141,6 +193,7 @@ gzip_min_length 1000;
 gzip_comp_level 4;
 gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 </code></pre>
+</div>
 
 <p>gzip是告诉nginx采用gzip压缩的形式发送数据。这将会减少我们发送的数据量。</p>
 
@@ -156,7 +209,7 @@ gzip_types text/plain text/css application/json application/x-javascript text/xm
 
 <p>gzip_type设置需要压缩的数据格式。上面例子中已经有一些了，你也可以再添加更多的格式。</p>
 
-<pre><code># cache informations about file descriptors, frequently accessed files
+<div class="highlighter-rouge"><pre class="highlight"><code># cache informations about file descriptors, frequently accessed files
 # can boost performance, but you need to test those values
 open_file_cache max=100000 inactive=20s;
 open_file_cache_valid 30s;
@@ -169,6 +222,7 @@ open_file_cache_errors on;
 include /etc/nginx/conf.d/*.conf;
 include /etc/nginx/sites-enabled/*;
 </code></pre>
+</div>
 
 <p>open_file_cache打开缓存的同时也指定了缓存最大数目，以及缓存的时间。我们可以设置一个相对高的最大时间，这样我们可以在它们不活动超过20秒后清除掉。</p>
 
@@ -180,7 +234,7 @@ include /etc/nginx/sites-enabled/*;
 
 <h2 id="section-2">一个完整的配置</h2>
 
-<pre><code>user www-data;
+<div class="highlighter-rouge"><pre class="highlight"><code>user www-data;
 pid /var/run/nginx.pid;
 worker_processes auto;
 worker_rlimit_nofile 100000;
@@ -220,6 +274,7 @@ http {
   include /etc/nginx/sites-enabled/*;
 }
 </code></pre>
+</div>
 
 <p>编辑完配置后，确认重启nginx使设置生效。</p>
 
@@ -231,81 +286,42 @@ http {
 
 <p>就这样！你的Web服务器现在已经就绪，之前困扰你的众多访问者的问题来吧。这并不是加速网站的唯一途径，很快我会写更多介绍其他加速网站方法的文章的。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/11/22/nginx-setup.html">http://http://uwebs.tk/archives/2013/11/22/nginx-setup.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

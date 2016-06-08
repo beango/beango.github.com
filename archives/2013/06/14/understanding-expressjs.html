@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="node.js" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / (译)深入理解Express.js</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>(译)深入理解Express.js</title>
+  <meta name="description" content="本文针对那些对Node.js有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/06/14/understanding-expressjs.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / (译)深入理解Express.js</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/06/14/understanding-expressjs.html">(译)深入理解Express.js</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-06-14</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>本文针对那些对<a href="http://nodejs.org">Node.js</a>有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">(译)深入理解Express.js</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>本文针对那些对<a href="http://nodejs.org">Node.js</a>有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。</p>
 
 <p><a href="http://expressjs.org">Express.js</a>这么描述自己：”轻量灵活的node.js Web应用框架”。它可以帮助你快速搭建web应用。如果你使用过Ruby里的<a href="http://www.sinatrarb.com/">Sinatra</a>,那么相信你对这个也会很快就能熟悉。</p>
 
@@ -41,7 +86,7 @@
 
 <p>Node中有<a href="http://nodejs.org/api/http.html">HTTP模块</a>,它将搭建一个web服务器的过程抽象出来。你可以这样使用:</p>
 
-<pre><code>// 引入所需模块
+<div class="highlighter-rouge"><pre class="highlight"><code>// 引入所需模块
 var http = require("http");
 
 // 建立服务器
@@ -56,14 +101,15 @@ var app = http.createServer(function(request, response) {
 app.listen(1337, "localhost");
 console.log("Server running at http://localhost:1337/");
 </code></pre>
+</div>
 
-<p>运行这个程序(假设文件名 ​​为<code>app.js</code> ,运行<code>node app.js</code> )，你会得到”Hello world!“在浏览器访问<code>localhost:1337</code>，你会得到同样的结果。你也可以尝试访问其他地址，如<code>localhost:1337/whatever</code>，结果仍然会一样。</p>
+<p>运行这个程序(假设文件名 ​​为<code class="highlighter-rouge">app.js</code> ,运行<code class="highlighter-rouge">node app.js</code> )，你会得到”Hello world!“在浏览器访问<code class="highlighter-rouge">localhost:1337</code>，你会得到同样的结果。你也可以尝试访问其他地址，如<code class="highlighter-rouge">localhost:1337/whatever</code>，结果仍然会一样。</p>
 
 <p>分解以上代码来看。</p>
 
-<p>第一行使用<code>require</code>函数引入Node内置模块<code>http</code>。然后存入名为<code>http</code>的变量中。如果你要了解更多关于require函数的知识，参考<a href="http://docs.nodejitsu.com/articles/getting-started/what-is-require">Nodejitsu</a>的文档。</p>
+<p>第一行使用<code class="highlighter-rouge">require</code>函数引入Node内置模块<code class="highlighter-rouge">http</code>。然后存入名为<code class="highlighter-rouge">http</code>的变量中。如果你要了解更多关于require函数的知识，参考<a href="http://docs.nodejitsu.com/articles/getting-started/what-is-require">Nodejitsu</a>的文档。</p>
 
-<p>然后我们使用<code>http.createServer</code>将服务器保存至<code>app</code>变量。它将一个函数作为参数监听请求。稍后将会详细介绍它。</p>
+<p>然后我们使用<code class="highlighter-rouge">http.createServer</code>将服务器保存至<code class="highlighter-rouge">app</code>变量。它将一个函数作为参数监听请求。稍后将会详细介绍它。</p>
 
 <p>最后我们要做的就是告诉服务器监听来自1337端口的请求，之后输出结果。然后一切完成。</p>
 
@@ -73,11 +119,11 @@ console.log("Server running at http://localhost:1337/");
 
 <p>在开始这个部分之前，我事先声明这里所涉及的HTTP相关知识与学习Express本身没有太大关系。如果你感兴趣，可以查看<a href="http://nodejs.org/api/http.html">HTTP模块文档</a>。</p>
 
-<p>任何时候我们向服务器发起请求，request方法将会被调用。如果你不信，你可以<code>console.log</code>将结果打印出来。你会发现每次请求一个页面时它都会出来。</p>
+<p>任何时候我们向服务器发起请求，request方法将会被调用。如果你不信，你可以<code class="highlighter-rouge">console.log</code>将结果打印出来。你会发现每次请求一个页面时它都会出来。</p>
 
-<p><code>request</code>是来自客户端的请求。在很多应用中，你可能会看到它的缩写<code>req</code>。仔细看代码。我们修改代码如下:</p>
+<p><code class="highlighter-rouge">request</code>是来自客户端的请求。在很多应用中，你可能会看到它的缩写<code class="highlighter-rouge">req</code>。仔细看代码。我们修改代码如下:</p>
 
-<pre><code>var app = http.createServer(function(request, response) {
+<div class="highlighter-rouge"><pre class="highlight"><code>var app = http.createServer(function(request, response) {
 
     // 创建answer变量
     var answer = "";
@@ -91,15 +137,17 @@ console.log("Server running at http://localhost:1337/");
 
 });
 </code></pre>
+</div>
 
-<p>重启服务器并刷新<code>localhsot:1337</code>.你会发现，每次访问一个URL，就会发起一次GET请求，并会得到一堆类似用户代理或者一些其他的更加复杂的HTTP相关信息。如果你访问<code>localhost:1337/what_is_fraser</code>,你会看到request的地址发生了变化。如果你使用不同的浏览器访问，用户代理也会跟着改变，如果你使用POST请求，request的方法也很改变。</p>
+<p>重启服务器并刷新<code class="highlighter-rouge">localhsot:1337</code>.你会发现，每次访问一个URL，就会发起一次GET请求，并会得到一堆类似用户代理或者一些其他的更加复杂的HTTP相关信息。如果你访问<code class="highlighter-rouge">localhost:1337/what_is_fraser</code>,你会看到request的地址发生了变化。如果你使用不同的浏览器访问，用户代理也会跟着改变，如果你使用POST请求，request的方法也很改变。</p>
 
-<p><code>response</code>是另外一个部分。正如<code>request</code>被缩写为<code>req</code>，<code>response</code>同样被简写为<code>res</code>。每次response你都会得到对应的返回结果，之后你便可以通过调用<code>response.end</code>来结束。实际上最终你还是要执行这个方法的,甚至在<a href="http://nodejs.org/api/http.html#http_response_end_data_encoding">node</a>的文档里也是这么描述的。这个方法完成了真正的数据传输部分。你可以建立一个服务器并不调用<code>req.end</code>方法，它就会永远存在。</p>
+<p><code class="highlighter-rouge">response</code>是另外一个部分。正如<code class="highlighter-rouge">request</code>被缩写为<code class="highlighter-rouge">req</code>，<code class="highlighter-rouge">response</code>同样被简写为<code class="highlighter-rouge">res</code>。每次response你都会得到对应的返回结果，之后你便可以通过调用<code class="highlighter-rouge">response.end</code>来结束。实际上最终你还是要执行这个方法的,甚至在<a href="http://nodejs.org/api/http.html#http_response_end_data_encoding">node</a>的文档里也是这么描述的。这个方法完成了真正的数据传输部分。你可以建立一个服务器并不调用<code class="highlighter-rouge">req.end</code>方法，它就会永远存在。</p>
 
 <p>在你返回结果之前，你也可以填写一下header头​​部部分。我们的例子里是这么写的:</p>
 
-<pre><code>response.writeHead(200, { "Content-Type": "text/plain" });
+<div class="highlighter-rouge"><pre class="highlight"><code>response.writeHead(200, { "Content-Type": "text/plain" });
 </code></pre>
+</div>
 
 <p>这个步骤主要完成两件事情。第一，发送<a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">HTTP状态码</a>，表示请求成功。其次，它设置了返回的头部信息。这里表示我们要返回的是纯文本格式的内容。我们也可以返回类似JSON或者HTML格式的内容。</p>
 
@@ -109,7 +157,7 @@ console.log("Server running at http://localhost:1337/");
 
 <p>看了上面的之后，你可能会立马开始利用它来写api了。</p>
 
-<pre><code>var http = require("http");
+<div class="highlighter-rouge"><pre class="highlight"><code>var http = require("http");
 
 http.createServer(function(req, res) {
 
@@ -133,6 +181,7 @@ http.createServer(function(req, res) {
 
 }).listen(1337, "localhost");
 </code></pre>
+</div>
 
 <p>你可以选择优化代码，让它变得更整洁。也可以向<a href="https://github.com/isaacs/npm-www#design-philosophy">npm.org</a>的那帮家伙一样用原生的Node来编写。但是你也可以选择去创建一个框架。这就是Sencha所做的，并把这个框架称为–Connect.</p>
 
@@ -142,9 +191,9 @@ http.createServer(function(req, res) {
 
 <p><strong>一段Connect代码</strong></p>
 
-<p>假如我们想要编写和上面一样的代码，但是这次我们要使用Connect.别忘记安装Connect模块( <code>npm install</code> )。完成之后，代码看起来非常相似。</p>
+<p>假如我们想要编写和上面一样的代码，但是这次我们要使用Connect.别忘记安装Connect模块( <code class="highlighter-rouge">npm install</code> )。完成之后，代码看起来非常相似。</p>
 
-<pre><code>// 引入所需模块
+<div class="highlighter-rouge"><pre class="highlight"><code>// 引入所需模块
 var connect = require("connect");
 var http = require("http");
 
@@ -160,18 +209,19 @@ app.use(function(request, response) {
 // 启动应用
 http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
 <p>下面分解这段代码来看。</p>
 
 <p>首先我们分别引入了Connect和Node HTTP模块。</p>
 
-<p>接下来和之前一样声明<code>app</code>变量，但是在创建服务器时，我们调用了<code>connect()</code>.这有是如何工作的？</p>
+<p>接下来和之前一样声明<code class="highlighter-rouge">app</code>变量，但是在创建服务器时，我们调用了<code class="highlighter-rouge">connect()</code>.这有是如何工作的？</p>
 
-<p>我们添加了一个中间件，实际上就是一个函数。传入<code>app.use</code>，几乎和上面使用request方法写法一样。实际上代码是从上面粘贴过来的。</p>
+<p>我们添加了一个中间件，实际上就是一个函数。传入<code class="highlighter-rouge">app.use</code>，几乎和上面使用request方法写法一样。实际上代码是从上面粘贴过来的。</p>
 
-<p>之后我们建立并启动服务器。<code>http.createServer</code>接收函数作为参数。没错，<code>app</code>实际上也是一个函数。这是一个Connect提供的函数，它会查找代码并自上而下执行。</p>
+<p>之后我们建立并启动服务器。<code class="highlighter-rouge">http.createServer</code>接收函数作为参数。没错，<code class="highlighter-rouge">app</code>实际上也是一个函数。这是一个Connect提供的函数，它会查找代码并自上而下执行。</p>
 
-<p>(你可能会看见其他人使用<code>app.listen(1337)</code>,这实际上只是将<code>http.createServer</code>返回一个promise对象。再Connect和Express中都是一样的原理。)</p>
+<p>(你可能会看见其他人使用<code class="highlighter-rouge">app.listen(1337)</code>,这实际上只是将<code class="highlighter-rouge">http.createServer</code>返回一个promise对象。再Connect和Express中都是一样的原理。)</p>
 
 <p>接下来解释什么是中间件(middleware).</p>
 
@@ -183,16 +233,17 @@ http.createServer(app).listen(1337);
 
 <p>一个最基本的中间件结构如下:</p>
 
-<pre><code>function myFunMiddleware(request, response, next) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function myFunMiddleware(request, response, next) {
     // 对request和response作出相应操作
     // 操作完毕后返回next()即可转入下个中间件
     next();
 }
 </code></pre>
+</div>
 
 <p>当我们启动一个服务器，函数开始从顶部一直往下执行。如果你想输出函数的执行过程，添加一下代码:</p>
 
-<pre><code>var connect = require("connect");
+<div class="highlighter-rouge"><pre class="highlight"><code>var connect = require("connect");
 var http = require("http");
 var app = connect();
 
@@ -210,14 +261,15 @@ app.use(function(request, response, next) {
 
 http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
-<p>如果你启动应用并访问<code>localhost:1337</code>，你会看到服务器可以log出相关信息。</p>
+<p>如果你启动应用并访问<code class="highlighter-rouge">localhost:1337</code>，你会看到服务器可以log出相关信息。</p>
 
-<p>有一点值得注意，任何可以在Node.js下执行的代码都可以在中间件执行。例如上面我们所使用的<code>req.method</code>方法。</p>
+<p>有一点值得注意，任何可以在Node.js下执行的代码都可以在中间件执行。例如上面我们所使用的<code class="highlighter-rouge">req.method</code>方法。</p>
 
 <p>你当然可以编写自己的中间件，但是也不要错过Connect的一些很cool的<a href="https://github.com/senchalabs/connect/wiki">第三方中间件</a>。下面我们移除自己的log中间件，使用Connect内置方法。</p>
 
-<pre><code>var connect = require("connect");
+<div class="highlighter-rouge"><pre class="highlight"><code>var connect = require("connect");
 var http = require("http");
 var app = connect();
 
@@ -231,12 +283,13 @@ app.use(function(request, response) {
 
 http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
-<p>跳转至浏览器并访问<code>localhost:1337</code>你会得到同样的结果。</p>
+<p>跳转至浏览器并访问<code class="highlighter-rouge">localhost:1337</code>你会得到同样的结果。</p>
 
 <p>很快有人就会想使用上面的中间件组合起来创建一个完整应用。代码如下:</p>
 
-<pre><code>var connect = require("connect");
+<div class="highlighter-rouge"><pre class="highlight"><code>var connect = require("connect");
 var http = require("http");
 var app = connect();
 
@@ -272,6 +325,7 @@ app.use(function(request, response) {
 
 http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
 <p>“这个看起来不太好看!我要自己写框架！”</p>
 
@@ -283,25 +337,27 @@ http.createServer(app).listen(1337);
 
 <p>正如Connect拓展了Node, Express拓展Connect.代码的开始部分看起来和在Connect中非常类似：</p>
 
-<pre><code>var express = require("express");
+<div class="highlighter-rouge"><pre class="highlight"><code>var express = require("express");
 var http = require("http");
 var app = express();
 </code></pre>
+</div>
 
 <p>结尾部分也一样:</p>
 
-<pre><code>http.createServer(app).listen(1337);
+<div class="highlighter-rouge"><pre class="highlight"><code>http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
 <p>中间部分才是不一样的地方。Connect为我们提供了中间件，Express则为我们提供了另外三个优秀的特性：路由分发，请求处理，视图渲染。首先从如有开始看。</p>
 
 <h3 id="section">特性一：路由</h3>
 
-<p>路由的功能就是处理不同的请求。在上面的很多例子中，我们分别有首页，关于和404页面。我们是通过<code>if</code>来判断并处理不同请求地址。</p>
+<p>路由的功能就是处理不同的请求。在上面的很多例子中，我们分别有首页，关于和404页面。我们是通过<code class="highlighter-rouge">if</code>来判断并处理不同请求地址。</p>
 
 <p>但是Express却可以做的更好。Express提供了”routing”这个东西，也就是我们所说的路由。我觉得可读性甚至比纯文字还要好。</p>
 
-<pre><code>var express = require("express");
+<div class="highlighter-rouge"><pre class="highlight"><code>var express = require("express");
 var http = require("http");
 var app = express();
 
@@ -324,26 +380,29 @@ app.get("*", function(request, response) {
 
 http.createServer(app).listen(1337);
 </code></pre>
+</div>
 
-<p>简单的引入相关模块之后，我们立即调用<code>app.all</code>处理所有请求。写法看起来也非常像中间件不是吗？</p>
+<p>简单的引入相关模块之后，我们立即调用<code class="highlighter-rouge">app.all</code>处理所有请求。写法看起来也非常像中间件不是吗？</p>
 
-<p>代码中的<code>app.get</code>就是Express提供的路由系统。也可以是<code>app.post</code>来处理POST请求，或者是PUT和任何的HTTP请求方式。第一个参数是路径，例如<code>/about</code>或者<code>/</code>。第二个参数类似我们之前所见过的请求handler。引用<a href="http://expressjs.com/api.html#app.VERB">Expess文档的内容</a>:</p>
+<p>代码中的<code class="highlighter-rouge">app.get</code>就是Express提供的路由系统。也可以是<code class="highlighter-rouge">app.post</code>来处理POST请求，或者是PUT和任何的HTTP请求方式。第一个参数是路径，例如<code class="highlighter-rouge">/about</code>或者<code class="highlighter-rouge">/</code>。第二个参数类似我们之前所见过的请求handler。引用<a href="http://expressjs.com/api.html#app.VERB">Expess文档的内容</a>:</p>
 
 <blockquote>
-  <p>这些请求handler和中间件一样，唯一的区别是这些回调函数会调用<code>next('route')</code>从而能够继续执行剩下的路由回调函数。这种机制简单说来，它们和我们之前提过的中间件是一样，只不过是一些函数而已。</p>
+  <p>这些请求handler和中间件一样，唯一的区别是这些回调函数会调用<code class="highlighter-rouge">next('route')</code>从而能够继续执行剩下的路由回调函数。这种机制简单说来，它们和我们之前提过的中间件是一样，只不过是一些函数而已。</p>
 </blockquote>
 
 <p>这些路由也可以更加灵活，看起来是这样：</p>
 
-<pre><code>app.get("/hello/:who", function(req, res) {
+<div class="highlighter-rouge"><pre class="highlight"><code>app.get("/hello/:who", function(req, res) {
     res.end("Hello, " + req.params.who + ".");    
 });
 </code></pre>
+</div>
 
-<p>重启服务器并在浏览器访问<code>localhost:1337/hello/animelover69</code>你会得到如下信息：</p>
+<p>重启服务器并在浏览器访问<code class="highlighter-rouge">localhost:1337/hello/animelover69</code>你会得到如下信息：</p>
 
-<pre><code>Hello, animelover69.
+<div class="highlighter-rouge"><pre class="highlight"><code>Hello, animelover69.
 </code></pre>
+</div>
 
 <p><a href="http://expressjs.com/api.html#app.VERB">这些文档</a>演示了如何使用正则表达式，可以使得路由更加灵活。如果只是单从概念理解来讲，我说的已经足够了。</p>
 
@@ -353,19 +412,21 @@ http.createServer(app).listen(1337);
 
 <p>Express将你传入请求的handler传入request和response对象中。原先该有的还在，但是却加入了更多新的特性。<a href="http://expressjs.com/api.html">API文档</a>里有详细解释。下面让我们来看一些例子。</p>
 
-<p>其中一个就是<code>redirect</code>方法。代码如下：</p>
+<p>其中一个就是<code class="highlighter-rouge">redirect</code>方法。代码如下：</p>
 
-<pre><code>response.redirect("/hello/anime");
+<div class="highlighter-rouge"><pre class="highlight"><code>response.redirect("/hello/anime");
 response.redirect("http://xvfeng.me");
 response.redirect(301, "http://xvfeng.me"); // HTTP 301 状态码
 </code></pre>
+</div>
 
-<p>以上代码既不属于原生Node代码也不是来自与Connect,而是Express中自身添加的。它加入了一些例如<code>sendFile</code>，让你传输整个文件等功能：</p>
+<p>以上代码既不属于原生Node代码也不是来自与Connect,而是Express中自身添加的。它加入了一些例如<code class="highlighter-rouge">sendFile</code>，让你传输整个文件等功能：</p>
 
-<pre><code>response.sendFile("/path/to/anime.mp4");
+<div class="highlighter-rouge"><pre class="highlight"><code>response.sendFile("/path/to/anime.mp4");
 </code></pre>
+</div>
 
-<p>request对象还有一些很cool的属性，例如<code>request.ip</code>可以获取IP地址,<code>request.files</code>上传文件等。</p>
+<p>request对象还有一些很cool的属性，例如<code class="highlighter-rouge">request.ip</code>可以获取IP地址,<code class="highlighter-rouge">request.files</code>上传文件等。</p>
 
 <p>理论上来讲，我们要知道的东西也不是太多，Express做的只是拓展了request和response对象而已。Express所提供的方法，请参考<a href="http://expressjs.com/api.html">API文档</a>.</p>
 
@@ -373,7 +434,7 @@ response.redirect(301, "http://xvfeng.me"); // HTTP 301 状态码
 
 <p>Express可以渲染视图。代码如下：</p>
 
-<pre><code>// 启动Express
+<div class="highlighter-rouge"><pre class="highlight"><code>// 启动Express
 var express = require("express");
 var app = express();
 
@@ -383,32 +444,35 @@ app.set("views", __dirname + "/views");
 // 设置模板引擎
 app.set("view engine", "jade");
 </code></pre>
+</div>
 
-<p>开头部分的代码和前面基本一样。之后我们指定视图文件所在目录。然后告诉Express我们要使用<code>Jade</code>作为模板引擎。<a href="http://jade-lang.com/">Jade</a>是一种模板语言。稍后将会详细介绍。</p>
+<p>开头部分的代码和前面基本一样。之后我们指定视图文件所在目录。然后告诉Express我们要使用<code class="highlighter-rouge">Jade</code>作为模板引擎。<a href="http://jade-lang.com/">Jade</a>是一种模板语言。稍后将会详细介绍。</p>
 
 <p>现在我们已经设置好了view.但是如何来使用它呢？</p>
 
-<p>首先我们建立一个名为<code>index.jade</code>的文件并把它放入<code>views</code>目录。代码如下：</p>
+<p>首先我们建立一个名为<code class="highlighter-rouge">index.jade</code>的文件并把它放入<code class="highlighter-rouge">views</code>目录。代码如下：</p>
 
-<pre><code>doctype 5
+<div class="highlighter-rouge"><pre class="highlight"><code>doctype 5
 html
   body
     h1 Hello, world!
     p= message
 </code></pre>
+</div>
 
-<p>代码只是去掉了括号的HTML代码。如果你懂HTML那肯定也看得懂上面的代码。唯一有趣的是最后一样。<code>message</code>是一个变量。它是从哪里来的呢？马上告诉你。</p>
+<p>代码只是去掉了括号的HTML代码。如果你懂HTML那肯定也看得懂上面的代码。唯一有趣的是最后一样。<code class="highlighter-rouge">message</code>是一个变量。它是从哪里来的呢？马上告诉你。</p>
 
 <p>我们需要从Express中渲染这个视图。代码如下：</p>
 
-<pre><code>app.get("/", function(request, response) {
+<div class="highlighter-rouge"><pre class="highlight"><code>app.get("/", function(request, response) {
     response.render("index", { message: "I love anime" });    
 });
 </code></pre>
+</div>
 
-<p>Express为<code>response</code>对象添加了一个<code>render</code>方法。这个方法可以处理很多事情，但最主要的还是加载模板引擎和对应的视图文件，之后渲染成普通的HTML文档，例如这里的<code>index.jade</code>.</p>
+<p>Express为<code class="highlighter-rouge">response</code>对象添加了一个<code class="highlighter-rouge">render</code>方法。这个方法可以处理很多事情，但最主要的还是加载模板引擎和对应的视图文件，之后渲染成普通的HTML文档，例如这里的<code class="highlighter-rouge">index.jade</code>.</p>
 
-<p>最后一步(我觉得可能算是第一步)就是安装Jade,因为它本身并不是Express的一部分。添加至<code>package.json</code>文件并使用<code>npm install</code>进行安装。</p>
+<p>最后一步(我觉得可能算是第一步)就是安装Jade,因为它本身并不是Express的一部分。添加至<code class="highlighter-rouge">package.json</code>文件并使用<code class="highlighter-rouge">npm install</code>进行安装。</p>
 
 <p>如果一起设置完毕，你会看到<a href="http://evanhahn.com/wp-content/uploads/2013/05/anime.html">这个页面</a>。<a href="https://gist.github.com/EvanHahn/5673968">完整代码</a>.</p>
 
@@ -416,7 +480,7 @@ html
 
 <p>我需要再次提醒你的是Express建立与Connect和Node之上，这意味着所有的Connect中间件均可以在Express中使用。这个对与开发来讲帮助很大。例如：</p>
 
-<pre><code>var express = require("express");
+<div class="highlighter-rouge"><pre class="highlight"><code>var express = require("express");
 var app = express();
 
 app.use(express.logger()); // 继承自Connect
@@ -427,6 +491,7 @@ app.get("/", function(req, res) {
 
 app.listen(1337);
 </code></pre>
+</div>
 
 <p>如果说你从这篇文章中学到了一点什么，就是这一点。</p>
 
@@ -436,25 +501,27 @@ app.listen(1337);
 
 <p>你可以将Exp​​ress安装到系统全局，从而可以在命令行使用它。它可以帮助你迅速的完成代码组织并启动应用。使用npm安装：</p>
 
-<pre><code># 安装时可能需要加`sudo`
+<div class="highlighter-rouge"><pre class="highlight"><code># 安装时可能需要加`sudo`
 npm install -g express
 </code></pre>
+</div>
 
-<p>如果你需要帮助，输入<code>express --help</code>。它加入一些可选参数。例如，如果你想使用EJS模板引擎，LESS作为CSS引擎。应用的名称为”myApp”.输入以下命令：</p>
+<p>如果你需要帮助，输入<code class="highlighter-rouge">express --help</code>。它加入一些可选参数。例如，如果你想使用EJS模板引擎，LESS作为CSS引擎。应用的名称为”myApp”.输入以下命令：</p>
 
-<pre><code>express --ejs --css less myApp
+<div class="highlighter-rouge"><pre class="highlight"><code>express --ejs --css less myApp
 </code></pre>
+</div>
 
-<p>这里会自动生成很多文件。进入项目目录，并使用<code>npm install</code>安装依赖包，之后便可以使用<code>node app</code>启动应用！我建议你详细的查看项目结构和代码。它可能还算不上一个真正的应用，但是我觉得它对于初学者来讲还是很有帮助的。</p>
+<p>这里会自动生成很多文件。进入项目目录，并使用<code class="highlighter-rouge">npm install</code>安装依赖包，之后便可以使用<code class="highlighter-rouge">node app</code>启动应用！我建议你详细的查看项目结构和代码。它可能还算不上一个真正的应用，但是我觉得它对于初学者来讲还是很有帮助的。</p>
 
 <p><a href="https://github.com/visionmedia/express/tree/master/examples">项目Github目录下</a>也有一些很有帮助的文档。</p>
 
 <h3 id="section-3">一些补充</h3>
 
 <ul>
-  <li>如果你也和我一样喜欢使用CoffeeScript，好消息是Express完美支持CoffeeScript.你甚至不需要编译它。这样你只用<code>coffee app.coffee</code>即可启动应用。我在我的其他项目中也是这么做的。</li>
-  <li>在我看到<code>app.use(app.router)</code>的时候我很疑惑：
-Express不是一直在使用router吗？简单回答是<code>app.router</code>是Express的路由中间件，在你定义路由的时候被直接添加到项目中。如果你需要在加载其他文件之前应用，也可以直接引入它。关于这么做的原因，请参考<a href="http://stackoverflow.com/a/12695813/804100">StackOverflow的这个答案</a>.</li>
+  <li>如果你也和我一样喜欢使用CoffeeScript，好消息是Express完美支持CoffeeScript.你甚至不需要编译它。这样你只用<code class="highlighter-rouge">coffee app.coffee</code>即可启动应用。我在我的其他项目中也是这么做的。</li>
+  <li>在我看到<code class="highlighter-rouge">app.use(app.router)</code>的时候我很疑惑：
+Express不是一直在使用router吗？简单回答是<code class="highlighter-rouge">app.router</code>是Express的路由中间件，在你定义路由的时候被直接添加到项目中。如果你需要在加载其他文件之前应用，也可以直接引入它。关于这么做的原因，请参考<a href="http://stackoverflow.com/a/12695813/804100">StackOverflow的这个答案</a>.</li>
   <li>本文是针对Express 3，而在<a href="https://github.com/visionmedia/express/wiki/4.x-roadmap">第四版的规划中</a>又会有很多大的改动。最明显的是，Experss可能要将会分解成一些小的模块，并吸收Connect的一些特性。这个虽然还在计划中，但是也值得一看。</li>
 </ul>
 
@@ -468,81 +535,42 @@ Express不是一直在使用router吗？简单回答是<code>app.router</code>�
 
 <p>时间仓促，翻译错误在所难免，还请指正，转载还请注明。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/06/14/understanding-expressjs.html">http://http://uwebs.tk/archives/2013/06/14/understanding-expressjs.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

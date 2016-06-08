@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Python中函数式编程，第三部分</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Python中函数式编程，第三部分</title>
+  <meta name="description" content="英文原文：Charming Python: Functional programming in Python, Part 3，翻译：开源中国">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/04/25/python-functional-programming-part3.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Python中函数式编程，第三部分</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/04/25/python-functional-programming-part3.html">Python中函数式编程，第三部分</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-04-25</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>英文原文：<a href="http://www.ibm.com/developerworks/linux/library/l-prog3/index.html">Charming Python: Functional programming in Python, Part 3</a>，翻译：<a href="http://www.oschina.net/translate/python-functional-programming-part3">开源中国</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Python中函数式编程，第三部分</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>英文原文：<a href="http://www.ibm.com/developerworks/linux/library/l-prog3/index.html">Charming Python: Functional programming in Python, Part 3</a>，翻译：<a href="http://www.oschina.net/translate/python-functional-programming-part3">开源中国</a></p>
 
 <p><strong>摘要：</strong>  作者David Mertz在其文章《可爱的Python：“Python中的函数式编程”》中的<a href="http://blog.jobbole.com/35028/">第一部分</a>和<a href="http://blog.jobbole.com/35042/">第二部分</a>中触及了函数式编程的大量基本概念。本文中他将继续前面的讨论，解释函数式编程的其它功能，如currying和Xoltar
 Toolkit中的其它一些高阶函数。</p>
@@ -38,7 +83,7 @@ Toolkit中的其它一些高阶函数。</p>
 
 <p><strong><em>具有重新绑定向导的 Python 函数式编程(FP)</em></strong></p>
 
-<pre><code>&gt;&gt;&gt; from functional import *
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; from functional import *
 &gt;&gt;&gt; let = Bindings()
 &gt;&gt;&gt; let.car = lambda lst: lst[0]
 &gt;&gt;&gt; let.car = lambda lst: lst[2]
@@ -51,12 +96,13 @@ functional.BindingError:  Binding 'car' cannot be modified.
 &gt;&gt;&gt; let.car(range(10))
 0
 </code></pre>
+</div>
 
 <p>绑定类在一个模块或者一个功能定义范围内做这些我们希望的事情，但是没有办法在一条表达式内使之工作。然而在ML家族语言(译者注：ML是一种通用的函数式<a href="http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="如何选择语言和编程语言排名相关文章">编程语言</a>),在一条表达式内创建绑定是很自然的事。</p>
 
 <p><strong><em>Haskell 命名绑定表达式</em></strong></p>
 
-<pre><code>-- car (x:xs) = x  -- *could* create module-level binding
+<div class="highlighter-rouge"><pre class="highlight"><code>-- car (x:xs) = x  -- *could* create module-level binding
 list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
  
 -- 'where' clause for expression-level binding
@@ -70,33 +116,36 @@ firsts3 = map car list_of_list where car (x:xs) = x
  
 -- Result: firsts1 == firsts2 == firsts3 == [1,4,7]
 </code></pre>
+</div>
 
 <p>Greg Ewing发现用Python的list概念实现同样的效果是有可能的；甚至我们可以用几乎与Haskell语法一样干净的方式做到。</p>
 
 <p><strong><em>Python 2.0+ 命名绑定表达式</em></strong></p>
 
-<pre><code>&gt;&gt;&gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
 &gt;&gt;&gt; [car_x for x in list_of_list for car_x in
  (x[0],)]
 [1, 4, 7]
 </code></pre>
+</div>
 
 <p>在列表解析（list comprehension）中将表达式放入一个单项元素（a single-item tuple）中的这个小技巧，并不能为使用带有表达式级绑定的高阶函数提供任何思路。要使用这样的高阶函数，还是需要使用块级（block-level）绑定，就象以下所示：</p>
 
 <p><strong><em>Python中的使用块级绑定的’map()’</em></strong></p>
 
-<pre><code>&gt;&gt;&gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; list_of_list = [[1,2,3],[4,5,6],[7,8,9]]
 &gt;&gt;&gt; let = Bindings()
 &gt;&gt;&gt; let.car = lambda l: l[0]
 &gt;&gt;&gt; map(let.car,list_of_list)
 [1, 4, 7]
 </code></pre>
+</div>
 
 <p>这样真不错，但如果我们想使用函数map()，那么其中的绑定范围可能会比我们想要的更宽一些。然而，我们可以做到的，哄骗列表解析让它替我们做名字绑定，即使其中的列表并不是我们最终想要得到的列表的情况下也没问题：</p>
 
 <p><strong><em>从Python的列表解析中“走下舞台”</em></strong></p>
 
-<pre><code># Compare Haskell expression:
+<div class="highlighter-rouge"><pre class="highlight"><code># Compare Haskell expression:
 # result = func car_car
 #          where
 #              car (x:xs) = x
@@ -109,12 +158,13 @@ for car in (x[0],)
 for func in (car+car**2,)][0]
 2
 </code></pre>
+</div>
 
 <p>我们对list_of_list列表中第一个元素的第一个元素进行了一次算数运算，而且期间还对该算术运算进行了命名（但其作用域仅仅是在表达式的范围内）。作为一种“优化”，我们可以不用费心创建多于一个元素的列表就能开始运算了，因为我们结尾处用的索引为0，所以我们仅仅选择的是第一个元素。：</p>
 
 <p><strong><em>从列表解析中高效地走下舞台</em></strong></p>
 
-<pre><code># Compare Haskell expression:
+<div class="highlighter-rouge"><pre class="highlight"><code># Compare Haskell expression:
 # result = func car_car
 #          where
 #              car (x:xs) = x
@@ -127,6 +177,7 @@ for car in (x[0],)
 for func in (car+car**2,)][0]
 2
 </code></pre>
+</div>
 
 <p><strong>高阶函数：currying</strong></p>
 
@@ -136,7 +187,7 @@ Python一直都有能让其使用者构造自己的高阶函数的能力。举�
 
 <p><strong><em>Python中一个简单函数工厂（function factory）</em></strong></p>
 
-<pre><code>&gt;&gt;&gt; def
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; def
  foo_factory():
 ...    
 def
@@ -151,6 +202,7 @@ return foo
 &gt;&gt;&gt; f()
 Foo function from factory
 </code></pre>
+</div>
 
 <p>本系列文章的第二部分我讨论过的Xoltar Toolkit中，有一组非常好用的高阶函数。Xoltar的functional模块中提供的绝大多数高阶函数都是在其它各种不同的传统型函数式编程语言中发展出来的高阶函数，其有用性已经过多年的实践验证。</p>
 
@@ -160,7 +212,7 @@ Foo function from factory
 
 <p><strong>在Haskell计算中使用Curry</strong>*</p>
 
-<pre><code>computation a b c d = (a + b^2+ c^3 + d^4)
+<div class="highlighter-rouge"><pre class="highlight"><code>computation a b c d = (a + b^2+ c^3 + d^4)
 check = 1 + 2^2 + 3^3 + 5^4
  
 fillOne   = computation 1
@@ -174,12 +226,13 @@ answer    = fillThree 5
  
 -- Result: check == answer == 657
 </code></pre>
+</div>
 
 <p>现在使用Python：</p>
 
 <p>在Python计算中使用Curry</p>
 
-<pre><code>&gt;&gt;&gt; from functional import curry
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; from functional import curry
 &gt;&gt;&gt; computation = lambda a,b,c,d: (a + b**2 + c**3 + d**4)
 &gt;&gt;&gt; computation(1,2,3,5)
 657
@@ -195,10 +248,11 @@ answer    = fillThree 5
 &gt;&gt;&gt; answer
 657
 </code></pre>
+</div>
 
 <p>第二部分中提到过的一个简单的计税程序的例子，当时用的是闭包（这次使用curry()），可以用来进一步做个对比：</p>
 
-<pre><code>Python中curry后的计税程序
+<div class="highlighter-rouge"><pre class="highlight"><code>Python中curry后的计税程序
 
 from functional import *
  
@@ -213,6 +267,7 @@ print "Curried taxes due =",taxCurry
 print "Curried expression taxes due =", \
       curry(taxcalc)(50000)(0.30)(10000)
 </code></pre>
+</div>
 
 <p>和使用闭包不同，我们需要以特定的顺序（从左到右）对参数进行curry处理。当要注意的是，functional模块中还包含一个rcurry()类，能够以相反的方向进行curry处理（从右到左）。</p>
 
@@ -228,7 +283,7 @@ print "Curried expression taxes due =", \
 
 <p><strong>* 顺序调用一系列函数(使用相同的参数)</strong>*</p>
 
-<pre><code>&gt;&gt;&gt; def a(x):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; def a(x):
 ...     print x,
 ...     return "a"
 ...
@@ -250,6 +305,7 @@ print "Curried expression taxes due =", \
 x xx xxx
 'c'
 </code></pre>
+</div>
 
 <p>isjoin()和conjoin()这两个函数同equential()和also()在创建新函数并对参数进行多个成分函数的调用方面非常相似。只是disjoin()函数用来查询成分函数中是否有一个函数的返回值（针对给定的参数）为真；conjoin()函数用来查询是否所有的成分函数的返回值都为真。在这些函数中只要条件允许就会使用逻辑短路，因此disjoin()函数可能不会出现某些副作用。joinfuncs()i同also()类似，但它返回的是由所有成分函数的返回值组成的一个元组（tuple），而不是选中的某个主函数。</p>
 
@@ -257,7 +313,7 @@ x xx xxx
 
 <p><strong>* 对一系列返回值的真、假情况进行判断</strong>*</p>
 
-<pre><code>&gt;&gt;&gt; from functional import *
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; from functional import *
 &gt;&gt;&gt; isEven = lambda n: (n%2 == 0)
 &gt;&gt;&gt; any([1,3,5,8], isEven)
 1
@@ -270,12 +326,13 @@ x xx xxx
 &gt;&gt;&gt; all([2,4,6,7], isEven)
 0
 </code></pre>
+</div>
 
 <p>有点数学基础的人会对这个高阶函数非常感兴趣：iscompose().将多个函数进行合成（compostion）指的是，将一个函数的返回值同下个函数的输入“链接到一起”。对多个函数进行合成的程序员需要负责保证函数间的输入和输出是相互匹配的，不过这个条件无论是程序员在何时想使用返回值时都是需要满足的。举个简单的例子和阐明这一点：</p>
 
 <p><strong>* 创建合成函数</strong>*</p>
 
-<pre><code>&gt;&gt;&gt; def minus7(n): return n-7
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; def minus7(n): return n-7
 ...
 &gt;&gt;&gt; def times3(n): return n*3
 ...
@@ -292,6 +349,7 @@ x xx xxx
 &gt;&gt;&gt; minus7(times3(10))
 23
 </code></pre>
+</div>
 
 <p><strong>后会有期</strong></p>
 
@@ -303,81 +361,42 @@ x xx xxx
 
 <p><a href="/archives/2013/04/25/python-functional-programming-part3.html" title="Python中的函数式编程，第三部分">Python中的函数式编程，第三部分</a></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/04/25/python-functional-programming-part3.html">http://http://uwebs.tk/archives/2013/04/25/python-functional-programming-part3.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

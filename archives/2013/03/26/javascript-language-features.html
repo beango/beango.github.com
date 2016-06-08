@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="javascript" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 浅谈JavaScript的语言特性</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>浅谈JavaScript的语言特性</title>
+  <meta name="description" content="前言">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/03/26/javascript-language-features.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 浅谈JavaScript的语言特性</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/03/26/javascript-language-features.html">浅谈JavaScript的语言特性</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-03-26</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<h2 id="section">前言</h2>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">浅谈JavaScript的语言特性</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <h2 id="section">前言</h2>
 
 <p>在JavaScript中，作用域、上下文、闭包、函数等算是精华中的精华了。对于初级JSer来说，是进阶必备。对于前端攻城师来说，只有静下心来，理解了这些精华，才能写出优雅的代码。</p>
 
@@ -47,13 +92,14 @@
 
 <p>先看代码段：</p>
 
-<pre><code>var f = function foo(){
+<div class="highlighter-rouge"><pre class="highlight"><code>var f = function foo(){
     return typeof foo; // foo是在内部作用域内有效
 };
 // foo在外部用于是不可见的
 typeof foo; // "undefined"
 f(); // "function"
 </code></pre>
+</div>
 
 <p>这里想说一点的就是，在函数表达式中的foo，只能在函数内部引用，外面是不能引用的。</p>
 
@@ -65,18 +111,19 @@ JSON是设计成描述数据交换格式的，它也有自己的语法，这个�
 <p>{ “prop”: “val” }这样的声明有可能是JavaScript对象字面量，也有可能是JSON字符串，取决于什么上下文使用它。如果是用在string上下文(用单引号或双引
 号引住，或者从text文件读取)的话，那它就是JSON字符串，如果是用在对象字面量上下文中，那它就是对象字面量。</p>
 
-<pre><code>// 这是JSON字符串
+<div class="highlighter-rouge"><pre class="highlight"><code>// 这是JSON字符串
 var foo = '{ "prop": "val" }';
  
 // 这是对象字面量
 var bar = { "prop": "val" };
 </code></pre>
+</div>
 
 <p>还有一点需要知道的是，JSON.parse用来将JSON字符串反序列化成对象，JSON.stringify用来将对象序列化成JSON字符串。<strong>老版本的<a href="http://blog.jobbole.com/12749/" title="浏览器">浏览器</a>不支持这个对象，但你可以通过json2.js来实现同样的功能。</strong></p>
 
 <h3 id="section-3">原型</h3>
 
-<pre><code>function Animal (){  
+<div class="highlighter-rouge"><pre class="highlight"><code>function Animal (){  
     // ...
 }
 function cat (){  
@@ -88,10 +135,11 @@ cat.prototype = Animal.prototype;//这种方式不会继承构造函数里面的
 //还有一个重要的细节需要注意的就是一定要维护自己的原型链,新手总会忘记这个！
 cat.prototype.constructor = cat;
 </code></pre>
+</div>
 
 <p>如果我们彻底改变函数的prototype属性（通过分配一个新的对象），那原始构造函数的引用就是丢失，这是因为我们创建的对象不包括constructor属性：</p>
 
-<pre><code>function A() {}
+<div class="highlighter-rouge"><pre class="highlight"><code>function A() {}
 A.prototype = {
   x: 10
 };
@@ -100,10 +148,11 @@ var a = new A();
 alert(a.x); // 10
 alert(a.constructor === A); // false!
 </code></pre>
+</div>
 
 <p>让我们一起看下MDN上关于constructor的<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/constructor">解释</a>吧：prototype：Returns a reference to the Object function that created the instance’s prototype.因此，对函数的原型引用需要手工恢复：</p>
 
-<pre><code>function A() {}
+<div class="highlighter-rouge"><pre class="highlight"><code>function A() {}
 A.prototype = {
   constructor: A,
   x: 10
@@ -113,10 +162,11 @@ var a = new A();
 alert(a.x); // 10
 alert(a.constructor === A); // true
 </code></pre>
+</div>
 
 <p>然而，提交prototype属性不会影响已经创建对象的原型（只有在构造函数的prototype属性改变的时候才会影响到)，就是说新创建的对象才有有新的原型，而已创建对象还是引用到原来的旧原型（这个原型已经不能被再被修改了）。</p>
 
-<pre><code>function A() {}
+<div class="highlighter-rouge"><pre class="highlight"><code>function A() {}
 A.prototype.x = 10;
  
 var a = new A();
@@ -138,6 +188,7 @@ var b = new A();
 alert(b.x); // 20
 alert(b.y) // 30
 </code></pre>
+</div>
 
 <p>因此，“动态修改原型将影响所有的对象都会拥有新的原型”是错误的，新原型仅仅在原型修改以后的新创建对象上生效。这里的主要规则是：对象的原型是对象的创建的时候创建的，并且在此之后不能修改为新的对象，如果依然引用到同一个对象，可以通过构造函数的显式prototype引用，对象创建以后，只能对原型的属性进行添加或修改。</p>
 
@@ -147,7 +198,7 @@ alert(b.y) // 30
 object)是不能直接访问的，此时由活动对象(activation object)扮演VO的角色。
 活动对象是在进入函数上下文时刻被创建的，它通过函数的arguments属性初始化。arguments属性的值是Arguments对象：</p>
 
-<pre><code>function foo(x, y, z) {
+<div class="highlighter-rouge"><pre class="highlight"><code>function foo(x, y, z) {
   // 声明的函数参数数量arguments (x, y, z)
   alert(foo.length); // 3
  
@@ -158,6 +209,7 @@ object)是不能直接访问的，此时由活动对象(activation object)扮演
   alert(arguments.callee === foo); // true
 }
 </code></pre>
+</div>
 
 <p>当进入执行上下文(代码执行之前)时，VO里已经包含了下列属性：1.
 函数的所有形参(如果我们是在函数执行上下文中)；</p>
@@ -169,7 +221,7 @@ object)是不能直接访问的，此时由活动对象(activation object)扮演
 
 <p>另一个经典例子：</p>
 
-<pre><code>alert(x); // function
+<div class="highlighter-rouge"><pre class="highlight"><code>alert(x); // function
  
 var x = 10;
 alert(x); // 10
@@ -180,11 +232,12 @@ function x() {};
  
 alert(x); // 20
 </code></pre>
+</div>
 
 <p>根据规范函数声明是在当进入上下文时填入的;
 在进入上下文的时候还有一个变量声明“x”，那么正如我们在上面所说，<strong>变量声明在顺序上跟在函数声明和形式参数声明之后</strong>，而且在这个进入上下文阶段，变量声明不会干扰VO中已经存在的同名函数声明或形式参数声明。变量相对于简单属性来说，变量有一个特性(attribute)：{DontDelete},这个特性的含义就是不能用delete操作符直接删除变量属性。</p>
 
-<pre><code>a = 10;
+<div class="highlighter-rouge"><pre class="highlight"><code>a = 10;
 alert(window.a); // 10
 alert(delete a); // true
 alert(window.a); // undefined
@@ -202,6 +255,7 @@ var a = 10; // 全局上下文中的变量
 alert(a); // 10
 alert(b); // 全局变量 "b" 没有声明.
 </code></pre>
+</div>
 
 <h3 id="this">this</h3>
 
@@ -212,14 +266,15 @@ alert(b); // 全局变量 "b" 没有声明.
 object），在其他情况下（与引用类型不同的任何其它属性），这个值为null。不过，实际不存在this的值为null的情况，因为当this的值
 为null的时候，其值会被隐式转换为全局对象。</p>
 
-<pre><code>(function () {
+<div class="highlighter-rouge"><pre class="highlight"><code>(function () {
   alert(this); // null =&gt; global
 })();
 </code></pre>
+</div>
 
 <p>在这个例子中，我们有一个函数对象但不是引用类型的对象（它不是标示符，也不是属性访问器），相应地，this值最终设为全局对象。</p>
 
-<pre><code>var foo = {
+<div class="highlighter-rouge"><pre class="highlight"><code>var foo = {
     bar: function () {
       alert(this);
     }
@@ -232,6 +287,7 @@ foo.bar(); // Reference, OK =&gt; foo
 (false || foo.bar)(); // global
 (foo.bar, foo.bar)(); // global
 </code></pre>
+</div>
 
 <p>问题在于后面的三个调用，在应用一定的运算操作之后，在调用括号的左边的值不在是引用类型。</p>
 
@@ -245,13 +301,14 @@ foo.bar(); // Reference, OK =&gt; foo
 
 <p>正如我们知道的，局部变量、内部函数、形式参数储存在给定函数的激活对象中。</p>
 
-<pre><code>function foo() {
+<div class="highlighter-rouge"><pre class="highlight"><code>function foo() {
    function bar() {
       alert(this); // global
    }
    bar(); // the same as AO.bar()
 }
 </code></pre>
+</div>
 
 <p>活动对象总是作为this返回，值为null——（即伪代码的AO.bar()相当于null.bar()）。这里我们再次回到上面描述的例子，this设置为全局对象。</p>
 
@@ -261,7 +318,7 @@ foo.bar(); // Reference, OK =&gt; foo
 
 <p>一个重要的例外，它涉及到通过函数构造函数创建的函数。</p>
 
-<pre><code>var x = 10;
+<div class="highlighter-rouge"><pre class="highlight"><code>var x = 10;
 function foo() {
    var y = 20;
    function barFD() { // 函数声明
@@ -274,10 +331,11 @@ function foo() {
 }
 foo();
 </code></pre>
+</div>
 
 <p>还有：</p>
 
-<pre><code>var x = 10, y = 10;
+<div class="highlighter-rouge"><pre class="highlight"><code>var x = 10, y = 10;
  
 with ({x: 20}) {
  
@@ -290,6 +348,7 @@ with ({x: 20}) {
 alert(x); // 10
 alert(y); // 30
 </code></pre>
+</div>
 
 <p>在进入上下文时发生了什么？标识符“x”和“y”已被添加到变量对象中。此外，在代码运行阶段作如下修改：</p>
 
@@ -313,7 +372,7 @@ alert(y); // 30
 <p>按照标准，表达式语句不能以一个大括号 {
 开始是因为他很难与代码块区分，同样，他也不能以函数关键字开始，因为很难与函数声明进行区分。即，所以，如果我们定义一个立即执行的函数，在其创建后立即按以下方式调用：</p>
 
-<pre><code>function () {
+<div class="highlighter-rouge"><pre class="highlight"><code>function () {
   ...
 }();
  
@@ -323,27 +382,30 @@ function foo() {
   ...
 }();
 </code></pre>
+</div>
 
 <p>我们使用了函数声明，上述2个定义，解释器在解释的时候都会报错，但是可能有多种原因。如果在全局代码里定义（也就是程序级别），解释器会将它看做是函数声明，因为他是以function关键字开头，第一个例子，我们会得到SyntaxError错误，是因为函数声明没有名字（我们前面提到了函数声明必须有名字）。第二个例子，我们有一个名称为foo的一个函数声明正常创建，但是我们依然得到了一个语法错误——没有任何表达式的分组操作符错误。在函数声明后面他确实是一个分组操作符，而不是一个函数调用所使用的圆括号。所以如果我们声明如下代码：</p>
 
-<pre><code>// "foo" 是一个函数声明，在进入上下文的时候创建
+<div class="highlighter-rouge"><pre class="highlight"><code>// "foo" 是一个函数声明，在进入上下文的时候创建
 alert(foo); // 函数
 function foo(x) {
    alert(x);
 }(1); // 这只是一个分组操作符，不是函数调用！
 foo(10); // 这才是一个真正的函数调用，结果是10
 </code></pre>
+</div>
 
 <p>创建表达式最简单的方式就是用分组操作符括号，里边放入的永远是表达式，所以解释器在解释的时候就不会出现歧义。在代码执行阶段这个的function就会被创建，并且立即执行，然后自动销毁（如果没有引用的话）</p>
 
-<pre><code>(function foo(x) {
+<div class="highlighter-rouge"><pre class="highlight"><code>(function foo(x) {
     alert(x);
 })(1); // 这才是调用，不是分组操作符
 </code></pre>
+</div>
 
 <p>上述代码就是我们所说的在用括号括住一个表达式，然后通过（1）去调用。注意，下面一个立即执行的函数，周围的括号不是必须的，因为函数已经处在表达式的位置，解析器知道它处理的是在函数执行阶段应该被创建的FE，这样在函数创建后立即调用了函数。</p>
 
-<pre><code>var foo = {
+<div class="highlighter-rouge"><pre class="highlight"><code>var foo = {
     bar: function (x) {
         return x % 2 != 0 ? 'yes' : 'no';
     }(1)
@@ -351,6 +413,7 @@ foo(10); // 这才是一个真正的函数调用，结果是10
  
 alert(foo.bar); // 'yes'
 </code></pre>
+</div>
 
 <p>就像我们看到的，foo.bar是一个字符串而不是一个函数，这里的函数仅仅用来根据条件参数初始化这个属性——它创建后并立即调用。</p>
 
@@ -362,7 +425,7 @@ alert(foo.bar); // 'yes'
 
 <p>自由变量：</p>
 
-<pre><code>function testFn() {
+<div class="highlighter-rouge"><pre class="highlight"><code>function testFn() {
    var localVar = 10;//对于innerFn函数来说，localVar就属于自由变量。
    function innerFn(innerParam) {
       alert(innerParam + localVar);
@@ -370,6 +433,7 @@ alert(foo.bar); // 'yes'
    return innerFn;
 }
 </code></pre>
+</div>
 
 <p>闭包的静态作用域：</p>
 
@@ -406,81 +470,42 @@ foo(); // 10 – 使用静态和动态作用域的时候
 
 <p> </p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/03/26/javascript-language-features.html">http://http://uwebs.tk/archives/2013/03/26/javascript-language-features.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

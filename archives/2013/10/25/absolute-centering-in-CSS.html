@@ -1,39 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="CSS" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 如何只用CSS做到完全居中</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>如何只用CSS做到完全居中</title>
+  <meta name="description" content="我们都知道 margin:0 auto; 的样式能让元素水平居中，而 margin: auto;却不能做到垂直居中……直到现在。但是，请注意！想让元素绝对居中，只需要声明元素高度，并且附加以下样式，就可以做到：">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/10/25/absolute-centering-in-CSS.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 如何只用CSS做到完全居中</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/10/25/absolute-centering-in-CSS.html">如何只用CSS做到完全居中</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-10-25</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>我们都知道 <code>margin:0 auto;</code> 的样式能让元素水平居中，而 <code>margin: auto;</code>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">如何只用CSS做到完全居中</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>我们都知道 <code class="highlighter-rouge">margin:0 auto;</code> 的样式能让元素水平居中，而 <code class="highlighter-rouge">margin: auto;</code>
 却不能做到垂直居中……直到现在。但是，请注意！想让元素绝对居中，只需要声明元素高度，并且附加以下样式，就可以做到：</p>
 
-<pre><code>.Absolute-Center {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center {
   margin: auto;
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
 }
 </code></pre>
+</div>
 
 <p>我并不是第一个发现这种方法的人（不过我还是敢把它叫做“完全居中”），它有可能是种非常普遍的技巧。但大多数介绍垂直居中的文章中并没有提到过这种方法。如果不是浏览<a href="http://designshack.net/articles/css/how-to-center-anything-with-css">这篇文章</a>的评论，我甚至根本就不会发现这个办法。</p>
 
@@ -42,7 +88,7 @@
 <p>以前从未用过这种方法的我想试试，看看这种”完全居中”的方法到底有多么神奇。好处：</p>
 
 <ul>
-  <li>跨浏览器，兼容性好（无需hack，可兼顾IE8\~IE10）</li>
+  <li>跨浏览器，兼容性好（无需hack，可兼顾IE8~IE10）</li>
   <li>无特殊标记，样式更精简</li>
   <li>自适应布局，可以使用百分比和最大最小高宽等样式</li>
   <li>居中时不考虑元素的padding值（也不需要使用box-sizing样式）</li>
@@ -58,7 +104,7 @@
   <li>这种方法在Windows Phone上不起作用</li>
 </ul>
 
-<p>浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile Safari中，甚至也可以运行在IE8\~IE10上</p>
+<p>浏览器支持：Chrome、Firefox、Safari、Mobile Safari、IE8-10。“完全居中”经测试可以完美地应用在最新版本的Chrome、Firefox、Safari、Mobile Safari中，甚至也可以运行在IE8~IE10上</p>
 
 <h2 id="section">对照表</h2>
 
@@ -252,7 +298,7 @@
 
 <p>使用“完全居中”，就可以在一个设置了position: relative的容器中做到完全居中元素了！<a href="http://codepen.io/shshaw/full/gEiDt">（居中例子，请前往英文原文查看）</a></p>
 
-<pre><code>.Center-Container {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Center-Container {
   position: relative;
 }
  
@@ -265,6 +311,7 @@
   top: 0; left: 0; bottom: 0; right: 0;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtm5q14rj20gu0b4jrr.jpg" alt="" /></p>
 
@@ -274,11 +321,12 @@
 
 <p>想要使内容区在可视区域内居中么？设置position: fixed样式，并设置一个较高的z-index值，就可以做到。</p>
 
-<pre><code>.Absolute-Center.is-Fixed {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Fixed {
   position: fixed;
   z-index: 999;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtm67yllj20ad082dg4.jpg" alt="" /></p>
 
@@ -286,15 +334,16 @@
 
 <h3 id="section-5">偏移值</h3>
 
-<p>如果需要添加固定的标题，或者其他带偏移样式的元素，可以直接把类似top: 70px;的样式写进内容区域的样式中。一旦声明了margin: auto;的样式，内容块的<code>top </code><code>left </code><code>bottom </code><code>right</code>的属性值也会同时计算进去。</p>
+<p>如果需要添加固定的标题，或者其他带偏移样式的元素，可以直接把类似top: 70px;的样式写进内容区域的样式中。一旦声明了margin: auto;的样式，内容块的<code class="highlighter-rouge">top </code><code class="highlighter-rouge">left </code><code class="highlighter-rouge">bottom </code><code class="highlighter-rouge">right</code>的属性值也会同时计算进去。</p>
 
 <p>如果想让内容块在贴近侧边的过程中保持水平居中，可以使用right: 0; left: auto; 让内容贴在右侧，或者使用left: 0; right: auto; 使内容贴在左侧。</p>
 
-<pre><code>.Absolute-Center.is-Fixed {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Fixed {
   position: fixed;
   z-index: 999;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtm8nu2ej20gw0b50t1.jpg" alt="" /></p>
 
@@ -304,7 +353,7 @@
 
 <p>再进一步加上padding样式的话，absolute式的完全居中也丝毫不会破坏！</p>
 
-<pre><code>.Absolute-Center.is-Responsive {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Responsive {
   width: 60%; 
   height: 60%;
   min-width: 200px;
@@ -312,6 +361,7 @@
   padding: 40px;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg" alt="" /></p>
 
@@ -319,10 +369,11 @@
 
 <p>内容区高度大于可视区域或者一个position: relative的容器，其内容可能会溢出容器，或被容器截断。只要内容区域没有超出容器（没有给内容容器预留padding的话，可以设置max-height: 100%;的样式），那么容器内就会产生滚动条。</p>
 
-<pre><code>.Absolute-Center.is-Overflow {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Overflow {
   overflow: auto;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg" alt="" /></p>
 
@@ -332,7 +383,7 @@
 
 <p>设置了min-/max- 开头的属性可以限制区块的大小而不用担心撑开容器。</p>
 
-<pre><code>.Absolute-Center.is-Resizable {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Resizable {
   min-width: 20%;
   max-width: 80%;
   min-height: 20%;
@@ -341,6 +392,7 @@
   overflow: auto;
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg" alt="" /></p>
 
@@ -366,12 +418,13 @@
 
 <p><strong>HTML:</strong></p>
 
-<pre><code>&lt;img src="http://placekitten.com/g/500/200" alt="" /&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;img src="http://placekitten.com/g/500/200" alt="" /&gt;
 </code></pre>
+</div>
 
 <p><strong>CSS:</strong></p>
 
-<pre><code>.Absolute-Center.is-Image {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Absolute-Center.is-Image {
   height: auto;
 }
  
@@ -380,6 +433,7 @@
   height: auto;
 }
 </code></pre>
+</div>
 
 <h3 id="section-10">可变高度</h3>
 
@@ -400,19 +454,21 @@
 
 <p><strong>Javascript:</strong></p>
 
-<pre><code>/* Modernizr Test for Variable Height Content */
+<div class="highlighter-rouge"><pre class="highlight"><code>/* Modernizr Test for Variable Height Content */
 Modernizr.testStyles('#modernizr { display: table; height: 50px; width: 50px; margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; }', function(elem, rule) {
   Modernizr.addTest('absolutecentercontent', Math.round(window.innerHeight / 2 - 25) === elem.offsetTop);
 });
 </code></pre>
+</div>
 
 <p><strong>CSS:</strong></p>
 
-<pre><code>.absolutecentercontent .Absolute-Center.is-Variable {
+<div class="highlighter-rouge"><pre class="highlight"><code>.absolutecentercontent .Absolute-Center.is-Variable {
   display: table;
   height: auto;
 }
 </code></pre>
+</div>
 
 <h2 id="section-11">其他方法</h2>
 
@@ -428,7 +484,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p>需要注意的是，这是按照预想情况也能在工作在IE6-7下的唯一方法。</p>
 
-<pre><code>.is-Negative {
+<div class="highlighter-rouge"><pre class="highlight"><code>.is-Negative {
         width: 300px;
         height: 200px;
         padding: 20px;
@@ -438,6 +494,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
         margin-top: -120px; /* (height + padding)/2 */
 }
 </code></pre>
+</div>
 
 <p>好处：</p>
 
@@ -458,7 +515,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p>和“完全居中”法的好处一样，简单有效，同时支持可变高度。为内容指定带有厂商前缀的transform: translate(-50%,-50%)和top: 50%; left: 50%;样式就可以让内容块居中。</p>
 
-<pre><code>.is-Transformed { 
+<div class="highlighter-rouge"><pre class="highlight"><code>.is-Transformed { 
   width: 50%;
   margin: auto;
   position: absolute;
@@ -468,6 +525,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
           transform: translate(-50%,-50%);
 }
 </code></pre>
+</div>
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg" alt="" /></p>
 
@@ -495,7 +553,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p><strong>HTML:</strong></p>
 
-<pre><code>&lt;div class="Center-Container is-Table"&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;div class="Center-Container is-Table"&gt;
   &lt;div class="Table-Cell"&gt;
     &lt;div class="Center-Block"&gt;
     &lt;!-- CONTENT --&gt;
@@ -503,10 +561,11 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
+</div>
 
 <p><strong>CSS:</strong></p>
 
-<pre><code>.Center-Container.is-Table { display: table; }
+<div class="highlighter-rouge"><pre class="highlight"><code>.Center-Container.is-Table { display: table; }
 .is-Table .Table-Cell {
   display: table-cell;
   vertical-align: middle;
@@ -516,6 +575,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
   margin: 0 auto;
 }
 </code></pre>
+</div>
 
 <p>好处：</p>
 
@@ -533,7 +593,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <h3 id="inline-block">inline-block法</h3>
 
-<p>迫切需要的方法：inline-block法居中。基本方法是使用 <code>display: inline-block</code>, <code>vertical-align: middle</code>样式和伪元素让内容块在容器中居中。我的实现用到了几个在其他地方见不到的新技巧解决了一些问题。</p>
+<p>迫切需要的方法：inline-block法居中。基本方法是使用 <code class="highlighter-rouge">display: inline-block</code>, <code class="highlighter-rouge">vertical-align: middle</code>样式和伪元素让内容块在容器中居中。我的实现用到了几个在其他地方见不到的新技巧解决了一些问题。</p>
 
 <p>内容区声明的宽度不能大于容器的100%减去0.25em的宽度。就像一段带有长文本的区域。不然，内容区域会被推到顶端，这就是使用:after伪类的原因。使用:before伪类则会让元素有100%的大小！</p>
 
@@ -545,16 +605,17 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p><strong>HTML:</strong></p>
 
-<pre><code>&lt;div class="Center-Container is-Inline"&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;div class="Center-Container is-Inline"&gt;
   &lt;div class="Center-Block"&gt;
     &lt;!-- CONTENT --&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
+</div>
 
 <p><strong>CSS:</strong></p>
 
-<pre><code>.Center-Container.is-Inline { 
+<div class="highlighter-rouge"><pre class="highlight"><code>.Center-Container.is-Inline { 
   text-align: center;
   overflow: auto;
 }
@@ -576,6 +637,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
   /* max-width: calc(100% - 0.25em) /* Only for IE9+ */
 }
 </code></pre>
+</div>
 
 <p>好处：</p>
 
@@ -600,7 +662,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p><img src="/assets/files/2013-10/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg" alt="" /></p>
 
-<pre><code>.Center-Container.is-Flexbox {
+<div class="highlighter-rouge"><pre class="highlight"><code>.Center-Container.is-Flexbox {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -618,6 +680,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
           justify-content: center;
 }
 </code></pre>
+</div>
 
 <p>好处：</p>
 
@@ -642,81 +705,42 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 <p>如果网站需要可变高度的内容，而且同时照顾到浏览器兼容性的话，可以尝试table-cell和inline-block技术，如果想尝试新鲜事物的话，可以使用Flexbox，并享受这种高级技术带来的好处。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/10/25/absolute-centering-in-CSS.html">http://http://uwebs.tk/archives/2013/10/25/absolute-centering-in-CSS.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

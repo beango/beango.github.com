@@ -1,24 +1,68 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="python" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 深刻理解Python中的元类(metaclass)</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>深刻理解Python中的元类(metaclass)</title>
+  <meta name="description" content="译注：这是一篇在Stack overflow上很热的帖子。提问者自称已经掌握了有关Python OOP编程中的各种概念，但始终觉得元类(metaclass)难以理解。他知道这肯定和自省有关，但仍然觉得不太明白，希望大家可以给出一些实际的例子和代码片段以帮助理解，以及在什么情况下需要进行元编程。于是e-satis同...">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/06/11/what-is-a-metaclass-in-python.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
 
-<div class="main">
-	<article>
-	
-<p><strong>译注：</strong>这是一篇在<a href="http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python">Stack overflow</a>上很热的帖子。提问者自称已经掌握了有关Python OOP编程中的各种概念，但始终觉得元类(metaclass)难以理解。他知道这肯定和自省有关，但仍然觉得不太明白，希望大家可以给出一些实际的例子和代码片段以帮助理解，以及在什么情况下需要进行元编程。于是e-satis同学给出了神一般的回复，该回复获得了985点的赞同点数，更有人评论说这段回复应该加入到Python的官方文档中去。而e-satis同学本人在Stack Overflow中的声望积分也高达64271分。以下就是这篇精彩的回复（提示：非常长）</p>
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      <p><strong>译注：</strong>这是一篇在<a href="http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python">Stack overflow</a>上很热的帖子。提问者自称已经掌握了有关Python OOP编程中的各种概念，但始终觉得元类(metaclass)难以理解。他知道这肯定和自省有关，但仍然觉得不太明白，希望大家可以给出一些实际的例子和代码片段以帮助理解，以及在什么情况下需要进行元编程。于是e-satis同学给出了神一般的回复，该回复获得了985点的赞同点数，更有人评论说这段回复应该加入到Python的官方文档中去。而e-satis同学本人在Stack Overflow中的声望积分也高达64271分。以下就是这篇精彩的回复（提示：非常长）</p>
 
 <p><a href="/assets/files/2012-06/python-icon.jpg" title="python-icon"><img src="/assets/files/2012-06/python-icon.jpg" alt="" title="python-icon" /></a></p>
 
@@ -26,20 +70,22 @@
 
 <p>在理解元类之前，你需要先掌握Python中的类。Python中类的概念借鉴于Smalltalk，这显得有些奇特。在大多数<a href="http://blog.jobbole.com/tag/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="如何选择语言和编程语言排名相关文章">编程语言</a>中，类就是一组用来描述如何生成一个对象的代码段。在Python中这一点仍然成立：</p>
 
-<pre><code>&gt;&gt;&gt; class ObjectCreator(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; class ObjectCreator(object):
 …       pass
 …
 &gt;&gt;&gt; my_object = ObjectCreator()
 &gt;&gt;&gt; print my_object
 &lt;__main__.ObjectCreator object at 0x8974f2c&gt;
 </code></pre>
+</div>
 
 <p>但是，Python中的类还远不止如此。类同样也是一种对象。是的，没错，就是对象。只要你使用关键字class，Python解释器在执行的时候就会创建一个对象。下面的代码段：</p>
 
-<pre><code>&gt;&gt;&gt; class ObjectCreator(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; class ObjectCreator(object):
 …       pass
 …
 </code></pre>
+</div>
 
 <p>将在内存中创建一个对象，名字就是ObjectCreator。<strong>这个对象（类）自身拥有创建对象（类实例）的能力，而这就是为什么它是一个类的原因。</strong>但是，它的本质仍然是一个对象，于是乎你可以对它做如下的操作：</p>
 
@@ -53,7 +99,7 @@
 
 <p>下面是示例：</p>
 
-<pre><code>&gt;&gt;&gt; print ObjectCreator     # 你可以打印一个类，因为它其实也是一个对象
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; print ObjectCreator     # 你可以打印一个类，因为它其实也是一个对象
 &lt;class '__main__.ObjectCreator'&gt;
 &gt;&gt;&gt; def echo(o):
 …       print o
@@ -71,6 +117,7 @@ foo
 &gt;&gt;&gt; print ObjectCreatorMirror()
 &lt;__main__.ObjectCreator object at 0x8997b4c&gt;
 </code></pre>
+</div>
 
 <p> </p>
 
@@ -78,7 +125,7 @@ foo
 
 <p>因为类也是对象，你可以在运行时动态的创建它们，就像其他任何对象一样。首先，你可以在函数中创建类，使用class关键字即可。</p>
 
-<pre><code>&gt;&gt;&gt; def choose_class(name):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; def choose_class(name):
 …       if name == 'foo':
 …           class Foo(object):
 …               pass
@@ -94,10 +141,11 @@ foo
 &gt;&gt;&gt; print MyClass()            # 你可以通过这个类创建类实例，也就是对象
 &lt;__main__.Foo object at 0x89c6d4c&gt;
 </code></pre>
+</div>
 
 <p>但这还不够动态，因为你仍然需要自己编写整个类的代码。由于类也是对象，所以它们必须是通过什么东西来生成的才对。当你使用class关键字时，Python解释器自动创建这个对象。但就和Python中的大多数事情一样，Python仍然提供给你手动处理的方法。还记得内建函数type吗？这个古老但强大的函数能够让你知道一个对象的类型是什么，就像这样：</p>
 
-<pre><code>&gt;&gt;&gt; print type(1)
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; print type(1)
 &lt;type 'int'&gt;
 &gt;&gt;&gt; print type("1")
 &lt;type 'str'&gt;
@@ -106,45 +154,51 @@ foo
 &gt;&gt;&gt; print type(ObjectCreator())
 &lt;class '__main__.ObjectCreator'&gt;
 </code></pre>
+</div>
 
 <p>这里，type有一种完全不同的能力，它也能动态的创建类。type可以接受一个类的描述作为参数，然后返回一个类。（我知道，根据传入参数的不同，同一个函数拥有两种完全不同的用法是一件很傻的事情，但这在Python中是为了保持向后兼容性）</p>
 
 <p>type可以像这样工作：</p>
 
-<pre><code>type(类名, 父类的元组（针对继承的情况，可以为空），包含属性的字典（名称和值）)
+<div class="highlighter-rouge"><pre class="highlight"><code>type(类名, 父类的元组（针对继承的情况，可以为空），包含属性的字典（名称和值）)
 </code></pre>
+</div>
 
 <p>比如下面的代码：</p>
 
-<pre><code>&gt;&gt;&gt; class MyShinyClass(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; class MyShinyClass(object):
 …       pass
 </code></pre>
+</div>
 
 <p>可以手动像这样创建：</p>
 
-<pre><code>&gt;&gt;&gt; MyShinyClass = type('MyShinyClass', (), {})  # 返回一个类对象
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; MyShinyClass = type('MyShinyClass', (), {})  # 返回一个类对象
 &gt;&gt;&gt; print MyShinyClass
 &lt;class '__main__.MyShinyClass'&gt;
 &gt;&gt;&gt; print MyShinyClass()  #  创建一个该类的实例
 &lt;__main__.MyShinyClass object at 0x8997cec&gt;
 </code></pre>
+</div>
 
 <p>你会发现我们使用“MyShinyClass”作为类名，并且也可以把它当做一个变量来作为类的引用。类和变量是不同的，这里没有任何理由把事情弄的复杂。</p>
 
 <p>type 接受一个字典来为类定义属性，因此</p>
 
-<pre><code>&gt;&gt;&gt; class Foo(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; class Foo(object):
 …       bar = True
 </code></pre>
+</div>
 
 <p>可以翻译为：</p>
 
-<pre><code>&gt;&gt;&gt; Foo = type('Foo', (), {'bar':True})
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; Foo = type('Foo', (), {'bar':True})
 </code></pre>
+</div>
 
 <p>并且可以将Foo当成一个普通的类一样使用：</p>
 
-<pre><code>&gt;&gt;&gt; print Foo
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; print Foo
 &lt;class '__main__.Foo'&gt;
 &gt;&gt;&gt; print Foo.bar
 True
@@ -154,25 +208,28 @@ True
 &gt;&gt;&gt; print f.bar
 True
 </code></pre>
+</div>
 
 <p>当然，你可以向这个类继承，所以，如下的代码：</p>
 
-<pre><code>&gt;&gt;&gt; class FooChild(Foo):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; class FooChild(Foo):
 …       pass
 </code></pre>
+</div>
 
 <p>就可以写成：</p>
 
-<pre><code>&gt;&gt;&gt; FooChild = type('FooChild', (Foo,),{})
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; FooChild = type('FooChild', (Foo,),{})
 &gt;&gt;&gt; print FooChild
 &lt;class '__main__.FooChild'&gt;
 &gt;&gt;&gt; print FooChild.bar   # bar属性是由Foo继承而来
 True
 </code></pre>
+</div>
 
 <p>最终你会希望为你的类增加方法。只需要定义一个有着恰当签名的函数并将其作为属性赋值就可以了。</p>
 
-<pre><code>&gt;&gt;&gt; def echo_bar(self):
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; def echo_bar(self):
 …       print self.bar
 …
 &gt;&gt;&gt; FooChild = type('FooChild', (Foo,), {'echo_bar': echo_bar})
@@ -184,6 +241,7 @@ True
 &gt;&gt;&gt; my_foo.echo_bar()
 True
 </code></pre>
+</div>
 
 <p>你可以看到，在Python中，类也是对象，你可以动态的创建类。这就是当你使用关键字class时Python在幕后做的事情，而这就是通过元类来实现的。</p>
 
@@ -193,18 +251,20 @@ True
 
 <p>元类就是用来创建类的“东西”。你创建类就是为了创建类的实例对象，不是吗？但是我们已经学习到了Python中的类也是对象。好吧，元类就是用来创建这些类（对象）的，元类就是类的类，你可以这样理解为：</p>
 
-<pre><code>MyClass = MetaClass()
+<div class="highlighter-rouge"><pre class="highlight"><code>MyClass = MetaClass()
 MyObject = MyClass()
 </code></pre>
+</div>
 
 <p>你已经看到了type可以让你像这样做：</p>
 
-<pre><code>MyClass = type('MyClass', (), {})
+<div class="highlighter-rouge"><pre class="highlight"><code>MyClass = type('MyClass', (), {})
 </code></pre>
+</div>
 
 <p>这是因为函数type实际上是一个元类。type就是Python在背后用来创建所有类的元类。现在你想知道那为什么type会全部采用小写形式而不是Type呢？好吧，我猜这是为了和str保持一致性，str是用来创建字符串对象的类，而int是用来创建整数对象的类。type就是创建类对象的类。你可以通过检查__class__属性来看到这一点。Python中所有的东西，注意，我是指所有的东西——都是对象。这包括整数、字符串、函数以及类。它们全部都是对象，而且它们都是从一个类创建而来。</p>
 
-<pre><code>&gt;&gt;&gt; age = 35
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; age = 35
 &gt;&gt;&gt; age.__class__
 &lt;type 'int'&gt;
 &gt;&gt;&gt; name = 'bob'
@@ -218,10 +278,11 @@ MyObject = MyClass()
 &gt;&gt;&gt; b.__class__
 &lt;class '__main__.Bar'&gt;
 </code></pre>
+</div>
 
 <p>现在，对于任何一个__class__的__class__属性又是什么呢？</p>
 
-<pre><code>&gt;&gt;&gt; a.__class__.__class__
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt; a.__class__.__class__
 &lt;type 'type'&gt;
 &gt;&gt;&gt; age.__class__.__class__
 &lt;type 'type'&gt;
@@ -230,6 +291,7 @@ MyObject = MyClass()
 &gt;&gt;&gt; b.__class__.__class__
 &lt;type 'type'&gt;
 </code></pre>
+</div>
 
 <p>因此，元类就是创建类这种对象的东西。如果你喜欢的话，可以把元类称为“类工厂”（不要和工厂类搞混了:D）
 type就是Python的内建元类，当然了，你也可以创建自己的元类。</p>
@@ -240,16 +302,18 @@ type就是Python的内建元类，当然了，你也可以创建自己的元类�
 
 <p>你可以在写一个类的时候为其添加__metaclass__属性。</p>
 
-<pre><code>class Foo(object):
+<div class="highlighter-rouge"><pre class="highlight"><code>class Foo(object):
     __metaclass__ = something…
 […]
 </code></pre>
+</div>
 
 <p>如果你这么做了，Python就会用元类来创建类Foo。小心点，这里面有些技巧。你首先写下class Foo(object)，但是类对象Foo还没有在内存中创建。Python会在类的定义中寻找__metaclass__属性，如果找到了，Python就会用它来创建类Foo，如果没有找到，就会用内建的type来创建这个类。把下面这段话反复读几次。当你写如下代码时:</p>
 
-<pre><code>class Foo(Bar):
+<div class="highlighter-rouge"><pre class="highlight"><code>class Foo(Bar):
     pass
 </code></pre>
+</div>
 
 <p>Python做了如下的操作：</p>
 
@@ -265,7 +329,7 @@ type就是Python的内建元类，当然了，你也可以创建自己的元类�
 
 <p>幸运的是，__metaclass__实际上可以被任意调用，它并不需要是一个正式的类（我知道，某些名字里带有‘class’的东西并不需要是一个class，画画图理解下，这很有帮助）。所以，我们这里就先以一个简单的函数作为例子开始。</p>
 
-<pre><code># 元类会自动将你通常传给‘type’的参数作为自己的参数传入
+<div class="highlighter-rouge"><pre class="highlight"><code># 元类会自动将你通常传给‘type’的参数作为自己的参数传入
 def upper_attr(future_class_name, future_class_parents, future_class_attr):
     '''返回一个类对象，将属性都转为大写形式'''
     #  选择所有不以'__'开头的属性
@@ -292,10 +356,11 @@ f = Foo()
 print f.BAR
 # 输出:'bip'
 </code></pre>
+</div>
 
 <p>现在让我们再做一次，这一次用一个真正的class来当做元类。</p>
 
-<pre><code># 请记住，'type'实际上是一个类，就像'str'和'int'一样
+<div class="highlighter-rouge"><pre class="highlight"><code># 请记住，'type'实际上是一个类，就像'str'和'int'一样
 # 所以，你可以从type继承
 class UpperAttrMetaClass(type):
     # __new__ 是在__init__之前被调用的特殊方法
@@ -310,10 +375,11 @@ class UpperAttrMetaClass(type):
         uppercase_attr = dict((name.upper(), value) for name, value in attrs)
         return type(future_class_name, future_class_parents, uppercase_attr)
 </code></pre>
+</div>
 
 <p>但是，这种方式其实不是OOP。我们直接调用了type，而且我们没有改写父类的__new__方法。现在让我们这样去处理:</p>
 
-<pre><code>class UpperAttrMetaclass(type):
+<div class="highlighter-rouge"><pre class="highlight"><code>class UpperAttrMetaclass(type):
     def __new__(upperattr_metaclass, future_class_name, future_class_parents, future_class_attr):
         attrs = ((name, value) for name, value in future_class_attr.items() if not name.startswith('__'))
         uppercase_attr = dict((name.upper(), value) for name, value in attrs)
@@ -322,24 +388,27 @@ class UpperAttrMetaClass(type):
         # 这就是基本的OOP编程，没什么魔法
         return type.__new__(upperattr_metaclass, future_class_name, future_class_parents, uppercase_attr)
 </code></pre>
+</div>
 
 <p>你可能已经注意到了有个额外的参数upperattr_metaclass，这并没有什么特别的。类方法的第一个参数总是表示当前的实例，就像在普通的类方法中的self参数一样。当然了，为了清晰起见，这里的名字我起的比较长。但是就像self一样，所有的参数都有它们的传统名称。因此，在真实的产品代码中一个元类应该是像这样的：</p>
 
-<pre><code>class UpperAttrMetaclass(type):
+<div class="highlighter-rouge"><pre class="highlight"><code>class UpperAttrMetaclass(type):
     def __new__(cls, name, bases, dct):
         attrs = ((name, value) for name, value in dct.items() if not name.startswith('__')
         uppercase_attr  = dict((name.upper(), value) for name, value in attrs)
         return type.__new__(cls, name, bases, uppercase_attr)
 </code></pre>
+</div>
 
 <p>如果使用super方法的话，我们还可以使它变得更清晰一些，这会缓解继承（是的，你可以拥有元类，从元类继承，从type继承）</p>
 
-<pre><code>class UpperAttrMetaclass(type):
+<div class="highlighter-rouge"><pre class="highlight"><code>class UpperAttrMetaclass(type):
     def __new__(cls, name, bases, dct):
         attrs = ((name, value) for name, value in dct.items() if not name.startswith('__'))
         uppercase_attr = dict((name.upper(), value) for name, value in attrs)
         return super(UpperAttrMetaclass, cls).__new__(cls, name, bases, uppercase_attr)
 </code></pre>
+</div>
 
 <p>就是这样，除此之外，关于元类真的没有别的可说的了。使用到元类的代码比较复杂，这背后的原因倒并不是因为元类本身，而是因为你通常会使用元类去做一些晦涩的事情，依赖于自省，控制继承等等。确实，用元类来搞些“黑暗魔法”是特别有用的，因而会搞出些复杂的东西来。但就元类本身而言，它们其实是很简单的：</p>
 
@@ -375,16 +444,18 @@ class UpperAttrMetaClass(type):
 
 <p>元类的主要用途是创建API。一个典型的例子是<a href="http://blog.jobbole.com/15555/" title="10个实用的Django建议">Django</a>ORM。它允许你像这样定义：</p>
 
-<pre><code>class Person(models.Model):
+<div class="highlighter-rouge"><pre class="highlight"><code>class Person(models.Model):
     name = models.CharField(max_length=30)
     age = models.IntegerField()
 </code></pre>
+</div>
 
 <p>但是如果你像这样做的话：</p>
 
-<pre><code>guy  = Person(name='bob', age='35')
+<div class="highlighter-rouge"><pre class="highlight"><code>guy  = Person(name='bob', age='35')
 print guy.age
 </code></pre>
+</div>
 
 <p>这并不会返回一个IntegerField对象，而是会返回一个int，甚至可以直接从数据库中取出数据。这是有可能的，因为models.Model定义了__metaclass__，并且使用了一些魔法能够将你刚刚定义的简单的Person类转变成对数据库的一个复杂hook。Django框架将这些看起来很复杂的东西通过暴露出一个简单的使用元类的API将其化简，通过这个API重新创建代码，在背后完成真正的工作。</p>
 
@@ -394,10 +465,11 @@ print guy.age
 
 <p>首先，你知道了类其实是能够创建出类实例的对象。好吧，事实上，类本身也是实例，当然，它们是元类的实例。</p>
 
-<pre><code>&gt;&gt;&gt;class Foo(object): pass
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt;&gt;class Foo(object): pass
 &gt;&gt;&gt; id(Foo)
 142630324
 </code></pre>
+</div>
 
 <p>Python中的一切都是对象，它们要么是类的实例，要么是元类的实例，除了type。type实际上是它自己的元类，在纯Python环境中这可不是你能够做到的，这是通过在实现层面耍一些小手段做到的。其次，元类是很复杂的。对于非常简单的类，你可能不希望通过使用元类来对类做修改。你可以通过其他两种技术来修改类：</p>
 
@@ -412,78 +484,32 @@ print guy.age
 <p>英文原文：<a href="http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python">Stack Overflow</a>   编译：<a href="http://www.jobbole.com/">伯乐</a>在线— <a href="http://blog.jobbole.com/21351/">陈舸</a></p>
 
 
-</article>
+    </main>
 
-
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+  </body>
+
 </html>

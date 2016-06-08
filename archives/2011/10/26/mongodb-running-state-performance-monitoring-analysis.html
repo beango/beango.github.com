@@ -1,33 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="mongodb" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / MongoDB运行状态、性能监控，分析</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MongoDB运行状态、性能监控，分析</title>
+  <meta name="description" content="这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / MongoDB运行状态、性能监控，分析</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">MongoDB运行状态、性能监控，分析</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2011-10-26</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。</p>
 
-<h3 id="mongostat">mongostat详解</h3>
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">MongoDB运行状态、性能监控，分析</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。</p>
+
+<p>###mongostat详解</p>
 
 <p><img src="/assets/files/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;" />
 mongostat是mongdb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。</p>
@@ -53,27 +98,29 @@ mongostat是mongdb自带的状态检测工具，在命令行下使用。它会�
   <li>time 时间戳</li>
 </ul>
 
-<h3 id="profiler">使用profiler</h3>
+<p>###使用profiler</p>
 
 <p>类似于MySQL的slow log, MongoDB可以监控所有慢的以及不慢的查询。</p>
 
 <p>Profiler默认是关闭的，你可以选择全部开启，或者有慢查询的时候开启。</p>
 
-<pre><code>&gt; use test
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; use test
 switched to db test
 &gt; db.setProfilingLevel(2);
 {"was" : 0 , "slowms" : 100, "ok" : 1} // "was" is the old setting
 &gt; db.getProfilingLevel()
 2
 </code></pre>
+</div>
 
 <p>查看Profile日志</p>
 
-<pre><code>&gt; db.system.profile.find().sort({$natural:-1})
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; db.system.profile.find().sort({$natural:-1})
 {"ts" : "Thu Jan 29 2009 15:19:32 GMT-0500 (EST)" , "info" :
 "query test.$cmd ntoreturn:1 reslen:66 nscanned:0 query: { profile: 2 } nreturned:1 bytes:50" ,
 "millis" : 0} ...
 </code></pre>
+</div>
 
 <p>3个字段的意义</p>
 
@@ -85,7 +132,7 @@ switched to db test
 
 <p>不多说，此处有<a href="http://www.mongodb.org/display/DOCS/Database+Profiler">官方文档</a>。注意，造成满查询可能是索引的问题，也可能是数据不在内存造成因此磁盘读入造成。</p>
 
-<h3 id="web">使用Web控制台</h3>
+<p>###使用Web控制台</p>
 
 <p><a href="/assets/files/2011-10/mongod-localhost.png"><img src="/assets/files/2011-10/mongod-localhost.png" alt="mongodb web
 monitor" title="mongodb web monitor" /></a>Mongodb自带了Web控制台，默认和数据服务一同开启。他的端口在Mongodb数据库服务器端口的基础上加1000，如果是默认的Mongodb数据服务端口(Which is 27017)，则相应的Web端口为28017这个页面可以看到</p>
@@ -103,7 +150,7 @@ monitor" title="mongodb web monitor" /></a>Mongodb自带了Web控制台，默认
 
 <p>获取当前数据库的信息，比如Obj总数、数据库总大小、平均Obj大小等</p>
 
-<pre><code>&gt; use test
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; use test
 switched to db test
 &gt; db.stats()
 {
@@ -119,84 +166,86 @@ switched to db test
     "ok" : 1
 }
 </code></pre>
+</div>
 
 <h2 id="dbserverstatus">db.serverStatus()</h2>
 
 <p>获取服务器的状态</p>
 
-<pre><code>{
-    "version" : "1.6.5",
-    "uptime" : 7208469,
-    "uptimeEstimate" : 7138829,
-    "localTime" : "Wed Oct 26 2011 22:23:07 GMT+0800 (CST)",
-    "globalLock" : {
-        "totalTime" : 7208469556704,
-        "lockTime" : 4959693717,
-        "ratio" : 0.000688036992871448,
-        "currentQueue" : {
-            "total" : 0,
-            "readers" : 0,
-            "writers" : 0
-        }
-    },
-    "mem" : {
-        "bits" : 64,
-        "resident" : 3131,
-        "virtual" : 6172,
-        "supported" : true,
-        "mapped" : 4927
-    },
-    "connections" : {
-        "current" : 402,
-        "available" : 2599
-    },
-    "extra_info" : {
-        "note" : "fields vary by platform",
-        "heap_usage_bytes" : 832531920,
-        "page_faults" : 8757
-    },
-    "indexCounters" : {
-        "btree" : {
-            "accesses" : 2821726,
-            "hits" : 2821725,
-            "misses" : 1,
-            "resets" : 0,
-            "missRatio" : 3.543930204420982e-7
-        }
-    },
-    "backgroundFlushing" : {
-        "flushes" : 120133,
-        "total_ms" : 73235923,
-        "average_ms" : 609.6236920746173,
-        "last_ms" : 1332,
-        "last_finished" : "Wed Oct 26 2011 22:22:23 GMT+0800 (CST)"
-    },
-    "cursors" : {
-        "totalOpen" : 0,
-        "clientCursors_size" : 0,
-        "timedOut" : 238392
-    },
-    "repl" : {
-        "ismaster" : true
-    },
-    "opcounters" : {
-        "insert" : 269351,
-        "query" : 19331151,
-        "update" : 14199331,
-        "delete" : 1,
-        "getmore" : 145575,
-        "command" : 55982302
-    },
-    "asserts" : {
-        "regular" : 0,
-        "warning" : 0,
-        "msg" : 0,
-        "user" : 27,
-        "rollovers" : 0
-    },
-    "ok" : 1
-}
-</code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"version"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"1.6.5"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"uptime"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">7208469</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"uptimeEstimate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">7138829</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"localTime"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Wed Oct 26 2011 22:23:07 GMT+0800 (CST)"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"globalLock"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"totalTime"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">7208469556704</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"lockTime"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4959693717</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ratio"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">0.000688036992871448</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"currentQueue"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"total"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"readers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"writers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"mem"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"bits"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resident"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3131</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"virtual"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">6172</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"supported"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mapped"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4927</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"connections"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"current"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">402</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"available"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2599</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"extra_info"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"note"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"fields vary by platform"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"heap_usage_bytes"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">832531920</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"page_faults"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">8757</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"indexCounters"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"btree"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"accesses"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2821726</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"hits"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">2821725</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"misses"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"resets"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"missRatio"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">3.543930204420982e-7</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"backgroundFlushing"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"flushes"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">120133</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"total_ms"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">73235923</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"average_ms"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">609.6236920746173</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"last_ms"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1332</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"last_finished"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Wed Oct 26 2011 22:22:23 GMT+0800 (CST)"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"cursors"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"totalOpen"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"clientCursors_size"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"timedOut"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">238392</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"repl"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"ismaster"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"opcounters"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"insert"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">269351</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"query"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">19331151</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"update"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">14199331</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"delete"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"getmore"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">145575</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"command"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">55982302</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"asserts"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"regular"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"warning"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"msg"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"user"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"rollovers"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"ok"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
 
 <p>需要关心的地方：</p>
 
@@ -213,19 +262,22 @@ switched to db test
 
 <p>在没有负载的机器上，该命令基本上都是返回空的</p>
 
-<pre><code>&gt;  db.currentOp()
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;  db.currentOp()
 { "inprog" : [ ] }
 </code></pre>
+</div>
 
 <p>以下是一个有负载的机器上得到的返回值样例：</p>
 
-<pre><code>{ "opid" : "shard3:466404288", "active" : false, "waitingForLock" : false, "op" : "query", "ns" : "sd.usersEmails", "query" : { }, "client_s" : "10.121.13.8:34473", "desc" : "conn" },
-</code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w"> </span><span class="nt">"opid"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"shard3:466404288"</span><span class="p">,</span><span class="w"> </span><span class="nt">"active"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitingForLock"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"op"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"query"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ns"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"sd.usersEmails"</span><span class="p">,</span><span class="w"> </span><span class="nt">"query"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nt">"client_s"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"10.121.13.8:34473"</span><span class="p">,</span><span class="w"> </span><span class="nt">"desc"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"conn"</span><span class="w"> </span><span class="p">}</span><span class="err">,</span><span class="w">
+</span></code></pre>
+</div>
 
 <p>字段名字都能自解释。如果你发现一个操作太长，把数据库卡死的话，可以用这个命令杀死他</p>
 
-<pre><code>&gt; db.killOp("shard3:466404288")
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; db.killOp("shard3:466404288")
 </code></pre>
+</div>
 
 <h2 id="mongodb-monitoring-service">MongoDB Monitoring Service</h2>
 
@@ -233,81 +285,42 @@ switched to db test
 
 <p>MongoDB Monitoring Service(MMS)是Mongodb厂商提供的监控服务，可以在网页和Android客户端上监控你的MongoDB状况。请<a href="http://blog.nosqlfan.com/html/3171.html">参考</a></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">http://http://uwebs.tk/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="HTTPS" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / HTTPS连接的前几毫秒发生了什么</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>HTTPS连接的前几毫秒发生了什么</title>
+  <meta name="description" content="花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/09/21/first-few-milliseconds-of-https.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / HTTPS连接的前几毫秒发生了什么</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/09/21/first-few-milliseconds-of-https.html">HTTPS连接的前几毫秒发生了什么</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-09-21</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">HTTPS连接的前几毫秒发生了什么</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……</p>
 
 <p>哇！刚刚发生了什么?</p>
 
@@ -202,10 +247,11 @@ FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFF00302130
 
 <p>“SSL连接的客户端确认证书正确，并检查证书中所对应的主机名是否正确，因为这是我们应对中间人攻击的唯一方式！”（译者注：中间人攻击是一种“间接”的入侵攻击，这种攻击模式是通过各种技术手段将受入侵者控制的一台计算机虚拟放置在网络连接中的两台通信计算机之间，这台计算机就称为“中间人”。）</p>
 
-<pre><code>/* cert is OK. This is the client side of an SSL connection.
+<div class="highlighter-rouge"><pre class="highlight"><code>/* cert is OK. This is the client side of an SSL connection.
  * Now check the name field in the cert against the desired hostname.
  * NB: This is our only defense against Man-In-The-Middle (MITM) attacks! */
 </code></pre>
+</div>
 
 <p>这样的检查是为了防止中间人攻击：因为我们对整个信任链条上的人都采取了完全信任的态度，认为他们并不会进行黑客行为，就像我们的证书中所声称它是来自Amazon.com，但是假如他的真实来源并非Amazon.com，那我们可能就有被攻击的危险。如果攻击者使用域名污染（DNS cache poisoning）等技术对你的DNS服务器进行篡改，那么你也许会把黑客的网站误认为是一个安全的受信网站（诸如Amazon.com），因为地址栏显示的信息一切正常。这最后一步对证书颁发机构的检查就是为了防止这样的事情发生。</p>
 
@@ -222,11 +268,12 @@ OpenSSL的维护工程师吧。如果随机数的生成方式遭到破解，那�
 
 <p>其中，SSLDEBUGFILE显示的就是随机密码串的值：</p>
 
-<pre><code>4456: SSL[131491792]: Pre-Master Secret [Len: 48]
+<div class="highlighter-rouge"><pre class="highlight"><code>4456: SSL[131491792]: Pre-Master Secret [Len: 48]
 03 01 bb 7b 08 98 a7 49 de e8 e9 b8 91 52 ec 81 ...{...I.....R..
 4c c2 39 7b f6 ba 1c 0a b1 95 50 29 be 02 ad e6 L.9{......P)....
 ad 6e 11 3f 20 c4 66 f0 64 22 57 7e e1 06 7a 3b .n.? .f.d"W~..z;
 </code></pre>
+</div>
 
 <p>需要注意的是，这串数字从各种意义上来说都不是真正的随机数，就拿它的前两位来说：这就是根据TLS协议约定的TLS版本号（0301）。</p>
 
@@ -236,7 +283,7 @@ ad 6e 11 3f 20 c4 66 f0 64 22 57 7e e1 06 7a 3b .n.? .f.d"W~..z;
 
 <p>同样的，我们很难直接观察到火狐浏览器中的这一过程，所以我不得不在填充随机数的函数中增加了debug的语句，使我们能够观察这一过程：</p>
 
-<pre><code>wrapperHandle = fopen("plaintextpadding.txt", "a");
+<div class="highlighter-rouge"><pre class="highlight"><code>wrapperHandle = fopen("plaintextpadding.txt", "a");
 fprintf(wrapperHandle, "PLAINTEXT = ");
 for(i = 0; i &lt; modulusLen; i++)
 {
@@ -245,6 +292,7 @@ for(i = 0; i &lt; modulusLen; i++)
 fprintf(wrapperHandle, "\r\n");
 fclose(wrapperHandle);
 </code></pre>
+</div>
 
 <p>在这个例子中，完整的填充后的随机密码串为：</p>
 
@@ -271,8 +319,9 @@ Spec”记录：</p>
 
 <p>如果我们正确完成了之前的过程，并且各方都获得了48字节（256二进制位）的随机密码串。从Amazon.com的角度来看，这里还有一些信任问题：随机密码串是由客户端生成的，并没有将任何服务器信息或者之前约定的信息加入其中。这一点，我们会通过生成主密钥的方式加以完善。根据协议规范约定，这个的计算过程为：</p>
 
-<pre><code>master_secret = PRF(pre_master_secret, "master secret", ClientHello.random + ServerHello.random)
+<div class="highlighter-rouge"><pre class="highlight"><code>master_secret = PRF(pre_master_secret, "master secret", ClientHello.random + ServerHello.random)
 </code></pre>
+</div>
 
 <p>pre_master_secret就是我们之前传送的随机密码串，”master secret”是一串ASCII码（例如：6d 61 73 74 65 72……），再连接上在客户端问候和服务器问候（来自Amazon的）的信息。</p>
 
@@ -290,35 +339,39 @@ Spec”记录：</p>
 <p>现在，各方面已经有了主密钥，根据协议约定，我们需要利用PRF生成这个会话中所需要的各种密钥，称之为“密钥块”（key
 block）：</p>
 
-<pre><code>key_block = PRF(SecurityParameters.master_secret, "key expansion", SecurityParameters.server_random + SecurityParameters.client_random);
+<div class="highlighter-rouge"><pre class="highlight"><code>key_block = PRF(SecurityParameters.master_secret, "key expansion", SecurityParameters.server_random + SecurityParameters.client_random);
 </code></pre>
+</div>
 
 <p>密钥块用于构成以下密钥：</p>
 
-<pre><code>client_write_MAC_secret[SecurityParameters.hash_size]
+<div class="highlighter-rouge"><pre class="highlight"><code>client_write_MAC_secret[SecurityParameters.hash_size]
 server_write_MAC_secret[SecurityParameters.hash_size]
 client_write_key[SecurityParameters.key_material_length]
 server_write_key[SecurityParameters.key_material_length]
 client_write_IV[SecurityParameters.IV_size]
 server_write_IV[SecurityParameters.IV_size]
 </code></pre>
+</div>
 
 <p>因为我们使用了类似于高级加密标准（AES）的密码流代替了分组密码我们就不需要初始化向量（IVs）了。因此我们只需要双方的两个16字节（128二进制位）的消息认证码（Message Authentication Code，MAC），因为MD5的哈希值就是16字节的。此外，双方也需要16字节（128二进制位）的RC4码。所以我们总共需要从密码块获得2*16 + 2*16 = 64字节的数据。</p>
 
 <p>运行PRF，我们能得到以下值：</p>
 
-<pre><code>client_write_MAC_secret = 80 B8 F6 09 51 74 EA DB 29 28 EF 6F 9A B8 81 B0
+<div class="highlighter-rouge"><pre class="highlight"><code>client_write_MAC_secret = 80 B8 F6 09 51 74 EA DB 29 28 EF 6F 9A B8 81 B0
 server_write_MAC_secret = 67 7C 96 7B 70 C5 BC 62 9D 1D 1F 4A A6 79 81 61
 client_write_key = 32 13 2C DD 1B 39 36 40 84 4A DE E5 6C 52 46 72
 server_write_key = 58 36 C4 0D 8C 7C 74 DA 6D B7 34 0A 91 B6 8F A7
 </code></pre>
+</div>
 
 <h2 id="section-3">准备加密！</h2>
 
 <p>客户端最后一次送出的握手信息是“结束信息”。这条信息保证了没有人篡改握手信息，并且我们已经知晓所必须的密钥。客户端将整个握手过程的全部信息都放入一个名为“handshake_messages”的缓冲区。我们能通过伪随机函数利用主密钥、“client finished”标签、MD5和SHA-1的哈希值生成12字节的“区别数据”（verify_data）：</p>
 
-<pre><code>verify_data = PRF(master_secret, "client finished", MD5(handshake_messages) + SHA-1(handshake_messages)) [12]
+<div class="highlighter-rouge"><pre class="highlight"><code>verify_data = PRF(master_secret, "client finished", MD5(handshake_messages) + SHA-1(handshake_messages)) [12]
 </code></pre>
+</div>
 
 <p>我们在这个结果前面加上0×14（用于表示结束信息）和00 00 0c（用于表示verify_data有12字节）。就像以后所有的加密过程一样，我们要在加密之前确保原始数据没有被篡改。因为我们使用的是“TLS_RSA_WITH_RC4_128_MD5”密码组，这就意味着我们需要使用MD5哈希函数。</p>
 
@@ -363,7 +416,7 @@ TLSCompressed.version + TLSCompressed.length + TLSCompressed.fragment));</p>
 
 <p>加密的数据的明文如下：</p>
 
-<pre><code>GET /gp/cart/view.html/ref=pd_luc_mri HTTP/1.1
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /gp/cart/view.html/ref=pd_luc_mri HTTP/1.1
 Host: www.amazon.com
 User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.10) Gecko/2009060911 Minefield/3.0.10 (.NET CLR 3.5.30729)
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
@@ -374,6 +427,7 @@ Keep-Alive: 300
 Connection: keep-alive
 ...
 </code></pre>
+</div>
 
 <p>在Wireshark中显示如下：</p>
 
@@ -387,13 +441,14 @@ Connection: keep-alive
 
 <p>解密后的信息如下：</p>
 
-<pre><code>HTTP/1.1 200 OK
+<div class="highlighter-rouge"><pre class="highlight"><code>HTTP/1.1 200 OK
 Date: Wed, 10 Jun 2009 01:09:30 GMT
 Server: Server
 ...
 Cneonction: close
 Transfer-Encoding: chunked
 </code></pre>
+</div>
 
 <p>这就是一个来自Amazon负载平衡服务器的普通HTTP回应：包含了非描述性的服务器信息“Server: Server”和一个拼错了的“Cneonction: close”。</p>
 
@@ -423,81 +478,42 @@ Transfer-Encoding: chunked
 
 <p><strong>本文由 <a href="http://blog.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/author/ripenc/">水果泡腾片</a> 翻译自 <a href="http://www.moserware.com/2009/06/first-few-milliseconds-of-https.html">JEFF MOSER</a>。</strong></p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/09/21/first-few-milliseconds-of-https.html">http://http://uwebs.tk/archives/2013/09/21/first-few-milliseconds-of-https.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

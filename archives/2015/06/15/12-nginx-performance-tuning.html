@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="shell" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / 为最佳性能调优 Nginx</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>为最佳性能调优 Nginx</title>
+  <meta name="description" content="英文出处：dak1n1.com。欢迎加入翻译小组。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2015/06/15/12-nginx-performance-tuning.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / 为最佳性能调优 Nginx</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2015/06/15/12-nginx-performance-tuning.html">为最佳性能调优 Nginx</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2015-06-15</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>英文出处：<a href="http://dak1n1.com/blog/12-nginx-performance-tuning">dak1n1.com</a>。欢迎加入<a href="http://group.jobbole.com/category/feedback/trans-team/">翻译小组</a>。</p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">为最佳性能调优 Nginx</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>英文出处：<a href="http://dak1n1.com/blog/12-nginx-performance-tuning">dak1n1.com</a>。欢迎加入<a href="http://group.jobbole.com/category/feedback/trans-team/">翻译小组</a>。</p>
 
 <p>这篇文章是《<a href="http://dak1n1.com/blog/13-load-balancing-lvs">打造3百万次请求/秒的高性能服务器集群</a>》 系列的第2部分，在这个部分中你可以使用任何一种WEB服务器，不过我决定使用 Nginx，因其轻量级、高可靠及高性能的优点。</p>
 
@@ -35,18 +80,20 @@
 
 <p>从<a href="http://dak1n1.com/blog/12-nginx-performance-tuning/blog/3-getting-more-from-yum-with-rpmforge-and-epel-repos">EPEL</a> 源安装 Nginx：</p>
 
-<pre><code>yum -y install nginx
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install nginx
 </code></pre>
+</div>
 
 <p>备份配置文件，然后根据你的需要进行配置：</p>
 
-<pre><code>cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
+<div class="highlighter-rouge"><pre class="highlight"><code>cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
 vim /etc/nginx/nginx.conf
 </code></pre>
+</div>
 
 <p></p>
 
-<pre><code># This number should be, at maximum, the number of CPU cores on your system.
+<div class="highlighter-rouge"><pre class="highlight"><code># This number should be, at maximum, the number of CPU cores on your system.
 # (since nginx doesn't benefit from more than one worker per CPU.)
 # 这里的数值不能超过 CPU 的总核数，因为在单个核上部署超过 1 个 Nginx 服务进程并不起到提高性能的作用。
 worker_processes 24;
@@ -136,19 +183,22 @@ gzip_proxied expired no-cache no-store private auth;
 gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
 gzip_disable "MSIE [1-6].";
 </code></pre>
+</div>
 
 <p>启动 Nginx 并配置起机自动加载。</p>
 
-<pre><code>service nginx start
+<div class="highlighter-rouge"><pre class="highlight"><code>service nginx start
 chkconfig nginx on
 </code></pre>
+</div>
 
 <p>配置 Tsung 并启动测试，测试差不多 10 分钟左右就能测试到服务器的峰值能力，具体的时间与你的 Tsung 配置相关。</p>
 
-<pre><code>[root@loadnode1 ~] vim ~/.tsung/tsung.xml
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@loadnode1 ~] vim ~/.tsung/tsung.xml
     &lt;server host="YOURWEBSERVER" port="80" type="tcp"&gt;;
 tsung start
 </code></pre>
+</div>
 
 <p>你觉得测试结果已经够了的情况下，通过 ctrl+c 退出，之后使用我们之前配置的别名命令 treport 查看测试报告。</p>
 
@@ -162,17 +212,19 @@ tsung start
 
 <p>下面的配置项，我建议每次只修订其中一项，之后用网络性能测试工具 netperf、iperf 或是用我类似的测试脚本<a href="https://github.com/dak1n1/cluster-netbench/blob/master/netbench.pl">cluster-netbench.pl</a>对服务器进行多次测试。</p>
 
-<pre><code>yum -y install netperf iperf
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install netperf iperf
 </code></pre>
+</div>
 
 <p></p>
 
-<pre><code>vim /etc/sysctl.conf
+<div class="highlighter-rouge"><pre class="highlight"><code>vim /etc/sysctl.conf
 </code></pre>
+</div>
 
 <p></p>
 
-<pre><code># Increase system IP port limits to allow for more connections
+<div class="highlighter-rouge"><pre class="highlight"><code># Increase system IP port limits to allow for more connections
 # 调高系统的 IP 以及端口数据限制，从可以接受更多的连接
 net.ipv4.ip_local_port_range = 2000 65000
  
@@ -196,89 +248,52 @@ net.ipv4.tcp_rmem = 4096 87380 16777216
 net.ipv4.tcp_wmem = 4096 65536 16777216
 net.ipv4.tcp_congestion_control = cubic
 </code></pre>
+</div>
 
 <p>每次修订配置之后都需要执行以下命令使之生效.</p>
 
-<pre><code>sysctl -p /etc/sysctl.conf
+<div class="highlighter-rouge"><pre class="highlight"><code>sysctl -p /etc/sysctl.conf
 </code></pre>
+</div>
 
 <p>别忘了在配置修订之后务必要进行网络 benchmark 测试，这样可以观测到具体是哪个配置修订的优化效果最明显。通过这种有效测试方法可以为你节省大量时间。</p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2015/06/15/12-nginx-performance-tuning.html">http://http://uwebs.tk/archives/2015/06/15/12-nginx-performance-tuning.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>

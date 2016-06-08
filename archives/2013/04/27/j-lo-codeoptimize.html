@@ -1,31 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8" />
-<meta name="author" content="HuangDing" />
-<meta name="keywords" content="java" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>程序员 - 博客 - HuangDing / Java 代码优化过程的实例介绍</title>
-<link href="http://http://uwebs.tk/feed.xml" rel="alternate" title="程序员 - 博客 - HuangDing" type="application/atom+xml" />
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/site.css" />
-<link rel="stylesheet" type="text/css" href="/assets/css/code/github.css" />
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Java 代码优化过程的实例介绍</title>
+  <meta name="description" content="来源: IBM developerworks">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/04/27/j-lo-codeoptimize.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+
+  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
+
+  <!-- Google fonts -->
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
+  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
 
 </head>
 
-<body class="page-type-post">
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
 
-<div class="main">
-	<div class="trace">/ <a href="/">程序员 - 博客 - HuangDing</a> / Java 代码优化过程的实例介绍</div>
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
 
-<article>
-	<h1><a href="/archives/2013/04/27/j-lo-codeoptimize.html">Java 代码优化过程的实例介绍</a></h1>
-	
-	<p class="meta">
-	<span class="datetime">2013-04-27</span> posted in [<a href="/category/default" class="category">转载</a>]
-</p>
-	
-<p>来源: <a href="http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.html?ca=drs-">IBM developerworks</a></p>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Java 代码优化过程的实例介绍</h1>
+                <p class="article-time">
+                    ,  发表于 <span></span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/liungkejin/liungkejin.github.io/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+                </p>
+            </header>
+            <p>来源: <a href="http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.html?ca=drs-">IBM developerworks</a></p>
 
 <p><strong>简介：</strong> 通过笔者经历的一个项目实例，本文介绍了 Java 代码优化的过程，总结了优化 Java 程序的一些最佳实践，分析了进行优化的方法，并解释了性能提升的原因。从多个角度分析导致性能低的原因，并逐个进行优化，最终使得程序的性能得到极大提升，代码的可读性、可扩展性更强。</p>
 
@@ -63,12 +108,13 @@
 
 <p><strong>清单 1. log.properties 设置日志输出级别的片段</strong></p>
 
-<pre><code># default file output is in user ’ s home directory. 
+<div class="highlighter-rouge"><pre class="highlight"><code># default file output is in user ’ s home directory. 
 # levels can be: SEVERE, WARNING, INFO, FINE, FINER, FINEST 
 java.util.logging.ConsoleHandler.level=SEVERE 
 java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter 
 java.util.logging.FileHandler.append=true
 </code></pre>
+</div>
 
 <p>通过上述的优化之后，性能有了大幅度的提升，从原来的 100 秒左右降到了 50 秒左右。为什么仅仅不记录日志就能有如此大幅度的性能提升呢？查阅资料，发现已经有人做了相关的研究与实验。经常听到 Java 程序比 C/C++ 程序慢的言论，但是运行速度慢的真正原因是什么，估计很多人并不清楚。对于 CPU 密集型的程序（即程序中包含大量计算），Java 程序可以达到 C/C++ 程序同等级别的速度，但是对于 I/O 密集型的程序（即程序中包含大量 I/O 操作），Java 程序的速度就远远慢于 C/C++ 程序了，很大程度上是因为 C/C++ 程序能直接访问底层的存储设备。因此，不记录日志而得到大幅度性能提升的原因是，Java 程序的 I/O 操作较慢，是一个很耗时的操作。</p>
 
@@ -78,7 +124,7 @@ java.util.logging.FileHandler.append=true
 
 <p><strong>清单 2. 共享数据库连接的代码片段</strong></p>
 
-<pre><code>public class JdbcUtil { 
+<div class="highlighter-rouge"><pre class="highlight"><code>public class JdbcUtil { 
     private static Connection con; 
     // 从配置文件读取连接数据库的信息
     private static String driverClassName; 
@@ -115,16 +161,17 @@ java.util.logging.FileHandler.append=true
     } 
  }
 </code></pre>
+</div>
 
 <p>通过上述的优化之后，性能有了小幅度的提升，从 50 秒左右降到了 40 秒左右。共享数据库连接而得到的性能提升的原因是，数据库连接是一个耗时耗资源的操作，需要同远程计算机进行网络通信，建立 TCP 连接，还需要维护连接状态表，建立数据缓冲区。如果共享数据库连接，则只需要进行一次数据库连接操作，省去了多次重新建立数据库连接的时间。</p>
 
 <p>针对插入数据库记录的优化 1</p>
 
-<p><strong>使用预编译 SQL。</strong>具体做法是使用 java.sql.PreparedStatement 代替 java.sql.Statement 生成 SQL 语句。PreparedStatement 使得数据库预先编译好 SQL 语句，可以传入参数。而 Statement 生成的 SQL 语句在每次提交时，数据库都需进行编译。在执行大量类似的 SQL 语句时，可以使用 PreparedStatement 提高执行效率。使用 PreparedStatement 的另一个好处是不需要拼接 SQL 语句，代码的可读性更强。通过上述的优化之后，性能有了小幅度的提升，从 40 秒左右降到了 30\~35 秒左右。</p>
+<p><strong>使用预编译 SQL。</strong>具体做法是使用 java.sql.PreparedStatement 代替 java.sql.Statement 生成 SQL 语句。PreparedStatement 使得数据库预先编译好 SQL 语句，可以传入参数。而 Statement 生成的 SQL 语句在每次提交时，数据库都需进行编译。在执行大量类似的 SQL 语句时，可以使用 PreparedStatement 提高执行效率。使用 PreparedStatement 的另一个好处是不需要拼接 SQL 语句，代码的可读性更强。通过上述的优化之后，性能有了小幅度的提升，从 40 秒左右降到了 30~35 秒左右。</p>
 
 <p><strong>清单 3. 使用 Statement 的代码片段</strong></p>
 
-<pre><code>// 需要拼接 SQL 语句，执行效率不高，代码可读性不强
+<div class="highlighter-rouge"><pre class="highlight"><code>// 需要拼接 SQL 语句，执行效率不高，代码可读性不强
 StringBuilder sql = new StringBuilder(); 
 sql.append("insert into table1(column1,column2) values('"); 
 sql.append(column1Value); 
@@ -140,20 +187,22 @@ try {
     e.printStackTrace(); 
 }
 </code></pre>
+</div>
 
 <p><strong>清单 4. 使用 PreparedStatement 的代码片段</strong></p>
 
-<pre><code>// 预编译 SQL 语句，执行效率高，可读性强
+<div class="highlighter-rouge"><pre class="highlight"><code>// 预编译 SQL 语句，执行效率高，可读性强
 String sql = “insert into table1(column1,column2) values(?,?)”; 
 PreparedStatement pst = con.prepareStatement(sql); 
 pst.setString(1,column1Value); 
 pst.setString(2,column2Value); 
 pst.execute();
 </code></pre>
+</div>
 
 <p><strong>针对插入数据库记录的优化 2</strong></p>
 
-<p><strong>使用 SQL 批处理。</strong>通过 java.sql.PreparedStatement 的 addBatch 方法将 SQL 语句加入到批处理，这样在调用 execute 方法时，就会一次性地执行 SQL 批处理，而不是逐条执行。通过上述的优化之后，性能有了小幅度的提升，从 30\~35 秒左右降到了 30 秒左右。</p>
+<p><strong>使用 SQL 批处理。</strong>通过 java.sql.PreparedStatement 的 addBatch 方法将 SQL 语句加入到批处理，这样在调用 execute 方法时，就会一次性地执行 SQL 批处理，而不是逐条执行。通过上述的优化之后，性能有了小幅度的提升，从 30~35 秒左右降到了 30 秒左右。</p>
 
 <p><strong>针对多线程的优化</strong></p>
 
@@ -161,7 +210,7 @@ pst.execute();
 
 <p><strong>清单 5. 使用多线程的代码片段</strong></p>
 
-<pre><code>Thread t0 = new Thread(new ClearTableTask()); 
+<div class="highlighter-rouge"><pre class="highlight"><code>Thread t0 = new Thread(new ClearTableTask()); 
 Thread t1 = new Thread(new StoreServersTask(ADDRESS1)); 
 Thread t2 = new Thread(new StoreServersTask(ADDRESS2)); 
  
@@ -184,8 +233,9 @@ try {
     e.printStackTrace(); 
 }
 </code></pre>
+</div>
 
-<p>通过上述的优化之后，性能有了大幅度的提升，从 30 秒左右降到了 15 秒以下，10\~15秒之间。使用多线程而得到的性能提升的原因是，系统部署所在的服务器是多核多处理器的，使用多线程，给每个任务分配一个线程执行，可以充分地利用 CPU 计算资源。</p>
+<p>通过上述的优化之后，性能有了大幅度的提升，从 30 秒左右降到了 15 秒以下，10~15秒之间。使用多线程而得到的性能提升的原因是，系统部署所在的服务器是多核多处理器的，使用多线程，给每个任务分配一个线程执行，可以充分地利用 CPU 计算资源。</p>
 
 <p>笔者试着给每个任务分配两个线程执行，希望能使程序运行得更快，但是事与愿违，此时程序运行的时间反而比每个任务分配一个线程执行的慢，大约 20 秒。笔者推测，这是因为线程较多（相对于 CPU 的内核数），使得 CPU 忙于线程的上下文切换，过多的线程上下文切换使得程序的性能反而不如之前。因此，要根据实际的硬件环境，给任务分配适量的线程执行。</p>
 
@@ -199,7 +249,7 @@ try {
 
 <p><strong>清单 6. 使用 DAO 模式的代码片段</strong></p>
 
-<pre><code>// DeviceDAO.java，定义了 DAO 抽象，上层的业务逻辑代码引用该接口，面向接口编程
+<div class="highlighter-rouge"><pre class="highlight"><code>// DeviceDAO.java，定义了 DAO 抽象，上层的业务逻辑代码引用该接口，面向接口编程
  public interface DeviceDAO { 
     public void add(Device device); 
  } 
@@ -216,6 +266,7 @@ try {
     } 
  }
 </code></pre>
+</div>
 
 <p>回顾以上代码优化过程：关闭日志记录、共享数据库连接、使用预编译 SQL、使用 SQL 批处理、使用多线程实现并发 / 并行、使用 DAO 模式抽象出数据访问层，程序运行时间从最初的 100 秒左右降低到 15 秒以下，在性能上得到了很大的提升，同时也具有了更好的可读性和可扩展性。</p>
 
@@ -225,81 +276,42 @@ try {
 
 <p> </p>
 
-	
-	<!--<p class="permalink">永久链接：<a href="http://http://uwebs.tk/archives/2013/04/27/j-lo-codeoptimize.html">http://http://uwebs.tk/archives/2013/04/27/j-lo-codeoptimize.html</a></p>-->
-</article>
-<div id="disqus_thread" class="comments"></div>
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+    </section>
+</footer>
 
+        </main>
 
-	<footer>
-		<p>&copy; Since 2012</p>
-	</footer>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
 </div>
-
-<aside>
-	<h2><a href="/">程序员 - 博客 - HuangDing</a><a href="/feed.xml" class="feed-link" title="Subscribe"><i class="fa fa-rss-square"></i></a></h2>
-	
-	<nav class="block">
-		<ul>
-		<li class="default"><a href="/category/default/">转载</a></li>
-		<li class="code"><a href="/category/code/">笔记</a></li>
-		
-		</ul>
-	</nav>
-	
-	<form action="/search/" class="block block-search">
-		<h3>Search</h3>
-		<p><input type="search" name="q" placeholder="Search" /></p>
-	</form>
-	
-	<div class="block block-about">
-		<h3>About</h3>
-		<figure>
-			
-			<figcaption><strong>HuangDing</strong></figcaption>
-		</figure>
-		<p>dotnet, mvc, python</p>
-	</div>
-	
-	<div class="block block-license">
-		<h3>Copyright</h3>
-		<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/cn/" target="_blank" class="hide-target-icon" title="Copyright declaration of site content"><img alt="知识共享许可协议" src="http://i.creativecommons.org/l/by-nc-nd/2.5/cn/88x31.png" /></a></p>
-	</div>
-	
-	
-	<div class="block block-fork">
-		<a href="https://github.com/beango"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	</div>
-	
-	
-	<div class="block block-thank">
-		<h3>Powered by</h3>
-		<p>
-			<a href="http://disqus.com/" target="_blank">Disqus</a>,
-			<a href="http://elfjs.com/" target="_blank">elf+js</a>,
-			<a href="https://github.com/" target="_blank">GitHub</a>,
-			<a href="http://www.google.com/cse/" target="_blank">Google Custom Search</a>,
-			<a href="http://en.gravatar.com/" target="_blank">Gravatar</a>,
-			<a href="http://softwaremaniacs.org/soft/highlight/en/">HighlightJS</a>,
-			<a href="https://github.com/mojombo/jekyll" target="_blank">jekyll</a>,
-			<a href="https://github.com/mytharcher/SimpleGray" target="_blank">SimpleGray</a>
-		</p>
-	</div>
-</aside>
-
-<script src="http://elfjs.qiniudn.com/code/elf-0.5.0.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
-
-<script src="/assets/js/site.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
 
 <script>
-site.URL_GOOGLE_API = 'http://www.google.com/jsapi';
-site.URL_DISCUS_COMMENT = 'beango' ? 'http://beango.disqus.com/embed.js' : '';
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-site.VAR_SITE_NAME = '程序员 - 博客 - HuangDing';
-site.VAR_GOOGLE_CUSTOM_SEARCH_ID = '015845096645085761197:gh2gyye7u1m';
-site.TPL_SEARCH_TITLE = '#{0} / 搜索：#{1}';
-site.VAR_AUTO_LOAD_ON_SCROLL = 0;
+  ga('create', 'UA-74743250-2', 'auto');
+  ga('send', 'pageview');
+
 </script>
-</body>
+
+
+    </body>
+
 </html>
