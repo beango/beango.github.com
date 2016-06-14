@@ -33,7 +33,7 @@ redirecturl: http://blog.jobbole.com/40443/
 
 内联合（inner join）只生成同时匹配表A和表B的记录集。（如下图）
 
-[![inner join]({{ site.JB.FILE_PATH }}/2013-05/iinner-join.png "inner join")]({{ site.JB.FILE_PATH }}/2013-05/iinner-join.png "inner join")
+[![inner join]({{ site.assetpath }}/2013-05/iinner-join.png "inner join")]({{ site.assetpath }}/2013-05/iinner-join.png "inner join")
 
 ——————————————————————————-
 
@@ -52,7 +52,7 @@ redirecturl: http://blog.jobbole.com/40443/
 
 全外联合（full outer join）生成表A和表B里的记录全集，包括两边都匹配的记录。如果有一边没有匹配的，缺失的这一边为null。（如下图）
 
-[![Full outer join]({{ site.JB.FILE_PATH }}/2013-05/Full-outer-join.png "Full outer join")]({{ site.JB.FILE_PATH }}/2013-05/Full-outer-join.png "Full outer join")
+[![Full outer join]({{ site.assetpath }}/2013-05/Full-outer-join.png "Full outer join")]({{ site.assetpath }}/2013-05/Full-outer-join.png "Full outer join")
 
 ——————————————————————————-
 
@@ -69,7 +69,7 @@ redirecturl: http://blog.jobbole.com/40443/
 
 左外联合（left outer join）生成表A的所有记录，包括在表B里匹配的记录。如果没有匹配的，右边将是null。（如下图）
 
-[![Left outer join]({{ site.JB.FILE_PATH }}/2013-05/Left-outer-join.png "Left outer join")]({{ site.JB.FILE_PATH }}/2013-05/Left-outer-join.png "Left outer join")
+[![Left outer join]({{ site.assetpath }}/2013-05/Left-outer-join.png "Left outer join")]({{ site.assetpath }}/2013-05/Left-outer-join.png "Left outer join")
 
 ——————————————————————————-
 
@@ -85,7 +85,7 @@ redirecturl: http://blog.jobbole.com/40443/
 
 为了生成只在表A里而不在表B里的记录集，我们用同样的左外联合，然后用where语句排除我们不想要的记录。（如下图）
 
-[![]({{ site.JB.FILE_PATH }}/2013-05/WHERE-TableB.id-IS-nul.png "WHERE TableB.id IS nul")]({{ site.JB.FILE_PATH }}/2013-05/WHERE-TableB.id-IS-nul.png "WHERE TableB.id IS nul")
+[![]({{ site.assetpath }}/2013-05/WHERE-TableB.id-IS-nul.png "WHERE TableB.id IS nul")]({{ site.assetpath }}/2013-05/WHERE-TableB.id-IS-nul.png "WHERE TableB.id IS nul")
 
 ——————————————————————————-
 
@@ -106,7 +106,7 @@ redirecturl: http://blog.jobbole.com/40443/
 
  
 
-[![]({{ site.JB.FILE_PATH }}/2013-05/WHERE-TableA.id-IS-null.png "WHERE TableA.id IS null")]({{ site.JB.FILE_PATH }}/2013-05/WHERE-TableA.id-IS-null.png "WHERE TableA.id IS null")
+[![]({{ site.assetpath }}/2013-05/WHERE-TableA.id-IS-null.png "WHERE TableA.id IS null")]({{ site.assetpath }}/2013-05/WHERE-TableA.id-IS-null.png "WHERE TableA.id IS null")
 
 ———————————————————–
 

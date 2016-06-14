@@ -148,7 +148,7 @@ tags: [jquery,javascript]
 
 A、C行颜色\#EEE（第一行的索引为0），B、D行颜色\#DADADA
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030155067.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030141021.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030155067.png "image")]({{ site.assetpath }}/2012-06/201206022030141021.png)
 
     <table width="200" cellpadding="0" cellspacing="0">  
         <tbody>  
@@ -161,7 +161,7 @@ A、C行颜色\#EEE（第一行的索引为0），B、D行颜色\#DADADA
 
 -   :eq(x) （取指定索引的元素）
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030166854.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030158348.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030166854.png "image")]({{ site.assetpath }}/2012-06/201206022030158348.png)
     
     $(document).ready(function () {  
         $('tr:eq(2)').css('background', '#FF0000');  
@@ -178,7 +178,7 @@ A、C行颜色\#EEE（第一行的索引为0），B、D行颜色\#DADADA
 
 L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030182228.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030173723.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030182228.png "image")]({{ site.assetpath }}/2012-06/201206022030173723.png)
 
     <ul>  
         <li>L1</li>  
@@ -196,7 +196,7 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
 
 下面的代码，H1~H6的背景色都会变  
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/20120602203020917.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030191573.png)
+[![image]({{ site.assetpath }}/2012-06/20120602203020917.png "image")]({{ site.assetpath }}/2012-06/201206022030191573.png)
 
     <h1>H1</h1>  
     <h2>H2</h2>  
@@ -238,7 +238,7 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
 
 即使span不是div的直系子元素，也会生效
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030258994.png "image")]({{ site.JB.FILE_PATH }}/2012-06/20120602203024488.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030258994.png "image")]({{ site.assetpath }}/2012-06/20120602203024488.png)
 
     <div>  
         <h2>  
@@ -255,7 +255,7 @@ L4和L5会是红色，L1和L2会是蓝色，L3是默认颜色
 
 下面的代码，A和D所在的li会有边框
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030266320.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030269451.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030266320.png "image")]({{ site.assetpath }}/2012-06/201206022030269451.png)
 
     <ol>  
         <li></li>  
@@ -272,7 +272,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 下面的代码，先弹出"hello"对话框，然后hid-1会显示，hid-2仍然是不可见的。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030299088.png "image")]({{ site.JB.FILE_PATH }}/2012-06/2012060220302892.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030299088.png "image")]({{ site.assetpath }}/2012-06/2012060220302892.png)
 
     <html xmlns="http://www.w3.org/1999/xhtml">  
     <head runat="server">  
@@ -311,7 +311,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 下面的代码，最后一个div会有背景色
 
-![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030314463.png "image")
+![image]({{ site.assetpath }}/2012-06/201206022030314463.png "image")
 
     <script type="text/javascript">  
         $(document).ready(function() {  
@@ -331,7 +331,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 下面的代码，最后一个a标签没有title属性，所以它仍然会带下划线
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/20120602203033643.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030329347.png)
+[![image]({{ site.assetpath }}/2012-06/20120602203033643.png "image")]({{ site.assetpath }}/2012-06/201206022030329347.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -351,7 +351,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 分别为class="item"和class!=item的a标签指定文字颜色
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030352921.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030343576.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030352921.png "image")]({{ site.assetpath }}/2012-06/201206022030343576.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -364,7 +364,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 在属性选择器中，^$符号和正则表达式的开始结束符号表示的含义是一致的，\*模糊匹配，类似于sql中的like'%str%'。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030377150.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030364217.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030377150.png "image")]({{ site.assetpath }}/2012-06/201206022030364217.png)
 
     <script type="text/javascript">
         // 识别大小写，输入字符串时可以输入引号，[title^=jQuery]和[title^="jQuery"]是一样的
@@ -440,7 +440,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
     </html>
 
 结果却是弹出三个alert，只不过最后一个alert里面是空白的。  
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030416753.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030416753.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030416753.png "image")]({{ site.assetpath }}/2012-06/201206022030416753.png)
 
 -   :only-child
 
@@ -467,7 +467,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 这里:only-child也是三个元素，从最后一个很粗的红色边框（实际是两个元素的边框重叠了）也可以看出来。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030443325.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030431539.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030443325.png "image")]({{ site.assetpath }}/2012-06/201206022030431539.png)
 
 -   :nth-child
 
@@ -481,7 +481,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 例2：
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030482123.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030467894.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030482123.png "image")]({{ site.assetpath }}/2012-06/201206022030467894.png)
 
     <html xmlns="http://www.w3.org/1999/xhtml" >
     <head runat="server">
@@ -516,7 +516,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
     </html>
 
 例3（html代码和例2是一样的）：  
-[![SNAGHTMLd6d414]({{ site.JB.FILE_PATH }}/2012-06/20120602203050812.png "SNAGHTMLd6d414")]({{ site.JB.FILE_PATH }}/2012-06/201206022030495056.png)
+[![SNAGHTMLd6d414]({{ site.assetpath }}/2012-06/20120602203050812.png "SNAGHTMLd6d414")]({{ site.assetpath }}/2012-06/201206022030495056.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -530,7 +530,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 :enabled和:diabled的匹配范围包括input, select, textarea。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/20120602203052265.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030515697.png)
+[![image]({{ site.assetpath }}/2012-06/20120602203052265.png "image")]({{ site.assetpath }}/2012-06/201206022030515697.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -558,7 +558,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 下面的代码，更改边框或背景色仅在IE下有效果，chrome和firefox不会改变，但是alert都会弹出来。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/20120602203054906.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030537974.png)
+[![image]({{ site.assetpath }}/2012-06/20120602203054906.png "image")]({{ site.assetpath }}/2012-06/201206022030537974.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -579,7 +579,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 -   :selected（取下拉列表被选中的元素）
 
-[![SNAGHTML14414ae]({{ site.JB.FILE_PATH }}/2012-06/2012060220305753.png "SNAGHTML14414ae")]({{ site.JB.FILE_PATH }}/2012-06/201206022030566281.png)
+[![SNAGHTML14414ae]({{ site.assetpath }}/2012-06/2012060220305753.png "SNAGHTML14414ae")]({{ site.assetpath }}/2012-06/201206022030566281.png)
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -602,7 +602,7 @@ jQuery至1.3.2之后的:hidden选择器仅匹配display:none或\<input type="hid
 
 这两个选择器分别和属性选择器$('input[type=text]')、$('input[type=password]')等同。
 
-[![image]({{ site.JB.FILE_PATH }}/2012-06/201206022030599506.png "image")]({{ site.JB.FILE_PATH }}/2012-06/201206022030582985.png)
+[![image]({{ site.assetpath }}/2012-06/201206022030599506.png "image")]({{ site.assetpath }}/2012-06/201206022030582985.png)
 
     <script type="text/javascript">
        $(document).ready(function() {

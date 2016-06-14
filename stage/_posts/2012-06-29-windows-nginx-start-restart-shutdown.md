@@ -64,4 +64,4 @@ GOTO cmd1
 GOTO MENU   
 {% endhighlight %}
 
-[猛击这里下载]({{ site.JB.FILE_PATH }}/2012-06/nginx.bat)
+[猛击这里下载]({{ site.assetpath }}/2012-06/nginx.bat)

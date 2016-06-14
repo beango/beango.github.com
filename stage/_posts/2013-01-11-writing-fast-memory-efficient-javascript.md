@@ -455,11 +455,11 @@ Geisendörfer的这篇[在Node中调试内存泄露][memory pitfalls]也值得�
 
   [Learning JavaScript Design Patterns]: http://addyosmani.com/resources/essentialjsdesignpatterns/book/
   
-  [0]: {{ site.JB.FILE_PATH }}/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg
-  [1]: {{ site.JB.FILE_PATH }}/2013-01/30222814-1daecc2610464207ace4ff0b55bf6478.jpg
-  [2]: {{ site.JB.FILE_PATH }}/2013-01/30222814-7d1a23445e9e4a0e9f526ecc058d3327.jpg
+  [0]: {{ site.assetpath }}/2013-01/30222814-d81e4caabffe4608b364814a05d30152.jpg
+  [1]: {{ site.assetpath }}/2013-01/30222814-1daecc2610464207ace4ff0b55bf6478.jpg
+  [2]: {{ site.assetpath }}/2013-01/30222814-7d1a23445e9e4a0e9f526ecc058d3327.jpg
   
-  [Performance improvements]: {{ site.JB.FILE_PATH }}/2013-01/30222814-2290aec479784183a360e757fbc3677c.png "Performance Improvements When Using The Module And Prototypal Patterns"
+  [Performance improvements]: {{ site.assetpath }}/2013-01/30222814-2290aec479784183a360e757fbc3677c.png "Performance Improvements When Using The Module And Prototypal Patterns"
 
   [这是测试原型与模块模式性能代码]: http://jsperf.com/prototypal-performance/12
 

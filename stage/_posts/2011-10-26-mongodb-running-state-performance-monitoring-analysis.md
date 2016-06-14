@@ -14,7 +14,7 @@ redirecturl: http://tech.lezi.com/archives/290
 
 ###mongostat详解
 
-<img src="{{ site.JB.FILE_PATH }}/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;">
+<img src="{{ site.assetpath }}/2011-10/mongod_stat-300x46.png" title="mongod_stat" alt="mongostat" style="float:right;">
 mongostat是mongdb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。
 
 它的输出有以下几列：
@@ -68,7 +68,7 @@ Profiler默认是关闭的，你可以选择全部开启，或者有慢查询的
 ###使用Web控制台
 
 [![mongodb web
-monitor]({{ site.JB.FILE_PATH }}/2011-10/mongod-localhost.png "mongodb web monitor")]({{ site.JB.FILE_PATH }}/2011-10/mongod-localhost.png)Mongodb自带了Web控制台，默认和数据服务一同开启。他的端口在Mongodb数据库服务器端口的基础上加1000，如果是默认的Mongodb数据服务端口(Which is 27017)，则相应的Web端口为28017这个页面可以看到
+monitor]({{ site.assetpath }}/2011-10/mongod-localhost.png "mongodb web monitor")]({{ site.assetpath }}/2011-10/mongod-localhost.png)Mongodb自带了Web控制台，默认和数据服务一同开启。他的端口在Mongodb数据库服务器端口的基础上加1000，如果是默认的Mongodb数据服务端口(Which is 27017)，则相应的Web端口为28017这个页面可以看到
 
 -   当前Mongodb的所有连接
 -   各个数据库和Collection的访问统计，包括：Reads, Writes, Queries, GetMores ,Inserts, Updates, Removes
@@ -204,6 +204,6 @@ Mongodb
 MongoDB Monitoring Service
 --------------------------
 
-[![]({{ site.JB.FILE_PATH }}/2011-10/mms.png "mms")]({{ site.JB.FILE_PATH }}/2011-10/mms.png)
+[![]({{ site.assetpath }}/2011-10/mms.png "mms")]({{ site.assetpath }}/2011-10/mms.png)
 
 MongoDB Monitoring Service(MMS)是Mongodb厂商提供的监控服务，可以在网页和Android客户端上监控你的MongoDB状况。请[参考](http://blog.nosqlfan.com/html/3171.html)

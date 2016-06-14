@@ -55,7 +55,7 @@ HTML 4 规范指出 \<script\> 标签可以放在 HTML 文档的\<head\>或\<bod
 
 **图 1 JavaScript 文件的加载和执行阻塞其他文件的下载**\
 
-![]({{ site.JB.FILE_PATH }}/2013-09/image003.jpg)
+![]({{ site.assetpath }}/2013-09/image003.jpg)
 
 我们可以发现一个有趣的现象：第一个 JavaScript 文件开始下载，与此同时阻塞了页面其他文件的下载。此外，从 script1.js 下载完成到 script2.js 开始下载前存在一个延时，这段时间正好是 script1.js 文件的执行过程。每个文件必须等到前一个文件下载并执行完成才会开始下载。在这些文件逐个下载过程中，用户看到的是一片空白的页面。
 

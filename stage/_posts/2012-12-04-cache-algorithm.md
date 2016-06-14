@@ -90,7 +90,7 @@ ID）。太棒了
 
 programmer one 已经知道这点了，但是他还不知道下面的缓存术语。
 
-[![缓存、缓存算法和缓存框架简介]({{ site.JB.FILE_PATH }}/2012-12/caching.jpg "缓存、缓存算法和缓存框架简介")](http://blog.jobbole.com/wp-content/uploads/2012/12/caching.jpg "缓存、缓存算法和缓存框架简介")
+[![缓存、缓存算法和缓存框架简介]({{ site.assetpath }}/2012-12/caching.jpg "缓存、缓存算法和缓存框架简介")](http://blog.jobbole.com/wp-content/uploads/2012/12/caching.jpg "缓存、缓存算法和缓存框架简介")
 
 **命中：**
 

@@ -26,7 +26,7 @@ MongoDB 的 sharding的特色就是自动化。具体体现为可以动态扩容
 
 MongoDB 的 sharding 有如此强大的功能，它的实现机制是怎样的呢？下图就是 MongoDB sharding 的结构图。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/1.png "1")
+![]({{ site.assetpath }}/2012-12/1.png "1")
 
 从图中可以看出，MongoDB sharding 主要分为 3 大部分。shard 节点、config节点和 config 节点。对客户端来说，直接访问的是 图中绿色的 mongos 节点。背后的 config 节点和 shard 节点是客户端不能直接访问的。mongos的主要作用是数据路由。从元数据中定位数据位置，合并查询结果。另外，mongos节点还负责数据迁移和数据自动平衡，并作为 sharding 集群的管理节点。它对外的接口就和普通的 mongod 一样。因此，可以使用标准 mongodb 客户端和驱动进行访问。mongos节点是无状态的，本身不保存任何数据和元数据，因此可以任意水平扩展，这样任意一个节点发生故障都可以很容易的进行故障转移，不会造成严重影响。
 
@@ -83,21 +83,21 @@ mongodb sharding 的搭建也很容易。简单的几步就能完成。
 
 这样就可以了。还是很简单的吧。如果 collection 里有数据，则会自动进行数据平衡。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/2.png "2")
+![]({{ site.assetpath }}/2012-12/2.png "2")
 
 之前说过，mongodb 的 sharding 把数据分成了数据块（chunk）来进行管理。现在来看看 chunk 究竟是怎么回事。在mongodb sharding 中，chunk是数据迁移的基本单位。每个节点中的数据都被划分成若干个 chunk 。一个 chunk 本质上是 shard key 的一个连续区间。chunk实际上是一个逻辑划分而非物理划分。sharding 的后端就是普通的 mongod 或者replica set，并不会因为是 sharding 就对数据做特殊处理。一个 chunk 并不是实际存储的一个页或者一个文件之类，而是仅仅在 config 节点中的元数据中体现。mongodb 的sharding 策略实际上就是一个 range 模式。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/3.png "3")
+![]({{ site.assetpath }}/2012-12/3.png "3")
 
 如图，第一个 chunk 的范围就是 uid 从 -∞ 到 12000 范围内的数据。第二个就是 12000 到 58000 。以此类推。对于一个刚配置为 sharding 的 collection，最开始只有一个 chunk，范围是从 -∞ 到 +∞。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/4.png "4")
+![]({{ site.assetpath }}/2012-12/4.png "4")
 
 随着数据的增长，其中的数据大小超过了配置的 chunk size，默认是 64M 则这个 chunk 就会分裂成两个。因为 chunk 是逻辑单元，所以分裂操作只涉及到元数据的操作。数据的增长会让 chunk 分裂得越来越多。这时候，各个 shard 上的 chunk 数量就会不平衡。这时候，mongos 中的一个组件 balancer 就会执行自动平衡。把 chunk 从 chunk 数量最多的 shard 节点挪动到数量最少的节点。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/5.png "5")
+![]({{ site.assetpath }}/2012-12/5.png "5")
 
-![]({{ site.JB.FILE_PATH }}/2012-12/6.png "6")
+![]({{ site.assetpath }}/2012-12/6.png "6")
 
 最后，各个 shard 节点上的 chunk 数量就会趋于平衡。当然，balance不一定会使数据完全平均，因为移动数据本身有一定成本，同时为了避免极端情况下早晨数据来回迁移，只有在两个 shard 的 chunk 数量之差达到一定阈值时才会进行。默认阈值是 8 个。也就是说，默认情况下，只有当两个节点的数据量差异达到 64M \* 8 == 256M 的时候才会进行。这样就不用对刚建好的 sharding，插入了不少数据，为什么还是都在一个节点里感到奇怪了。那只是因为数据还不够多到需要迁移而已。
 
@@ -107,19 +107,19 @@ mongodb 的 sharding 和传统 sharding 的最大区别就在于引入了元数�
 
 再说说数据路由功能。mongos的最主要功能就是作为数据路由，找到数据的位置，合并查询结果。来看看它是如何处理的。如果查询的条件是shard key ，那么 mongos 就能从元数据直接定位到 chunk 的位置，从目标节点找到数据。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/7.png "7")
+![]({{ site.assetpath }}/2012-12/7.png "7")
 
 如果查询条件是 shard key 的范围，由于 chunk 是按 shard key的范围来划分的，所以 mongos 也可以找到数据对应 chunk 的位置，并把各个节点返回的数据合并。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/8.png "8")
+![]({{ site.assetpath }}/2012-12/8.png "8")
 
 如果查询的条件不是任何一个索引，原来的全 collection 遍历仍然不可避免。但是会分发到所有节点进行。所以，还是可以起到分担负载的作用。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/9.png "9")
+![]({{ site.assetpath }}/2012-12/9.png "9")
 
 如果查询的条件是一个索引，但不是 shard key，查询也会被分发到所有节点，不过在每个节点上索引仍然有效。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/10.png "10")
+![]({{ site.assetpath }}/2012-12/10.png "10")
 
 如果是按查询 shard key 进行排序，同样由于 chunk 是一个 shard key 的范围，则会依次查询各 chunk 所在节点，而无需返回所有数据再排序。如果不是按 shard key 排序，则会在每个节点上执行排序操作，然后由 mongos 进行归并排序。由于是对已排序结果的归并排序，所以在 mongos 上不会有多少压力，查询结果的游标也会变成在每个节点上的游标。并不需要把所有数据都吐出来。
 

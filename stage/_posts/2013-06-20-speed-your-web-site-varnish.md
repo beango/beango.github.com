@@ -73,13 +73,13 @@ Vanish将安装在/usr/local目录下。主程序的完整路径为：/usr/local
 
     GET -Used http://localhost:6081/
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20080236_hM8L.png)
+![]({{ site.assetpath }}/2013-06/20080236_hM8L.png)
 
 在这里GET命令的选项无所谓。需要注意的是varnish返回的响应，varnish会增加三个相应头信息，分别是“X-Varnish”、“Via”和“Age”。这些头信息在Varnish的处理过程中非常有用。X-Varnish头信息的后面会有一个或两个数字，如果是一个数字，就表明varnish在缓存中没有发现这个请求，这个数字的含义是varnish为这个请求所做的标记ID。如果X-Varnish后是两个数字，就表明varnish在缓存中命中了这个请求，第一个数字是请求的标识ID，第二个数字是缓存的标识ID。“Via”头信息表明这个请求将经过一个代理。“Age”头信息标识出这个请求将被缓存多长时间（单位：秒）。首次请求的“Age”为0，后续的重复请求将会使Age值增大。如果后续的请求没有是“Age”增加，那就说明varnish没有缓存这个响应的结果。
 
 现在来看看 varnishstat 命令启动执行的情况，如下图所示：
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20080237_w5ic.png)
+![]({{ site.assetpath }}/2013-06/20080237_w5ic.png)
 
 图2. varnishstat 命令
 
@@ -87,7 +87,7 @@ Vanish将安装在/usr/local目录下。主程序的完整路径为：/usr/local
 
 接下来看看 varnishlog 命令：
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20080238_inKm.png)
+![]({{ site.assetpath }}/2013-06/20080238_inKm.png)
 
 图3. varnishlog 命令
 
@@ -478,7 +478,7 @@ load）和磁盘IO（%iowait）。系统负载可以从top命令里查看，%iow
 
     ab -c 50 -n 100000 http://localhost/cgi-bin/test
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20080239_FhrH.png)
+![]({{ site.assetpath }}/2013-06/20080239_FhrH.png)
 
 图 6. Apache 下系统压力测试流量记录
 
@@ -486,7 +486,7 @@ load）和磁盘IO（%iowait）。系统负载可以从top命令里查看，%iow
 
     ab -c 50 -n 1000000 http://localhost:6081/cgi-bin/test
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20080239_P03y.png)
+![]({{ site.assetpath }}/2013-06/20080239_P03y.png)
 
 图 7. Varnish下系统压力测试流量记录
 

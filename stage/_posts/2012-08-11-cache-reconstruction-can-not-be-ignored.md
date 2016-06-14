@@ -13,7 +13,7 @@ redirecturl: http://blog.nosqlfan.com/html/3097.html
 
 　　如下图的架构，在数据库前端加上分布式的Cache（比如我们常用的Memcached），让客户端在访问时先查找Cache，Cache不命中再读数据库并将结构缓存在Cache中。这是目前比较常用的一种分担读压力的方法。
 
-![]({{ site.JB.FILE_PATH }}/2012-08/zraqX.png "cache")
+![]({{ site.assetpath }}/2012-08/zraqX.png "cache")
 
 　　但是这个方法存在一个问题，如果前端的Cache挂掉，或者比较极端的整个机房断电了，那么在机器重启后，原来Cache机器在内存中的缓存会全部清空，在客户端访问过程中，会百分之百的不命中，这样数据库会在瞬间接受巨大的读压力。
 

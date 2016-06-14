@@ -6,7 +6,7 @@ baseurl:
 url: 127.0.0.1 #https://liungkejin.github.io
 rss_url:
 permalink: /archives/:year/:month/:day/:title.html
-
+assetpath: /assets/files
 # Build settings
 
 highlight: true

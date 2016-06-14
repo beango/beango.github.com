@@ -15,7 +15,7 @@ redirecturl: http://heidixie.blog.sohu.com/219290540.html
 
 真实整理的流程牵涉到公司未公布的计划，不好公开，所以在本文中会借助一个简单的案例替代（这个案例呢，也就是计划写本文前30分分钟才想到的，如有考虑不周，请各位见谅），但是仅传达概念和方法，倒也足够了。恩，甄環体告一段落，咱们开始吧。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg "业务流程图的绘制流程分享")
 
 图1：用即时贴与白板做的简单流程图
 
@@ -45,7 +45,7 @@ redirecturl: http://heidixie.blog.sohu.com/219290540.html
 
 那什么是流程图呢？说文解字是一种了解定义的好方法。流程图=流程+图，如下图：
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg "业务流程图的绘制流程分享")
 
 图2：流程图的定义
 
@@ -62,7 +62,7 @@ redirecturl: http://heidixie.blog.sohu.com/219290540.html
 Map)，，开发工程师们经常说的用例图(Use
 Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简单做个对比，如图：
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg "业务流程图的绘制流程分享")
 
 图3：流程图VS其他常用图表
 
@@ -90,7 +90,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 那么流程图要体现出他的差异定义，要素是什么？总结出了流程图的6大要素，希望大家能够记住，这6个要素可以在以后的文章里不断回顾，你也可以拿来判断你所看到的流程图是否专业。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg "业务流程图的绘制流程分享")
 
 图4：流程图6大要素
 
@@ -108,9 +108,9 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 关于流程图的标准化，并不是强制的，事实上，我们见过很多种类的流程图，只要能够传递明白任务和次序其实已经归类于流程图了。如下面的图：
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg "业务流程图的绘制流程分享")
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg "业务流程图的绘制流程分享")
 
 但是若在一个公司的环境下，你的流程图的受众又非常多的话，采取标准化的符号会带来很多交流上的好处，总之你懂的。
 
@@ -157,7 +157,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 我们平时工作中，还会经常听人谈到泳道图啊，任务流程图啊等等概念，究竟是神马关系呢？
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg "业务流程图的绘制流程分享")
 
 图5：流程图的分类
 
@@ -167,15 +167,15 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 在工作中，我们经常能够看到两种业务流程图，从表现形式来看，一种很好区分，俗称为“泳道图”的它，在样子上也确实像个泳道，可以有横向的泳道，也会有纵向的泳道。泳道图在某些文档里会被称为“以活动为单位的流程图”，浮在泳道中的都是一个个活动。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg "业务流程图的绘制流程分享")
 
 另外一种类型是以部门和岗位为单位的流程图，下图中的圆形就代表一个个部门或岗位。矩形代表活动。这种流程图关注事情如何完成的逻辑，但是在体现各个部门的责任上比较弱。如果是某个岗位的人来看，很难像泳道图那样一眼就能看到自己部门的职责和任务。所以现在用得比较少。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg "业务流程图的绘制流程分享")
 
 再回过头来说泳道图，泳道图有几个关键点：两大维度，活动流转，流程要素。我们会在以后详解。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg "业务流程图的绘制流程分享")
 
  
 
@@ -191,7 +191,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 **1. 员工培训**
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg "业务流程图的绘制流程分享")
 
 图6：流程图的应用场景之一：培训
 
@@ -201,7 +201,7 @@ Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简
 
 **2：流程优化与重组**
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg "业务流程图的绘制流程分享")
 
 图7：流程图的应用场景之二：流程优化
 
@@ -214,7 +214,7 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 **3：信息化的基础**
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg "业务流程图的绘制流程分享")
 
 图8：流程图的应用场景之三：信息化基础
 
@@ -265,14 +265,14 @@ Reengineering）的存在可以明确反驳：存在即合理。事实上，存�
 
 小的流程图用用PPT就够了，完了就导出图片或截图。交互设计师们因为常用axure绘制线框图，所以也不必为了流程图去学习新的工具，完全可以用axure的flow控件完成简单的业务流程图的制作。而PD们则常用微软的visio。
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg "业务流程图的绘制流程分享")
 
 此外，特别推荐一个软件：[SmartDraw](http://www.smartdraw.com/)。
 
 我最近的流程图都是用SmartDraw绘制的，你可以下载一个免费版本体验下。这个工具不仅仅是为了流程图而设计的，几乎上包罗万象：线框图，流程图，E-R图，UML
 ,韦恩图，甚至甘特图，脑图……没有像很多人推荐就是因为他太庞大了，尤其是里面的模版。大家体验下：
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg "业务流程图的绘制流程分享")
 
 Mac电脑:
 
@@ -287,20 +287,20 @@ Mac电脑:
 
 1.[https://cacoo.com/](https://cacoo.com/)
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg "业务流程图的绘制流程分享")
 
 这个是界面做得最好看的一个工具。我用它来绘制过概念图（Concept
 map）。如下图即是用以上的工具画的。
 
- [![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg "业务流程图的绘制流程分享")
+ [![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg "业务流程图的绘制流程分享")
 
 ​2. http://creately.com/
 
- [![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg "业务流程图的绘制流程分享")
+ [![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg "业务流程图的绘制流程分享")
 
 ​3. www.lucidchart.com
 
-[![业务流程图的绘制流程分享]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg "业务流程图的绘制流程分享")]({{ site.JB.FILE_PATH }}/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg "业务流程图的绘制流程分享")
+[![业务流程图的绘制流程分享]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg "业务流程图的绘制流程分享")]({{ site.assetpath }}/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg "业务流程图的绘制流程分享")
 
  
 

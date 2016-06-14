@@ -33,7 +33,7 @@ MongoDB做了一个数据库路由的策略，而且保证跨库操作的数据�
 集群中的关键部分Sharding不是一门新技术，而是一种策略，关键还是看应用场景和案例提供的可用性，因为Sharding不仅仅是MongoDB
 集群中所提到的分布在不同的机器上，还可以分表，分区，分数据，等等。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/machines-cluster.png)
+![]({{ site.assetpath }}/2012-12/machines-cluster.png)
 
 **MongoDB 集群的工作原理：**
 
@@ -45,7 +45,7 @@ Server
 MongoDB集群中通过mongos路由，所以我们并感觉不到是数据存放在哪个shard的
 chunk上，但是通过后台的Sharding的管理命令可以看到插入的数据存放在哪个节点上。
 
-![]({{ site.JB.FILE_PATH }}/2012-12/mongodb_cluster_sharding.png)
+![]({{ site.assetpath }}/2012-12/mongodb_cluster_sharding.png)
 
 **配置MongoDB集群**
 

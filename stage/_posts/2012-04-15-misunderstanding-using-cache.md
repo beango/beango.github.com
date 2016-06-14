@@ -20,7 +20,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　首先对于本地内存缓存，就是把数据缓存在本机的内存中，如下图1所示：
 
-![缓存]({{ site.JB.FILE_PATH }}/2013-02/2012041314085328.png)
+![缓存]({{ site.assetpath }}/2013-02/2012041314085328.png)
 
 　　从上图中可以很清楚的看出：
 
@@ -29,7 +29,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　对于分布式的缓存，此时因为缓存的数据是放在缓存服务器中的，或者说，此时应用程序需要跨进程的去访问分布式缓存服务器，如图2：
 
-![缓存]({{ site.JB.FILE_PATH }}/2013-02/2012041314090310.png)
+![缓存]({{ site.assetpath }}/2013-02/2012041314090310.png)
 
 　　不管缓存服务器在哪里，因为涉及到了跨进程，甚至是跨域访问缓存数据，那么缓存数据在发送到缓存服务器之前就要先被序列化，当要用缓存数据的时候，应用程序服务器接收到了序列化的数据之后，会将之反序列化。序列化与反序列化的过程是非常消耗CPU的操作，很多问题就出现在这上面。
 
@@ -64,11 +64,11 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　首先我们来看看默认的序列化机制是怎么样的。如图3：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314091150.png)
+![]({{ site.assetpath }}/2013-02/2012041314091150.png)
 
 　　然后，我们自己来实现ISerializable接口，如下图4所示：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314092260.png)
+![]({{ site.assetpath }}/2013-02/2012041314092260.png)
 
 　　我们自己实现的方式与.NET默认的序列化机制的最大区别在于：没有使用反射。自己实现的这种方式速度可以是默认机制的上百倍。
 
@@ -96,7 +96,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　因为在.NET中，大对象是分配在大对象托管堆上面的（我们简称为“大堆”，当然，还有一个对应的小堆），而这个大堆上面的对象的分配机制和小堆不一样：大堆在分配的时候，总是去需找合适的内存空间，结果就是导致出现内存碎片，导致内存不足！我们用一个图来描述一下，如图5所示：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314093247.png)
+![]({{ site.assetpath }}/2013-02/2012041314093247.png)
 
 　　上图非常明了，在图5中：
 
@@ -118,7 +118,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　看下面的一段代码：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314094321.png)
+![]({{ site.assetpath }}/2013-02/2012041314094321.png)
 
 　　对于本地内存缓存，对于上面的代码，当这个三个线程运行起来之后，在线程1中，item的值很多时候可能为1，线程2可能是2，线程3可能是3。当然，这不一定！只是大多数情况下的可能值！
 
@@ -134,7 +134,7 @@ redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 
 　　例如，对于一个ASP.NET应用而言，如果我们在一个按钮的Click事件中调用了缓存API，然后在页面呈现的时候，就去读取缓存，代码如下：
 
-![]({{ site.JB.FILE_PATH }}/2013-02/2012041314095217.png)
+![]({{ site.assetpath }}/2013-02/2012041314095217.png)
 
 　　上面的代码照道理来说是对的，但是会发生问题。按钮点击之后回传页面，然后呈现页面的时候显示数据，流程没有问题。但是没有考虑到这样一个问题：如果服务器的内存紧张，而导致进行服务器内存的回收，那么很有可能缓存的数据就没有了！
 

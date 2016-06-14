@@ -305,7 +305,7 @@ C Python解释器使用引用计数的方法来作为其内存管理的主要方
 
 这个命令的输出应该是一个PNG图片，它的路径为/tmp/backrefs.png。它看起来应该是这样：
 
-[![backrefs]({{ site.JB.FILE_PATH }}/2013-09/backrefs.png)]({{ site.JB.FILE_PATH }}/2013-09/backrefs.png "Python程序的性能分析指南")
+[![backrefs]({{ site.assetpath }}/2013-09/backrefs.png)]({{ site.assetpath }}/2013-09/backrefs.png "Python程序的性能分析指南")
 
 最下面的方框，里面用红色字母写出的是我们感兴趣的对象。我们可以看到它被变量x引用一次，被列表y引用三次。如果x是导致内存泄漏的对象，我们可以用这个方法来看为什么它没有通过追踪所有的引用而被自动释放。
 

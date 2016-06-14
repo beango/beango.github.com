@@ -16,7 +16,7 @@ redirecturl: http://www.ruanyifeng.com/blog/2012/06/internet_protocol_suite_part
 
 我们已经知道，网络通信就是交换数据包。电脑A向电脑B发送一个数据包，后者收到了，回复一个数据包，从而实现两台电脑之间的通信。数据包的结构，基本上是下面这样：
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012052913.png" alt="" class="Pic" />
+<img src="{{ site.assetpath }}/2012-05/bg2012052913.png" alt="" class="Pic" />
 
 发送这个包，需要知道两个地址：
 
@@ -26,7 +26,7 @@ redirecturl: http://www.ruanyifeng.com/blog/2012/06/internet_protocol_suite_part
 
 有了这两个地址，数据包才能准确送到接收者手中。但是，前面说过，MAC地址有局限性，如果两台电脑不在同一个子网络，就无法知道对方的MAC地址，必须通过网关（gateway）转发。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061101.jpg" alt="" class="Pic" />
+<img src="{{ site.assetpath }}/2012-05/bg2012061101.jpg" alt="" class="Pic" />
 
 上图中，1号电脑要向4号电脑发送一个数据包。它先判断4号电脑是否在同一个子网络，结果发现不是（后文介绍判断方法），于是就把这个数据包发到网关A。网关A通过路由协议，发现4号电脑位于子网络B，又把数据包发给网关B，网关B再转发到4号电脑。
 
@@ -46,7 +46,7 @@ redirecturl: http://www.ruanyifeng.com/blog/2012/06/internet_protocol_suite_part
 
 你买了一台新电脑，插上网线，开机，这时电脑能够上网吗？
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061110.jpg" alt="" class="Pic" />
+<img src="{{ site.assetpath }}/2012-05/bg2012061110.jpg" alt="" class="Pic" />
 
 通常你必须做一些设置。有时，管理员（或者ISP）会告诉你下面四个参数，你把它们填入操作系统，计算机就能连上网了：
 
@@ -57,7 +57,7 @@ redirecturl: http://www.ruanyifeng.com/blog/2012/06/internet_protocol_suite_part
 
 下图是Windows系统的设置窗口。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061111.png" alt="" class="Pic" />
+<img src="{{ site.assetpath }}/2012-05/bg2012061111.png" alt="" class="Pic" />
 
 这四个参数缺一不可，后文会解释为什么需要知道它们才能上网。由于它们是给定的，计算机每次开机，都会分到同样的IP地址，所以这种情况被称作"静态IP地址上网"。
 
@@ -77,7 +77,7 @@ DHCP协议做了一些巧妙的规定。
 
 首先，它是一种应用层协议，建立在UDP协议之上，所以整个数据包是这样的：
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061102.png" alt="" class="Pic" />
+<img src="{{ site.assetpath }}/2012-05/bg2012061102.png" alt="" class="Pic" />
 
 （1）最前面的"以太网标头"，设置发出方（本机）的MAC地址和接收方（DHCP服务器）的MAC地址。前者就是本机网卡的MAC地址，后者这时不知道，就填入一个广播地址：FF-FF-FF-FF-FF-FF。
 
@@ -115,7 +115,7 @@ DHCP协议做了一些巧妙的规定。
 
 然后他打开浏览器，想要访问Google，在地址栏输入了网址：www.google.com。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061103.png" alt="" class="Pic">
+<img src="{{ site.assetpath }}/2012-05/bg2012061103.png" alt="" class="Pic">
 
 这意味着，浏览器要向Google发送一个网页请求的数据包。
 
@@ -125,7 +125,7 @@ DHCP协议做了一些巧妙的规定。
 
 [DNS协议](http://en.wikipedia.org/wiki/Domain_Name_System) 可以帮助我们，将这个网址转换成IP地址。已知DNS服务器为8.8.8.8，于是我们向这个地址发送一个DNS数据包（53端口）。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061105.png" alt="" class="Pic">
+<img src="{{ site.assetpath }}/2012-05/bg2012061105.png" alt="" class="Pic">
 
 然后，DNS服务器做出响应，告诉我们Google的IP地址是172.194.72.105。于是，我们知道了对方的IP地址。
 
@@ -141,7 +141,7 @@ DHCP协议做了一些巧妙的规定。
 
 浏览网页用的是HTTP协议，它的整个数据包构造是这样的：
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061106.png" alt="" class="Pic">
+<img src="{{ site.assetpath }}/2012-05/bg2012061106.png" alt="" class="Pic">
 
 HTTP部分的内容，类似于下面这样：
 
@@ -176,7 +176,7 @@ IP数据包的标头长度为20字节，加上嵌入的TCP数据包，总长度�
 
 以太网数据包的数据部分，最大长度为1500字节，而现在的IP数据包长度为5000字节。因此，IP数据包必须分割成四个包。因为每个包都有自己的IP标头（20字节），所以四个包的IP数据包的长度分别为1500、1500、1500、560。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061107.png" alt="" class="Pic">
+<img src="{{ site.assetpath }}/2012-05/bg2012061107.png" alt="" class="Pic">
 
 **9.8 服务器端响应**
 
@@ -186,7 +186,7 @@ IP数据包的标头长度为20字节，加上嵌入的TCP数据包，总长度�
 
 本机收到HTTP响应以后，就可以将网页显示出来，完成一次网络通信。
 
-<img src="{{ site.JB.FILE_PATH }}/2012-05/bg2012061104.jpg" alt="" class="Pic">
+<img src="{{ site.assetpath }}/2012-05/bg2012061104.jpg" alt="" class="Pic">
 
 这个例子就到此为止，虽然经过了简化，但它大致上反映了互联网协议的整个通信过程。
 

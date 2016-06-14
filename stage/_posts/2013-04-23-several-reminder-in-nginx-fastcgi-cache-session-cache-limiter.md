@@ -11,7 +11,7 @@ redirecturl: http://www.cnxct.com/several-reminder-in-nginx-fastcgi_cache-and-ph
 
 　　在web项目中，大家都已经非常熟悉其架构流程了。都说Cache是万金油，哪里不舒服抹哪里。这些流程中，几乎每个环节都会进行cache。从[浏览器](http://blog.jobbole.com/12749/ "浏览器")到webserver，到cgi程序，到DB数据库，会进行浏览器cache，数据cache，SQL查询的cache等等。对于fastcgi这里的cache，很少被使用。去年年底，我对nginx的[fastcgi_cache](http://wiki.nginx.org/HttpFastcgiModule "Fastcgi_cache的WIKI")进行摸索使用。在我的测试过程中，发现一些wiki以及网络上没被提到的注意点，这里分享一下。
 
-[![从浏览器到数据库的流程图]({{ site.JB.FILE_PATH }}/2013-04/browser-nginx-php-db-300x168.png)]({{ site.JB.FILE_PATH }}/2013-04browser-nginx-php-db.png "Nginx模块fastcgi_cache的几个注意点")
+[![从浏览器到数据库的流程图]({{ site.assetpath }}/2013-04/browser-nginx-php-db-300x168.png)]({{ site.assetpath }}/2013-04browser-nginx-php-db.png "Nginx模块fastcgi_cache的几个注意点")
 
 　　从浏览器到数据库的流程图
 
@@ -39,7 +39,7 @@ redirecturl: http://www.cnxct.com/several-reminder-in-nginx-fastcgi_cache-and-ph
 -   STALE – expired, stale response was used due to proxy/fastcgi_cache_use_stale Cache已过期，响应数据不合法，被污染
 -   HIT 命中cache
 
-[![FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中]({{ site.JB.FILE_PATH }}/2013-04/fastcgi_cache_miss_session_start-300x128.png)]({{ site.JB.FILE_PATH }}/2013-04/fastcgi_cache_miss_session_start.png "Nginx模块fastcgi_cache的几个注意点")
+[![FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中]({{ site.assetpath }}/2013-04/fastcgi_cache_miss_session_start-300x128.png)]({{ site.assetpath }}/2013-04/fastcgi_cache_miss_session_start.png "Nginx模块fastcgi_cache的几个注意点")
 
 FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中
 

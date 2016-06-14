@@ -19,7 +19,7 @@ redirecturl: http://blog.jobbole.com/55086/
 
 3、 想要教别人 SQL 的人。
 
-![sql logo]({{ site.JB.FILE_PATH }}/2014-01/e59983b9f25fc171558066e3071150d6.jpg)
+![sql logo]({{ site.assetpath }}/2014-01/e59983b9f25fc171558066e3071150d6.jpg)
 
 本文着重介绍 SELECT 句式，其他的 DML （Data Manipulation Language 数据操纵语言命令）将会在别的文章中进行介绍。
 

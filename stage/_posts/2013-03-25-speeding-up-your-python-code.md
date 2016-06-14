@@ -287,7 +287,7 @@ Cython本质上是另一个不再开发的类似类库Pyrex的分支，它将我
 
 这儿通过表格和图标来比较不同的结果。
 
-[![加速你的Python代码]({{ site.JB.FILE_PATH }}/2013-03/speeding-up-your-python-code.jpg "加速你的Python代码")]({{ site.JB.FILE_PATH }}/2013-03/speeding-up-your-python-code.jpg "加速你的Python代码")
+[![加速你的Python代码]({{ site.assetpath }}/2013-03/speeding-up-your-python-code.jpg "加速你的Python代码")]({{ site.assetpath }}/2013-03/speeding-up-your-python-code.jpg "加速你的Python代码")
 
 <table border="1" style="width:100%;text-align:center;">
 <tbody>

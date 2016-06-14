@@ -48,7 +48,7 @@ NoSQL领域在短短的4到5年的时间里，爆炸性地产生了50到150个�
 
 另外一个很有意思的技术指示器就是ThoughtWorks的技术雷达，即便你可能不完全同意它所包含的所有事情，但它总会包含一些有意思的事情。让我们看一下他们2012年10月份的技术雷达，如图1：
 
-[![NoSQL的现状]({{ site.JB.FILE_PATH }}/2013-02/5fig1.jpg "NoSQL的现状")]({{ site.JB.FILE_PATH }}/2013-02/5fig1.jpg "NoSQL的现状")
+[![NoSQL的现状]({{ site.assetpath }}/2013-02/5fig1.jpg "NoSQL的现状")]({{ site.assetpath }}/2013-02/5fig1.jpg "NoSQL的现状")
 
 **图1：ThoughtWorks技术雷达，2012年10月——平台**
 
@@ -72,7 +72,7 @@ NoSQL领域在短短的4到5年的时间里，爆炸性地产生了50到150个�
 
 作为最好的数据库格局图之一，是由[451 Group的Matt Aslett在一个报告中](http://blogs.the451group.com/information_management/2012/11/02/updated-database-landscape-graphic/)给出的。最近，他更新了该图片从而能够让我们可以更好得深入理解他所提到的分类。你可以在下面的图片中看到，这个格局是高度碎片化和重叠的：
 
-[![NoSQL的现状]({{ site.JB.FILE_PATH }}/2013-02/7fig2small.jpg "NoSQL的现状")]({{ site.JB.FILE_PATH }}/2013-02/7fig2small.jpg "NoSQL的现状")
+[![NoSQL的现状]({{ site.assetpath }}/2013-02/7fig2small.jpg "NoSQL的现状")]({{ site.assetpath }}/2013-02/7fig2small.jpg "NoSQL的现状")
 
 **图2：Matt Aslett（451 Group）给出的数据库格局**
 

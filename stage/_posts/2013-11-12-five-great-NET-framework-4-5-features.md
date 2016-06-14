@@ -19,7 +19,7 @@ redirecturl: http://blog.jobbole.com/51271/
 
 所以在这篇文章中我想提及我喜欢的5个在.NET4.5内核中的特性。当然，这可能只是我喜欢的而并不是你的。但是我所做的是当我选择这些特性时我也想着较大的.NET社区，我希望我满足了这种期望。
 
-![aehtrhthjtyj]({{ site.JB.FILE_PATH }}/2013-11/aehtrhthjtyj.jpg)
+![aehtrhthjtyj]({{ site.assetpath }}/2013-11/aehtrhthjtyj.jpg)
 
 提示：这篇文章没有讨论在ASP.NET, WCF, WPF, WWF等中的新特性。仅仅讲了关于内核的新特性。
 
@@ -27,7 +27,7 @@ redirecturl: http://blog.jobbole.com/51271/
 
 这个特性已经被吹嘘过度并且每个.NET布道者都谈论它。但是这仍然是我喜欢的并且你会知道为什么从这里只有几行。
 
-![atrhrtjrt2]({{ site.JB.FILE_PATH }}/2013-11/atrhrtjrt2.jpg)
+![atrhrtjrt2]({{ site.assetpath }}/2013-11/atrhrtjrt2.jpg)
 
 异步和等待是标记，它们标记当任务（线程）结束时控制应该恢复到代码的位置。
 
@@ -39,7 +39,7 @@ redirecturl: http://blog.jobbole.com/51271/
 
 现在在相同的情景下，我们想要第3步执行得不一样。我们想要在LongTask()执行完成后，控制应该回到Method方法执行接下来的代码。“异步”和“等待”关键字能够帮助实现上面的功能。
 
-![agfhgfnhgm3]({{ site.JB.FILE_PATH }}/2013-11/agfhgfnhgm3.jpg)
+![agfhgfnhgm3]({{ site.assetpath }}/2013-11/agfhgfnhgm3.jpg)
 
 这里有三个关于关键字“异步”和“等待”的重点需要记住：
 
@@ -49,13 +49,13 @@ redirecturl: http://blog.jobbole.com/51271/
 
 下面是前面讨论的代码的修订版本，这里我们应用了异步与等待。所有其他的步骤仍然如前所述，但是“步骤3”将在“步骤2”完成之后执行。简单来说就是控制在任务完成之后回到Method()方法。
 
-![arhtrh4]({{ site.JB.FILE_PATH }}/2013-11/arhtrh4.jpg)
+![arhtrh4]({{ site.assetpath }}/2013-11/arhtrh4.jpg)
 
 现在你已经阅读了“异步”与“等待”的内容，让我来提个问题。上面的代码同样也能通过Task.Wait或者Task.ContinueWith实现，那么它们有什么不同？我把这个问题留作给你的家庭作业。
 
 ### **特性2：便利Zip压缩（Zip压缩）**
 
-![sawfwsfa5]({{ site.JB.FILE_PATH }}/2013-11/sawfwsfa5.jpg)
+![sawfwsfa5]({{ site.assetpath }}/2013-11/sawfwsfa5.jpg)
 
 Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名字被几乎所有操作系统支持。
 
@@ -83,25 +83,25 @@ Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名�
 
 ### **特性3：正则表达式超时（超时）**
 
-![ewfjdnvlgdklgv]({{ site.JB.FILE_PATH }}/2013-11/ewfjdnvlgdklgv.jpg)
+![ewfjdnvlgdklgv]({{ site.assetpath }}/2013-11/ewfjdnvlgdklgv.jpg)
 
 “正则表达式”一直是做验证首选的方式。如果你是正则表达式的新手，请看正则表达式，我解释了正则表达式是如何执行的。但是正因为正则表达式的典型逻辑解析使得它暴露于DOS攻击下。让我们试着理解刚才我说的。
 
 作为例子请考虑这样的正则表达式-“\^ (\\d+)\$”。这个正则表达式表明只能有数字。你也可以看正则表达式符号图，它标明了这个正则表达式会如何求值。现在让我们假设要验证“123456X”。这将有6条路径如下图所示。
 
-![afnhjgfnhgm7]({{ site.JB.FILE_PATH }}/2013-11/afnhjgfnhgm7.jpg)
+![afnhjgfnhgm7]({{ site.assetpath }}/2013-11/afnhjgfnhgm7.jpg)
 
 但如果我们再多加一个数字进去，将会有7条路径。换句话说，随着字符长度的增加，正则表达式将会花更多时间执行。也就是说，求值时间与字符长度成线性比例。
 
-![agnhgm8]({{ site.JB.FILE_PATH }}/2013-11/agnhgm8.jpg)
+![agnhgm8]({{ site.assetpath }}/2013-11/agnhgm8.jpg)
 
 现在让我们把之前定义的正则式从“\^ (\\d+)\$”变为“\^ (\\d+)+\$”。如果你看正则表达式符号图它将相当复杂。如果我们现在试着验证“123456X”，将会有32条路径。如果你再增加一个字符，路径数将会增加到64。
 
-![asdgvdfbfgn9]({{ site.JB.FILE_PATH }}/2013-11/asdgvdfbfgn9.jpg)
+![asdgvdfbfgn9]({{ site.assetpath }}/2013-11/asdgvdfbfgn9.jpg)
 
 换句话说，上面的正则表达式中时间开销与字符数目为成倍关系。
 
-![adsbfdbfghrt10]({{ site.JB.FILE_PATH }}/2013-11/adsbfdbfghrt10.jpg)
+![adsbfdbfghrt10]({{ site.assetpath }}/2013-11/adsbfdbfghrt10.jpg)
 
 现在你可能要问的是，这很重要吗？线性上升的求值时间可以被黑客利用来进行DOS（拒绝服务）攻击。他们可以部署一个长而且是足够长的字符串来使你的应用永远挂起。
 
@@ -119,7 +119,7 @@ Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名�
 
 ### **特性4：优化配置文件（提升启动性能）**
 
-![asdvdbfrbngrb-11]({{ site.JB.FILE_PATH }}/2013-11/asdvdbfrbngrb-11.jpg)
+![asdvdbfrbngrb-11]({{ site.assetpath }}/2013-11/asdvdbfrbngrb-11.jpg)
 
 我们都知道.NET代码是半编译的格式。在运行时，JIT（Just-in-Time）编译器执行并且转换这种半编译的IL代码为机器原生代码。对JIT最大的抱怨之一是当.NET应用初次执行的时候，它运行得很慢因为JIT在忙着转换IL代码到机器代码。
 
@@ -127,7 +127,7 @@ Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名�
 
 这个后台JIT在多个处理器上编译启动方法从而进一步降低启动时间。另外请注意你需要多核处理器来实现配置文件优化。如果你没有多核处理器那么这个设定会被忽略。
 
-![afgngkmyjkytjy12]({{ site.JB.FILE_PATH }}/2013-11/afgngkmyjkytjy12.jpg)
+![afgngkmyjkytjy12]({{ site.assetpath }}/2013-11/afgngkmyjkytjy12.jpg)
 
 为了创建“配置文件”这个文件，首先你需要引入System.Runtime命名空间。然后你可以调用静态类ProfileOptimization的SetProfileRoot和StartProfile方法。现在当应用启动后台JIT，它将会读取配置文件并且在后台编译启动方法从而降低启动时间。
 
@@ -142,17 +142,17 @@ Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名�
 
 ### **特性5：垃圾回收（垃圾后台清理）**
 
-![afgjrtk5ytjytn13]({{ site.JB.FILE_PATH }}/2013-11/afgjrtk5ytjytn13.jpg)
+![afgjrtk5ytjytn13]({{ site.assetpath }}/2013-11/afgjrtk5ytjytn13.jpg)
 
 垃圾回收在.NET应用中是一项真正繁重的任务。当是ASP.NET应用的时候，它变得更繁重。ASP.NET应用在服务器运行，许多客户端向服务器发送请求从而产生对象负荷，使得垃圾回收确实努力清理不需要的对象。
 
-![aedvgdbh4erh14]({{ site.JB.FILE_PATH }}/2013-11/aedvgdbh4erh14.jpg)
+![aedvgdbh4erh14]({{ site.assetpath }}/2013-11/aedvgdbh4erh14.jpg)
 
 在.NET4.0中，当垃圾回收运行清理的时候，所有的应用程序线程都暂停了。在上图中你可以看到我们有3个应用程序线程在执行。有两个垃圾回收运行在不同的线程上。一个垃圾回收线程对应一个逻辑处理器。现在应用程序线程运行并执行它们的任务，伴随着这些应用程序线程的执行它们也创建了操作对象。
 
 在某个时间点，后台垃圾回收运行开始清理。当这些垃圾回收开始清理的时候，它们暂停了所有的应用程序线程。这使得服务器/应用程序在那一刻不响应了。
 
-![afvfbrtherg15]({{ site.JB.FILE_PATH }}/2013-11/afvfbrtherg15.jpg)
+![afvfbrtherg15]({{ site.assetpath }}/2013-11/afvfbrtherg15.jpg)
 
 为了克服上述问题，服务器垃圾回收被引进了。在服务器垃圾回收机制中多创建了一个运行在后台的线程。这个线程在后台运行并持续清理2代对象（关于垃圾回收0,1和2代的视频）从而降低主垃圾回收线程的开销。由于双垃圾回收线程的执行，主应用程序线程很少被暂停，进而增加了应用程序吞吐量。为了使用服务器垃圾回收，我们需要使用gcServer XML标签并且将它置为true。
 
@@ -193,4 +193,4 @@ Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名�
 
 当你有空的时候，一定来看看我的网站 www.questpond.com关于.NET4.5面试问和答，我已经在这方面有了不少努力。
 
-![astrhhjync]({{ site.JB.FILE_PATH }}/2013-11/astrhhjync.jpg)
+![astrhhjync]({{ site.assetpath }}/2013-11/astrhhjync.jpg)

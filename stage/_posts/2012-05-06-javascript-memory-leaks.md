@@ -66,7 +66,7 @@ DOM 元素的顺序添加，这样它们就总是有同样的范围，不会产
 Chrome
 开发者工具。这是谷歌开者这网站中的[堆分析](https://developers.google.com/chrome-developer-tools/docs/heap-profiling)的特性的教程。
 
-![]({{ site.JB.FILE_PATH }}/2012-05/20120504_161658_1.jpg)
+![]({{ site.assetpath }}/2012-05/20120504_161658_1.jpg)
 
 　　**参考：**
 

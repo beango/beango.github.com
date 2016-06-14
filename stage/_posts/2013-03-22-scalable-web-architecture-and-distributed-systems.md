@@ -60,7 +60,7 @@ redirecturl: http://www.oschina.net/translate/scalable-web-architecture-and-dist
 
 Figure 1.1是一个简化的功能图。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-01.jpg "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-01.jpg "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-01.jpg "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-01.jpg "可扩展Web架构与分布式系统")
 <center>Figure 1.1: 图片主机应用的简化架构图</center>
 
 　　在这个图片主机的例子里，可遇见系统必需快速，它的数据存储要可靠以及这些所有的属性都应该高度的可扩展。建立这个应用程序的一个小版本不是很重要而且很容易部署在单一的服务器上；然而，这不是这节里的感兴趣部分。假设下我们想建一个会增长到和Flickr痛让规模的东西。
@@ -77,7 +77,7 @@ Figure 1.1是一个简化的功能图。
 
 　　这种设计另一个潜在的问题出在web服务器上，像Apache或者lighttpd通常都有一个能够维持的并发连接数上限（默认情况下在500左右，不过可以更高）和最高流量数，它们会很快被写操作消耗掉。因为读操作可以异步进行，或者采用其它一些像gizp压缩的性能优化或者块传输编码方式，web服务器可以通过在多个请求服务之间切换来满足比最大连接数更多的请求（一台Apache的最大连接数设置为500，它每秒钟提供近千次读请求服务也是正常的）。写操作则不同，它需要在上传过程中保持连接，所以大多数家庭网络环境下，上传一个1MB的文件可能需要超过1秒的时间，所以web服务器只能处理500个这样并发写操作请求。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-02.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-02.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-02.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-02.png "可扩展Web架构与分布式系统")
 
 　　对于这种瓶颈，一个好的规划案例是将读取和写入图片分离为两个独立的服务，如图Figure1.2.所示。这让我们可以单独的扩展其中任意一个（因为有可能我们读操作比写操作要频繁很多），同时也有助于我们理清每个节点在做什么。最后，这也避免了未来的忧虑，这使得故障诊断和查找问题更简单，像慢读问题。
 
@@ -100,7 +100,7 @@ Figure 1.1是一个简化的功能图。
 　　例如，在我们的图片服务应用，所有的图片应该都冗余备份在另外的一个硬件上（理想的情况下，在不同的地理位置，以防数据中心发生大灾难，例如地震，火灾），而且访问图片的服务（见Figure
 1.3.）-包括所有潜在的服务请求-也应该冗余。（负载均衡器是个很好的方法冗余服务，但是下面的方法不仅仅是负载均衡）
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-03.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-03.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-03.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-03.png "可扩展Web架构与分布式系统")
 <center>Figure 1.3: 使用冗余的图片存储</center>
 
 ### 分区
@@ -116,7 +116,7 @@ Figure 1.1是一个简化的功能图。
 　　以我们的图像服务器为例，将曾经储存在单一的文件服务器的图片重新保存到多个文件服务器中是可以实现的，每个文件服务器都有自己惟一的图片集。（见图表1.4。）这种构架允许系统将图片保存到某个文件服务器中，在服务器都即将存满时，像增加硬盘一样增加额外的服务器。这种设计需要一种能够将文件名和存放服务器绑定的命名规则。一个图像的名称可能是映射全部服务器的完整散列方案的形式。或者可选的，每个图像都被分配给一个递增的ID，当用户请求图像时，图像检索服务只需要保存映射到每个服务器的 ID
 范围（类似索引）就可以了。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-04.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-04.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-04.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-04.png "可扩展Web架构与分布式系统")
 <center>图 1.4: 使用冗余和分区实现的图片存储服务</center>
 
 　　当然，为多个服务器分配数据或功能是充满挑战的。一个关键的问题就是*数据局部性*；对于分布式系统，计算或操作的数据越相近，系统的性能越佳。因此，一个潜在的问题就是数据的存放遍布多个服务器，当需要一个数据时，它们并不在一起，迫使服务器不得不为从网络中获取数据而付出昂贵的性能代价。
@@ -132,21 +132,21 @@ Figure 1.1是一个简化的功能图。
 
 　　对于大多数简单的web应用程序，比如LAMP系统，类似于图 Figure 1.5.
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-05.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-05.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-05.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-05.png "可扩展Web架构与分布式系统")
 <center>Figure 1.5: 简单web应用程序</center>
 
 　　随着它们的成长，主要发生了两方面的变化：应用服务器和数据库的扩展。在一个高度可伸缩的应用程序中，应用服务器通常最小化并且一般是shared-nothing架构（译注：shared nothing architecture是一种分布式计算架构，这种架构中不存在集中存储的状态，整个系统中没有资源竞争，这种架构具有非常强的扩张性，在web应用中广泛使用）方式的体现，这使得系统的应用服务器层水平可伸缩。由于这种设计，数据库服务器可以支持更多的负载和服务；在这一层真正的扩展和性能改变开始发挥作用了。
 
 　　剩下的章节主要集中于通过一些更常用的策略和方法提供快速的数据访问来使这些类型服务变得更加迅捷。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-06.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-06.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-06.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-06.png "可扩展Web架构与分布式系统")
 <center>Figure 1.6: Oversimplified web application</center>
 
 　　大多数系统简化为如图 Figure 1.6所示，这是一个良好的开始。如果你有大量的数据，你想快捷的访问，就像一堆糖果摆放在你办公室抽屉的最上方。虽然过于简化，前面的声明暗示了两个困难的问题：存储的可伸缩性和数据的快速访问。
 
 　　为了这一节内容，我们假设你有很大的数据存储空间（TB），并且你想让用户随机访问一小部分数据（查看Figure 1.7）。这类似于在图像应用的例子里在文件服务器定位一个图片文件。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-07.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-07.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-07.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-07.png "可扩展Web架构与分布式系统")
 <center>Figure 1.7: Accessing specific data</center>
 
 　　这非常具有挑战性，因为它需要把数TB的数据加载到内存中；并且直接转化为磁盘的IO。要知道从磁盘读取比从内存读取慢很多倍-内存的访问速度如同敏捷的查克·诺里斯（译注：空手道冠军），而磁盘的访问速度就像笨重的卡车一样。这个速度差异在大数据集上会增加更多；在实数顺序读取上内存访问速度至少是磁盘的6倍，随机读取速度比磁盘快100,000倍（参考“大数据之殇”[http://queue.acm.org/detail.cfm?id=1563874](http://queue.acm.org/detail.cfm?id=1563874)）。另外，即使使用唯一的ID，解决获取少量数据存放位置的问题也是个艰巨的任务。这就如同不用眼睛看在你的糖果存放点取出最后一块Jolly Rancher口味的糖果一样。
@@ -159,12 +159,12 @@ Figure 1.1是一个简化的功能图。
 
 　　在我们的API例子中如何使用缓存来快速访问数据？在这种情况下，有两个地方你可以插入缓存。一个操作是在你的请求层节点添加一个缓存，如图 Figure 1.8.
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-08.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-08.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-08.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-08.png "可扩展Web架构与分布式系统")
 <center>Figure 1.8: Inserting a cache on your request layer node</center>
 
 　　直接在一个请求层节点配置一个缓存可以在本地存储相应数据。每次发送一个请求到服务，如果数据存在节点会快速的返回本地缓存的数据。如果数据不在缓存中，请求节点将在磁盘查找数据。请求层节点缓存可以存放在内存和节点本地磁盘中（比网络存储快些）。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-09.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-09.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-09.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-09.png "可扩展Web架构与分布式系统")
 <center>Figure 1.9: Multiple caches</center>
 
 　　当你扩展这些节点后会发生什么呢？如图Figure 1.9所示，如果请求层扩展为多个节点，每个主机仍然可能有自己的缓存。然而，如果你的负载均衡器随机分配请求到节点，同样的请求将指向不同的节点，从而增加了缓存的命中缺失率。有两种选择可以解决这个问题：全局缓存和分布式缓存。
@@ -175,10 +175,10 @@ Figure 1.1是一个简化的功能图。
 
 　　在描述图中有两种常见形式的缓存。在图Figure 1.10中，当一个缓存响应没有在缓存中找到时，缓存自身从底层存储中查找出数据。在 Figure 1.11中，当在缓存中招不到数据时，请求节点会向底层去检索数据。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-10.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-10.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-10.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-10.png "可扩展Web架构与分布式系统")
 <center>Figure 1.10: Global cache where cache is responsible for retrieval</center>
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-11.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-11.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-11.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-11.png "可扩展Web架构与分布式系统")
 <center>Figure 1.11: Global cache where request nodes are responsible for retrieval</center>
 
 　　大多数使用全局缓存的应用程序趋向于第一类，这类缓存可以管理数据的读取，防止客户端大量的请求同样的数据。然而，一些情况下，第二类实现方式似乎更有意义。比如，如果一个缓存被用于非常大的文件，一个低命中比的缓存将会导致缓冲区来填满未命中的缓存；在这种情况下，将使缓存中有一个大比例的总数据集。另一个例子是架构设计中文件在缓存中存储是静态的并且不会被排除。（这可能是因为应用程序要求周围数据的延迟-某些片段的数据可能需要在大数据集中非常快-在有些地方应用程序逻辑理清排除策略或者热点 比缓存方案好使些）
@@ -191,7 +191,7 @@ Figure 1.1是一个简化的功能图。
 
 　　分布式缓存的一个缺点是修复缺失的节点。一些分布式缓存系统通过在不同节点做多个备份绕过了这个问题；然而，你可以想象这个逻辑迅速变复杂了，尤其是当你在请求层添加或者删除节点时。即便是一个节点消失和部分缓存数据丢失了，我们还可以在源数据存储地址获取-因此这不一定是灾难性的!
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-12.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-12.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-12.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-12.png "可扩展Web架构与分布式系统")
 <center>Figure 1.12: Distributed cache</center>
 
 　　缓存的伟大之处在于它们使我们的访问速度更快了（当然前提是正确使用），你选择的方法要在更多请求下更快才行。然而，所有这些缓存的代价是必须有额外的存储空间，通常在放在昂贵的内存中；从来没有嗟来之食。缓存让事情处理起来更快，而且在高负载情况下提供系统功能，否则将会使服务器出现降级。
@@ -208,7 +208,7 @@ Figure 1.1是一个简化的功能图。
 
 　　简单来说，代理服务器是一种处于客户端和服务器中间的硬件或软件，它从客户端接收请求，并将它们转交给服务器。代理一般用于过滤请求、记录日志或对请求进行转换(增加/删除头部、加密/解密、压缩，等等)。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-13.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-13.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-13.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-13.png "可扩展Web架构与分布式系统")
 <center>图1.13: 代理服务器</center>
 
 　　当需要协调来自多个服务器的请求时，代理服务器也十分有用，它允许我们从整个系统的角度出发、对请求流量执行优化。压缩转发(collapsed forwarding)是利用代理加快访问的其中一种方法，将多个相同或相似的请求压缩在同一个请求中，然后将单个结果发送给各个客户端。
@@ -217,12 +217,12 @@ Figure 1.1是一个简化的功能图。
 
 　　在一个LAN代理服务器中，客户端不需要通过自己的IP连接到Internet，而代理会将请求相同内容的请求合并起来。这里比较容易搞混，因为许多代理同时也充当缓存(这里也确实是一个很适合放缓存的地方)，但缓存却不一定能当代理。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-14.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-14.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-14.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-14.png "可扩展Web架构与分布式系统")
 <center>图1.14: 通过代理来合并请求</center>
 
 　　另一个使用代理的方式不只是合并相同数据的请求，同时也可以用来合并靠近存储源（一般是磁盘）的数据请求。采用这种策略可以让请求最大化使用本地数据，这样可以减少请求的数据延迟。比如，一群节点请求B部分信息：partB1,partB2等，我们可以设置代理来识别各个请求的空间区域，然后把它们合并为一个请求并返回一个bigB，大大减少了读取的数据来源（查看图Figure 1.15）。当你随机访问上TB数据时这个请求时间上的差异就非常明显了！代理在高负载情况下，或者限制使用缓存时特别有用，因为它基本上可以批量的把多个请求合并为一个。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-15.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-15.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-15.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-15.png "可扩展Web架构与分布式系统")
 <center>Figure 1.15: Using a proxy to collapse requests for data that is spatially close together</center>
 
 　　值得注意的是，代理和缓存可以放到一起使用，但通常最好把缓存放到代理的前面，放到前面的原因和在参加者众多的马拉松比赛中最好让跑得较快的选手在队首起跑一样。因为缓存从内存中提取数据，速度飞快，它并不介意存在对同一结果的多个请求。但是如果缓存位于代理服务器的另一边，那么在每个请求到达cache之前都会增加一段额外的时延，这就会影响性能。
@@ -235,7 +235,7 @@ Figure 1.1是一个简化的功能图。
 
 　　你可以把这个概念应用到大数据集中就像应用在传统的关系数据存储。索引要关注的技巧是你必须仔细考虑用户会怎样访问你的数据。如果数据集有很多TBs，但是每个数据包(payload)很小(可能只有1KB)，这时就必须用索引来优化数据访问。在这么大的数据集找到小的数据包是个很有挑战性的工作因为你不可能在合理的时间內遍历所有数据。甚至，更有可能的是这么大的数据集分布在几个（甚至很多个）物理设备上-这意味着你要用些方法找到期望数据的正确物理位置。索引是最适合的方法做这种事情。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-16.jpg "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-16.jpg "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-16.jpg "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-16.jpg "可扩展Web架构与分布式系统")
 <center>Figure 1.16: Indexes</center>
 
 　　索引可以作为内容的一个表格-表格的每一项指明你的数据存储的位置。例如，如果你正在查找B的第二部分数据-你如何知道去哪里找？如果你有个根据数据类型(数据A，B，C)排序的索引，索引会告诉你数据B的起点位置。然后你就可以跳转(seek)到那个位置，读取你想要的数据B的第二部分。(See Figure 1.16.)
@@ -244,7 +244,7 @@ Figure 1.1是一个简化的功能图。
 
 　　常常索引有很多层，当作数据地图，把你从一个地方指向另外一个地方，一直到你的得到你想要的那块数据。(See Figure 1.17.)
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-17.jpg "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-17.jpg "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-17.jpg "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-17.jpg "可扩展Web架构与分布式系统")
 <center>Figure 1.17: Many layers of indexes</center>
 
 　　索引也可以用来创建同样数据的多个不同视图(views)。对于大数据集来说，这是个很棒的方法来定义不同的过滤器(filter)和类别(sort)，而不用创建多个额外的数据拷贝。
@@ -288,14 +288,14 @@ Figure 1.1是一个简化的功能图。
 
 　　最后还要讲讲所有分布式系统中另一个比较关键的部分，负载均衡器。负载均衡器是各种体系结构中一个不可或缺的部分，因为它们担负着将负载在处理服务请求的一组节点中进行分配的任务。这样就可以让系统中的多个节点透明地服务于同一个功能（参见图1.18）。它的主要目的就是要处理大量并发的连接并将这些连接分配给某个请求处理节点，从而可使系统具有伸缩性，仅仅通过添加新节点便能处理更多的请求。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-18.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-18.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-18.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-18.png "可扩展Web架构与分布式系统")
 <center>图1.18: 负载均衡器</center>
 
 　　用于处理这些请求的算法有很多种，包括随机选取节点、循环式选取，甚至可以按照内存或CPU的利用率等等这样特定的条件进行节点选取。负载均衡器可以用软件或硬件设备来实现。近来得到广泛应用的一个开源的软件负载均衡器叫做 [HAProxy](http://haproxy.1wt.eu/)）。
 
 　　在分布式系统中，负载均衡器往往处于系统的最前端，这样所有发来的请求才能进行相应的分发。在一些比较复杂的分布式系统中，将一个请求分发给多个负载均衡器也是常事，如图1.19所示。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-19.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-19.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-19.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-19.png "可扩展Web架构与分布式系统")
 <center>图1.19: 多重负载均衡器</center>
 
 　　和代理类似，有些负载均衡器还可以基于请求的类型对不同的请求进行不同的处理（技术上讲，这样的叫做反向代理）。
@@ -311,14 +311,14 @@ Figure 1.1是一个简化的功能图。
 
 　　目前为止我们已经介绍了许多更快读取数据的方法，但另一个使数据层具伸缩性的重要部分是对写的有效管理。当系统简单的时候，只有最小的处理负载和很小的数据库，写的有多快可以预知；然而，在更复杂的系统，写可能需要几乎无法决定的长久时间。例如，数据可能必须写到不同数据库或索引中的几个地方，或者系统可能正好处于高负载。这些情况下，写或者任何那一类任务，有可能需要很长的时间，追求性能和可用性需要在系统中创建异步；一个通常的做到那一点的办法是通过队列。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-20.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-20.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-20.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-20.png "可扩展Web架构与分布式系统")
 <center>Figure 1.20: Synchronous request</center>
 
 　　设想一个系统，每个客户端都在发起一个远程服务的任务请求。每一个客户端都向服务器发送它们的请求，服务器尽可能快的完成这些任务，并分别返回结果给各个客户端。在一个小型系统，一个服务器（或逻辑服务）可以给传入的客户端请求提供迅速服务，就像它们来的一样快，这种情形应该工作的很好。然而，当服务器收到了超过它所能处理数量的请求时，每个客户端在产生一个响应前，将被迫等待其他客户端的请求结束。这是一个同步请求的例子，示意在图1.20。
 
 　　这种同步的行为会严重的降低客户端性能；客户端被迫等待，有效的执行零工作，直到它的请求被应答。添加额外的服务器承担系统负载也不会解决这个问题；即使是有效的负载均衡，为了最大化客户端性能，保证平等的公平的分发工作也是极其困难的。而且，如果服务器处理请求不可及，或者失败了，客户端上行也会失败。有效解决这个问题在于，需要在客户端请求与实际的提供服务的被执行工作之间建立抽象。
 
-[![可扩展Web架构与分布式系统]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-21.png "可扩展Web架构与分布式系统")]({{ site.JB.FILE_PATH }}/2013-03/scalable-web-architecture-21.png "可扩展Web架构与分布式系统")
+[![可扩展Web架构与分布式系统]({{ site.assetpath }}/2013-03/scalable-web-architecture-21.png "可扩展Web架构与分布式系统")]({{ site.assetpath }}/2013-03/scalable-web-architecture-21.png "可扩展Web架构与分布式系统")
 <center>图 1.21:用队列管理请求</center>
 
 　　进入队列。一个队列就像它听起来那么简单：一个任务进入，被加入队列然后工人们只要有能力去处理就会拿起下一个任务。（看图1.21）这些任务可能是代表了简单的写数据库，或者一些复杂的事情，像为一个文档生成一个缩略预览图一类的。当一个客户端提交一个任务请求到一个队列，它们再也不会被迫等待结果；它们只需要确认请求被正确的接收了。这个确认之后可能在客户端请求的时候，作为一个工作结果的参考。

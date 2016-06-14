@@ -69,7 +69,7 @@ redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.
 
 **图 1. 工程目录结构**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-01.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-01.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-01.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-01.png "使用 Spring 进行单元测试")
 
 **类总体介绍**
 
@@ -314,7 +314,7 @@ AccountService 包括下列方法：
 
 **图 2. 测试的结果**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-02.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-02.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-02.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-02.png "使用 Spring 进行单元测试")
 
 对于这种不使用 Spring test 框架进行的单元测试，我们注意到，需要做这些工作：
 
@@ -396,7 +396,7 @@ AccountService 包括下列方法：
 
 **图 3. 执行结果**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-03.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-03.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-03.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-03.png "使用 Spring 进行单元测试")
 
 **小结**
 
@@ -687,7 +687,7 @@ Spring 2.5 以后，就开始支持 TestNG 了，支持的方法包括：
 
 **图 4. 测试成功**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-04.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-04.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-04.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-04.png "使用 Spring 进行单元测试")
 
 搜索数据库对应的表，我们看到里面没有数据，说明自动事务起作用了。
 
@@ -697,7 +697,7 @@ Spring test framework 主要位于 org.Springframework.test.context 包中，主
 
 **图 5. Spring 测试框架类图**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-05.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-05.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-05.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-05.png "使用 Spring 进行单元测试")
 
 -   TestContextManager：主要的入口类，提供 TestContext 实例的管理，负责根据各种事件来通知测试监听器
 -   TestContext：实体类，提供访问 Spring applicatoin context 的能力，并负责缓存 applicationContext
@@ -709,7 +709,7 @@ Spring 通过 AOP hook 了测试类的实例创建、beforeClass、before、afte
 
 **图 6. Spring 测试框架执行序列图**
 
-[![使用 Spring 进行单元测试]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-06.png "使用 Spring 进行单元测试")]({{ site.JB.FILE_PATH }}/2013-05/spring-unit-test-06.png "使用 Spring 进行单元测试")
+[![使用 Spring 进行单元测试]({{ site.assetpath }}/2013-05/spring-unit-test-06.png "使用 Spring 进行单元测试")]({{ site.assetpath }}/2013-05/spring-unit-test-06.png "使用 Spring 进行单元测试")
 
 -   测试执行者开始执行测试类，这个时候 Spring 获取消息，自动创建 TestContextManager 实例
 -   TestContextManager 会创建 TestContext，以记录当前测试的上下文信息，TestContext 则通过 ContextLoader 来获取 Spring ApplicationContext 实例

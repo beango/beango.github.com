@@ -14,11 +14,11 @@ redirecturl: http://www.ruanyifeng.com/blog/2013/10/register.html
 
 计算机的[存储层次](http://zh.wikipedia.org/wiki/%E5%AD%98%E5%82%A8%E5%B1%82%E6%AC%A1)（memory hierarchy）之中，[寄存器](http://zh.wikipedia.org/wiki/%E5%AF%84%E5%AD%98%E5%99%A8)（register）最快，内存其次，最慢的是硬盘。
 
-[![20131015105220]({{ site.JB.FILE_PATH }}/2013-10/20131015105220.jpg)]({{ site.JB.FILE_PATH }}/2013-10/20131015105220.jpg "为什么寄存器比内存快？")
+[![20131015105220]({{ site.assetpath }}/2013-10/20131015105220.jpg)]({{ site.assetpath }}/2013-10/20131015105220.jpg "为什么寄存器比内存快？")
 
 同样都是晶体管存储设备，为什么寄存器比内存快呢？
 
-[![2013101402]({{ site.JB.FILE_PATH }}/2013-10/2013101402.jpg)]({{ site.JB.FILE_PATH }}/2013-10/2013101402.jpg "为什么寄存器比内存快？")
+[![2013101402]({{ site.assetpath }}/2013-10/2013101402.jpg)]({{ site.assetpath }}/2013-10/2013101402.jpg "为什么寄存器比内存快？")
 
 [Mike Ash](http://www.mikeash.com/pyblog/friday-qa-2013-10-11-why-registers-are-fast-and-ram-is-slow.html)写了一篇很好的解释，非常通俗地回答了这个问题，有助于加深对硬件的理解。下面就是我的简单翻译。
 
@@ -34,7 +34,7 @@ redirecturl: http://www.ruanyifeng.com/blog/2013/10/register.html
 
 苹果公司新推出的iPhone 5s，CPU是[A7](http://en.wikipedia.org/wiki/Apple_A7)，寄存器有6000多位（31个64位寄存器，加上32个128位寄存器）。而iPhone 5s的内存是1GB，约为80亿位（bit）。这意味着，高性能、高成本、高耗电的设计可以用在寄存器上，反正只有6000多位，而不能用在内存上。因为每个位的成本和能耗只要增加一点点，就会被放大80亿倍。
 
-[![2013101403]({{ site.JB.FILE_PATH }}/2013-10/20131014031.jpg)]({{ site.JB.FILE_PATH }}/2013-10/20131014031.jpg "为什么寄存器比内存快？")
+[![2013101403]({{ site.assetpath }}/2013-10/20131014031.jpg)]({{ site.assetpath }}/2013-10/20131014031.jpg "为什么寄存器比内存快？")
 
 事实上确实如此，内存的设计相对简单，每个位就是一个电容和一个晶体管，而寄存器的[设计](http://en.wikipedia.org/wiki/Register_file#Array)则完全不同，多出好几个电子元件。并且通电以后，寄存器的晶体管一直有电，而内存的晶体管只有用到的才有电，没用到的就没电，这样有利于省电。这些设计上的因素，决定了寄存器比内存读取速度更快。
 

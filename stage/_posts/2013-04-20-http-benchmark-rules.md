@@ -56,7 +56,7 @@ redirecturl: http://www.oschina.net/translate/http_benchmark_rules
 
 记住，我们在负载产生工具中看到的数字并没有包括TCP开销，而且，如果我们的负载在整个测试期间并不固定，那么突发带宽一定会有超过平均值的时候。而且除了带宽以外还有其它的问题，例如，廉价的网卡和交换机很有可能会被大量的数据包淹没。
 
-[![HTTP负载测试]({{ site.JB.FILE_PATH }}/2013-04/17043810_eBxe.png "HTTP负载测试")]({{ site.JB.FILE_PATH }}/2013-04/17043810_eBxe.png "HTTP负载测试")
+[![HTTP负载测试]({{ site.assetpath }}/2013-04/17043810_eBxe.png "HTTP负载测试")]({{ site.assetpath }}/2013-04/17043810_eBxe.png "HTTP负载测试")
 
 基于以上的种种原因，我们最好不要让测试的带宽逼近网络的可用带宽，最好是不要超过某个比例，比如2/3。对网络(包括网卡和交换机)错误和峰值速率进行监控也是一个很好的办法。
 
@@ -94,7 +94,7 @@ descriptor)。
 
 [autobench](http://www.xenoclast.org/autobench/)是其中的一种方法，我们可以设置测试的范围，然后就可以得到这样一张图:
 
-[![HTTP负载测试]({{ site.JB.FILE_PATH }}/2013-04/17043810_197M.jpg "HTTP负载测试")]({{ site.JB.FILE_PATH }}/2013-04/17043810_197M.jpg "HTTP负载测试")
+[![HTTP负载测试]({{ site.assetpath }}/2013-04/17043810_197M.jpg "HTTP负载测试")]({{ site.assetpath }}/2013-04/17043810_197M.jpg "HTTP负载测试")
 
 可以看到，在响应消息最小时，服务器的处理峰值为16,000响应/秒，但在过载情况下快速衰落至14,000响应/秒。而在响应消息更大时，过载情况下的衰落并没有这么多，但可以看到错误条不停弹出来，说明了服务器的紧张境况。
 

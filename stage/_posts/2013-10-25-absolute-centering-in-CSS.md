@@ -245,7 +245,7 @@ redirecturl: http://blog.jobbole.com/46574/
       top: 0; left: 0; bottom: 0; right: 0;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtm5q14rj20gu0b4jrr.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtm5q14rj20gu0b4jrr.jpg)
 
 接下来的示例会假设已经包含了以下样式，并且以逐步添加样式的方式提供不同的特性。
 
@@ -258,7 +258,7 @@ redirecturl: http://blog.jobbole.com/46574/
       z-index: 999;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtm67yllj20ad082dg4.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtm67yllj20ad082dg4.jpg)
 
 **移动版Safari****的说明**：如果外面没有一层设置position: relative的容器，内容区会以整个文档的高度的中心点为基准居中，而不是以可视区域的高度中心点为基准居中。
 
@@ -273,7 +273,7 @@ redirecturl: http://blog.jobbole.com/46574/
       z-index: 999;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtm8nu2ej20gw0b50t1.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtm8nu2ej20gw0b50t1.jpg)
 
 ### 带响应式
 
@@ -289,7 +289,7 @@ redirecturl: http://blog.jobbole.com/46574/
       padding: 40px;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtmbxviuj20gw0b6jrw.jpg)
 
 ### 带溢出内容
 
@@ -299,7 +299,7 @@ redirecturl: http://blog.jobbole.com/46574/
       overflow: auto;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtmcpu5uj20gw0b63zg.jpg)
 
 ### 大小可调整
 
@@ -316,7 +316,7 @@ redirecturl: http://blog.jobbole.com/46574/
       overflow: auto;
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtmdawehj20gw0b4aai.jpg)
 
 如果不设置resize: both的样式，可以设置transition样式平滑地在大小间切换。一定要记得设置overflow: auto样式，因为改变大小后的容器高宽很有可能会小于内容的高宽。“完全居中”法是唯一一种能支持使用resize: both样式的方法。
 
@@ -330,7 +330,7 @@ redirecturl: http://blog.jobbole.com/46574/
 
 图像也同样有效！提供相应的class，并指定样式 height: auto;，就得到了一张随着容器改变大小的响应式图片。
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8dtmekxnpj20gv0b5t8x.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8dtmekxnpj20gv0b5t8x.jpg)
 
 请注意，height: auto;样式虽然对图片有效，如果没有用到了后面介绍的‘可变高技巧’，则会导致普通内容区域伸长以适应容器长度。
 
@@ -355,7 +355,7 @@ redirecturl: http://blog.jobbole.com/46574/
 
 “完全居中”法的确需要声明容器高度，但是高度受max-height样式的影响，也可以是百分比。这非常适合响应式的方案，只需要设置好带溢出内容就行。
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1cpkopj20gt0b4jro.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du1cpkopj20gt0b4jro.jpg)
 
 另一种替代方案是设置display: table样式居中，，不管内容的长度。这种方法会在一些浏览器中产生问题（主要是IE和Firefox）。我在ELL Creative的朋友Kalley写了一个基于Modernizr的测试，可以用来检查浏览器是否支持这种居中方案。现在这种方法可以做到渐进增强。
 
@@ -391,7 +391,7 @@ redirecturl: http://blog.jobbole.com/46574/
 border-box样式，还需要加上padding值），再配合top: 50%; left:
 50%;样式就会使块元素居中。
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1d8ll3j20gv0b3glt.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du1d8ll3j20gv0b3glt.jpg)
 
 需要注意的是，这是按照预想情况也能在工作在IE6-7下的唯一方法。
 
@@ -430,7 +430,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
               transform: translate(-50%,-50%);
     }
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du1dt1xfj20gw0b5aae.jpg)
 
 好处：
 
@@ -448,7 +448,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 这种可能是最好的方法，因为高度可以随内容改变，浏览器支持也不差。主要缺陷是会产生额外的标签，每一个需要居中的元素需要三个额外的HTML标签。
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1eg5cgj20gw0b53yx.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du1eg5cgj20gw0b53yx.jpg)
 
 **HTML:**
 
@@ -488,7 +488,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 内容区声明的宽度不能大于容器的100%减去0.25em的宽度。就像一段带有长文本的区域。不然，内容区域会被推到顶端，这就是使用:after伪类的原因。使用:before伪类则会让元素有100%的大小！
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du1f7o33j20gv0b5glz.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du1f7o33j20gv0b5glz.jpg)
 
 如果内容块需要尽可能大地占用水平空间，可以为大容器加上max-width:99%;样式，或者考虑浏览器和容器宽度的情况下使用max-width: calc(100% – 0.25em) 样式。
 
@@ -543,7 +543,7 @@ border-box样式，还需要加上padding值），再配合top: 50%; left:
 
 CSS未来发展的方向就是采用Flexbox这种设计，解决像垂直居中这种共同的问题。请注意，Flexbox有不止一种办法居中，他也可以用来分栏，并解决奇奇怪怪的布局问题。
 
-![]({{ site.JB.FILE_PATH }}/2013-10/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg)
+![]({{ site.assetpath }}/2013-10/7cc829d3gw1e8du699aqwj20gu0b3weo.jpg)
 
     .Center-Container.is-Flexbox {
       display: -webkit-box;

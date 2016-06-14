@@ -29,37 +29,37 @@ nginx的负载均衡策略可以划分为两大类：内置策略和扩展策略
 
 轮询的原理很简单，首先我们介绍一下轮询的基本流程。如下是处理一次请求的流程图：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing1.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing1.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing1.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing1.jpg "解析 Nginx 负载均衡")
 
 图中有两点需要注意，第一，如果可以把加权轮询算法分为先深搜索和先广搜索，那么nginx采用的是先深搜索算法，即将首先将请求都分给高权重的机器，直到该机器的权值降到了比其他机器低，才开始将请求分给下一个高权重的机器；第二，当所有后端机器都down掉时，nginx会立即将所有机器的标志位清成初始状态，以避免造成所有的机器都处在timeout的状态，从而导致整个前端被夯住。
 
 接下来看下源码。nginx源码的目录结构很清晰，加权轮询所在路径为nginx-1.0.15/src/http/ngx\_http\_upstream\_round\_robin.[c|h]，在源码的基础上，针对重要的、不易理解的地方我加了注释。首先看下ngx\_http\_upstream\_round\_robin.h中的重要声明：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing2.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing2.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing2.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing2.jpg "解析 Nginx 负载均衡")
 
 从变量命名中，我们就可以大致猜出其作用。其中，current\_weight和weight的区别主要是前者为权重排序的值，随着处理请求会动态的变化，后者是配置值，用于恢复初始状态。
 
 接下来看下轮询的创建过程，代码如下图所示。
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing3.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing3.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing3.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing3.jpg "解析 Nginx 负载均衡")
 
 这里有个tried变量需要做些说明。tried中记录了服务器当前是否被尝试连接过。他是一个位图。如果服务器数量小于32，则只需在一个int中即可记录下所有服务器状态。如果服务器数量大于32，则需在内存池中申请内存来存储。对该位图数组的使用可参考如下代码：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing4.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing4.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing4.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing4.jpg "解析 Nginx 负载均衡")
 
 最后是实际的策略代码，逻辑很简单，代码实现也只有30行，直接上代码。
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing5.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing5.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing5.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing5.jpg "解析 Nginx 负载均衡")
 
 **2.2. ip hash**
 
 ip hash是nginx内置的另一个负载均衡的策略，流程和轮询很类似，只是其中的算法和具体的策略有些变化，如下图所示：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing6.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing6.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing6.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing6.jpg "解析 Nginx 负载均衡")
 
 ip hash算法的核心实现如下图：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing7.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing7.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing7.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing7.jpg "解析 Nginx 负载均衡")
 
 从代码中可以看出，hash值既与ip有关又与后端机器的数量有关。经过测试，上述算法可以连续产生1045个互异的value，这是该算法的硬限制。对此nginx使用了保护机制，当经过20次hash仍然找不到可用的机器时，算法退化成轮询。因此，从本质上说，ip hash算法是一种变相的轮询算法，如果两个ip的初始hash值恰好相同，那么来自这两个ip的请求将永远落在同一台服务器上，这为均衡性埋下了很深的隐患。
 
@@ -85,7 +85,7 @@ easyABC是公司内部开发的性能测试工具，采用epool模型实现，�
 
 polygraph是一款免费的性能测试工具，以对缓存服务、代理、交换机等方面的测试见长。它有规范的配置语言PGL（Polygraph Language），为软件提供了强大的灵活性。其工作原理如下图所示：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing8.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing8.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing8.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing8.jpg "解析 Nginx 负载均衡")
 
 polygraph提供client端和server端，将测试目标nginx放在二者之间，三者之间的网络交互均走http协议，只需配置ip+port即可。client端可以配置虚拟robot的个数以及每个robot发请求的速率，并向代理服务器发起随机的静态文件请求，server端将按照请求的url生成随机大小的静态文件做响应。这也是选用这个测试软件的一个**主要原因**：可以产生随机的url作为nginx各种hash策略的key。
 
@@ -95,7 +95,7 @@ polygraph提供client端和server端，将测试目标nginx放在二者之间，
 
 本测试运行在5台物理机上，其中被测对象单独搭在一台8核机器上，另外四台4核机器分别搭建了easyABC、webserver桩和polygraph，如下图所示：
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing9.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing9.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing9.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing9.jpg "解析 Nginx 负载均衡")
 
 **3.3. 测试方案**
 
@@ -123,23 +123,23 @@ polygraph提供client端和server端，将测试目标nginx放在二者之间，
 
 表1和图1是轮询策略在两种测试工具下的负载情况。对比在两种测试工具下的测试结果会发现，结果完全一致，因此可以排除测试工具的影响。从图表中可以看出，轮询策略对于均衡性和容灾性都可以做到很好的满足。
 
- [![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing10.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing10.jpg "解析 Nginx 负载均衡")
+ [![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing10.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing10.jpg "解析 Nginx 负载均衡")
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing11.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing11.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing11.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing11.jpg "解析 Nginx 负载均衡")
 
 表2和图2是fair策略在两种测试工具下的负载情况。fair策略受环境影响非常大，在排除了测试工具的干扰之后，结果仍然有非常大的抖动。从直观上讲，这完全不满足均衡性。但是从另一个角度出发，恰恰是由于这种自适应性确保了在复杂的网络环境中能够物尽所用。因此，在应用到工业生产中之前，需要在具体的环境中做好测试工作。
 
- [![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing12.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing12.jpg "解析 Nginx 负载均衡") 
+ [![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing12.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing12.jpg "解析 Nginx 负载均衡") 
 
-[![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing13.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing13.jpg "解析 Nginx 负载均衡")
+[![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing13.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing13.jpg "解析 Nginx 负载均衡")
 
 以下图表是各种hash策略，所不同的仅仅是hash key或者是具体的算法实现，因此一起做对比。实际测试中发现，通用hash和一致性hash均存在一个问题：当某台后端的机器挂掉时，原有落到这台机器上的流量会丢失，但是在ip hash中就不存在这样的问题。正如上文中对ip hash源码的分析，当ip hash失效时，会退化为轮询策略，因此不会有丢失流量的情况。从这个层面上说，ip hash也可以看成是轮询的升级版。
 
- [![解析 Nginx 负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing14.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing14.jpg "解析 Nginx 负载均衡")
+ [![解析 Nginx 负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing14.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing14.jpg "解析 Nginx 负载均衡")
 
 图5为ip hash策略，ip hash是nginx内置策略，可以看做是前两种策略的特例：以来源ip为key。由于测试工具不便于模拟海量ip下的请求，因此这里截取线上实际的情况加以分析，如下图所示：
 
- [![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing16.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing16.jpg "解析 Nginx 负载均衡")[]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing15.jpg)
+ [![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing16.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing16.jpg "解析 Nginx 负载均衡")[]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing15.jpg)
 
 图5 ip hash策略
 
@@ -152,6 +152,6 @@ hash策略恰恰是按照ip来划分流量，因此造成上述后果也就自�
 
 通过实际的对比测试，我们对nginx各个负载均衡策略进行了验证。下面从均衡性、一致性、容灾性以及适用场景等角度对比各种策略。(点击图片查看大图)
 
- [![解析 Nginx负载均衡]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing17.jpg "解析 Nginx 负载均衡")]({{ site.JB.FILE_PATH }}/2012-09/Parse-nginx-load-balancing17.jpg "解析 Nginx 负载均衡")
+ [![解析 Nginx负载均衡]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing17.jpg "解析 Nginx 负载均衡")]({{ site.assetpath }}/2012-09/Parse-nginx-load-balancing17.jpg "解析 Nginx 负载均衡")
 
 以上从源码和实际的测试数据角度分析说明了nginx负载均衡的策略，并给出了各种策略适合的应用场景。通过本文的分析不难发现，无论哪种策略都不是万金油，在具体的场景下应该选择哪种策略一定程度上依赖于使用者对这些策略的熟悉程度。希望本文的分析和测试数据能够对读者有所帮助，更希望有越来越多、越来越好的负载均衡策略产出。

@@ -11,7 +11,7 @@ redirecturl: http://blog.nosqlfan.com/html/2914.html
 
 [BSON](http://bsonspec.org/)是由10gen开发的一个数据格式，目前主要用于[MongoDB](http://blog.nosqlfan.com/tags/mongodb "查看 MongoDB 的全部文章")中，是MongoDB的数据存储格式。BSON基于JSON格式，选择JSON进行改造的原因主要是JSON的通用性及JSON的schemaless的特性。
 
-![]({{ site.JB.FILE_PATH }}/2013-01/UIQZU.gif "BSON")
+![]({{ site.assetpath }}/2013-01/UIQZU.gif "BSON")
 
 BSON主要会实现以下三点目标：
 

@@ -15,7 +15,7 @@ redirecturl: http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E
 
 我们知道，在全量建索引时，在内存中一般用开链的哈希表来存储Token的Hash值及其倒排链的信息。假设有N个不同的tokens，那么这个hash数组的大小一般是取第一个大于N\*(5/3)的质数P。结构如下图所示：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing.png "optimizing")]({{ site.JB.FILE_PATH }}/2013-08/optimizing.png "optimizing")
+[![]({{ site.assetpath }}/2013-08/optimizing.png "optimizing")]({{ site.assetpath }}/2013-08/optimizing.png "optimizing")
 
 *图1: 全量索引在内存中的开链哈希表结构图*
 
@@ -35,7 +35,7 @@ redirecturl: http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E
 
 提到哈希表，不少人想到就是快，时间复杂度为O(1),其实未必如此，这个在后面的优化讨论中再深入。对于闭链hash,其大小一般也是取第一个大于N\*(5/3)的质数P来申请空间，所以空间占用一般会比较大。对于以上例子，即N=100万，那么这个Hash数组大小为P，为原始keyword terms大小的3.15倍。闭链Hash表事实上就是环形数组，如下图所示：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing2.png "optimizing2")]({{ site.JB.FILE_PATH }}/2013-08/optimizing2.png "optimizing2")
+[![]({{ site.assetpath }}/2013-08/optimizing2.png "optimizing2")]({{ site.assetpath }}/2013-08/optimizing2.png "optimizing2")
 
 *图2: 闭链Hash表结构图*
 
@@ -51,7 +51,7 @@ redirecturl: http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E
 
 所以一个跳表的结构如下图所示：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing3.png "optimizing3")]({{ site.JB.FILE_PATH }}/2013-08/optimizing3.png "optimizing3")
+[![]({{ site.assetpath }}/2013-08/optimizing3.png "optimizing3")]({{ site.assetpath }}/2013-08/optimizing3.png "optimizing3")
 
 *图3: 跳表结构图*
 
@@ -73,7 +73,7 @@ Tiered dictionary的思路是分层查询定位。即，先二分查找一个小
 
 所以，序列化好的tiered dictionary结构图如下：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing4.png "optimizing4")]({{ site.JB.FILE_PATH }}/2013-08/optimizing4.png "optimizing4")
+[![]({{ site.assetpath }}/2013-08/optimizing4.png "optimizing4")]({{ site.assetpath }}/2013-08/optimizing4.png "optimizing4")
 
 *图4: Tiered dictionary结构图*
 
@@ -99,7 +99,7 @@ Tiered dictionary的思路是分层查询定位。即，先二分查找一个小
 最简单的实现，就是将内存中的hash table里面的conflicting hash nodes list一条一条的序列化，内存中的主索引数组的元素分布情况不变，同时将conflicting nodes直接链在原hash主数组的后面。不过，为了链式存储，序列化好的每个keyword
 item里面会增加一个next指针和是否是每条链的最后一个节点的标记。存储好的结果如下图所示：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing5.png "optimizing5")]({{ site.JB.FILE_PATH }}/2013-08/optimizing5.png "optimizing5")
+[![]({{ site.assetpath }}/2013-08/optimizing5.png "optimizing5")]({{ site.assetpath }}/2013-08/optimizing5.png "optimizing5")
 
 *图5: 开链Hash表结构图*
 
@@ -111,7 +111,7 @@ item里面会增加一个next指针和是否是每条链的最后一个节点的
 
 我们发现主hash数组里面的每个空元素也占用了一个keyword item的空间大小，但其实它们唯一的作用就是表明这个位置为空，所以我们可以用一个每个元素大小为32位(uint32\_t)的数组来表明hash结果信息，其中1个bit用来表明此位置是否有hash结果，另外31个bit用来表示当有hash结果的时候，对应hash节点链在keyword items数组中的开始下标。这样就可以将整个keyword items按每条hash冲突链存储在一起了，next指针也不需要了，只需要用一个bit来标识其是否是hash冲突链的最后一个节点就可以了，一般这个flag可以从32位的doc id上面取一位来标识。故，改进后的存储结构为：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing6.png "optimizing6")]({{ site.JB.FILE_PATH }}/2013-08/optimizing6.png "optimizing6")
+[![]({{ site.assetpath }}/2013-08/optimizing6.png "optimizing6")]({{ site.assetpath }}/2013-08/optimizing6.png "optimizing6")
 
 *图6: 内存使用优化后的开链Hash表结构图*
 
@@ -133,7 +133,7 @@ item里面会增加一个next指针和是否是每条链的最后一个节点的
 
 所以，修改后的实时增量段的Unique索引的存储结构为：
 
-[![]({{ site.JB.FILE_PATH }}/2013-08/optimizing7.png "optimizing7")]({{ site.JB.FILE_PATH }}/2013-08/optimizing7.png "optimizing7")
+[![]({{ site.assetpath }}/2013-08/optimizing7.png "optimizing7")]({{ site.assetpath }}/2013-08/optimizing7.png "optimizing7")
 
 *图7: 避免簇拥的闭链Hash表结构图*
 

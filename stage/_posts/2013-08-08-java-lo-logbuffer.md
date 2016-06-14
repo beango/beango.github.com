@@ -41,7 +41,7 @@ Formatter：它主要用于定义一个 LogRecord 的输出格式。
 
 **图 1. Java 日志处理流程**
 
-![javarz01]({{ site.JB.FILE_PATH }}/2013-08/javarz01.png "javarz01")
+![javarz01]({{ site.assetpath }}/2013-08/javarz01.png "javarz01")
 
 图 1 展示了一个 LogRecord 的处理流程。一条日志进入处理流程首先是 Logger，其中定义了可通过的 Level，如果 LogRecord 的 Level 高于Logger 的等级，则进入 Filter（如果有）过滤。如果没有定义 Level，则使用父 Logger 的 Level。Handler 中过程类似，其中 Handler 也定义了可通过 Level，然后进行 Filter 过滤，通过如果后面还有其他 Handler，则直接交由后面的 Handler 进行处理，否则会直接绑定到 formatter 上面输出到指定位置。
 
@@ -85,7 +85,7 @@ MemoryHandler 使用了典型的“注册 – 通知”的观察者模式。Memo
 
 **图 2. Log 转储链**
 
-![javarz02]({{ site.JB.FILE_PATH }}/2013-08/javarz02.jpg "javarz02")
+![javarz02]({{ site.assetpath }}/2013-08/javarz02.jpg "javarz02")
 
 在实例中，通过对 MemoryHandler 配置项 .push 的 Level 进行判断，决定是否将日志推向下一个 Handler，通常在 publish() 方法内实现。代码清单如下：
 
@@ -231,13 +231,13 @@ Java.util.logging 中有三种类型的 Level，分别是 Logger 的 Level，Han
 
 **图 3. Java Log 中 Level 的传递影响**
 
-![javarz03]({{ site.JB.FILE_PATH }}/2013-08/javarz03.jpg "javarz03")
+![javarz03]({{ site.assetpath }}/2013-08/javarz03.jpg "javarz03")
 
 Java.util.logging.Logger 提供的 setUseParentHandlers 方法，也可能会影响到最终输出终端的日志显示。这个方法允许用户将自身的日志条目打印一份到 Parent Logger 的输出终端中。缺省会打印到 Parent Logger 终端。此时，如果 Parent Logger Level 相关的设置与自身 Logger 不同，则打印到 Parent Logger 和自身中的日志条目也会有所不同。如图 4 所示：
 
 **图 4. 子类日志需打印到父类输出终端**
 
-!["javarz04"]({{ site.JB.FILE_PATH }}/2013-08/javarz04.jpg "javarz04")
+!["javarz04"]({{ site.assetpath }}/2013-08/javarz04.jpg "javarz04")
 
 **2. 开发 log 接口过程中处理错误日志**
 

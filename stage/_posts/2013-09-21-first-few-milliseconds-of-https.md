@@ -13,13 +13,13 @@ redirecturl: http://blog.jobbole.com/48369/
 
 哇！刚刚发生了什么?
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafpk13uj207002cglj.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafpk13uj207002cglj.jpg)
 
 在点击按钮过后的220毫秒时间内，发生了一系列有趣的事情，火狐浏览器（Firefox）不仅改变了地址栏颜色，而且在浏览器的右下角出现了一个小锁头的标志。在我最喜欢的互联网工具Wireshark的帮助下，我们可以通过一个经过略微调整的用于debug的火狐浏览器来探究这一过程。
 
 根据RFC 2818标准（译者注：RFC 2818为HTTP Over TLS-网络协议），火狐浏览器自动通过连接Amazon.com的443端口来响应HTTPS请求。
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafqg1ynj20b403taaj.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafqg1ynj20b403taaj.jpg)
 
 很多人会把HTTPS和网景公司（Netscape）于上世纪九十年代中期创建的SSL（安全套接层）联系起来。事实上，随着时间的推移，这两者之间的关系也慢慢淡化。随着网景公司渐渐的失去市场份额，SSL的维护工作移交给了Internet工程任务组（IETF）。由网景公司发布的第一个版本被重新命名为TLS1.0（安全传输层协议1.0），并于1999年1月正式发布。考虑到TLS已经发布了将近10年，如今已经很难再见到真正的SSL通信了。
 
@@ -28,7 +28,7 @@ redirecturl: http://blog.jobbole.com/48369/
 
 TLS将全部的通信以不同方式包裹为“记录”（Records）。我们可以看到，从浏览器发出的第一个字节为0×16（十进制的22），它表示了这是一个“握手”记录。
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafrxaddj20b403baac.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafrxaddj20b403baac.jpg)
 
 接下来的两个字节是0×0301，它表示了这是一条版本为3.1的记录，同时也向我们表明了TLS1.0实际上是基于SSL3.1构建而来的。
 
@@ -36,25 +36,25 @@ TLS将全部的通信以不同方式包裹为“记录”（Records）。我们�
 
 -    随机数：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafsvt2cj20b4022mxd.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafsvt2cj20b4022mxd.jpg)
 
 在客户端问候中，有四个字节以Unix时间格式记录了客户端的协调世界时间（UTC）。协调世界时间是从1970年1月1日开始到当前时刻所经历的秒数。在这个例子中，0x4a2f07ca就是协调世界时间。在他后面有28字节的随机数，在后面的过程中我们会用到这个随机数。
 
 -   SID（Session ID）：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafu3wcij20b400tt8m.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafu3wcij20b400tt8m.jpg)
 
 在这里，SID是一个空值（Null）。如果我们在几秒钟之前就登陆过了Amazon.com，我们有可能会恢复之前的会话，从而避免一个完整的握手过程。
 
 -   密文族（Cipher Suites）：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafv0zu5j20b403aq3h.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafv0zu5j20b403aq3h.jpg)
 
 密文族是浏览器所支持的加密算法的清单。整个密文族是由推荐的加密算法“TLS\_ECDHE\_ECDSA\_WITH\_AES\_256\_CBC\_SHA”和33种其他加密算法所组成。别担心其他的加密算法会出现问题，我们一会儿就会发现Amazon也没有使用推荐的加密算法。
 
 -    Server\_name扩展：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafvtru3j20b401caa4.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafvtru3j20b401caa4.jpg)
 
 通过这种方式，我们能够告诉Amazon.com：浏览器正在试图访问[https://www.amazon.com](https://www.amazon.com/)。这确实方便了很多，因为我们的TLS握手时间发生在HTTP通信之前，而HTTP请求会包含一个“Host头”，从而使那些为了节约成本而将数百个网站域名解析到一个IP地址上的网络托管商能够分辨出一个网络请求对应的是哪个网站。传统意义上的SSL同样要求一个网站请求对应一个IP地址，但是Server\_name扩展则允许服务器对浏览器的请求授予相对应的证书。如果没有其他的请求，Server\_name扩展应该允许浏览器访问这个IPV4地址一周左右的时间。
 
@@ -67,7 +67,7 @@ Amazon.com回复的握手记录由两个比较大的包组成（2551字节）。
 
 **1.服务器问候信息（Server Hello）(2):**
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafwsvx9j20b4057dgj.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafwsvx9j20b4057dgj.jpg)
 
 1.  我们得到了服务器的以Unix时间格式记录的UTC和28字节的随机数。
 2.  32字节的SID，在我们想要重新连接到Amazon.com的时候可以避免一整套握手过程。
@@ -75,15 +75,15 @@ Amazon.com回复的握手记录由两个比较大的包组成（2551字节）。
 
 **2.证书信息（11）：**
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafxsvrjj20b405vjs7.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafxsvrjj20b405vjs7.jpg)
 
 这段巨大的信息共有2464字节，其证书允许客户端在Amazon服务器上进行认证。这个证书其实并没有什么奇特之处，你能通过浏览器浏览它的大部分内容。
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafz3g7cj20b40a1dgl.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafz3g7cj20b40a1dgl.jpg)
 
 **3.服务器问候结束信息（14）：**
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uafzsnfjj20b401o3yi.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uafzsnfjj20b401o3yi.jpg)
 
 这是一个零字节信息，用于告诉客户端整个“问候”过程已经结束，并且表明服务器不会再向客户端询问证书。
 
@@ -96,7 +96,7 @@ Amazon.com回复的握手记录由两个比较大的包组成（2551字节）。
 
 证书中所包含的签名是一串非常长的大端格式的数字：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag3onewj20b401mq31.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag3onewj20b401mq31.jpg)
 
 任何人都可以向我们发送这些字节，但我们为什么要信任这个签名？为了解释这个问题，我们首先要回顾一些重要的数学知识：
 
@@ -138,11 +138,11 @@ RSA加密算法的基础介绍
 
 这个VeriSign的加密密钥e是。当然，他们将解密密钥d保管得十分严密，通常是在拥有视网膜扫描和荷枪实弹的警卫守护的机房当中。在签名之前，VeriSign会根据相关约定的技术文档，对Amazon.com证书上所提供的信息进行校验。一旦证书信息符合相关要求，VeriSign会利用SHA-1哈希算法获取证书的哈希值（hash），并对其进行声明。在Wireshark中，完整的证书信息会显示在“signedCertificate”（已签名证书）中：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag4tlrhj20b406kjs7.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag4tlrhj20b406kjs7.jpg)
 
 这里应该是软件的用词不当，因为这一段实际上是指那些即将被签名的信息，而不是指那些已经包含了签名的信息。
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag5yeqij20b404cjs3.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag5yeqij20b404cjs3.jpg)
 
 实际上经过签名的信息S，在Wireshark中被称之为“encrypted”（密文）。我们将S的e次幂除以n取余数（即公式：）就能计算出被加密的原文，其十六进制如下：
 
@@ -163,7 +163,7 @@ FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFF FFFFFFFF00302130
 
 但是，即便是这样，我们为什么要信任VeriSign公司？整个的信任链条就此断掉了。
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag6ww8rj20b40353ym.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag6ww8rj20b40353ym.jpg)
 
 由图可以看到，“VeriSign Class 3 Secure Server CA”对Amazon.com进行了签名，而“VeriSign Class 3 Public Primary Certification Authority”对“VeriSign Class 3 Secure Server CA”进行了签名，但是最顶部的“VeriSign Class 3 Public Primary Certification Authority”则对自己进行了签名。这是因为，这个证书自从NSS（网络安全服务）库中的certdata.txt升级到1.4版之后就作为“受信任的根证书颁发机构”（译者注：参照微软官方翻译）被编译到了Mozilla产品中（火狐浏览器）。这段信息是由网景公司的Robert Relyea于2000年9月6日提交的，并随附以下注释：
 
@@ -236,12 +236,12 @@ OpenSSL的维护工程师吧。如果随机数的生成方式遭到破解，那�
 火狐浏览器使用这个值计算出 ，我们可以看到它显示在“客户端交换密钥”（Client
 Key Exchange）的记录中：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag7w4chj20b403sgm7.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag7w4chj20b403sgm7.jpg)
 
 在这个过程的最后，火狐浏览器会发送一个不加密的信息：一条“Change Cipher
 Spec”记录：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag8ow99j20b4023aa6.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag8ow99j20b4023aa6.jpg)
 
 通过这种方式：火狐浏览器要求Amazon.com在后面的通信过程中使用约定的加密方式传输信息。
 
@@ -320,7 +320,7 @@ RC4加密
 
 首先，RC4生成一个256字节的数组S，并用0-255填充。接下来的工作就是将需要将KEY混合插入进数组中并反复迭代。你可以编写一个状态机，利用它来阐释随机字节。为了产生随机字节，我们需要将S数组打乱，如图所示：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uag9iu9nj208w0480st.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uag9iu9nj208w0480st.jpg)
 
 为了加密一个字节，我们将其与随机字节进行异或运算。记住：一位二进制数与1作异或运算会翻转（译者注：即1\^1=0；1\^0=1）。因为我们利用的是随机数，所以从统计学的角度来讲，有一半的数被翻转。这种随机翻转的现象就是我们加密数据的有效方法。正如你所见，这并不复杂，而且计算速度十分快，我认为这也是Amazon.com选择它的原因之一。
 
@@ -328,7 +328,7 @@ RC4加密
 
 “client\_write\_key”最初的几个字节是7E 20 7A 4D FE FB 78 A7 33 …如果我们对这些字节和未加密的数据头以及版本信息（“14 00 00 0C98 F0 AE CB C4 …”）进行异或运算，我们就能得到在Wireshark中看到的加密信息了：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uagaluufj20b402l3yr.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uagaluufj20b402l3yr.jpg)
 
 服务器端做的几乎是相同的事情。它们发送了一个密钥协议的说明和一个包含全部握手过程的结束信息，其中有结束信息的解密版本。因此，这种机制就保证了客户端和服务器能成功的解密信息。
 
@@ -354,13 +354,13 @@ RC4加密
 
 在Wireshark中显示如下：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uagbgauoj20b4017dfw.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uagbgauoj20b4017dfw.jpg)
 
 唯一有趣的地方是序号是按照记录来增长，这条记录是1，下一条就是2。
 
 服务器端利用“server\_write\_key”做着同样的事情。我们能看到服务器的相应结果，包括程序开头的指示位：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uagcffmyj20b4042dgh.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uagcffmyj20b4042dgh.jpg)
 
 解密后的信息如下：
 
@@ -388,7 +388,7 @@ TLS RFC的文档包含了更多的信息，有需要的朋友们可以自己查�
 
 正如我们所看到的那样，如果有人能对Amazon服务器的参数n进行因式分解得到p和q的话，那他就能破解全部的基于亚马逊证书的安全通信。所以Amazon为这个参数设置了有效期以防止这种事情的发生：
 
-![]({{ site.JB.FILE_PATH }}/2013-09/63918611gw1e8uagf9f96j205n01nt8j.jpg)
+![]({{ site.assetpath }}/2013-09/63918611gw1e8uagf9f96j205n01nt8j.jpg)
 
 在我们提供的密码族中，有一组密码组“TLS\_DHE\_RSA\_WITH\_AES\_256\_CBC\_SHA”使用了Diffie-Hellman密钥交换，并因此能提供良好的前向安全特性。这就意味着如果有人破解了交换密钥的数学运算方式，他们也不能利用这个来破解其他的会话。但是他的一个劣势在于其运算需求更大的数字和更高的运算能力。AES算法在很多密码组中都出现了，它与RC4的不同之处在于它每次使用的是16字节的“块”而RC4使用的是单字节。因为其key最高能到256位二进制位，所以一般认为它比RC4的安全性更高。
 

@@ -283,7 +283,7 @@ buddy所引用的对象将从它的原型中继承到相应的属性和方法，
 
 在JavaScript中，每个函数都有一个叫做“prototype”的属性，该属性指向一个原型对象。发过来，该原型对象据有一个叫做"constructor"的属性，该属性又指回了这个函数本身。这是一种循环引用；**图3** 更好地揭示出了这种环形关系。
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20151040_gQ9A.gif) 图3** 每个函数的原型都具有一个叫做Constructor的属性 **
+![]({{ site.assetpath }}/2013-06/20151040_gQ9A.gif) 图3** 每个函数的原型都具有一个叫做Constructor的属性 **
 
 好了，当一个函数（比如上例中的Dog）和"new"操作符一起使用，创建出一个对象时，该对象将从Dog.prototype中继承所有的属性。在图**3**中，你可以看出，Dog.prototype对象具有一个指会Dog函数的construtor属性，每个Dog对象（它们继承自Dog.prototype)将同样也具有一个指会Dog函数的constructor属性。**图4**中的代码证明了这一点。构造器函数、原型对象以及用它们创建出来的对象这三者之间的关系如**图5**所示。
 
@@ -307,7 +307,7 @@ buddy所引用的对象将从它的原型中继承到相应的属性和方法，
     // The line below displays "true"
     alert(Dog.prototype.hasOwnProperty("constructor"));
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20151041_UD0W.gif) 图5** 继承自它们的原型的实例**
+![]({{ site.assetpath }}/2013-06/20151041_UD0W.gif) 图5** 继承自它们的原型的实例**
 
 有些读者可能已经注意到了**图4**中对hasOwnProperty方法和isPrototypeOf方法的调用。这些方法又来自哪里呢？它们并不是来自Dog.prototype。实际上，JavaScript中还有其它一些类似于toString、toLocaleString和valueOf等等我们可以直接对Dog.prototype以及Dog的实例进行调用的方法，但它们统统都不是来自于Dog.prototype的。其实就象.NET框架具有System.Object一样，JavaScript中也有Object.prototype，它是所有类的最顶级的基类。（Object.prototype的原型为null。）
 
@@ -484,7 +484,7 @@ JavaScript中更加高级的一个特性便是它对闭包的支持，在C\# 2.0
 
 比方说，如**图9**所示，你有一个基类叫Pet，它有一个派生类叫做Dog。怎样在JavaScript中实现这个继承关系呢？Pet类就很简单了，你已经看到过怎么实现它了：
 
-![]({{ site.JB.FILE_PATH }}/2013-06/20151043_zqob.gif) 图9** 类 **
+![]({{ site.assetpath }}/2013-06/20151043_zqob.gif) 图9** 类 **
 
     // class Pet
     function Pet(name) {

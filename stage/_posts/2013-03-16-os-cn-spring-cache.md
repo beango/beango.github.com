@@ -180,7 +180,7 @@ Spring 的缓存技术还具备相当的灵活性，不仅能够使用 SpEL（Sp
 为了实用 spring cache 缓存方案，在工程的 classpath 必须具备下列 jar 包。
 
 ***图 1. 工程依赖的 jar 包图***
-[![注释驱动的 Spring cache 缓存介绍]({{ site.JB.FILE_PATH }}/2013-03/image001.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.JB.FILE_PATH }}/2013-03/image001.jpg "注释驱动的 Spring cache 缓存介绍")
+[![注释驱动的 Spring cache 缓存介绍]({{ site.assetpath }}/2013-03/image001.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.assetpath }}/2013-03/image001.jpg "注释驱动的 Spring cache 缓存介绍")
 
 注意这里我引入的是最新的 spring 3.2.0.M1 版本 jar 包，其实只要是 spring 3.1 以上，都支持 spring cache。其中 spring-context-\*.jar 包含了 cache 需要的类。
 
@@ -633,14 +633,14 @@ sendLog 属性没有考虑，因为其对缓存没有影响。
 和 spring 的事务管理类似，spring cache 的关键原理就是 spring AOP，通过 spring AOP，其实现了在方法调用前、调用后获取方法的入参和返回值，进而实现了缓存的逻辑。我们来看一下下面这个图：
 
 ***图 2. 原始方法调用图***
-[![注释驱动的 Spring cache缓存介绍]({{ site.JB.FILE_PATH }}/2013-03/image002.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.JB.FILE_PATH }}/2013-03/image002.jpg "注释驱动的 Spring cache 缓存介绍")
+[![注释驱动的 Spring cache缓存介绍]({{ site.assetpath }}/2013-03/image002.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.assetpath }}/2013-03/image002.jpg "注释驱动的 Spring cache 缓存介绍")
 
 上图显示，当客户端“Calling code”调用一个普通类 Plain Object 的 foo() 方法的时候，是直接作用在 pojo 类自身对象上的，客户端拥有的是被调用者的直接的引用。
 
 而 Spring cache 利用了 Spring AOP 的动态代理技术，即当客户端尝试调用 pojo 的 foo（）方法的时候，给他的不是 pojo 自身的引用，而是一个动态生成的代理类
 
 ***图 3. 动态代理调用图***
-[![注释驱动的 Spring cache 缓存介绍]({{ site.JB.FILE_PATH }}/2013-03/image003.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.JB.FILE_PATH }}/2013-03/image003.jpg "注释驱动的 Spring cache 缓存介绍")
+[![注释驱动的 Spring cache 缓存介绍]({{ site.assetpath }}/2013-03/image003.jpg "注释驱动的 Spring cache 缓存介绍")]({{ site.assetpath }}/2013-03/image003.jpg "注释驱动的 Spring cache 缓存介绍")
 
 如上图所示，这个时候，实际客户端拥有的是一个代理的引用，那么在调用 foo() 方法的时候，会首先调用 proxy 的 foo() 方法，这个时候 proxy 可以整体控制实际的 pojo.foo() 方法的入参和返回值，比如缓存结果，比如直接略过执行实际的 foo() 方法等，都是可以轻松做到的。
 

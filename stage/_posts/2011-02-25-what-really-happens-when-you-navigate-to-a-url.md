@@ -18,11 +18,11 @@ redirecturl: http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html
 
 ### 1. 首先嘛，你得在浏览器里输入要网址:
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image4.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image4.png "当你输入一个网址的时候，实际会发生什么?")
 
 ### 2. 浏览器查找域名的IP地址
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image13.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image13.png "当你输入一个网址的时候，实际会发生什么?")
 
 导航的第一步是通过访问的域名找出其IP地址。DNS查找过程如下：
 
@@ -39,7 +39,7 @@ redirecturl: http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html
 
 DNS递归查找如下图所示：
 
-![500px-An_example_of_theoretical_DNS_recursion_svg]({{ site.JB.FILE_PATH }}/2011-02/500pxAn_example_of_theoretical_DNS_recursion_svg.png "500px-An_example_of_theoretical_DNS_recursion_svg")
+![500px-An_example_of_theoretical_DNS_recursion_svg]({{ site.assetpath }}/2011-02/500pxAn_example_of_theoretical_DNS_recursion_svg.png "500px-An_example_of_theoretical_DNS_recursion_svg")
 
 DNS有一点令人担忧，这就是像wikipedia.org 或者facebook.com这样的整个域名看上去只是对应一个单独的IP地址。还好，有几种方法可以消除这个瓶颈：
 
@@ -57,7 +57,7 @@ DNS有一点令人担忧，这就是像wikipedia.org 或者facebook.com这样的
 
 ### 3. 浏览器给web服务器发送一个HTTP请求
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image22.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image22.png "当你输入一个网址的时候，实际会发生什么?")
 
 因为像Facebook主页这样的动态页面，打开后在浏览器缓存中很快甚至马上就会过期，毫无疑问他们不能从中读取。
 
@@ -77,7 +77,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 ### 4. facebook服务的永久重定向响应
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image8.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image8.png "当你输入一个网址的时候，实际会发生什么?")
 
 图中所示为Facebook服务器发回给浏览器的响应：
 
@@ -93,7 +93,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 ### 5. 浏览器跟踪重定向地址
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image23.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image23.png "当你输入一个网址的时候，实际会发生什么?")
 
 现在，浏览器知道了“http://www.facebook.com/”才是要访问的正确地址，所以它会发送另一个获取请求：
 
@@ -103,7 +103,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 ### 6. 服务器“处理”请求
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image9.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image9.png "当你输入一个网址的时候，实际会发生什么?")
 
 服务器接收到获取请求，然后处理并返回一个响应。
 
@@ -126,7 +126,7 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 ### 7. 服务器发回一个HTML响应
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image10.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image10.png "当你输入一个网址的时候，实际会发生什么?")
 
 图中为服务器生成并返回的响应：
 
@@ -146,11 +146,11 @@ GET 这个请求定义了要读取的**URL**： “http://facebook.com/”。浏
 
 在浏览器没有完整接受全部HTML文档时，它就已经开始显示这个页面了：
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image6.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image6.png "当你输入一个网址的时候，实际会发生什么?")
 
 ### 9. 浏览器发送获取嵌入在HTML中的对象
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image11.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image11.png "当你输入一个网址的时候，实际会发生什么?")
 
 在浏览器显示HTML时，它会注意到需要获取其他地址内容的标签。这时，浏览器会发送一个获取请求来重新获得这些文件。
 
@@ -183,7 +183,7 @@ ETag信息已经存在，就马上停止这个文件的传输。
 
 ### 10. 浏览器发送异步（AJAX）请求
 
-![当你输入一个网址的时候，实际会发生什么?]({{ site.JB.FILE_PATH }}/2011-02/image12.png "当你输入一个网址的时候，实际会发生什么?")
+![当你输入一个网址的时候，实际会发生什么?]({{ site.assetpath }}/2011-02/image12.png "当你输入一个网址的时候，实际会发生什么?")
 
 在Web 2.0伟大精神的指引下，页面显示完成后客户端仍与服务器端保持着联系。
 

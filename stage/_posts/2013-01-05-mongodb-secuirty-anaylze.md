@@ -71,7 +71,7 @@ pwd)的方式直接通过server认证。这里实际上server是将用户的pwd
 hash当作了真正的密码去验证，并没有基于原文密码验证。在这点上和我之前分析的[mysql的认证机制](http://www.phpweblog.net/GaRY/archive/2010/08/20/mysql_client_to_server_auth_method.html)其实没什么本质区别。当然或许这个也不算是认证机制的弱点，但是毕竟要获取mongodb的username和pwd的可能性会更大一些。
 
 
-![]({{ site.JB.FILE_PATH }}/2013-01/mongodb.png)
+![]({{ site.assetpath }}/2013-01/mongodb.png)
 
 
 然而在Web的监控界面的认证中则有一些不同。当client来源不是localhost，这里的用户认证过程是基于HTTP

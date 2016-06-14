@@ -65,7 +65,7 @@ redirecturl: http://blog.jobbole.com/40666/
 
 该应用在64位的机器上使用老的JDK6。默认情况下，这么做不能[压缩普通对象](https://wikis.oracle.com/display/HotSpotInternals/CompressedOops)的指针的。通过参数”[-XX:UseCompressedOops](https://wikis.oracle.com/display/HotSpotInternals/CompressedOops)“切换到压缩模式使我们获得了额外的收获，现在我们的内存消耗降低到了73MB。
 
-[![]({{ site.JB.FILE_PATH }}/2013-06/comparing-heap-consumption.png "comparing-heap-consumption")]({{ site.JB.FILE_PATH }}/2013-06/comparing-heap-consumption.png "comparing-heap-consumption")
+[![]({{ site.assetpath }}/2013-06/comparing-heap-consumption.png "comparing-heap-consumption")]({{ site.assetpath }}/2013-06/comparing-heap-consumption.png "comparing-heap-consumption")
 
 当然，我们还能走的更远。比如基于键值建立B-tree，但这已经开始影响到了代码的可读性，所以我们决定到此为止。降低21.5倍的堆内存应该已经是一个足够好的结果了。
 

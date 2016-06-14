@@ -24,14 +24,14 @@ Request](http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-proc
 　　当我们配置一个Web程序时，总会涉及到一个词“Web
 Server”，它的功能便是会响应所有请求。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135408_1.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135408_1.JPG)
 
 　　**什么是IIS？**
 
 　　IIS（*Internet Information Server*）是微软Web
 Server的一种，用来配置ASP.NET站点。IIS拥有自己的ASP.NET处理引擎来处理请求，因此，当一个请求到达时，IIS接收并处理请求，然后返回内容。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135410_2.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135410_2.JPG)
 
 　　**请求处理过程**
 
@@ -46,7 +46,7 @@ Server和IIS的区别。现在我们来看一下核心部分。在继续之前�
 
 　　**应用程序池**：应用程序池是工作进程的容器，通常用来隔开不同配置的工作进程。当一个程序出错或进程资源回收时，其他池中的程序不会受到影响。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135411_3.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135411_3.JPG)
 
 　　**注**：当一个应用程序池包含多个工作进程时，被叫做“Web Garden”。
 
@@ -59,44 +59,44 @@ Server和IIS的区别。现在我们来看一下核心部分。在继续之前�
 　　内核模式是从IIS
 6.0被引入的，它包含了一个叫HTTP.SYS的文件，每当请求进来时，会首先触发该文件的响应。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135411_4.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135411_4.JPG)
 
 　　HTTP.SYS文件负责把请求传入相应的应用程序池中。但HTTP.SYS如何知道应传给哪个应用程序池呢？当然不是随机抽取，每当创建一个应用程序池，该池的ID就会生成并在HTTP.SYS文件中注册，因此该文件才能确定将请求往哪传。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135412_5.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135412_5.JPG)
 
 　　以上便是IIS处理请求的第一步。接着，我们来看一下请求如何从HTTP.SYS传入应用程序池。
 
 　　在IIS的用户模块中，通过*Web Admin Services
 (WAS)*从HTTP.SYS接收请求，并传入相应的应用程序池中。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135414_6.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135414_6.JPG)
 
 　　当应用程序池接收到请求，会接着传给工作进程（w3wp.exe），该进程检查来请求的URL后缀以确定加载哪个ISAPI扩展。ASP.NET加载时会附带自己的ISAPI扩展（aspnet\_isapi.dll），以便在IIS中映射。
 
 　　**注意**：如果先安装了asp.net，然后再安装IIS，就需要通过aspnet\_regiis命令来注册ASP.NET中的ISAPI扩展。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135415_7.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135415_7.JPG)
 
 　　一旦工作进程加载了aspnet\_isapi.dll,
 就会构造一个HttpRuntime类，该类是应用程序的入口，通过ProcessRequest方法处理请求。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135417_8.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135417_8.JPG)
 
 　　一旦这个方法被调用，一个HttpContext的实例就产生了。可通过HTTPContent.Current获取到这个实例，且该实例会在整个生命周期中存活，我们通过它可以获取到一些常用对象，如Request，Response，Session
 等。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135418_9.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135418_9.JPG)
 
 　　之后HttpRuntime会通过HttpApplicationFactory类加载一个HttpApplication对象。每一次请求都要穿过一堆HttpModule到达HttpHandler，以便被响应。而这些HttpModule就被配置在HttpApplication中。
 
 　　有一个概念叫“Http管道”，被叫做管道是因为它包含了一系列的HttpModule，这些HttpModule拦截请求并将其导向相应的HttpHandler。我们也可自定义HttpModule，以便在请求响应之间做点特别的处理。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135419_10.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135419_10.JPG)
 
 　　HttpHandler是“Http管道”的终点。所有请求穿过HttpModule需抵达相应的HttpHandler，然后HttpHandler根据请求资源，产生并输出内容。也正因此，我们请求任何aspx页面才会得到响应的Html内容。
 
-![]({{ site.JB.FILE_PATH }}/2012-04/20120420_135422_11.JPG)
+![]({{ site.assetpath }}/2012-04/20120420_135422_11.JPG)
 
 　　**结语**
 

@@ -546,6 +546,6 @@ Redis的客户端很丰富，几乎所有流行的语言都有其客户端，这
 
 ### 10.总结
 
-![]({{ site.JB.FILE_PATH }}/2011-11/12pXcY.png "Redis overview")
+![]({{ site.assetpath }}/2011-11/12pXcY.png "Redis overview")
 
 来源：[itsgg.com](http://itsgg.com/2011/09/24/exploring-redis/)

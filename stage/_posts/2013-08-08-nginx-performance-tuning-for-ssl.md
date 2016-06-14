@@ -49,7 +49,7 @@ redirecturl: http://blog.jobbole.com/44844/
 
 直觉告诉我，想解决性能问题的直接途径就是升级硬件，我把EC2实例从t1.micro升级到了为高流量而优化过的 c1.medium 升级后的测试结果：
 
-![Nginx SSL性能调优]({{ site.JB.FILE_PATH }}/2013-08/63918611gw1e7ayxtue5mj20rb0o5gog.jpg)
+![Nginx SSL性能调优]({{ site.assetpath }}/2013-08/63918611gw1e7ayxtue5mj20rb0o5gog.jpg)
 
 巅峰时服务器的hits达到50/sec，压力增加时，time-out增加，hits减少。
 
@@ -106,7 +106,7 @@ redirecturl: http://blog.jobbole.com/44844/
 
 我有一个1.5GbRAM和8CPU的[Linode](http://blog.jobbole.com/go/linode/ "Linode")服务器，采用刚才的设置，这是我的测试结果：
 
-![Nginx SSL性能调优]({{ site.JB.FILE_PATH }}/2013-08/63918611gw1e7azsiccppj20r40oqtbc.jpg)
+![Nginx SSL性能调优]({{ site.assetpath }}/2013-08/63918611gw1e7azsiccppj20r40oqtbc.jpg)
 
 [Linode](http://blog.jobbole.com/go/linode/ "Linode")的服务器的结果棒极了！我的第一个直觉是难道Linode比EC2好吗。在我把我的服务迁移到Linode之前我想确保两者仅有的对性能有可能产生影响的不同被排除掉。
 
@@ -140,7 +140,7 @@ http://auxbuss.com/blog/posts/2011\_06\_28\_ssl\_session\_caching\_on\_nginx/
 
 下图是测试结果：
 
-![Nginx SSL性能调优]({{ site.JB.FILE_PATH }}/2013-08/63918611gw1e7b06kcqxfj20rk0o50vg.jpg)
+![Nginx SSL性能调优]({{ site.assetpath }}/2013-08/63918611gw1e7b06kcqxfj20rk0o50vg.jpg)
 
 效果很显著！
 
@@ -148,7 +148,7 @@ http://auxbuss.com/blog/posts/2011\_06\_28\_ssl\_session\_caching\_on\_nginx/
 
 现在我的EC2和Linode表现差不多了。但是我真的需要升级到c1.medium实例才能实现这个性能的提升吗？或许不是这样……所以我把我改回了t1.micro。因为t1.micro实例只有一个CPU，所以我把worder\_processes设置改回1。下面是测试的结果：
 
-![Nginx SSL性能调优]({{ site.JB.FILE_PATH }}/2013-08/63918611gw1e7b0b1e68dj20re0ordim.jpg)
+![Nginx SSL性能调优]({{ site.assetpath }}/2013-08/63918611gw1e7b0b1e68dj20re0ordim.jpg)
 
 所以答案是肯定的，硬件上的提升是必要的。
 
@@ -164,6 +164,6 @@ http://auxbuss.com/blog/posts/2011\_06\_28\_ssl\_session\_caching\_on\_nginx/
 
 现在这个设置应该满足Perfect Forward Secrecy协议了。我重新跑了测试：
 
-![Nginx SSL性能调优]({{ site.JB.FILE_PATH }}/2013-08/attempt10-300x263.png)
+![Nginx SSL性能调优]({{ site.assetpath }}/2013-08/attempt10-300x263.png)
 
 太棒了，性能也没有下降。很棒的学习经验！

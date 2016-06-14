@@ -115,7 +115,7 @@ Node.js被设计用来解决服务端阻塞问题.下面通过一段简单的代
 
 在每个JavaScript函数运行时，都有一个运行时内部对象称为Execution Context，它包含如下Variable Object(VO,变量对象)， Scope Chain(作用域链)和”this” Value三部分。如图:
 
-[![我为什么向后端工程师推荐Node.js]({{ site.JB.FILE_PATH }}/2012-08/why-recommend-nodejs.jpg "why recommend nodejs")]({{ site.JB.FILE_PATH }}/2012-08/why-recommend-nodejs.jpg "why recommend nodejs")
+[![我为什么向后端工程师推荐Node.js]({{ site.assetpath }}/2012-08/why-recommend-nodejs.jpg "why recommend nodejs")]({{ site.assetpath }}/2012-08/why-recommend-nodejs.jpg "why recommend nodejs")
 
 图片来自[ECMA-262 JavaScript .The Core](http://dmitrysoshnikov.com/ecmascript/javascript-the-core/#execution-context)
 

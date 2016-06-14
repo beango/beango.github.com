@@ -27,7 +27,7 @@ redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.h
 
 **图 1. 系统体系结构图**
 
-[![Java代码优化过程的实例介绍]({{ site.JB.FILE_PATH }}/2013-04/image002.jpg "Java 代码优化过程的实例介绍")]({{ site.JB.FILE_PATH }}/2013-04/image002.jpg "Java 代码优化过程的实例介绍")
+[![Java代码优化过程的实例介绍]({{ site.assetpath }}/2013-04/image002.jpg "Java 代码优化过程的实例介绍")]({{ site.assetpath }}/2013-04/image002.jpg "Java 代码优化过程的实例介绍")
 
 为了快速地实现预期效果，在最初的实现中优先考虑了功能的实现，而未考虑系统性能和代码可读性等。系统大致有以下的实现：
 （1）REST API获取信息、数据库操作可能抛出的异常信息都被记录到日志文件中，作为调试用；  
@@ -175,7 +175,7 @@ redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.h
 
 **图 2. DAO 模式的层次结构**
 
-[![Java代码优化过程的实例介绍]({{ site.JB.FILE_PATH }}/2013-04/image003.jpg "Java 代码优化过程的实例介绍")]({{ site.JB.FILE_PATH }}/2013-04/image003.jpg "Java 代码优化过程的实例介绍")
+[![Java代码优化过程的实例介绍]({{ site.assetpath }}/2013-04/image003.jpg "Java 代码优化过程的实例介绍")]({{ site.assetpath }}/2013-04/image003.jpg "Java 代码优化过程的实例介绍")
 
 **清单 6. 使用 DAO 模式的代码片段**
 

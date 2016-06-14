@@ -11,7 +11,7 @@ redirecturl: http://blog.jobbole.com/87465/
 
 原文出处： [Petras Liumparas](http://linoxide.com/linux-shell-script/guide-start-learning-shell-scripting-scratch/)   译文出处：[GOLinux](https://linux.cn/article-5591-1.html)   欢迎分享原创到[伯乐头条](http://top.jobbole.com/?utm_source=jobboleblog-article)
 
-![]({{ site.JB.FILE_PATH }}/2015-06/5e4d414cgw1esy2aafka3j20dw0afdgj.jpg "5e4d414cgw1esy2aafka3j20dw0afdgj")
+![]({{ site.assetpath }}/2015-06/5e4d414cgw1esy2aafka3j20dw0afdgj.jpg "5e4d414cgw1esy2aafka3j20dw0afdgj")
 
 通常，当人们提到“shell脚本语言”时，浮现在他们脑海中是bash，ksh，sh或者其它相类似的linux/unix脚本语言。脚本语言是与计算机交流的另外一种途径。使用图形化窗口界面（不管是windows还是linux都无所谓）用户可以移动鼠标并点击各种对象，比如按钮、列表、选框等等。但这种方式在每次用户想要计算机/服务器完成相同任务时（比如说批量转换照片，或者下载新的电影、mp3等）却是十分不方便。要想让所有这些事情变得简单并且自动化，我们可以使用shell脚本。
 
@@ -32,8 +32,8 @@ shell脚本语言就跟和几个人聊天类似。你只需把所有命令想象
 快速实例——当你打开linux终端并写一些文本时——你正通过“标准输入”和bash说话。那么，让我们来问问bash shell who am i（我是谁？）吧。
 
 	[root@localhost ~]
-	# who am i                                <--- 你通过标准输入对 bash shell 说
-	root     pts/0        2015-04-22 20:17 (192.168.1.123)     <--- bash shell通过标准输出回答你
+	# who am i                                     <--- 你通过标准输入对 bash shell 说
+	root  pts/0  2015-04-22 20:17 (192.168.1.123)  <--- bash shell通过标准输出回答你
 
 现在，让我们说一些bash听不懂的问题：
 

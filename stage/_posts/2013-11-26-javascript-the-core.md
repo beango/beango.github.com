@@ -34,7 +34,7 @@ ECMAScript做为一个高度抽象的面向对象语言，是通过*对象*来�
 
 我们拥有一个这样的结构，两个明显的自身属性和一个隐含的`__proto__`属性，这个属性是对`foo`原型对象的引用：
 
-[![basic-object]({{ site.JB.FILE_PATH }}/2013-11/basic-object.png)]({{ site.JB.FILE_PATH }}/2013-11/basic-object.png "JavaScript核心")
+[![basic-object]({{ site.assetpath }}/2013-11/basic-object.png)]({{ site.assetpath }}/2013-11/basic-object.png "JavaScript核心")
 
 这些prototype有什么用？让我们以*原型链*（prototype chain）的概念来回答这个问题。
 
@@ -81,7 +81,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 下一张图展示了对象`a`，`b`，`c`之间的继承层级：
 
-[![prototype-chain]({{ site.JB.FILE_PATH }}/2013-11/prototype-chain.png)]({{ site.JB.FILE_PATH }}/2013-11/prototype-chain.png "JavaScript核心")
+[![prototype-chain]({{ site.assetpath }}/2013-11/prototype-chain.png)]({{ site.assetpath }}/2013-11/prototype-chain.png "JavaScript核心")
 
 注意： ES5标准化了一个实现原型继承的可选方法，即使用`Object.create`函数：
 
@@ -153,7 +153,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 这个代码可以表示为如下关系：
 
-[![constructor-proto-chain]({{ site.JB.FILE_PATH }}/2013-11/constructor-proto-chain.png)]({{ site.JB.FILE_PATH }}/2013-11/constructor-proto-chain.png "JavaScript核心")
+[![constructor-proto-chain]({{ site.assetpath }}/2013-11/constructor-proto-chain.png)]({{ site.assetpath }}/2013-11/constructor-proto-chain.png "JavaScript核心")
 
 这张图又一次说明了每个对象都有一个原型。构造函数`Foo`也有自己的`__proto__`，值为`Function.prototype`，`Function.prototype`也通过其`__proto__`属性关联到`Object.prototype`。因此，重申一下，`Foo.prototype`就是`Foo`的一个明确的属性，指向对象`b`和对象`c`的原型。
 
@@ -211,13 +211,13 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 换句话说，所有ECMAScript*程序的运行时*可以用*执行上下文（EC）栈*来表示，*栈顶*是当前*活跃*(active)上下文：
 
-[![ec-stack]({{ site.JB.FILE_PATH }}/2013-11/ec-stack.png)]({{ site.JB.FILE_PATH }}/2013-11/ec-stack.png "JavaScript核心")
+[![ec-stack]({{ site.assetpath }}/2013-11/ec-stack.png)]({{ site.assetpath }}/2013-11/ec-stack.png "JavaScript核心")
 
 当程序开始的时候它会进入*全局执行上下文*，此上下文位于*栈底*并且是栈中的*第一个*元素。然后全局代码进行一些初始化，创建需要的对象和函数。在全局上下文的执行过程中，它的代码可能触发其他（已经创建完成的）函数，这些函数将会进入它们自己的执行上下文，向栈中push新的元素，以此类推。当初始化完成之后，运行时系统（runtime system）就会等待一些*事件*（比如，用户鼠标点击），这些事件将会触发一些函数，从而进入新的执行上下文中。
 
 在下个图中，拥有一些函数上下文`EC1`和全局上下文`Global EC`，当`EC1`进入和退出全局上下文的时候下面的栈将会发生变化：
 
-[![ec-stack-changes1]({{ site.JB.FILE_PATH }}/2013-11/ec-stack-changes1.png)]({{ site.JB.FILE_PATH }}/2013-11/ec-stack-changes1.png "JavaScript核心")
+[![ec-stack-changes1]({{ site.assetpath }}/2013-11/ec-stack-changes1.png)]({{ site.assetpath }}/2013-11/ec-stack-changes1.png "JavaScript核心")
 
 这就是ECMAScript的运行时系统如何真正地管理代码执行的。
 
@@ -229,7 +229,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 一个执行上下文可以抽象的表示为一个简单的对象。每一个执行上下文拥有一些属性（可以叫作*上下文状态*）用来跟踪和它相关的代码的执行过程。在下图中展示了一个上下文的结构：
 
-[![execution-context2]({{ site.JB.FILE_PATH }}/2013-11/execution-context2.png)]({{ site.JB.FILE_PATH }}/2013-11/execution-context2.png "JavaScript核心")
+[![execution-context2]({{ site.assetpath }}/2013-11/execution-context2.png)]({{ site.assetpath }}/2013-11/execution-context2.png "JavaScript核心")
 
 除了这三个必需的属性（一个*变量对象*（variable objec），一个*`this`*值以及一个*作用域链*（scope chain））之外，执行上下文可以拥有任何附加的状态，这取决于实现。
 
@@ -259,7 +259,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 之后，全局上下文的变量对象（variable objec，简称VO）将会拥有如下属性：
 
-[![variable-object3]({{ site.JB.FILE_PATH }}/2013-11/variable-object3.png)]({{ site.JB.FILE_PATH }}/2013-11/variable-object3.png "JavaScript核心")
+[![variable-object3]({{ site.assetpath }}/2013-11/variable-object3.png)]({{ site.assetpath }}/2013-11/variable-object3.png "JavaScript核心")
 
 再看一遍，函数`baz`是一个*函数表达式*，没有被包含在变量对象之中。这就是为什么当我们想要在函数自身之外访问它的时候会出现`ReferenceError`。
 
@@ -287,7 +287,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 我们看下函数`foo`的上下文中的活动对象（activation object，简称AO）：
 
-[![activation-object4]({{ site.JB.FILE_PATH }}/2013-11/activation-object4.png)]({{ site.JB.FILE_PATH }}/2013-11/activation-object4.png "JavaScript核心")
+[![activation-object4]({{ site.assetpath }}/2013-11/activation-object4.png)]({{ site.assetpath }}/2013-11/activation-object4.png "JavaScript核心")
 
 并且*函数表达式*`baz`还是没有被包含在变量/活动对象中。
 
@@ -325,7 +325,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 我们可以假设通过隐式的`__parent__`属性来和作用域链对象进行关联，这个属性指向作用域链中的下一个对象。这个方案可能在[真实的Rhino代码](http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/#feature-of-implementations-property-__parent)中经过了测试，并且这个技术很明确得被用于ES5的词法环境中（在那里被叫作`outer`连接）。作用域链的另一个表现方式可以是一个简单的数组。利用`_parent_`概念，我们可以用下面的图来表现上面的例子（并且父变量对象存储在函数的`[[Scope]]`属性中）：
 
-[![scope-chain5]({{ site.JB.FILE_PATH }}/2013-11/scope-chain5.png)]({{ site.JB.FILE_PATH }}/2013-11/scope-chain5.png "JavaScript核心")
+[![scope-chain5]({{ site.assetpath }}/2013-11/scope-chain5.png)]({{ site.assetpath }}/2013-11/scope-chain5.png "JavaScript核心")
 
 在代码执行过程中，作用域链可以通过使用`with`语句和`catch`从句对象来增强。并且由于这些对象是简单的对象，它们可以拥有原型（和原型链）。这个事实导致作用域链查找变为*两个维度*：（1）首先是作用域链连接，然后（2）在每个作用域链连接上－深入作用域链连接的原型链（如果此连接拥有原型）。
 
@@ -374,7 +374,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 我们可以给出如下的结构（确切的说，在我们查找`__parent__`连接之前，首先查找`__proto__`链）：
 
-[![scope-chain-with6]({{ site.JB.FILE_PATH }}/2013-11/scope-chain-with6.png)]({{ site.JB.FILE_PATH }}/2013-11/scope-chain-with6.png "JavaScript核心")
+[![scope-chain-with6]({{ site.assetpath }}/2013-11/scope-chain-with6.png)]({{ site.assetpath }}/2013-11/scope-chain-with6.png "JavaScript核心")
 
 注意，不是在所有的实现中全局对象都是继承自`Object.prototype`。上图中描述的行为（从全局上下文中引用「未定义」的变量`x`）可以在诸如SpiderMonkey引擎中进行测试。
 
@@ -465,7 +465,7 @@ ECMAScript中没有类的概念。但是，代码重用的风格并没有太多�
 
 以上代码可以通过下图进行说明：
 
-[![shared-scope7]({{ site.JB.FILE_PATH }}/2013-11/shared-scope7.png)]({{ site.JB.FILE_PATH }}/2013-11/shared-scope7.png "JavaScript核心")
+[![shared-scope7]({{ site.assetpath }}/2013-11/shared-scope7.png)]({{ site.assetpath }}/2013-11/shared-scope7.png "JavaScript核心")
 
 确切来说这个特性在循环中创建多个函数的时候会使人非常困惑。在创建的函数中使用循环计数器的时候，一些程序员经常会得到非预期的结果，所有函数中的计数器都是*同样*的值。现在是到了该揭开谜底的时候了－因为所有这些函数拥有同一个`[[Scope]]`，这个属性中的循环计数器的值是最后一次所赋的值。
 

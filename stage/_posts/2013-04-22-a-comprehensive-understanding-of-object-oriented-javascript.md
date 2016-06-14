@@ -138,7 +138,7 @@ redirecturl: http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.htm
 
 **图 1. 原型链中的属性隐藏机制**
 
-![全面理解面向对象的JavaScript]({{ site.JB.FILE_PATH }}/2013-04/image001.png "全面理解面向对象的 JavaScript") 
+![全面理解面向对象的JavaScript]({{ site.assetpath }}/2013-04/image001.png "全面理解面向对象的 JavaScript") 
 
 　　在图1 中，object1-\>prototype1-\>prototype2 构成了 对象 object1的原型链，根据上述属性隐藏机制，可以清楚地看到 prototype1 对象中的property4 属性和 prototype2 对象中的 property3属性皆被隐藏。理解了原型链，那么将非常容易理解 JS中基于原型的继承实现原理，程序清单 5 是利用原型链实现继承的简单例子。
 
@@ -225,7 +225,7 @@ redirecturl: http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.htm
 
 　　如果您已对原型、函数构造器、闭包和基于上下文的 this 有了充分的理解，那么理解 Simple Inheritance 的实现原理也并非相当困难。从本质上讲，*var Person = Class.extend(…)*该语句中，左边的 Person 实际上是获得了由 Class 调用 extend 方法返回的一个构造器，也即一个 function 对象的引用。顺着这个思路，我们继续介绍 Simple Inheritance 是如何做到这一点，进而实现了由原型继承方式到类式继承方式的转换的。图 2 是 Simple Inheritance 的源码及其附带注释。为了方便理解，用中文对代码逐行补充说明。
 
-**图 2.Simple Inheritance 源码解析** ![全面理解面向对象的JavaScript]({{ site.JB.FILE_PATH }}/2013-04/image003.png "全面理解面向对象的 JavaScript")
+**图 2.Simple Inheritance 源码解析** ![全面理解面向对象的JavaScript]({{ site.assetpath }}/2013-04/image003.png "全面理解面向对象的 JavaScript")
 
 　　抛开代码第二部分，整体连贯地考察第一和第三部分会发现，extend 函数的根本目的就是要构造一个具有新原型属性的新构造器。我们不禁感叹 *John Resig*的大师手笔及其对 JS 语言本质把握的细腻程度。至于 *John Resig*是如何想到这样精妙的实现方法，感兴趣的读者可以阅读本文（参考资源），其中有详细介绍关于最初设计 Simple Inheritance 的思维过程。
 
