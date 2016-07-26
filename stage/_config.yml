@@ -1,14 +1,19 @@
 encoding: utf-8
 markdown: kramdown
-pygments: true
+highlighter: true
 safe: false
-auto: true
+#auto: true
 permalink: /archives/:year/:month/:day/:title.html
 exclude: [".gitignore", ".rvmrc", ".rbenv-version", "Rakefile", "changelog.md", "README.md"]
 
 name: 程序员 - 博客 - HuangDing
-host: http://uwebs.tk
+host: 127.0.0.1 #http://uwebs.tk
 desc: dotnet, mvc, python
+
+collections:
+  collection:
+    output: true
+    permalink: /:collection/:title
 
 JB :
     FILE_PATH : /assets/files
