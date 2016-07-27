@@ -7,7 +7,7 @@ title: "Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17"
 description: "Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17"
 tags: [centos, php, nginx, mysql]
 ---
-{% include JB/setup %}
+
 
 ### 操作环境  
 -   操作系统:Win7旗舰版  

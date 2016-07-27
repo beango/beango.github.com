@@ -7,7 +7,7 @@ title: "Markdown语法说明 (简体中文版)"
 description: "Markdown语法说明 (简体中文版)"
 tags: [markdown]
 ---
-{% include JB/setup %}
+
 
 **NOTE:** This is Simplelified  Chinese Edition Document of Markdown Syntax. If you are seeking for English Edition Document. Please refer to [Markdown: Syntax][eng-doc].
 

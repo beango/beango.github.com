@@ -8,7 +8,7 @@ description: "MongoDB最佳实践"
 tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3661.html
 ---
-{% include JB/setup %}
+
 
 英文原文：[mongodb-best-practices](http://www.engineyard.com/blog/2011/mongodb-best-practices/)，翻译：[NoSQL
 Fan](http://blog.nosqlfan.com/html/3661.html)

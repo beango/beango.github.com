@@ -7,7 +7,7 @@ description: "解析 Nginx 负载均衡"
 tags: [nginx]
 redirecturl: http://stblog.baidu-tech.com/?p=2027
 ---
-{% include JB/setup %}
+
 
 来源：[百度搜索研发部](http://stblog.baidu-tech.com/?p=2027)
 

@@ -8,7 +8,7 @@ description: "MongoDB运行状态、性能监控，分析"
 tags: [mongodb]
 redirecturl: http://tech.lezi.com/archives/290
 ---
-{% include JB/setup %}
+
 
 这篇文章的目的是让你知道怎么了解你正在运行的Mongdb是否健康。
 

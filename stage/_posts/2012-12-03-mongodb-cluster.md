@@ -8,7 +8,7 @@ description: "MongoDB 集群"
 tags: [mongodb, 集群]
 redirecturl: http://blog.nosqlfan.com/html/544.html
 ---
-{% include JB/setup %}
+
 
 本文是一篇转载文章，作者对[MongoDB](http://blog.nosqlfan.com/tags/mongodb "查看 MongoDB 的全部文章")[集群](http://blog.nosqlfan.com/tags/%e9%9b%86%e7%be%a4 "查看 集群 的全部文章")结构，集群中各个角色的功能和基本原理做了详细地图文并茂地讲解，值得一看。
 

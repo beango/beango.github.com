@@ -7,7 +7,7 @@ description: "SQL联合语句的视觉解释"
 tags: [SQL]
 redirecturl: http://blog.jobbole.com/40443/
 ---
-{% include JB/setup %}
+
 
 我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。
 

@@ -7,7 +7,7 @@ title: "RabbitMQ安装及使用"
 description: "RabbitMQ安装及使用"
 tags: [rabbitmq]
 ---
-{% include JB/setup %}
+
 
 ### 介绍：
 

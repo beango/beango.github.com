@@ -7,7 +7,7 @@ description: "常见的nginx的配置选项"
 tags: [nginx]
 redirecturl: http://blog.jobbole.com/19043/
 ---
-{% include JB/setup %}
+
 
 英文原文：[agiletesting.blogspot.jp](http://agiletesting.blogspot.jp/2010/06/commong-nginx-configuration-options.html)，编译：[扶凯](http://www.php-oa.com/2012/04/01/commong-nginx-configuration-options.html)
 

@@ -7,7 +7,7 @@ description: ".NET Framework 4.5 五个很棒的特性"
 tags: [dotnet,.net 4.5]
 redirecturl: http://blog.jobbole.com/51271/
 ---
-{% include JB/setup %}
+
 
 ### 简介
 

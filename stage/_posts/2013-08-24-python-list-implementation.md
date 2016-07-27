@@ -7,7 +7,7 @@ description: "Python中list 的实现"
 tags: [python]
 redirecturl: https://github.com/acmerfight/insight_python/blob/master/list_implementation.md
 ---
-{% include JB/setup %}
+
 
 [原文链接](http://www.laurentluce.com/posts/python-list-implementation/)  
 这篇文章介绍了Python中list是如何实现的。  

@@ -7,7 +7,7 @@ description: "nginx性能优化"
 tags: [nginx, linux]
 redirecturl: http://www.dbasky.net/archives/2009/12/nginx.html
 ---
-{% include JB/setup %}
+
 
 作者：[Mike.Xu](http://www.dbasky.net) 发表于: December 28, 2009 9:09 PM
 

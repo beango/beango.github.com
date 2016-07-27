@@ -7,7 +7,7 @@ description: "nginx upstream 的几种分配方式"
 tags: [nginx, linux]
 redirecturl: http://www.dbasky.net/archives/2009/12/nginx-upstream.html
 ---
-{% include JB/setup %}
+
 
 1、轮询（默认）
 

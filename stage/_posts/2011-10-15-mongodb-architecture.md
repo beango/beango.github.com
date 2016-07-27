@@ -8,7 +8,7 @@ description: "MongoDB构架图分享"
 tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3887.html
 ---
-{% include JB/setup %}
+
 
 本文图片来自Ricky
 Ho的博文[MongoDB构架](http://horicky.blogspot.jp/2012/04/mongodb-architecture.html)（[MongoDB](http://blog.nosqlfan.com/tags/mongodb "查看 MongoDB 的全部文章")

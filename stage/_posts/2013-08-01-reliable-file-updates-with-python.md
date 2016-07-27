@@ -7,7 +7,7 @@ description: "使用 Python 进行稳定可靠的文件操作"
 tags: [python]
 redirecturl: http://www.oschina.net/translate/reliable-file-updates-with-python
 ---
-{% include JB/setup %}
+
 
 原文出处：[ckauhaus](http://blog.gocept.com/2013/07/15/reliable-file-updates-with-python/)   
 译文出处：[oschina](http://www.oschina.net/translate/reliable-file-updates-with-python)

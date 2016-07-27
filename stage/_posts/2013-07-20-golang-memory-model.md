@@ -7,7 +7,7 @@ description: "Go语言内存模型"
 tags: [go]
 redirecturl: http://hugozhu.myalert.info/2013/04/20/31-golang-memory-model.html
 ---
-{% include JB/setup %}
+
 
 目录：
 =====

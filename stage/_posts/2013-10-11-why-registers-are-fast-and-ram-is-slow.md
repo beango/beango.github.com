@@ -7,7 +7,7 @@ description: "为什么寄存器比内存快？"
 tags: [寄存器]
 redirecturl: http://www.ruanyifeng.com/blog/2013/10/register.html
 ---
-{% include JB/setup %}
+
 
 原文出处： [Mike Ash](http://www.mikeash.com/pyblog/friday-qa-2013-10-11-why-registers-are-fast-and-ram-is-slow.html)   译文出处：[阮一峰](http://www.ruanyifeng.com/blog/2013/10/register.html)
 

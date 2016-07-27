@@ -8,7 +8,7 @@ description: "Redis监控技巧"
 tags: [redis]
 redirecturl: http://blog.nosqlfan.com/html/4166.html
 ---
-{% include JB/setup %}
+
 
 
 本文来自 [Bugsnag](https://bugsnag.com/) 的联合创始人 [Simon Maynard](https://twitter.com/snmaynard/) 的系列文章，作者根据几年来对

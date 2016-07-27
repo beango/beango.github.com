@@ -7,7 +7,7 @@ description: "Java 日志缓存机制的实现"
 tags: [java]
 redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-logbuffer/index.html
 ---
-{% include JB/setup %}
+
 
 概述
 ----

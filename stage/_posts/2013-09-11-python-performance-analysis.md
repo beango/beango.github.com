@@ -7,7 +7,7 @@ description: "Python程序的性能分析指南"
 tags: [python]
 redirecturl: http://blog.jobbole.com/47619/
 ---
-{% include JB/setup %}
+
 
 虽然不是所有的Python程序都需要严格的性能分析，不过知道如何利用Python生态圈里的工具来分析性能，也是不错的。
 

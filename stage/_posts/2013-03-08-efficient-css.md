@@ -8,7 +8,7 @@ description: "翻译-高效的CSS"
 tags: [css]
 redirecturl: http://freestyle21.cn/writings/efficient-css.html
 ---
-{% include JB/setup %}
+
 
 译言：
 -----

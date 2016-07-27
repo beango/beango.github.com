@@ -8,7 +8,7 @@ description: "我为什么向后端工程师推荐Node.js"
 tags: [node.js]
 redirecturl: http://www.infoq.com/cn/articles/why-recommend-nodejs
 ---
-{% include JB/setup %}
+
 
 来源：[李穆](http://www.infoq.com/cn/articles/why-recommend-nodejs)
 

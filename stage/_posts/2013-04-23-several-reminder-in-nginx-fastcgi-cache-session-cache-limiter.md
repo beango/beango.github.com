@@ -7,7 +7,7 @@ description: "Nginx模块fastcgi_cache的几个注意点"
 tags: [nginx]
 redirecturl: http://www.cnxct.com/several-reminder-in-nginx-fastcgi_cache-and-php-session_cache_limiter/
 ---
-{% include JB/setup %}
+
 
 　　在web项目中，大家都已经非常熟悉其架构流程了。都说Cache是万金油，哪里不舒服抹哪里。这些流程中，几乎每个环节都会进行cache。从[浏览器](http://blog.jobbole.com/12749/ "浏览器")到webserver，到cgi程序，到DB数据库，会进行浏览器cache，数据cache，SQL查询的cache等等。对于fastcgi这里的cache，很少被使用。去年年底，我对nginx的[fastcgi_cache](http://wiki.nginx.org/HttpFastcgiModule "Fastcgi_cache的WIKI")进行摸索使用。在我的测试过程中，发现一些wiki以及网络上没被提到的注意点，这里分享一下。
 

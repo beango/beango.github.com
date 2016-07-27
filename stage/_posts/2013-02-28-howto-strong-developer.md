@@ -8,7 +8,7 @@ description: "如何成为强大的程序员？"
 tags: [程序员]
 redirecturl: http://www.infoq.com/cn/news/2013/02/howto-strong-developer
 ---
-{% include JB/setup %}
+
 
 　　[Aaron Stannard](http://www.aaronstannard.com/) 是新创公司[MarkedUp](https://markedup.com/)的CEO，他最近花费大量时间雇佣、评估很多不同的程序员，并和他们一起协作。在这个过程中他发现并总结了[十种程序员无法意识到自己潜力的原因](http://www.aaronstannard.com/post/2013/02/06/10-Reasons-Why-Youe28099re-Failing-to-Realize-Your-Potential-as-a-Developer.aspx)，意在让更多程序员发掘出自己的潜力，从而成为强大的程序员。
 

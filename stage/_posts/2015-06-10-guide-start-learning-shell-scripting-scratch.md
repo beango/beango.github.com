@@ -7,7 +7,7 @@ description: "Shell脚本编程初体验"
 tags: [shell]
 redirecturl: http://blog.jobbole.com/87465/
 ---
-{% include JB/setup %}
+
 
 原文出处： [Petras Liumparas](http://linoxide.com/linux-shell-script/guide-start-learning-shell-scripting-scratch/)   译文出处：[GOLinux](https://linux.cn/article-5591-1.html)   欢迎分享原创到[伯乐头条](http://top.jobbole.com/?utm_source=jobboleblog-article)
 

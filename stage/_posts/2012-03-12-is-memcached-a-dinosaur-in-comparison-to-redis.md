@@ -8,7 +8,7 @@ description: "Memcached真的过时了吗？"
 tags: [memcached, redis]
 redirecturl: http://blog.nosqlfan.com/html/3729.html
 ---
-{% include JB/setup %}
+
 
 这两年[Redis](http://blog.nosqlfan.com/tags/redis "查看 Redis 的全部文章")火得可以，Redis也常常被当作[Memcached](http://blog.nosqlfan.com/tags/memcached "查看 Memcached 的全部文章")的挑战者被提到桌面上来。关于Redis与Memcached的比较更是比比皆是。然而，Redis真的在功能、性能以及内存使用效率上都超越了Memcached吗？
 

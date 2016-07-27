@@ -7,7 +7,7 @@ title: "python爬虫"
 description: "python爬虫，使用BeautifulSoup分析HTML，并保存到mongo"
 tags: [python,BeautifulSoup,mongodb]
 ---
-{% include JB/setup %}
+
 
 module.py  
 ---------

@@ -8,7 +8,7 @@ description: "每个程序员都应该了解的“虚拟内存”知识"
 tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-virtual-memory-part3
 ---
-{% include JB/setup %}
+
 
 英文原文：[Memory part 3: Virtual Memory](http://lwn.net/Articles/253361/) 来源：[oschina](http://www.oschina.net/translate/what-every-programmer-should-know-about-virtual-memory-part3)
 

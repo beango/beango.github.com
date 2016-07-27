@@ -7,7 +7,7 @@ description: "复用Go的内存buffer"
 tags: [Goc, buffer]
 redirecturl: http://blog.jobbole.com/48969/
 ---
-{% include JB/setup %}
+
 
 之前我写过我们如何使用Lua[实现我们新的网络应用程序防火墙](http://blog.cloudflare.com/cloudflares-new-waf-compiling-to-lua)。在CloudFlare很流行的另一种语言是[Go](http://golang.org/)。在以前，我已经写过[如何使用Go](http://blog.cloudflare.com/go-at-cloudflare)来写网络服务，如[Railgun](http://blog.cloudflare.com/cacheing-the-uncacheable-cloudflares-railgun-73454)。
 

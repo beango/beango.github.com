@@ -7,7 +7,7 @@ description: "唯一性索引优化实践"
 tags: [SQL]
 redirecturl: http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html
 ---
-{% include JB/setup %}
+
 
 原文出处：[淘宝搜索技术博客](http://www.searchtb.com/2013/08/unique%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5.html)
 

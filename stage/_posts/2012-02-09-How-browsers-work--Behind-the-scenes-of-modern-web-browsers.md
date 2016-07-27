@@ -8,7 +8,7 @@ description: "前端必读：浏览器内部工作原理"
 tags: [浏览器]
 redirecturl: http://www.cnblogs.com/cnwebdeveloper/articles/2234423.html
 ---
-{% include JB/setup %}
+
 
 　　目录
 

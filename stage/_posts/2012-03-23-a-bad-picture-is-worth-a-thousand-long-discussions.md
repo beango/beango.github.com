@@ -8,7 +8,7 @@ description: "一张破图胜过长篇大论（译文：关于Windows 8的新编
 tags: [windows8]
 redirecturl: http://kb.cnblogs.com/page/136244/
 ---
-{% include JB/setup %}
+
 
 　　译者：linger(sysu大三 )
 

@@ -8,7 +8,7 @@ description: "缓存、缓存算法和缓存框架简介"
 tags: [cache, 框架]
 redirecturl: http://www.leexiang.com/cache-algorithm
 ---
-{% include JB/setup %}
+
 
 英文原文：[jtraining](http://www.jtraining.com/component/content/article/35-jtraining-blog/98.html)，译文：[Lixiang](http://www.leexiang.com/cache-algorithm)
 

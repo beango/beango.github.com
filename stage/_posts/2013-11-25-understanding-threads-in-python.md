@@ -7,7 +7,7 @@ description: "理解 Python 中的线程"
 tags: [python]
 redirecturl: https://github.com/acmerfight/insight_python/blob/master/understand_thread.md
 ---
-{% include JB/setup %}
+
 
 *郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/*
 

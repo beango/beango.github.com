@@ -7,7 +7,7 @@ description: "Python编码和Unicode"
 tags: [python]
 redirecturl: http://blog.jobbole.com/50345/
 ---
-{% include JB/setup %}
+
 
 我确定有很多关于Unicode和Python的说明，但为了方便自己的理解使用，我还是打算再写一些关于它们的东西。
 

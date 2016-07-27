@@ -7,7 +7,7 @@ description: "全面理解面向对象的 JavaScript"
 tags: [javascript]
 redirecturl: http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html
 ---
-{% include JB/setup %}
+
 
 来源：[DeveloperWorks – 曾滢著](http://www.ibm.com/developerworks/cn/web/1304_zengyz_jsoo/index.html)
 

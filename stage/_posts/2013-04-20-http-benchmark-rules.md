@@ -7,7 +7,7 @@ description: "HTTP负载测试"
 tags: [Iperf, Siege]
 redirecturl: http://www.oschina.net/translate/http_benchmark_rules
 ---
-{% include JB/setup %}
+
 
 英文原文：[ON HTTP LOAD TESTING](http://www.mnot.net/blog/2011/05/18/http_benchmark_rules) 来源：[oschina](http://www.oschina.net/translate/http_benchmark_rules)
 

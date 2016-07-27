@@ -8,7 +8,7 @@ description: "当你输入一个网址的时候，实际会发生什么?"
 tags: [浏览器]
 redirecturl: http://www.cnblogs.com/wenanry/archive/2010/02/25/1673368.html
 ---
-{% include JB/setup %}
+
 
 原文:http://igoro.com/archive/what-really-happens-when-you-navigate-to-a-url/ 
 

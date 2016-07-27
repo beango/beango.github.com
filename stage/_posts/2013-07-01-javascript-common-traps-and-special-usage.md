@@ -7,7 +7,7 @@ description: "Javascript 常见陷阱及特殊用法"
 tags: [javascript]
 redirecturl: http://www.csser.com/board/4f571b71431e7d0155000ac2
 ---
-{% include JB/setup %}
+
 
 对象使用和属性
 ----------------

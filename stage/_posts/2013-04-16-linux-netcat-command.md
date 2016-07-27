@@ -7,7 +7,7 @@ description: "Linux Netcat命令：网络工具中的瑞士军刀"
 tags: [linux]
 redirecturl: http://www.oschina.net/translate/linux-netcat-command
 ---
-{% include JB/setup %}
+
 
 英文原文：[Linux Netcat command – The swiss army knife of networking](http://mylinuxbook.com/linux-netcat-command/ "http://mylinuxbook.com/linux-netcat-command/")，编译：[oschina](http://www.oschina.net/translate/linux-netcat-command "http://www.oschina.net/translate/linux-netcat-command")
 

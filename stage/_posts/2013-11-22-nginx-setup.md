@@ -7,7 +7,7 @@ description: "Nginx 战斗准备 —— 优化指南"
 tags: [ngnix]
 redirecturl: http://www.oschina.net/translate/nginx-setup?print
 ---
-{% include JB/setup %}
+
 
 原文出处：[zachorr](http://blog.zachorr.com/nginx-setup/) 译文出处：[oschina -Garfielt, yale8848, tnjin](http://www.oschina.net/translate/nginx-setup?print)
 

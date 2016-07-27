@@ -8,7 +8,7 @@ description: "可扩展Web架构与分布式系统"
 tags: [Web架构,分布式系统]
 redirecturl: http://www.oschina.net/translate/scalable-web-architecture-and-distributed-systems
 ---
-{% include JB/setup %}
+
 
 英文原文：[Scalable Web Architecture and Distributed Systems](http://www.aosabook.org/en/distsys.html#)，翻译：[oschina](http://www.oschina.net/translate/scalable-web-architecture-and-distributed-systems)
 

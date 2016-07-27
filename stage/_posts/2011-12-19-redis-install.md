@@ -6,7 +6,7 @@ title: "CentOS6.3下Redis安装"
 description: "CentOS6.3下Redis安装"
 tags: [redis]
 ---
-{% include JB/setup %}
+
 
 **下载最新的稳定版redis**
 

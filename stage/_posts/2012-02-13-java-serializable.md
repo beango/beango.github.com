@@ -7,7 +7,7 @@ description: "理解Java对象序列化"
 tags: [java]
 redirecturl: http://www.blogjava.net/jiangshachina/archive/2012/02/13/369898.html
 ---
-{% include JB/setup %}
+
 
 **
 关于Java序列化的文章早已是汗牛充栋了，本文是对我个人过往学习，理解及应用Java序列化的一个总结。此文内容涉及Java序列化的基本原理，以及多种方法对序列化形式进行定制。在撰写本文时，既参考了Thinking in Java, Effective Java，JavaWorld，developerWorks中的相关文章和其它网络资料，也加入了自己的实践经验与理解，文、码并茂，希望对大家有所帮助。(2012.02.14最后更新)

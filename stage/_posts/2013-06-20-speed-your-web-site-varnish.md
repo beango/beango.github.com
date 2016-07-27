@@ -7,7 +7,7 @@ description: "使用 Varnish 加速你的 Web 网站"
 tags: [varnish, nginx]
 redirecturl: http://www.oschina.net/translate/speed-your-web-site-varnish
 ---
-{% include JB/setup %}
+
 
 Varnish可以有效降低web服务器的负载，提升访问速度。根据官方的说法，Varnish是一个cache型的HTTP反向代理。
 

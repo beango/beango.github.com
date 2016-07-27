@@ -8,7 +8,7 @@ description: "加速你的Python代码"
 tags: [python]
 redirecturl: http://www.oschina.net/translate/speeding-up-your-python-code
 ---
-{% include JB/setup %}
+
 
 来源：[oschina](http://www.oschina.net/translate/speeding-up-your-python-code),英文原文：[Speeding Up Your Python Code](http://maxburstein.com/blog/speeding-up-your-python-code/ "Speeding Up Your Python Code")
 

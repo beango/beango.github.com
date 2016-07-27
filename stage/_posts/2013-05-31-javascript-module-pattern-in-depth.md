@@ -7,7 +7,7 @@ description: "深入研究JavaScript的Module模式"
 tags: [javascript]
 redirecturl: http://blog.jobbole.com/40409/
 ---
-{% include JB/setup %}
+
 
 Module模式是常见的JavaScript编程模式，一般来说这种模式是很好理解的，但是依然有一些高级的用法没有得到太多的注意。在这篇文章中我会提到Module模式的基础知识和一些真正重要的话题，包括一个可能是我原创的。
 

@@ -7,7 +7,7 @@ description: "说说JSON和JSONP"
 tags: [json,jsonp]
 redirecturl: http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html
 ---
-{% include JB/setup %}
+
 
 来源：[随它去吧](http://www.cnblogs.com/dowinning/archive/2012/04/19/json-jsonp-jquery.html)
 

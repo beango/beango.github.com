@@ -7,7 +7,7 @@ description: "NoSQL数据库的分布式算法"
 tags: [nosql]
 redirecturl: http://tech2ipo.com/58058
 ---
-{% include JB/setup %}
+
 
 原文出处：[highlyscalable.wordpress.com](http://highlyscalable.wordpress.com/2012/09/18/distributed-algorithms-in-nosql-databases/)   译文出处：[juliashine](http://my.oschina.net/juliashine/blog/88173)
 

@@ -8,7 +8,7 @@ description: "编写高效的JavaScript程序"
 tags: [javascript]
 redirecturl: http://www.csdn.net/article/2012-11-20/2811887-writing-fast-memory-efficient-javascript
 ---
-{% include JB/setup %}
+
 
 **英文原文：**[Writing Fast, Memory-Efficient JavaScript][]
 

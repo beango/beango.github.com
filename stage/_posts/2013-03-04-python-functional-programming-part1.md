@@ -7,7 +7,7 @@ description: "Python中函数式编程，第一部分"
 tags: [python]
 redirecturl: http://www.oschina.net/translate/python-functional-programming-part1
 ---
-{% include JB/setup %}
+
 
 英文原文：[Charming Python: Functional programming in Python, Part 1](http://www.ibm.com/developerworks/linux/library/l-prog/index.html)，翻译：[开源中国](http://www.oschina.net/translate/python-functional-programming-part1)
 

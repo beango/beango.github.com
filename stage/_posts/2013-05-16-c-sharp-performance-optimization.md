@@ -7,7 +7,7 @@ description: "C#性能优化实践"
 tags: [.net]
 redirecturl: http://www.infoq.com/cn/articles/C-sharp-performance-optimization
 ---
-{% include JB/setup %}
+
 
 性能主要指两个方面：内存消耗和执行速度。性能优化简而言之，就是在不影响系统运行正确性的前提下，使之运行地更快，完成特定功能所需的时间更短。
 

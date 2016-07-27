@@ -8,7 +8,7 @@ description: "每个程序员都应该了解的CPU高速缓存"
 tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2
 ---
-{% include JB/setup %}
+
 
 英文原文：[Memory part 2: CPU caches](http://lwn.net/Articles/252125/) 来源：[oschina](http://www.oschina.net/translate/what-every-programmer-should-know-about-cpu-cache-part2)
 

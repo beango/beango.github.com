@@ -7,7 +7,7 @@ description: "注释驱动的 Spring cache 缓存介绍"
 tags: [java,spring,cache]
 redirecturl: http://www.ibm.com/developerworks/cn/opensource/os-cn-spring-cache/index.html
 ---
-{% include JB/setup %}
+
 
 **概述**
 

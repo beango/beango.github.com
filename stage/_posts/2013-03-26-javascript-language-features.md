@@ -8,7 +8,7 @@ description: "浅谈JavaScript的语言特性"
 tags: [javascript]
 redirecturl: http://freestyle21.cn/writings/javascript-core.html
 ---
-{% include JB/setup %}
+
 
 前言
 ----

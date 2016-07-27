@@ -7,7 +7,7 @@ description: "Java 安全模型介绍"
 tags: [java]
 redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-javasecurity/
 ---
-{% include JB/setup %}
+
 
 来源：[IBM developerworks](http://www.ibm.com/developerworks/cn/java/j-lo-javasecurity/)
 

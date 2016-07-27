@@ -7,7 +7,7 @@ description: "不可忽略的缓存重建"
 tags: [mongodb,nosql,cache]
 redirecturl: http://blog.nosqlfan.com/html/3097.html
 ---
-{% include JB/setup %}
+
 
 　　本文的主要内容来源于[MongoDB](http://blog.nosqlfan.com/tags/mongodb "查看 MongoDB 的全部文章")官方博客，由NoSQLFan补充说明，本文对传统的分布式Cache系统进行了分析，指出了其在[缓存](http://blog.nosqlfan.com/tags/%e7%bc%93%e5%ad%98 "查看 缓存 的全部文章")[重建](http://blog.nosqlfan.com/tags/%e9%87%8d%e5%bb%ba "查看 重建 的全部文章")中会对数据库产生巨大压力的问题。并分析了MongoDB的mmap方案是如何规避这一问题的。
 

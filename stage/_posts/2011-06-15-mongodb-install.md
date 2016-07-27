@@ -7,7 +7,7 @@ title: "MongoDB安装及使用"
 description: "MongoDB安装及使用"
 tags: [mongodb]
 ---
-{% include JB/setup %}
+
 
 ### 一、准备工作：
 

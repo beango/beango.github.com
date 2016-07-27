@@ -8,7 +8,7 @@ description: "Mongodb安全性初探"
 tags: [mongodb]
 redirecturl: http://www.phpweblog.net/GaRY/archive/2011/08/18/Mongodb_secuirty_anaylze.html
 ---
-{% include JB/setup %}
+
 
 Mongodb，这么火的玩意其实早就想好好研究一下了。之前一直没空仔细学学新的东西，总是感觉精力不足。这次趁着买了一本书，就零零散散地在VPS上搭建、测试、看实现代码。感觉也蛮有意思的一个数据库。虽然感觉它非常简单，尤其是看代码的时候更是感觉如此。但这不也是另一个KISS的典范么，还是简单但是实用的东西最能流行。
 

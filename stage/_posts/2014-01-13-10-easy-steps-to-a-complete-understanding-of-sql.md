@@ -7,7 +7,7 @@ description: "十步完全理解SQL"
 tags: [sql]
 redirecturl: http://blog.jobbole.com/55086/
 ---
-{% include JB/setup %}
+
 
 很多程序员视 SQL 为洪水猛兽。SQL 是一种为数不多的声明性语言，它的运行方式完全不同于我们所熟知的命令行语言、面向对象的程序语言、甚至是函数语言（尽管有些人认为 SQL 语言也是一种函数式语言）。
 

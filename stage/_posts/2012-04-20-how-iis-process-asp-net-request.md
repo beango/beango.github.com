@@ -8,7 +8,7 @@ description: "IIS是如何处理ASP.NET请求的"
 tags: [.net]
 redirecturl: http://kb.cnblogs.com/page/136274/
 ---
-{% include JB/setup %}
+
 
 　　英文原文：[Beginner’s Guide: How IIS Process ASP.NET
 Request](http://abhijitjana.net/2010/03/14/beginner%E2%80%99s-guide-how-iis-process-asp-net-request/)

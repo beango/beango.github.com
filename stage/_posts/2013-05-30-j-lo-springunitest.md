@@ -7,7 +7,7 @@ description: "使用 Spring 进行单元测试"
 tags: [java,spring]
 redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.html
 ---
-{% include JB/setup %}
+
 
 原文出处： [IBM developerworks](http://www.ibm.com/developerworks/cn/java/j-lo-springunitest/index.html)
 

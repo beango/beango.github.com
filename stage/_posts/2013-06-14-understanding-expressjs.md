@@ -7,7 +7,7 @@ description: "(译)深入理解Express.js"
 tags: [node.js]
 redirecturl: http://xvfeng.me/posts/understanding-expressjs/
 ---
-{% include JB/setup %}
+
 
 本文针对那些对[Node.js](http://nodejs.org)有一定了解的读者。假设你已经知道如何运行Node代码，使用npm安装依赖模块。但我保证，你并不需要是这方面的专家。本文针对的是Express 3.2.5版 ​​本，以介绍相关概念为主。
 

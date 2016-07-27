@@ -7,7 +7,7 @@ description: "Java 代码优化过程的实例介绍"
 tags: [java]
 redirecturl: http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.html?ca=drs-
 ---
-{% include JB/setup %}
+
 
 来源: [IBM developerworks](http://www.ibm.com/developerworks/cn/java/j-lo-codeoptimize/index.html?ca=drs-)
 

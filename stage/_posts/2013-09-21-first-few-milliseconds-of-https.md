@@ -7,7 +7,7 @@ description: "HTTPS连接的前几毫秒发生了什么"
 tags: [HTTPS]
 redirecturl: http://blog.jobbole.com/48369/
 ---
-{% include JB/setup %}
+
 
 花了数小时阅读了如潮的好评，Bob最终迫不及待为他购买的托斯卡纳全脂牛奶点击了“进行结算”，然后……
 

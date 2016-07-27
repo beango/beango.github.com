@@ -7,7 +7,7 @@ description: "编写更好的jQuery代码的建议"
 tags: [程序员]
 redirecturl: http://blog.jobbole.com/52770/
 ---
-{% include JB/setup %}
+
 
 **本文由 [伯乐在线](http://blog.jobbole.com) - [yanhaijing](http://blog.jobbole.com/author/yanhaijing/) 翻译自 [Mathew Carella](http://flippinawesome.org/2013/11/25/writing-better-jquery-code/)。欢迎加入[技术翻译小组](http://www.jobbole.com/groups/6/)。转载请参见文章末尾处的要求。**
 

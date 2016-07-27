@@ -8,7 +8,7 @@ description: "Javascript内存泄露"
 tags: [javascript,内存泄露]
 redirecturl: http://my.oschina.net/tsl0922/blog/56038
 ---
-{% include JB/setup %}
+
 
 　　英文原文：[JavaScript Memory
 Leaks](http://nesj.net/blog/2012/04/javascript-memory-leaks/)

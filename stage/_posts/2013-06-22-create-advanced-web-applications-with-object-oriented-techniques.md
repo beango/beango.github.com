@@ -7,7 +7,7 @@ description: "使用面向对象技术创建高级Web应用程序"
 tags: [javascript]
 redirecturl: http://www.oschina.net/translate/create-advanced-web-applications-with-object-oriented-techniques
 ---
-{% include JB/setup %}
+
 
 *英文原文：[Create Advanced Web Applications With Object-Oriented Techniques](http://msdn.microsoft.com/en-us/magazine/cc163419.aspx)*
 

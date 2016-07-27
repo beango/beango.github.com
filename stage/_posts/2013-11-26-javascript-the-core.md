@@ -7,7 +7,7 @@ description: "JavaScript核心"
 tags: [javascript]
 redirecturl: http://weizhifeng.net/javascript-the-core.html
 ---
-{% include JB/setup %}
+
 
 原文出处： [Dmitry Soshnikov](http://dmitrysoshnikov.com/ecmascript/javascript-the-core/)  译文出处：[JeremyWei](http://weizhifeng.net/javascript-the-core.html)
 

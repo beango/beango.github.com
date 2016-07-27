@@ -8,7 +8,7 @@ description: "MongoDB索引实战技巧"
 tags: [mongodb]
 redirecturl: http://blog.nosqlfan.com/html/3656.html
 ---
-{% include JB/setup %}
+
 
 本文内容源自[Kyle Banker](http://www.manning.com/banker/) 的[MongoDB](http://blog.nosqlfan.com/tags/mongodb "查看 MongoDB 的全部文章")
 In Action一书。主要描述了MongoDB[索引](http://blog.nosqlfan.com/tags/%e7%b4%a2%e5%bc%95 "查看 索引 的全部文章")相关的一些基础知识和使用技巧。

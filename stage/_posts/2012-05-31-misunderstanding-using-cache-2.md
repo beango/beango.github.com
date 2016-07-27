@@ -8,7 +8,7 @@ description: "使用缓存的9大误区（下）"
 tags: [cache, 集群, .net]
 redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache-2
 ---
-{% include JB/setup %}
+
 
 　　**相关文章：[使用缓存的9大误区（上）](/archives/2012/04/15/misunderstanding-using-cache.html)**
 

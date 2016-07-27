@@ -7,7 +7,7 @@ title: "MongoDB的Python接口PyMongo"
 description: "MongoDB的Python接口PyMongo"
 tags: [mongodb]
 ---
-{% include JB/setup %}
+
 
 *   创建Connection时，指定host及port参数
 

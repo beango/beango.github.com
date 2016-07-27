@@ -9,7 +9,7 @@ description: "thickbox使用"
 summary: "ThickBox是一个基于JQuery类库的扩展，它能在浏览器界面上显示非常棒的UI框，它可以显示单图片，多图片，ajax请求内容或链接内容."
 tags: [js,jquery,thickbox]
 ---
-{% include JB/setup %}
+
 
 ### 一  准备工作
 

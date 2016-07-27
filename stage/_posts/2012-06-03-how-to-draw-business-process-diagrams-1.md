@@ -7,7 +7,7 @@ description: "如何绘制业务流程图(一)"
 tags: [uml]
 redirecturl: http://heidixie.blog.sohu.com/219290540.html
 ---
-{% include JB/setup %}
+
 
 来源：[heidixie 的博客](http://heidixie.blog.sohu.com/219290540.html)
 

@@ -8,7 +8,7 @@ description: "Redis系统性介绍"
 tags: [redis]
 redirecturl: http://blog.nosqlfan.com/html/3139.html
 ---
-{% include JB/setup %}
+
 
 虽然[Redis](http://blog.nosqlfan.com/tags/redis "查看 Redis 的全部文章")已经很火了，相信还是有很多同学对Redis只是有所听闻或者了解并不全面，下面是一个比较系统的Redis介绍，对Redis的特性及各种数据类型及操作进行了介绍。是一个很不错的Redis入门教程。
 

@@ -7,7 +7,7 @@ description: "可伸缩系统的架构经验"
 tags: [架构分析]
 redirecturl: http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/
 ---
-{% include JB/setup %}
+
 
 来源：[简单文本](http://agiledon.github.com/blog/2013/02/27/scalability-system-architecture-lessons/)
 

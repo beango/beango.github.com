@@ -7,7 +7,7 @@ description: "如何只用CSS做到完全居中"
 tags: [CSS]
 redirecturl: http://blog.jobbole.com/46574/
 ---
-{% include JB/setup %}
+
 
 我们都知道 `margin:0 auto;` 的样式能让元素水平居中，而 `margin: auto;`
 却不能做到垂直居中……直到现在。但是，请注意！想让元素绝对居中，只需要声明元素高度，并且附加以下样式，就可以做到：

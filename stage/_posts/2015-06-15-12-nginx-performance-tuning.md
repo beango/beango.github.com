@@ -7,7 +7,7 @@ description: "为最佳性能调优 Nginx"
 tags: [shell]
 redirecturl: http://blog.jobbole.com/87531/
 ---
-{% include JB/setup %}
+
 
 英文出处：[dak1n1.com](http://dak1n1.com/blog/12-nginx-performance-tuning)。欢迎加入[翻译小组](http://group.jobbole.com/category/feedback/trans-team/)。
 

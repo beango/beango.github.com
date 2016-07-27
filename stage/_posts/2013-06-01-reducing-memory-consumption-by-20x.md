@@ -7,7 +7,7 @@ description: "优化技巧分享：把内存消耗降低至原来的1/20"
 tags: [java,jvm]
 redirecturl: http://blog.jobbole.com/40666/
 ---
-{% include JB/setup %}
+
 
 这是最近发生的又一起内存相关的事件了。这个案例是从一个最近的客户报告中提取出来，一个异常运行的应用在其产品中反复报告内存耗尽。
 

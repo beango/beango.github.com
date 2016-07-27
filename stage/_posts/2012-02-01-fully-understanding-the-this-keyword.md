@@ -7,7 +7,7 @@ description: "完全理解关键字this"
 tags: [javascript]
 redirecturl: http://blog.jobbole.com/12203/
 ---
-{% include JB/setup %}
+
 
 今天的教程来自天才的[Cody Lindley](http://codylindley.com/)的新书：《JavaScript启蒙教程[JavaScript Enlightenment](http://javascriptenlightenment.com/)》。他讨论了令人迷惑的关键字this，以及确定和设置this的值的方法。
 

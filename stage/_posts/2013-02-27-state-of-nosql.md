@@ -8,7 +8,7 @@ description: "NoSQL的现状"
 tags: [nosql]
 redirecturl: http://www.infoq.com/cn/articles/State-of-NoSQL
 ---
-{% include JB/setup %}
+
 
 
 译文来源：[InfoQ 张卫滨](http://www.infoq.com/cn/articles/State-of-NoSQL)

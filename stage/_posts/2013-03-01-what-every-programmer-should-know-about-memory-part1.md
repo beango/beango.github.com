@@ -8,7 +8,7 @@ description: "每个程序员都应该了解的内存知识"
 tags: [程序员]
 redirecturl: http://www.oschina.net/translate/what-every-programmer-should-know-about-memory-part1
 ---
-{% include JB/setup %}
+
 
 英文原文：[lwn.net](http://lwn.net/Articles/250967/)，翻译：[开源中国](http://www.oschina.net/translate/what-every-programmer-should-know-about-memory-part1)
 

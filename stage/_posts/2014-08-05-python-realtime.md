@@ -7,7 +7,7 @@ description: "python realtime"
 tags: [python]
 redirecturl: http://taokeqin.com/python-realtime.html
 ---
-{% include JB/setup %}
+
 
 声明
 ----

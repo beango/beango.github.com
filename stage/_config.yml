@@ -1,45 +1,38 @@
-encoding: utf-8
-markdown: kramdown
-highlighter: true
-safe: false
-#auto: true
+# Site settings
+title: HuangDing
+description: Huang Ding
+favicon: /assets/img/avatar.JPG
+baseurl:
+url: 127.0.0.1 #https://liungkejin.github.io
+rss_url:
 permalink: /archives/:year/:month/:day/:title.html
-exclude: [".gitignore", ".rvmrc", ".rbenv-version", "Rakefile", "changelog.md", "README.md"]
 
-name: 程序员 - 博客 - HuangDing
-host: 127.0.0.1 #http://uwebs.tk
-desc: dotnet, mvc, python
+# Build settings
+
+highlight: true
+#highlighter: rouge
 
 collections:
   collection:
     output: true
     permalink: /:collection/:title
 
-JB :
-    FILE_PATH : /assets/files
-    
-custom:
-    category:
-        default: 转载
-        code: 笔记
-    categories:
-      - name:  default
-        title: 转载
+timezone: Asia/Shanghai
 
-      - name:  code
-        title: 笔记
+markdown: kramdown
 
-    scrollingLoadCount: 0                          # 滚屏自动加载文章数量，“0”为关闭
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
 
-meta:
-    author:
-        name: HuangDing
-        email: 6588617@gmail.com
-        disqus: beango                              # Disqus缩略标识
-        gcse: 015845096645085761197:gh2gyye7u1m     # Google自定义搜索标识ID
-        github: beango                 # GitHub账号
-        gravatar: #1cd8c12591616d8c22aaa624f8c07834  # Gravatar头像标识
-
-    disqus: disqus.com/embed.js                     # Disqus评论的JS地址
-    gapi: http://www.google.com/jsapi               # Google API地址
-    gravatar: http://en.gravatar.com/avatar/        # Gravatar头像服务器地址
+  coderay:
+    coderay_wrap: div
+    coderay_line_numbers: inline
+    coderay_line_numbers_start: 1
+    coderay_tab_width: 4
+    coderay_bold_every: 10
+    coderay_css: style

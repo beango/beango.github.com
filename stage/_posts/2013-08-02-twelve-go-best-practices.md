@@ -7,7 +7,7 @@ description: "Go 语言 12 条最佳实践"
 tags: [go]
 redirecturl: http://blog.jobbole.com/44608/
 ---
-{% include JB/setup %}
+
 
 本文来自 Google 工程师 Francesc Campoy Flores 分享的幻灯片。内容包括：代码组织、API、并发最佳实践和一些推荐的相关资源。
 

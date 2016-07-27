@@ -7,7 +7,7 @@ description: "MongoDB Sharding 机制分析"
 tags: [mongodb]
 redirecturl: http://xiezhenye.com/2012/12/mongodb-sharding-%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90.html
 ---
-{% include JB/setup %}
+
 
 转载请注明出处：[http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html](http://xiezhenye.com/2012/12/mongodb-sharding-%e6%9c%ba%e5%88%b6%e5%88%86%e6%9e%90.html "MongoDB Sharding 机制分析")
 

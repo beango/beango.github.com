@@ -7,7 +7,7 @@ description: "程序猿的真实生活(GIF)"
 tags: [程序员]
 redirecturl: http://tech2ipo.com/58058
 ---
-{% include JB/setup %}
+
 
 程序猿是最苦逼的一群人，究竟有多苦？今天小编就用GIF图片来告诉大家程序猿的真实生活。（图片较多，请谨慎加载！）
 

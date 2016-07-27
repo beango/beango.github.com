@@ -7,7 +7,7 @@ title: "rabbitmq集群-1 介绍"
 description: "rabbitmq集群-1 介绍"
 tags: [rabbitmq]
 ---
-{% include JB/setup %}
+
 
 [http://www.rabbitmq.com/clustering.html#auto-config](http://www.rabbitmq.com/clustering.html#auto-config)  
 

@@ -8,7 +8,7 @@ description: "解密Redis持久化"
 tags: [redis]
 redirecturl: http://blog.nosqlfan.com/html/3813.html
 ---
-{% include JB/setup %}
+
 
 本文内容来源于[Redis](http://blog.nosqlfan.com/tags/redis "查看 Redis 的全部文章")作者博文，Redis作者说，他看到的所有针对Redis的讨论中，对Redis[持久化](http://blog.nosqlfan.com/tags/%e6%8c%81%e4%b9%85%e5%8c%96 "查看 持久化 的全部文章")的误解是最大的，于是他写了[一篇长文](http://antirez.com/post/redis-persistence-demystified.html)来对Redis的持久化进行了系统性的论述。文章非常长，也很值得一看，NoSQLFan将主要内容简述成本文。
 

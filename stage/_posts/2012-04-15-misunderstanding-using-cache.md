@@ -8,7 +8,7 @@ description: "使用缓存的9大误区（上）"
 tags: [缓存, .net]
 redirecturl: http://www.infoq.com/cn/articles/misunderstanding-using-cache
 ---
-{% include JB/setup %}
+
 
 　　如果说要对一个站点或者应用程序经常优化，可以说缓存的使用是最快也是效果最明显的方式。一般而言，我们会把一些常用的，或者需要花费大量的资源或时间而产生的数据缓存起来，使得后续的使用更加快速。
 

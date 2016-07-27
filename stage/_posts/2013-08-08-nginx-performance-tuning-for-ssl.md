@@ -7,7 +7,7 @@ description: "Nginx SSL性能调优"
 tags: [ngnix]
 redirecturl: http://blog.jobbole.com/44844/
 ---
-{% include JB/setup %}
+
 
 **本文由 [伯乐在线](http://blog.jobbole.com) - [路塔石](http://blog.jobbole.com/author/%e8%b7%af%e5%a1%94%e7%9f%b3/)
 翻译自 [prashant](http://techsamurais.com/?p=1384)。转载请参见文章末尾处的要求。**

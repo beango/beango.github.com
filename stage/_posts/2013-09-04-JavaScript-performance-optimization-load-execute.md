@@ -7,7 +7,7 @@ description: "JavaScript的性能优化：加载和执行"
 tags: [javascript]
 redirecturl: http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html
 ---
-{% include JB/setup %}
+
 
 原文出处：[蔡愉晟](http://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html)
 
