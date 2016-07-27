@@ -1,0 +1,36 @@
+# Author settings
+name: 黃丁
+title: 全棧工程師
+address: 中國, 廣州
+email: uwebs.tk@gmail.com
+github: beango
+gavatar: /assets/img/avatar.JPG
+workHistory:
+- work1:
+  company: 千朋財富
+  location: 中国, 廣州
+  title: 研發
+  started: 2012
+  duration: (2012.6 - now)
+  description: CRM開發；理財、期貨、現貨。
+
+educationHistory:
+- education1:
+  organization: 東華理工大學
+  degree: 学士
+  major: 信息管理與信息系統
+  started: 2001
+  duration: (2001.9 - 2005.7)
+  description: 自学 C/C++, Java, Linux, 培训并参加过 ACM 比赛
+languages:
+- language1:
+  name: 中文
+  proficiency: Native
+- language2:
+  name: English
+  proficiency: Limit
+programmingSkills:
+- C#:
+  name: DotNet/C#
+  percentage: 90%
+
