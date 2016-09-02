@@ -24,6 +24,15 @@ function filedown(urlPost, data, method)
           + inputs + '</form>').appendTo('body').submit().remove();
     }
 }
+
+// 第二种方式
+function filedown(url, filename) {
+    var contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+}
 ```
 
 後端：
@@ -48,4 +57,13 @@ public Stream ScLiu(string path)
         return obj;
     }
 }
+```
+
+调用：
+
+```js
+var urlPost = "Download";
+var data = "url=" + url + "&filename=" + FILENAME;
+var method = null;
+filedown(urlPost, data, method);
 ```

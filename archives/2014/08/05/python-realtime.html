@@ -15,12 +15,9 @@
   <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
   <link rel="stylesheet" href="/assets/css/blog.css" >
   <link rel="stylesheet" href="/assets/css/syntax.css">
-
-  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
-
-  <!-- Google fonts -->
-  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
-  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,7 +32,7 @@
         <header class="bloghead">
     <dev class="authorheader">
         <a href="/">
-            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
         </a>
         <dev class="blogtitle">
             <h1><a href="/">HuangDing</a></h1>
@@ -179,9 +176,9 @@
 
 <p>用伪代码，它会看起来像这样：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
-    data = get_more_data(request)
-    return send_response(data)
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_more_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">send_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -225,11 +222,11 @@
 
 <p>用伪代码，它看起来和同步版本完全一样：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
-    # 如果这里没有数据, greenlet 就会休眠
-    # 然后切换到其他greenlet执行
-    data = get_more_data(request)
-    return make_response(data)
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="c"># 如果这里没有数据, greenlet 就会休眠</span>
+    <span class="c"># 然后切换到其他greenlet执行</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_more_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">make_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -260,11 +257,11 @@
 
 <p>在伪代码：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
-    get_more_data(request, callback=on_data)
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">get_more_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">on_data</span><span class="p">)</span>
 
-def on_data(request):
-    send_response(request, make_response(data))
+<span class="k">def</span> <span class="nf">on_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">send_response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">make_response</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 </code></pre>
 </div>
 
@@ -295,10 +292,10 @@ def on_data(request):
 
 <p>Python生成器也可让写异步程序的程序员更快乐一点。我们还是看长轮询的例子，但这次我们基于生成器（请注意，从Python 3.3开始会允许从生成器返回值）：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
-def handle_request(request):
-    data = yield get_more_data(request)
-    return make_response(data)
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nd">@coroutine</span>
+<span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">get_more_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">make_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -308,14 +305,14 @@ def handle_request(request):
 
 <p>看下面的例子：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
-def get_mode_data(request):
-    data = yield make_db_query(request.user_id)
-    return data
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="nd">@coroutine</span>
+<span class="k">def</span> <span class="nf">get_mode_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">make_db_query</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
 
-def process_request(request):
-    data = get_more_data(request)
-    return data
+<span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_more_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
 </code></pre>
 </div>
 
@@ -376,19 +373,19 @@ def process_request(request):
 
 <p>这里是基于sockjs-tornado的简单聊天例子：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class ChatConnection(sockjs.tornado.SockJSConnection):
-    participants = set()
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ChatConnection</span><span class="p">(</span><span class="n">sockjs</span><span class="o">.</span><span class="n">tornado</span><span class="o">.</span><span class="n">SockJSConnection</span><span class="p">):</span>
+    <span class="n">participants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-    def on_open(self, info):
-        self.broadcast(self.participants, "Someone joined.")
-        self.participants.add(self)
+    <span class="k">def</span> <span class="nf">on_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="p">,</span> <span class="s">"Someone joined."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    def on_message(self, message):
-        self.broadcast(self.participants, message)
+    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
-    def on_close(self):
-        self.participants.remove(self)
-        self.broadcast(self.participants, "Someone left.")
+    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="p">,</span> <span class="s">"Someone left."</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -467,30 +464,30 @@ def process_request(request):
 
 <p>这最简单的推送broker：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class BrokerConnection(sockjs.tornado.SockJSConnection):
-    participants = set()
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BrokerConnection</span><span class="p">(</span><span class="n">sockjs</span><span class="o">.</span><span class="n">tornado</span><span class="o">.</span><span class="n">SockJSConnection</span><span class="p">):</span>
+    <span class="n">participants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-    def on_open(self, info):
-        self.participants.add(self)
+    <span class="k">def</span> <span class="nf">on_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    def on_message(self, message):
-        pass
+    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">pass</span>
 
-    def on_close(self):
-        self.participants.remove(self)
+    <span class="k">def</span> <span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">participants</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    @classmethod
-    def pubsub(cls, data):
-        msg_type, msg_chan, msg = data
-        if msg_type == 'message':
-            for c in cls.clients:
-                c.send(msg)
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">pubsub</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">msg_type</span><span class="p">,</span> <span class="n">msg_chan</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="n">msg_type</span> <span class="o">==</span> <span class="s">'message'</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">clients</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-if __name__ == '__main__':
-    # .. initialize tornado
-    # .. connect to redis
-    # .. subscribe to key
-    rclient.subscribe(v.key, BrokerConnection.pubsub)
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="c"># .. initialize tornado</span>
+    <span class="c"># .. connect to redis</span>
+    <span class="c"># .. subscribe to key</span>
+    <span class="n">rclient</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">BrokerConnection</span><span class="o">.</span><span class="n">pubsub</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -522,7 +519,7 @@ if __name__ == '__main__':
 
 <p>认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth"</span><span class="p">,</span><span class="w"> </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[encrypted-token-in-base64]"</span><span class="p">}</span><span class="w">
+<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth"</span><span class="p">,</span><span class="w"> </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[encrypted-token-in-base64]"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 </div>
 
@@ -540,35 +537,35 @@ if __name__ == '__main__':
 
 <p>Connection类看起来像这个样子（部分）：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class GameConnection(SockJSConnection):
-    def on_open(self, info):
-        self.authenticated = False
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">GameConnection</span><span class="p">(</span><span class="n">SockJSConnection</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticated</span> <span class="o">=</span> <span class="bp">False</span>
 
-    def on_message(self, data):
-        msg = json.loads(data)
-        msg_type = msg['msg']
+    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">msg_type</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s">'msg'</span><span class="p">]</span>
 
-        if not self.authenticated and msg_type != 'auth':
-            self.send_error('authentication required')
-            return
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">authenticated</span> <span class="ow">and</span> <span class="n">msg_type</span> <span class="o">!=</span> <span class="s">'auth'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_error</span><span class="p">(</span><span class="s">'authentication required'</span><span class="p">)</span>
+            <span class="k">return</span>
 
-        if msg_type == 'auth':
-            self.handle_auth(msg)
-            return
-        elif msg_type == 'join_room':
-            # ... other handlers
-            pass
+        <span class="k">if</span> <span class="n">msg_type</span> <span class="o">==</span> <span class="s">'auth'</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_auth</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="n">msg_type</span> <span class="o">==</span> <span class="s">'join_room'</span><span class="p">:</span>
+            <span class="c"># ... other handlers</span>
+            <span class="k">pass</span>
 
-    def handle_auth(self, msg):
-        user_id = decrypt_token(msg['token'])
-        if user_id is None:
-            self.send_error('invalid token')
-            return
-        self.authenticated = True
-        self.send_room_list()
+    <span class="k">def</span> <span class="nf">handle_auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">decrypt_token</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s">'token'</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_error</span><span class="p">(</span><span class="s">'invalid token'</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticated</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_room_list</span><span class="p">()</span>
 
-    def send_error(self, text):
-        self.send(json.dumps({'msg': 'error', 'text': text}))
+    <span class="k">def</span> <span class="nf">send_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s">'msg'</span><span class="p">:</span> <span class="s">'error'</span><span class="p">,</span> <span class="s">'text'</span><span class="p">:</span> <span class="n">text</span><span class="p">}))</span>
 </code></pre>
 </div>
 
@@ -700,11 +697,11 @@ if __name__ == '__main__':
 
             <footer class="article-footer">
     <div class="authorimage">
-        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
     </div>
     <section class="author">
         <h4><a href="/about.html">黃丁</a></h4>
-        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
     </section>
 </footer>
 

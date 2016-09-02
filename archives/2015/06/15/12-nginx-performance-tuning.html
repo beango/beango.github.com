@@ -15,12 +15,9 @@
   <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
   <link rel="stylesheet" href="/assets/css/blog.css" >
   <link rel="stylesheet" href="/assets/css/syntax.css">
-
-  <link rel="icon" type="image/png" href="/assets/img/avatar.JPG">
-
-  <!-- Google fonts -->
-  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300' type='text/css'>
-  <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Source+Sans+Pro' type='text/css'>
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,7 +32,7 @@
         <header class="bloghead">
     <dev class="authorheader">
         <a href="/">
-            <img alt="My Avatar" src="/assets/img/avatar.JPG"/>
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
         </a>
         <dev class="blogtitle">
             <h1><a href="/">HuangDing</a></h1>
@@ -80,108 +77,106 @@
 
 <p>从<a href="http://dak1n1.com/blog/12-nginx-performance-tuning/blog/3-getting-more-from-yum-with-rpmforge-and-epel-repos">EPEL</a> 源安装 Nginx：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install nginx
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nv">nginx</span>
 </code></pre>
 </div>
 
 <p>备份配置文件，然后根据你的需要进行配置：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
-vim /etc/nginx/nginx.conf
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">cp</span> <span class="sr">/etc/</span><span class="nv">nginx</span><span class="sr">/nginx.conf /</span><span class="nv">etc</span><span class="sr">/nginx/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">conf</span><span class="o">.</span><span class="nv">orig</span>
+<span class="nv">vim</span> <span class="sr">/etc/</span><span class="nv">nginx</span><span class="o">/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">conf</span>
 </code></pre>
 </div>
 
-<p></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code># This number should be, at maximum, the number of CPU cores on your system.
-# (since nginx doesn't benefit from more than one worker per CPU.)
-# 这里的数值不能超过 CPU 的总核数，因为在单个核上部署超过 1 个 Nginx 服务进程并不起到提高性能的作用。
-worker_processes 24;
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># This number should be, at maximum, the number of CPU cores on your system.</span>
+<span class="c1"># (since nginx doesn't benefit from more than one worker per CPU.)</span>
+<span class="c1"># 这里的数值不能超过 CPU 的总核数，因为在单个核上部署超过 1 个 Nginx 服务进程并不起到提高性能的作用。</span>
+<span class="nv">worker_processes</span> <span class="mi">24</span><span class="p">;</span>
  
-# Number of file descriptors used for Nginx. This is set in the OS with 'ulimit -n 200000'
-# or using /etc/security/limits.conf
-# Nginx 最大可用文件描述符数量，同时需要配置操作系统的 "ulimit -n 200000"，或者在 /etc/security/limits.conf 中配置。 
-worker_rlimit_nofile 200000;
+<span class="c1"># Number of file descriptors used for Nginx. This is set in the OS with 'ulimit -n 200000'</span>
+<span class="c1"># or using /etc/security/limits.conf</span>
+<span class="c1"># Nginx 最大可用文件描述符数量，同时需要配置操作系统的 "ulimit -n 200000"，或者在 /etc/security/limits.conf 中配置。 </span>
+<span class="nv">worker_rlimit_nofile</span> <span class="mi">200000</span><span class="p">;</span>
  
-# only log critical errors
-# 只记录 critical 级别的错误日志
-error_log /var/log/nginx/error.log crit
+<span class="c1"># only log critical errors</span>
+<span class="c1"># 只记录 critical 级别的错误日志</span>
+<span class="nv">error_log</span> <span class="sr">/var/</span><span class="nb">log</span><span class="sr">/nginx/</span><span class="nv">error</span><span class="o">.</span><span class="nb">log</span> <span class="nv">crit</span>
  
-# Determines how many clients will be served by each worker process.
-# (Max clients = worker_connections * worker_processes)
-# "Max clients" is also limited by the number of socket connections available on the system (~64k)
-# 配置单个 Nginx 单个进程可服务的客户端数量，（最大值客户端数 = 单进程连接数 * 进程数 ）
-# 最大客户端数同时也受操作系统 socket 连接数的影响（最大 64K ）
-worker_connections 4000;
+<span class="c1"># Determines how many clients will be served by each worker process.</span>
+<span class="c1"># (Max clients = worker_connections * worker_processes)</span>
+<span class="c1"># "Max clients" is also limited by the number of socket connections available on the system (~64k)</span>
+<span class="c1"># 配置单个 Nginx 单个进程可服务的客户端数量，（最大值客户端数 = 单进程连接数 * 进程数 ）</span>
+<span class="c1"># 最大客户端数同时也受操作系统 socket 连接数的影响（最大 64K ）</span>
+<span class="nv">worker_connections</span> <span class="mi">4000</span><span class="p">;</span>
  
-# essential for linux, optmized to serve many clients with each thread
-# Linux 关键配置，允许单个线程处理多个客户端请求。
-use epoll;
+<span class="c1"># essential for linux, optmized to serve many clients with each thread</span>
+<span class="c1"># Linux 关键配置，允许单个线程处理多个客户端请求。</span>
+<span class="k">use</span> <span class="nv">epoll</span><span class="p">;</span>
  
-# Accept as many connections as possible, after nginx gets notification about a new connection.
-# May flood worker_connections, if that option is set too low.
-# 允许尽可能地处理更多的连接数，如果 worker_connections 配置太低，会产生大量的无效连接请求。
-multi_accept on;
+<span class="c1"># Accept as many connections as possible, after nginx gets notification about a new connection.</span>
+<span class="c1"># May flood worker_connections, if that option is set too low.</span>
+<span class="c1"># 允许尽可能地处理更多的连接数，如果 worker_connections 配置太低，会产生大量的无效连接请求。</span>
+<span class="nv">multi_accept</span> <span class="nv">on</span><span class="p">;</span>
  
-# Caches information about open FDs, freqently accessed files.
-# Changing this setting, in my environment, brought performance up from 560k req/sec, to 904k req/sec.
-# I recommend using some varient of these options, though not the specific values listed below.
-# 缓存高频操作文件的FDs（文件描述符/文件句柄）
-# 在我的设备环境中，通过修改以下配置，性能从 560k 请求/秒 提升到 904k 请求/秒。
-# 我建议你对以下配置尝试不同的组合，而不是直接使用这几个数据。
-open_file_cache max=200000 inactive=20s;
-open_file_cache_valid 30s;
-open_file_cache_min_uses 2;
-open_file_cache_errors on;
+<span class="c1"># Caches information about open FDs, freqently accessed files.</span>
+<span class="c1"># Changing this setting, in my environment, brought performance up from 560k req/sec, to 904k req/sec.</span>
+<span class="c1"># I recommend using some varient of these options, though not the specific values listed below.</span>
+<span class="c1"># 缓存高频操作文件的FDs（文件描述符/文件句柄）</span>
+<span class="c1"># 在我的设备环境中，通过修改以下配置，性能从 560k 请求/秒 提升到 904k 请求/秒。</span>
+<span class="c1"># 我建议你对以下配置尝试不同的组合，而不是直接使用这几个数据。</span>
+<span class="nv">open_file_cache</span> <span class="nv">max</span><span class="o">=</span><span class="mi">200000</span> <span class="nv">inactive</span><span class="o">=</span><span class="mi">20</span><span class="nv">s</span><span class="p">;</span>
+<span class="nv">open_file_cache_valid</span> <span class="mi">30</span><span class="nv">s</span><span class="p">;</span>
+<span class="nv">open_file_cache_min_uses</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nv">open_file_cache_errors</span> <span class="nv">on</span><span class="p">;</span>
  
-# Buffer log writes to speed up IO, or disable them altogether
-# 将日志写入高速 IO 存储设备，或者直接关闭日志。
-# access_log /var/log/nginx/access.log main buffer=16k;
-access_log off;
+<span class="c1"># Buffer log writes to speed up IO, or disable them altogether</span>
+<span class="c1"># 将日志写入高速 IO 存储设备，或者直接关闭日志。</span>
+<span class="c1"># access_log /var/log/nginx/access.log main buffer=16k;</span>
+<span class="nv">access_log</span> <span class="nv">off</span><span class="p">;</span>
  
-# Sendfile copies data between one FD and other from within the kernel.
-# More efficient than read() + write(), since the requires transferring data to and from the user space.
-# 开启 sendfile 选项，使用内核的 FD 文件传输功能，这个比在用户态用 read() + write() 的方式更加高效。
-sendfile on;
+<span class="c1"># Sendfile copies data between one FD and other from within the kernel.</span>
+<span class="c1"># More efficient than read() + write(), since the requires transferring data to and from the user space.</span>
+<span class="c1"># 开启 sendfile 选项，使用内核的 FD 文件传输功能，这个比在用户态用 read() + write() 的方式更加高效。</span>
+<span class="nv">sendfile</span> <span class="nv">on</span><span class="p">;</span>
  
-# Tcp_nopush causes nginx to attempt to send its HTTP response head in one packet,
-# instead of using partial frames. This is useful for prepending headers before calling sendfile,
-# or for throughput optimization.
-# 打开 tcp_nopush 选项，Nginux 允许将 HTTP 应答首部与数据内容在同一个报文中发出。
-# 这个选项使服务器在 sendfile 时可以提前准备 HTTP 首部，能够达到优化吞吐的效果。
-tcp_nopush on;
+<span class="c1"># Tcp_nopush causes nginx to attempt to send its HTTP response head in one packet,</span>
+<span class="c1"># instead of using partial frames. This is useful for prepending headers before calling sendfile,</span>
+<span class="c1"># or for throughput optimization.</span>
+<span class="c1"># 打开 tcp_nopush 选项，Nginux 允许将 HTTP 应答首部与数据内容在同一个报文中发出。</span>
+<span class="c1"># 这个选项使服务器在 sendfile 时可以提前准备 HTTP 首部，能够达到优化吞吐的效果。</span>
+<span class="nv">tcp_nopush</span> <span class="nv">on</span><span class="p">;</span>
  
-# don't buffer data-sends (disable Nagle algorithm). Good for sending frequent small bursts of data in real time.
-# 不要缓存 data-sends （关闭 Nagle 算法），这个能够提高高频发送小数据报文的实时性。
-tcp_nodelay on;
+<span class="c1"># don't buffer data-sends (disable Nagle algorithm). Good for sending frequent small bursts of data in real time.</span>
+<span class="c1"># 不要缓存 data-sends （关闭 Nagle 算法），这个能够提高高频发送小数据报文的实时性。</span>
+<span class="nv">tcp_nodelay</span> <span class="nv">on</span><span class="p">;</span>
  
-# Timeout for keep-alive connections. Server will close connections after this time.
-# 配置连接 keep-alive 超时时间，服务器将在超时之后关闭相应的连接。
-keepalive_timeout 30;
+<span class="c1"># Timeout for keep-alive connections. Server will close connections after this time.</span>
+<span class="c1"># 配置连接 keep-alive 超时时间，服务器将在超时之后关闭相应的连接。</span>
+<span class="nv">keepalive_timeout</span> <span class="mi">30</span><span class="p">;</span>
  
-# Number of requests a client can make over the keep-alive connection. This is set high for testing.
-# 单个客户端在 keep-alive 连接上可以发送的请求数量，在测试环境中，需要配置个比较大的值。
-keepalive_requests 100000;
+<span class="c1"># Number of requests a client can make over the keep-alive connection. This is set high for testing.</span>
+<span class="c1"># 单个客户端在 keep-alive 连接上可以发送的请求数量，在测试环境中，需要配置个比较大的值。</span>
+<span class="nv">keepalive_requests</span> <span class="mi">100000</span><span class="p">;</span>
  
-# allow the server to close the connection after a client stops responding. Frees up socket-associated memory.
-# 允许服务器在客户端停止发送应答之后关闭连接，以便释放连接相应的 socket 内存开销。
-reset_timedout_connection on;
+<span class="c1"># allow the server to close the connection after a client stops responding. Frees up socket-associated memory.</span>
+<span class="c1"># 允许服务器在客户端停止发送应答之后关闭连接，以便释放连接相应的 socket 内存开销。</span>
+<span class="nv">reset_timedout_connection</span> <span class="nv">on</span><span class="p">;</span>
  
-# send the client a "request timed out" if the body is not loaded by this time. Default 60.
-# 配置客户端数据请求超时时间，默认是 60 秒。
-client_body_timeout 10;
+<span class="c1"># send the client a "request timed out" if the body is not loaded by this time. Default 60.</span>
+<span class="c1"># 配置客户端数据请求超时时间，默认是 60 秒。</span>
+<span class="nv">client_body_timeout</span> <span class="mi">10</span><span class="p">;</span>
  
-# If the client stops reading data, free up the stale client connection after this much time. Default 60.
-# 客户端数据读超时配置，客户端停止读取数据，超时时间后断开相应连接，默认是 60 秒。
-send_timeout 2;
+<span class="c1"># If the client stops reading data, free up the stale client connection after this much time. Default 60.</span>
+<span class="c1"># 客户端数据读超时配置，客户端停止读取数据，超时时间后断开相应连接，默认是 60 秒。</span>
+<span class="nv">send_timeout</span> <span class="mi">2</span><span class="p">;</span>
  
-# Compression. Reduces the amount of data that needs to be transferred over the network
-# 压缩参数配置，减少在网络上所传输的数据量。
-gzip on;
-gzip_min_length 10240;
-gzip_proxied expired no-cache no-store private auth;
-gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
-gzip_disable "MSIE [1-6].";
+<span class="c1"># Compression. Reduces the amount of data that needs to be transferred over the network</span>
+<span class="c1"># 压缩参数配置，减少在网络上所传输的数据量。</span>
+<span class="nv">gzip</span> <span class="nv">on</span><span class="p">;</span>
+<span class="nv">gzip_min_length</span> <span class="mi">10240</span><span class="p">;</span>
+<span class="nv">gzip_proxied</span> <span class="nv">expired</span> <span class="nb">no</span><span class="o">-</span><span class="nv">cache</span> <span class="nb">no</span><span class="o">-</span><span class="nv">store</span> <span class="nv">private</span> <span class="nv">auth</span><span class="p">;</span>
+<span class="nv">gzip_types</span> <span class="nv">text</span><span class="sr">/plain text/css</span> <span class="nv">text</span><span class="sr">/xml text/</span><span class="nv">javascript</span> <span class="nv">application</span><span class="sr">/x-javascript application/xm</span><span class="nv">l</span><span class="p">;</span>
+<span class="nv">gzip_disable</span> <span class="s">"MSIE [1-6]."</span><span class="p">;</span>
 </code></pre>
 </div>
 
@@ -194,9 +189,9 @@ chkconfig nginx on
 
 <p>配置 Tsung 并启动测试，测试差不多 10 分钟左右就能测试到服务器的峰值能力，具体的时间与你的 Tsung 配置相关。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>[root@loadnode1 ~] vim ~/.tsung/tsung.xml
-    &lt;server host="YOURWEBSERVER" port="80" type="tcp"&gt;;
-tsung start
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="nv">root@loadnode1</span> <span class="o">~</span><span class="p">]</span> <span class="nv">vim</span> <span class="o">~</span><span class="sr">/.tsung/</span><span class="nv">tsung</span><span class="o">.</span><span class="nv">xml</span>
+    <span class="o">&lt;</span><span class="nv">server</span> <span class="nv">host</span><span class="o">=</span><span class="s">"YOURWEBSERVER"</span> <span class="nv">port</span><span class="o">=</span><span class="s">"80"</span> <span class="nv">type</span><span class="o">=</span><span class="s">"tcp"</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nv">tsung</span> <span class="nv">start</span>
 </code></pre>
 </div>
 
@@ -212,47 +207,42 @@ tsung start
 
 <p>下面的配置项，我建议每次只修订其中一项，之后用网络性能测试工具 netperf、iperf 或是用我类似的测试脚本<a href="https://github.com/dak1n1/cluster-netbench/blob/master/netbench.pl">cluster-netbench.pl</a>对服务器进行多次测试。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install netperf iperf
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">yum</span> <span class="o">-</span><span class="nv">y</span> <span class="nv">install</span> <span class="nv">netperf</span> <span class="nv">iperf</span>
 </code></pre>
 </div>
 
-<p></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>vim /etc/sysctl.conf
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">vim</span> <span class="sr">/etc/s</span><span class="nv">ysctl</span><span class="o">.</span><span class="nv">conf</span>
 </code></pre>
 </div>
 
-<p></p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code># Increase system IP port limits to allow for more connections
-# 调高系统的 IP 以及端口数据限制，从可以接受更多的连接
-net.ipv4.ip_local_port_range = 2000 65000
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># Increase system IP port limits to allow for more connections</span>
+<span class="c1"># 调高系统的 IP 以及端口数据限制，从可以接受更多的连接</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">ip_local_port_range</span> <span class="o">=</span> <span class="mi">2000</span> <span class="mi">65000</span>
  
-net.ipv4.tcp_window_scaling = 1
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_window_scaling</span> <span class="o">=</span> <span class="mi">1</span>
  
-# number of packets to keep in backlog before the kernel starts dropping them
-# 设置协议栈可以缓存的报文数阀值，超过阀值的报文将被内核丢弃
-net.ipv4.tcp_max_syn_backlog = 3240000
+<span class="c1"># number of packets to keep in backlog before the kernel starts dropping them</span>
+<span class="c1"># 设置协议栈可以缓存的报文数阀值，超过阀值的报文将被内核丢弃</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_max_syn_backlog</span> <span class="o">=</span> <span class="mi">3240000</span>
  
-# increase socket listen backlog
-# 调高 socket 侦听数阀值
-net.core.somaxconn = 3240000
-net.ipv4.tcp_max_tw_buckets = 1440000
+<span class="c1"># increase socket listen backlog</span>
+<span class="c1"># 调高 socket 侦听数阀值</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">core</span><span class="o">.</span><span class="nv">somaxconn</span> <span class="o">=</span> <span class="mi">3240000</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_max_tw_buckets</span> <span class="o">=</span> <span class="mi">1440000</span>
  
-# Increase TCP buffer sizes
-# 调大 TCP 存储大小
-net.core.rmem_default = 8388608
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
-net.ipv4.tcp_rmem = 4096 87380 16777216
-net.ipv4.tcp_wmem = 4096 65536 16777216
-net.ipv4.tcp_congestion_control = cubic
+<span class="c1"># Increase TCP buffer sizes</span>
+<span class="c1"># 调大 TCP 存储大小</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">core</span><span class="o">.</span><span class="nv">rmem_default</span> <span class="o">=</span> <span class="mi">8388608</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">core</span><span class="o">.</span><span class="nv">rmem_max</span> <span class="o">=</span> <span class="mi">16777216</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">core</span><span class="o">.</span><span class="nv">wmem_max</span> <span class="o">=</span> <span class="mi">16777216</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_rmem</span> <span class="o">=</span> <span class="mi">4096</span> <span class="mi">87380</span> <span class="mi">16777216</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_wmem</span> <span class="o">=</span> <span class="mi">4096</span> <span class="mi">65536</span> <span class="mi">16777216</span>
+<span class="nv">net</span><span class="o">.</span><span class="nv">ipv4</span><span class="o">.</span><span class="nv">tcp_congestion_control</span> <span class="o">=</span> <span class="nv">cubic</span>
 </code></pre>
 </div>
-
 <p>每次修订配置之后都需要执行以下命令使之生效.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sysctl -p /etc/sysctl.conf
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">sysctl</span> <span class="o">-</span><span class="nv">p</span> <span class="sr">/etc/s</span><span class="nv">ysctl</span><span class="o">.</span><span class="nv">conf</span>
 </code></pre>
 </div>
 
@@ -260,11 +250,11 @@ net.ipv4.tcp_congestion_control = cubic
 
             <footer class="article-footer">
     <div class="authorimage">
-        <img src="/assets/img/avatar.JPG" alt="My Avatar" class="img-circle">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
     </div>
     <section class="author">
         <h4><a href="/about.html">黃丁</a></h4>
-        <a href="mailto:uwebs.tk@gmail.com">uwebs.tk@gmail.com</a>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
     </section>
 </footer>
 

@@ -121,9 +121,11 @@ Polyfill库
 
 用伪代码，它会看起来像这样：
 
-    def handle_request(request):
-        data = get_more_data(request)
-        return send_response(data)
+```python
+def handle_request(request):
+    data = get_more_data(request)
+    return send_response(data)
+```
 
 如果get\_more\_data阻塞了，那整个服务器就会被阻塞，不能处理请求了。
 
@@ -160,11 +162,13 @@ Greenlet的实现是从 [Stackless Python](http://www.stackless.com/)向后移�
 
 用伪代码，它看起来和同步版本完全一样：
 
-    def handle_request(request):
-        # 如果这里没有数据, greenlet 就会休眠
-        # 然后切换到其他greenlet执行
-        data = get_more_data(request)
-        return make_response(data)
+```python
+def handle_request(request):
+    # 如果这里没有数据, greenlet 就会休眠
+    # 然后切换到其他greenlet执行
+    data = get_more_data(request)
+    return make_response(data)
+```
 
 为什么greenlets很重要？
 
@@ -192,11 +196,13 @@ Greenlet试图通过把一部分栈数据复制到堆，然后复制回来的方
 
 在伪代码：
 
-    def handle_request(request):
-        get_more_data(request, callback=on_data)
+```python
+def handle_request(request):
+    get_more_data(request, callback=on_data)
 
-    def on_data(request):
-        send_response(request, make_response(data))
+def on_data(request):
+    send_response(request, make_response(data))
+```
 
 正如你看到的，工作流是相似的，但代码结构有所不同。
 
@@ -223,10 +229,12 @@ Generators
 
 Python生成器也可让写异步程序的程序员更快乐一点。我们还是看长轮询的例子，但这次我们基于生成器（请注意，从Python 3.3开始会允许从生成器返回值）：
 
-    @coroutine
-    def handle_request(request):
-        data = yield get_more_data(request)
-        return make_response(data)
+```python
+@coroutine
+def handle_request(request):
+    data = yield get_more_data(request)
+    return make_response(data)
+```
 
 正如你可以看到，生成器允许编写的异步代码有点像同步方式。查看 [PEP 342](http://www.python.org/dev/peps/pep-0342/) 获取的更多信息。
 
@@ -234,14 +242,16 @@ Python生成器也可让写异步程序的程序员更快乐一点。我们还�
 
 看下面的例子：
 
-    @coroutine
-    def get_mode_data(request):
-        data = yield make_db_query(request.user_id)
-        return data
+```python
+@coroutine
+def get_mode_data(request):
+    data = yield make_db_query(request.user_id)
+    return data
 
-    def process_request(request):
-        data = get_more_data(request)
-        return data
+def process_request(request):
+    data = get_more_data(request)
+    return data
+```
 
 这行代码不会得到预期的效果，在python调用生成器函数返回的生成器器对象不包含执行的内容。在这种情况下，process\_request也应该变为为异步用coroutine装饰器封装并且应该从get\_more\_data产生。另一种方法 - 使用框架功能运行异步函数（如通过回调或Future回调）的能力。
 
@@ -301,19 +311,21 @@ SockJS负责选择客户端和服务器之间最佳的可用的传输方式，�
 
 这里是基于sockjs-tornado的简单聊天例子：
 
-    class ChatConnection(sockjs.tornado.SockJSConnection):
-        participants = set()
+```python
+class ChatConnection(sockjs.tornado.SockJSConnection):
+    participants = set()
 
-        def on_open(self, info):
-            self.broadcast(self.participants, "Someone joined.")
-            self.participants.add(self)
+    def on_open(self, info):
+        self.broadcast(self.participants, "Someone joined.")
+        self.participants.add(self)
 
-        def on_message(self, message):
-            self.broadcast(self.participants, message)
+    def on_message(self, message):
+        self.broadcast(self.participants, message)
 
-        def on_close(self):
-            self.participants.remove(self)
-            self.broadcast(self.participants, "Someone left.")
+    def on_close(self):
+        self.participants.remove(self)
+        self.broadcast(self.participants, "Someone left.")
+```
 
 为了举例，聊天不会有任何的内部协议或认证 - 它只是广播消息发送给所有的参与者。
 
@@ -390,30 +402,32 @@ Broker接受从Flask应用发来的消息，并将其转发到已连接的客户
 
 这最简单的推送broker：
 
-    class BrokerConnection(sockjs.tornado.SockJSConnection):
-        participants = set()
+```python
+class BrokerConnection(sockjs.tornado.SockJSConnection):
+    participants = set()
 
-        def on_open(self, info):
-            self.participants.add(self)
+    def on_open(self, info):
+        self.participants.add(self)
 
-        def on_message(self, message):
-            pass
+    def on_message(self, message):
+        pass
 
-        def on_close(self):
-            self.participants.remove(self)
+    def on_close(self):
+        self.participants.remove(self)
 
-        @classmethod
-        def pubsub(cls, data):
-            msg_type, msg_chan, msg = data
-            if msg_type == 'message':
-                for c in cls.clients:
-                    c.send(msg)
+    @classmethod
+    def pubsub(cls, data):
+        msg_type, msg_chan, msg = data
+        if msg_type == 'message':
+            for c in cls.clients:
+                c.send(msg)
 
-    if __name__ == '__main__':
-        # .. initialize tornado
-        # .. connect to redis
-        # .. subscribe to key
-        rclient.subscribe(v.key, BrokerConnection.pubsub)
+if __name__ == '__main__':
+    # .. initialize tornado
+    # .. connect to redis
+    # .. subscribe to key
+    rclient.subscribe(v.key, BrokerConnection.pubsub)
+```
 
 完整的 [例子在这里](https://gist.github.com/mrjoes/3284402) 。
 
@@ -442,13 +456,17 @@ broker是无状态的 - 他们真的不存储任何特定于应用程序的状�
 
 认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：
 
-    {"msg": "auth", "token": "[encrypted-token-in-base64]"}
+```json
+{"msg": "auth", "token": "[encrypted-token-in-base64]"}
+```
 
 有效载荷是加密过的令牌，由Flask应用所产生。有一种方法来生成令牌：获得当前用户ID，用时间戳和一些使用共享密钥加密对称算法（如3DES或AES）随机添加一些东西。Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询得到任何有关用户的必要的信息。
 
 房间列表可以类似表示为：
 
-    {"msg": "room_list", "rooms": [{"name": "room1"}, {"name": "room2"}]}
+```
+{"msg": "room_list", "rooms": [{"name": "room1"}, {"name": "room2"}]}
+```
 
 依此类推。
 
@@ -456,35 +474,37 @@ broker是无状态的 - 他们真的不存储任何特定于应用程序的状�
 
 Connection类看起来像这个样子（部分）：
 
-    class GameConnection(SockJSConnection):
-        def on_open(self, info):
-            self.authenticated = False
+```python
+class GameConnection(SockJSConnection):
+    def on_open(self, info):
+        self.authenticated = False
 
-        def on_message(self, data):
-            msg = json.loads(data)
-            msg_type = msg['msg']
+    def on_message(self, data):
+        msg = json.loads(data)
+        msg_type = msg['msg']
 
-            if not self.authenticated and msg_type != 'auth':
-                self.send_error('authentication required')
-                return
+        if not self.authenticated and msg_type != 'auth':
+            self.send_error('authentication required')
+            return
 
-            if msg_type == 'auth':
-                self.handle_auth(msg)
-                return
-            elif msg_type == 'join_room':
-                # ... other handlers
-                pass
+        if msg_type == 'auth':
+            self.handle_auth(msg)
+            return
+        elif msg_type == 'join_room':
+            # ... other handlers
+            pass
 
-        def handle_auth(self, msg):
-            user_id = decrypt_token(msg['token'])
-            if user_id is None:
-                self.send_error('invalid token')
-                return
-            self.authenticated = True
-            self.send_room_list()
+    def handle_auth(self, msg):
+        user_id = decrypt_token(msg['token'])
+        if user_id is None:
+            self.send_error('invalid token')
+            return
+        self.authenticated = True
+        self.send_room_list()
 
-        def send_error(self, text):
-            self.send(json.dumps({'msg': 'error', 'text': text}))
+    def send_error(self, text):
+        self.send(json.dumps({'msg': 'error', 'text': text}))
+```
 
 房间可以存储在一个字典里，其中key是房间ID，value是房间对象。
 
