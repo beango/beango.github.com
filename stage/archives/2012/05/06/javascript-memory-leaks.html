@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Javascript内存泄露</title>
+  <meta name="description" content="　　英文原文：JavaScript MemoryLeaks">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/05/06/javascript-memory-leaks.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Javascript内存泄露</h1>
+                <p class="article-time">
+                    发表于 <span>2012-05-06</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://my.oschina.net/tsl0922/blog/56038' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>　　英文原文：<a href="http://nesj.net/blog/2012/04/javascript-memory-leaks/">JavaScript Memory
+Leaks</a></p>
+
+<p>　　<strong>1. 什么是内存泄露？</strong></p>
+
+<p>　　内存泄露是指分配给应用的内存不能被重新分配，即使在内存已经不被使用的时候。正常情况下，垃圾回收器在
+DOM 元素和 event 处理器不被引用或访问的时候回收它们。但是，IE
+的早些版本（IE7和之前）中内存泄露是很容易出现的，因为内存管理器不能正确理解
+Javascript 生命周期而且在周期被打破(可以通过赋值为 null
+实现)前不会回收内存。</p>
+
+<p>　　<strong>2. 为什么你需要注意它？</strong></p>
+
+<p>　　在大型 Web
+应用程序中内存泄露是一种常见的无意的编程错误。内存泄露会降低 Web
+应用程序的性能，直到浪费的内存超过了系统所能分配的，应用程序将不能使用。作为一位
+Web 开发者，开发一个满足功能要求的应用程序只是第一步，性能要求和 Web
+应用程序的成功是同样重要的，更何况它可能会导致应用程序错误或浏览器崩溃。</p>
+
+<p>　　<strong>3. Javascript 中出现内存泄露的主要原因是什么？</strong></p>
+
+<p>　　1) 循环引用</p>
+
+<p>　　一个很简单的例子：一个 DOM 对象被一个 Javascript
+对象引用，与此同时又引用同一个或其它的 Javascript 对象，这个 DOM
+对象可能会引发内存泄露。这个 DOM
+对象的引用将不会在脚本停止的时候被垃圾回收器回收。要想破坏循环引用，引用
+DOM 元素的对象或 DOM 对象的引用需要被赋值为 null。</p>
+
+<p>　　2) Javascript 闭包</p>
+
+<p>　　因为 Javascript 范围的限制，许多实现依赖 Javascript
+闭包。如果你想了解更多闭包方面的问题，请查看我的前面的文章 <a href="http://nesj.net/blog/2012/03/javascript-scope-and-closure/">JavaScript
+Scope and
+Closure</a> 。</p>
+
+<p>　　闭包可以导致内存泄露是因为内部方法保持一个对外部方法变量的引用，所以尽管方法返回了，内部方法还可以继续访问在外部方法中定义的私有变量。对
+Javascript 程序员来说最好的做法是在页面重载前断开所有的事件处理器。</p>
+
+<p>　　3) DOM 插入顺序</p>
+
+<p>　　当 2 个不同范围的
+DOM 对象附加到一起的时候，一个临时的对象会被创建。这个 DOM 对象改变范围到
+document 时，那个临时对象就没用了。也就是说，
+DOM 对象应该按照从当前页面存在的最上面的 DOM 元素开始往下直到剩下的
+DOM 元素的顺序添加，这样它们就总是有同样的范围，不会产生临时对象。</p>
+
+<p>　　<strong>4) 如何检测？</strong></p>
+
+<p>　　内存泄露对开发者来说一般很难检测，因为它们是由大量代码中的一些意外的错误引起的，但它在系统内存不足前并不影响程序的功能。这就是为什么会有人在很长时间的测试期中收集应用程序性能指标来测试性能。</p>
+
+<p>　　最简单的检测内存泄露的方式是用任务管理器检查内存使用情况。在 Chrome
+浏览器的新选项卡中打开应用并查看内存使用量是不是越来越多。还有其他的调试工具提供内存监视器，比如
+Chrome
+开发者工具。这是谷歌开者这网站中的<a href="https://developers.google.com/chrome-developer-tools/docs/heap-profiling">堆分析</a>的特性的教程。</p>
+
+<p><img src="/assets/files/2012-05/20120504_161658_1.jpg" alt="" /></p>
+
+<p>　　<strong>参考：</strong></p>
+
+<p>　　1.
+<a href="http://javascript.crockford.com/memory/leak.html">http://javascript.crockford.com/memory/leak.html</a></p>
+
+<p>　　2.
+<a href="http://msdn.microsoft.com/en-us/library/Bb250448">http://msdn.microsoft.com/en-us/library/Bb250448</a></p>
+
+<p>　　3.
+<a href="http://www.ibm.com/developerworks/web/library/wa-memleak/">http://www.ibm.com/developerworks/web/library/wa-memleak/</a></p>
+
+<p>　　（OsChina.NET 编译）</p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

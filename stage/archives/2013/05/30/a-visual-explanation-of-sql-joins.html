@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SQL联合语句的视觉解释</title>
+  <meta name="description" content="我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/05/30/a-visual-explanation-of-sql-joins.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">SQL联合语句的视觉解释</h1>
+                <p class="article-time">
+                    发表于 <span>2013-05-30</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://blog.jobbole.com/40443/' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>我认为Ligaya Turmelle的关于SQL联合（join）语句的帖子对于新开发者来说是份很好的材料。SQL联合语句好像是基于集合的，用韦恩图来解释咋一看是很自然而然的。不过正如在她的帖子的回复中所说的，在测试中我发现韦恩图并不是十分的匹配SQL联合语法。</p>
+
+<p>不过我还是喜欢这个观点，所以我们来看看能不能用上韦恩图。假设我们有下面两张表。表A在左边，表B在右边。我们给它们各四条记录。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>id name       id  name
+-- ----       --  ----
+1  Pirate     1   Rutabaga
+2  Monkey     2   Pirate
+3  Ninja      3   Darth Vader
+4  Spaghetti  4   Ninja
+</code></pre>
+</div>
+
+<p>我们用过name字段用几种不同方式把这些表联合起来，看能否得到和那些漂亮的韦恩图在概念上的匹配。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+INNER JOIN TableB
+ON TableA.name = TableB.name
+ 
+id  name       id   name
+--  ----       --   ----
+1   Pirate     2    Pirate
+3   Ninja      4    Ninja
+</code></pre>
+</div>
+
+<p>内联合（inner join）只生成同时匹配表A和表B的记录集。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/iinner-join.png" title="inner join"><img src="/assets/files/2013-05/iinner-join.png" alt="inner join" title="inner join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.name = TableB.name
+ 
+id    name       id    name
+--    ----       --    ----
+1     Pirate     2     Pirate
+2     Monkey     null  null
+3     Ninja      4     Ninja
+4     Spaghetti  null  null
+null  null       1     Rutabaga       
+null  null       3     Darth Vader
+</code></pre>
+</div>
+
+<p>全外联合（full outer join）生成表A和表B里的记录全集，包括两边都匹配的记录。如果有一边没有匹配的，缺失的这一边为null。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/Full-outer-join.png" title="Full outer join"><img src="/assets/files/2013-05/Full-outer-join.png" alt="Full outer join" title="Full outer join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+ON TableA.name = TableB.name
+ 
+id  name       id    name
+--  ----       --    ----
+1   Pirate     2     Pirate
+2   Monkey     null  null
+3   Ninja      4     Ninja
+4   Spaghetti  null  null
+</code></pre>
+</div>
+
+<p>左外联合（left outer join）生成表A的所有记录，包括在表B里匹配的记录。如果没有匹配的，右边将是null。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/Left-outer-join.png" title="Left outer join"><img src="/assets/files/2013-05/Left-outer-join.png" alt="Left outer join" title="Left outer join" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+LEFT OUTER JOIN TableB
+ON TableA.name = TableB.name
+WHERE TableB.id IS null
+ 
+id  name       id     name
+--  ----       --     ----
+2   Monkey     null   null
+4   Spaghetti  null   null
+</code></pre>
+</div>
+
+<p>为了生成只在表A里而不在表B里的记录集，我们用同样的左外联合，然后用where语句排除我们不想要的记录。（如下图）</p>
+
+<p><a href="/assets/files/2013-05/WHERE-TableB.id-IS-nul.png" title="WHERE TableB.id IS nul"><img src="/assets/files/2013-05/WHERE-TableB.id-IS-nul.png" alt="" title="WHERE TableB.id IS nul" /></a></p>
+
+<p>——————————————————————————-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+FULL OUTER JOIN TableB
+ON TableA.name = TableB.name
+WHERE TableA.id IS null 
+OR TableB.id IS null
+ 
+id    name       id    name
+--    ----       --    ----
+2     Monkey     null  null
+4     Spaghetti  null  null
+null  null       1     Rutabaga
+null  null       3     Darth Vader
+</code></pre>
+</div>
+
+<p>为了生成对于表A和表B唯一的记录集，我们用同样的全外联合，然后用where语句排除两边都不想要的记录。（如下图）</p>
+
+<p> </p>
+
+<p><a href="/assets/files/2013-05/WHERE-TableA.id-IS-null.png" title="WHERE TableA.id IS null"><img src="/assets/files/2013-05/WHERE-TableA.id-IS-null.png" alt="" title="WHERE TableA.id IS null" /></a></p>
+
+<p>———————————————————–</p>
+
+<p>还有一种笛卡尔积或者<strong>交叉联合（cross join）</strong>，据我所知不能用韦恩图表示：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT * FROM TableA
+CROSS JOIN TableB
+</code></pre>
+</div>
+
+<p>这个把“所有”联接到“所有”，产生4乘4=16行，远多于原始的集合。如果你学过数学，你便知道为什么这个联合遇上大型的表很危险。</p>
+
+<p>英文原文；<a href="http://www.codinghorror.com/blog/2007/10/a-visual-explanation-of-sql-joins.html">Jeff Atwood</a>，编译：<a href="http://www.jobbole.com" title="伯乐在线">伯乐</a>在线 – @<a href="http://weibo.com/deepfish2567" title="奇风余谷">奇风余谷</a></p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>CSS收集</title>
+  <meta name="description" content="图片等比缩放">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/06/11/css-collection.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      <h2 id="section">图片等比缩放</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.Pic {MARGIN: auto;WIDTH: 638px;}  
+.Pic img{MAX-WIDTH: 100%!important;HEIGHT: auto!important;  
+  width:expression(this.width&gt;638?"638px":this.width)!important;}
+</code></pre>
+</div>
+
+<h2 id="section-1">浏览器样式兼容</h2>
+
+<p>针对ie6,ie7,ie8,firefox,chrome显示不同效果 做网站时经常会用到.</p>
+
+<p>演示简单的hack实现方式和原理。浏览器呈红色则为firefox，浏览器呈灰色则为ie6，浏览器呈黄色则为ie9，浏览器呈蓝色则为ie7</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#hacker{
+    color:red; 
+    *color:white; /*for ie6,ie7*/
+    *+color:blue; /*for ie7*/
+    _color:gray; /*for ie6*/
+    color:balck !important; /*for firefox*/
+    color:yellow \9; /*for ie9*/
+}
+</code></pre>
+</div>
+
+<h2 id="section-2">透明</h2>
+
+<p>一段兼容的css透明代码一段兼容的css透明代码一段兼容的css透明代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.transparent{
+    filter:alpha(opacity=50); 
+    -moz-opacity:0.5;/**Firefox 3.5即将原生支持opacity属性，所以本条属性只在Firefox3以下版本有效 ***/ 
+    -khtml-opacity: 0.5; 
+    opacity: 0.5; 
+}
+</code></pre>
+</div>
+
+<h2 id="section-3">高亮</h2>
+
+<p>一段兼容的css高亮代码一段兼容的css高亮代码一段兼容的css高亮代码一段兼容的css高亮代码</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.highlighted {
+    background: none repeat scroll 0 0 #00ADEE;
+    color: #FFFFFF;
+    padding: 0 5px;
+}
+</code></pre>
+</div>
+
+<h3 id="section-4">阴影+圆角</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/**阴影**/
+-webkit-box-shadow:0 0 3px black;
+-moz-box-shadow:0 0 3px black;
+/**圆角**/
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+border-radius:3px;
+</code></pre>
+</div>
+
+
+    </main>
+
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

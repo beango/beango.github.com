@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>如何绘制业务流程图(一)</title>
+  <meta name="description" content="来源：heidixie 的博客">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/06/03/how-to-draw-business-process-diagrams-1.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">如何绘制业务流程图(一)</h1>
+                <p class="article-time">
+                    发表于 <span>2012-06-03</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://heidixie.blog.sohu.com/219290540.html' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>来源：<a href="http://heidixie.blog.sohu.com/219290540.html">heidixie 的博客</a></p>
+
+<p>前言：近来一段时间，忙于整理业务流程图，期间，关于流程图的绘制方法和工具也与内部团队和外部做了心得交流，恰好，个人生活也牵涉在买房，婚礼，户口迁移等流程中。不知不觉，伴随着实践与反思，个人所得的系统知识趋于完整，今儿天气极好，坐在飘窗一隅，听着间或几声鸟鸣歌唱，偶尔瞥一眼窗外的遍地绿荫，真真觉得是个写点什么的日子。所以就整理成文，如果恰好对你有所帮助，那是真真好的。</p>
+
+<p>真实整理的流程牵涉到公司未公布的计划，不好公开，所以在本文中会借助一个简单的案例替代（这个案例呢，也就是计划写本文前30分分钟才想到的，如有考虑不周，请各位见谅），但是仅传达概念和方法，倒也足够了。恩，甄環体告一段落，咱们开始吧。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams1.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图1：用即时贴与白板做的简单流程图</p>
+
+<p>本文会包含几块内容：</p>
+
+<p>​1.什么是流程图？流程图和其他图表（如线框图，概念图，架构图，用例图）有什么不同？</p>
+
+<p>​2. 为什么需要流程图？</p>
+
+<p>​3. 流程图的分类？</p>
+
+<p>​4. 如何绘制流程图？</p>
+
+<p>​5. 流程图绘制工具</p>
+
+<p>视篇幅情况，会在行文时略加划分为系列，敬请关注并多多交流。</p>
+
+<p> </p>
+
+<p><strong>第一部分：什么是流程图？</strong></p>
+
+<p><strong>1. 定义</strong></p>
+
+<p>了解一个事情，我习惯从它的定义开始。至于为什么，可以参见我之前的博客文章：http://heidixie.blog.sohu.com/161709085.html</p>
+
+<p>我们因为厌恶十年教育，厌恶背各种定理和定义，所以我发现生活中和工作中很多人都很讨厌给一个事情下定义以及去参考定义。所以你会发现很多人在一起争吵得不可开交，仔细去听，原来是鸡同鸭讲，根本不在一个频道上。对于一个事情的描述，没有一个共同的语言，没有所谓的术语。有定义很好办，你们共同引用一个定义，发现定义有问题，OK，去补充这个定义，并扩展到更多的人群。<strong>当然，任何事情<a href="http://www.amazon.cn/gp/product/B004JMZNYS/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=536&amp;creative=3200&amp;creativeASIN=B004JMZNYS&amp;linkCode=as2&amp;tag=vastwork-23" title="过犹不及:如何建立你的心理界线">过犹不及</a>，我们相互提醒吧。</strong></p>
+
+<p>那什么是流程图呢？说文解字是一种了解定义的好方法。流程图=流程+图，如下图：</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams2.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图2：流程图的定义</p>
+
+<p><strong>流程</strong>：Flow,是指特定主体为了满足特定需求而进行的有特定逻辑关系的一系列操作过程，流程是自然而然就存在的。但是它可以不规范，可以不固定，可以充满问题。所以就会造成看似没有流程。前不久，团队每个人对接一个业务团队去调研流程，反馈给我的流程有一些缺失。询问时，负责人反馈给我的答复是：这一块业务他们没有流程。其实严格意义上讲，业务已经开展，不可能没有流程，只是说没有固定的流程或者你调研的对象也讲不清楚。</p>
+
+<p><strong>图</strong>：Chart 或者 Diagram,
+是将基本固化有一定规律的流程进行显性化和书面化，从而有利于传播与沉淀、流程重组参考。</p>
+
+<p>从定义可以看出，只要有事情和任务，流程就会有，但是并不是所有的流程都适合用流程图的方式去表现，适合用流程图去表现的流程是一定程度固定的有规律可循的，流程中的关键环节不会朝令夕改的。</p>
+
+<p><strong>2. 流程图与其他图表的对比</strong></p>
+
+<p>工作中我们还用到或听到很多其他类型的图表，比如交互设计师们经常说的线框图(Wireframes)，信息架构图或站点地图(Site
+Map)，，开发工程师们经常说的用例图(Use
+Case)或E-R图。这些不同的图表要表达的内容有何种差异呢？简单做个对比，如图：</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams3.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图3：流程图VS其他常用图表</p>
+
+<p>如果要串到某一个项目来说，可以理解成：</p>
+
+<p><strong>用例图（Use Case）：</strong></p>
+
+<p>表现了一个角色在系统里要完成的活动是什么，比如用户这个角色与ATM取款机的交互过程中，用户需要完成的活动有存钱，取钱，查询等。而存钱这个活动再可以进一步细分为插卡，输入密码，输入金额，ATM吐钞，用户收款，退卡等活动。用例图可以不考虑用户动作的前后次序，而仅仅提取一些关键的动宾短语，映射出系统应该满足的功能点。常用用例图的人是产品经理和开发工程师。</p>
+
+<p>流程图则表示用户每一个活动的前后次序，比如用户必须要先插入银行卡，才能够输入密码，且流程图必须直接表现出各种异常判断，比如当密码错误时，出现什么提示，密码输入错误超过多少次时，出现什么提示和动作。常用流程图的人是产品经理，设计师，或者任何需要讲述业务如何运作的人。</p>
+
+<p><strong>信息架构图,站点地图(Site Map)：</strong></p>
+
+<p>表现为了做一个这样的系统，功能与内容的展现层次是什么，比如用户一进去后，欢迎页面的导航如何设计，是否直接出现取款，存款，查询，或者还有别的导航？常用信息架构图的是设计师。但是常用组织架构图的是HR。</p>
+
+<p><strong>线框图（Wireframe）：</strong></p>
+
+<p>将具体每个界面的内容布局和权重表达出来，且标注出一些交互细节的设计，比如当密码错误后，如何提示下一步动作。常用线框图的人是设计师。</p>
+
+<p><strong>实体关系图(E-R图):</strong></p>
+
+<p>则是数据库架构的工作，表示一个业务系统或场景中的实体时间的关系，比如储户与银行卡的关系是归属1对多，通过开卡事件产生关联。一般来讲，用矩形来表示实体，椭圆标识这个实体的属性，比如储户这个实体的属性有：姓，名，手机号码，住址等。而银行卡的属性有：开户行，开户名称，银行卡号等。</p>
+
+<p>以上的这些图表各自都有领域的专家，我这里就不班门弄斧了。</p>
+
+<p>那么流程图要体现出他的差异定义，要素是什么？总结出了流程图的6大要素，希望大家能够记住，这6个要素可以在以后的文章里不断回顾，你也可以拿来判断你所看到的流程图是否专业。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams4.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图4：流程图6大要素</p>
+
+<p>●参与者：谁在这个流程中？可以是系统，可以是个打印机，更多的指什么角色——一般是有某种工种的人。比如客服同时有小A和小B两人，但是若他们的工作性质完全一样，那么在流程图里只需要写一个客服角色就可以了。</p>
+
+<p>●活动：做了什么事，比如点餐，结帐等活动。</p>
+
+<p>●次序：这些事情发生的前后顺序如何，哪个任务是其他任务的前置条件？比如客人不结帐，就不会产生送他优惠卡的活动。</p>
+
+<p>●输入：每项活动开始取决于什么样的输入物或数据，比如做饭的师傅开始做菜时，需要拿到具体的点菜单。</p>
+
+<p>●输出：每项活动结束后，会输入什么样的文档或数据传递给下一方，比如师傅做好菜后，如何让负责传菜的人知道菜已经做好？</p>
+
+<p>●标准化：采用一套标准化的符号用以传递你的流程图，从而使受众更快明白。</p>
+
+<p>关于流程图的标准化，并不是强制的，事实上，我们见过很多种类的流程图，只要能够传递明白任务和次序其实已经归类于流程图了。如下面的图：</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams5.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams6.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>但是若在一个公司的环境下，你的流程图的受众又非常多的话，采取标准化的符号会带来很多交流上的好处，总之你懂的。</p>
+
+<p> </p>
+
+<p><strong>第二部分：流程图的分类？</strong></p>
+
+<p>常见的流程图有业务流程图（Transaction Flow）, 页面流程图（Page Flow）。</p>
+
+<p>在工作中，作为UED，你可能会发现PD经常谈的是业务流程，而作为交互设计师，我们更多产出的是页面流程图。页面流程图和业务流程图到底有什么关系呢？
+先有谁，其次再有谁呢？</p>
+
+<p>先讲个故事：假设你的梦想是开个中高档的全国连锁餐馆，那么首先你想到的应该不是如何去选址，而是将为何要开连锁餐馆这件事情，以及你的定位，核心竞争力想清楚。是快餐，还是点餐，是连锁还是加盟？定位于社区还是繁华商圈？是川菜还是江浙海鲜？是面向中老年还是年轻人？是家庭主题还是动漫主题？竞争对手是谁？需要什么样的投资？可能的风险是什么？这些都想清楚了，问题都有答案了，所谓战略层要清晰了吧。然后假设你现在分析来分析去，与主要投资方决定了一个方向：面向年轻人的时尚动漫茶餐厅，连锁，但是先在杭州开始第一家，选址定位于年轻人约会，扫街的地域，比如风景区，著名商圈，电影院旁…………等等等等，那么接下来呢？</p>
+
+<p>接下来就是想办法让这些实现吧？那么需要做什么事情呢？选址？拉投资？搞装修？选餐饮菜单？雇佣员工？每一步怎么去做，时间点是什么？等等的任务拆解以及计划，就需要到战术层了。</p>
+
+<p>这些事情的执行，总是需要请人的吧？先是核心团队分工去部署各项建设任务，当餐厅开设起来后，就需要组织稳定的运营团队，如服务、卫生、厨房、采购、人事等等，厨房里面还得分工，白案，热菜，冷菜等等吧？每个部门需要设置管理层以及汇报关系吧？所以你的组织结构就诞生了。</p>
+
+<p>那具体每种角色是如何顺畅合作完成日常稳定的以及突发的各项任务呢？比如，当顾客上门时，谁去引导客人入座，谁去点菜，怎么将点菜的讯息迅速传递到厨房，并分发到酒水间、冷菜间、热菜间？并保证客人尽快能够吃到所点的菜？你必须要考虑各种人员的协作流程，优化效率，所以业务流程就出现了。</p>
+
+<p>人肉运营了一段时间，没有借助任何点餐系统，你发现也还可以。客人点菜时，服务员手抄写下客人的要求，因为有复印纸，所以服务员能够将副本送入厨房，同时写下餐桌号码。厨房规模较小，负责分配任务的员工看下菜单，分别往冷菜处的黑板上写下需要他们处理的，以及跑到热菜区的黑板上写下待处理的菜品，以及去酒水间报下品名即可。可是随着经营的扩大，以上的人肉方式出现了很多问题，首先，手抄效率太低，顾客频繁换菜，响应来不及，手抄出错，导致经常报错菜。厨房很混乱，不得不多招了几个人专门跑堂。而一旦顾客要加菜，撤菜就更麻烦了，需要找出他们当时点的菜，再进行人工的批注和修改，同时要修改厨房后端的各个黑板……</p>
+
+<p>所以你们想要开发一套智能系统，取代很多人肉工作，你们请了系统开发团队，他们经过评估，判断从点菜开始，一直到传菜都可以用系统解决。手持终端，能够快速传递顾客点菜需求到打印机，打印系统能够根据顾客点菜的类型进行自动的分单打印，所以热菜间看到自己的热菜菜单，冷菜间看到自己的冷菜菜单，而酒水间看到酒店菜单。当他们准备完毕后，送出，传菜员可以根据菜名与打印出来的单据进行传菜并根据顾客的点菜小票进行核对。这套系统同时必须配备结算系统，将最终确认掉的菜单及消费价格传递到结算前台，收银员能够快速进行操作。</p>
+
+<p>这套系统最终是需要展现出来的，那么手持终端的界面如何设计？服务员能够用更少的点击完成一个菜的点餐吗？结算中心的界面如何设计？</p>
+
+<p>通过以上的故事，是不是更明白从战略、战术、业务流程图到页面流程图的关系了？总结下：</p>
+
+<p>●先是有一个业务需求和业务目标，也即我们的愿景是什么？（战略）</p>
+
+<p>●然后就诞生了我们需要分解出什么样的任务，如何执行战术？（战术）</p>
+
+<p>●然后就诞生了需要架构什么部门，岗位去分工协作？（组织架构）</p>
+
+<p>●然后就诞生了不同的部门在协作完成某件任务时的业务流程？（业务流程）</p>
+
+<p>●业务流程基本稳定后，往往会考虑优化效率，所以会诞生出系统来支持流程，减少人肉环节，促进数据采集（系统愿景）</p>
+
+<p>●为了设计这个系统，PD需要思考什么功能能够取代某个环节的人肉工作（功能需求，系统流程）</p>
+
+<p>●不管是怎么样的功能最终都会以界面的方式呈现，设计师们会关注用户在系统里的任务流，行为路径，让用户完成任务更加高效愉悦。（页面流程）</p>
+
+<p>当然，除了业务流程，系统流程，页面流程，还有数据流程被人关注。</p>
+
+<p>我们平时工作中，还会经常听人谈到泳道图啊，任务流程图啊等等概念，究竟是神马关系呢？</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams7.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图5：流程图的分类</p>
+
+<p>本文着重于上述流程中的“业务流程图”——并会分享如何绘制泳道图——也即是PD们最多使用，技术们最多参考，UED们最多看到的流程图。</p>
+
+<p>本来在第四部分会对泳道图的图示以及绘制方法、原则做更详细的说明，但是看目前的篇幅情况，预计会放到下篇，所以先在这里简单说明下吧。</p>
+
+<p>在工作中，我们经常能够看到两种业务流程图，从表现形式来看，一种很好区分，俗称为“泳道图”的它，在样子上也确实像个泳道，可以有横向的泳道，也会有纵向的泳道。泳道图在某些文档里会被称为“以活动为单位的流程图”，浮在泳道中的都是一个个活动。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams8.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>另外一种类型是以部门和岗位为单位的流程图，下图中的圆形就代表一个个部门或岗位。矩形代表活动。这种流程图关注事情如何完成的逻辑，但是在体现各个部门的责任上比较弱。如果是某个岗位的人来看，很难像泳道图那样一眼就能看到自己部门的职责和任务。所以现在用得比较少。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams10.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>再回过头来说泳道图，泳道图有几个关键点：两大维度，活动流转，流程要素。我们会在以后详解。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams11.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p> </p>
+
+<p><strong>第三部分：为什么需要业务流程图？</strong></p>
+
+<p>流程图可以提供一种简单扼要的“缩略俯瞰图”，帮助观众快速了解业务如何运转。它包含了几个关键词：谁，什么时候，在什么条件下，做了什么事情，输入什么，输出什么，输出给谁……</p>
+
+<p>与系统流程不同，业务流程更关注于业务本身如何运作，讲的是业务故事，包含的是业务规则。而系统流程则是满足业务流程，实现部分流程或全部流程的信息化和系统化。</p>
+
+<p>所以业务流程是所有环节的前置条件——软件需求分析，信息系统建设也会先进行业务流程的梳理。</p>
+
+<p>下面表现了业务流程图是如何在三个主要场景中发挥作用的：</p>
+
+<p><strong>1. 员工培训</strong></p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams12.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图6：流程图的应用场景之一：培训</p>
+
+<p>在此场景中：流程图能够提供一种快速了解业务如何运作的视图，通过业务流程图，新员工能够快速明白业务的最终目标是什么，中有哪些角色在参与以及他们的职责，以及彼此之间的联接。</p>
+
+<p>除了培训新员工，在员工轮岗、调职场景中，员工也需要业务流程图参考，明白新的工作内容如何开展，以及自己所处的位置，自己的上游是谁，下游是谁，自己需要交付的工作内容是什么。</p>
+
+<p><strong>2：流程优化与重组</strong></p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams13.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图7：流程图的应用场景之二：流程优化</p>
+
+<p>业务流程重组（Business Process
+Reengineering）的存在可以明确反驳：存在即合理。事实上，存在的业务流程并未是合理的，有可能是参与的多个角色习惯了某种做法，有可能是变革尚未影响到末端的操作，也有可能缺乏对于运行中的业务流程问题的洞察以及强有力的变革推动——因为要推动业务流程变革，不是某个部门的事情，而是需要流程中各个部门的通力配合。</p>
+
+<p>更多时候，业务流程优化是自上而下的，但是老板们未必对实际运作的业务流程那么心知肚明，业务流程图能够很好去表现这个“运作模型”。通过看业务流程图，找关键节点的人访问，能够直接切入：为什么要这么做，为什么不这么做？从而探索出更深层次的问题，而不是问：你们现在怎么做？</p>
+
+<p>通过调研，分析业务流程图，引入更多角色，能够分析出目前业务流程的问题：缺失，重复，风险，效率等等。从而制定相应的优化方案。</p>
+
+<p><strong>3：信息化的基础</strong></p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams14.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>图8：流程图的应用场景之三：信息化基础</p>
+
+<p>正如上文所述的餐馆梦想的案例，信息系统的一项任务就是解放员工的手脚，取代一些重复的人力劳动工作。系统上了之后，不是说业务流程不需要而是经过了一些调整，其中某个参与者变成了系统，或手持设备，或打印机而已。</p>
+
+<p>那么在做系统的功能设计和系统流程设计时，是不是必须先要了解目前业务是如何运作的呢？从而更好分析分析，更好说明系统在什么环节取代了什么类型的人肉工作？</p>
+
+<p>所以我们看到的PRD往往也会先以业务流程图开始说明，而叙述一个系统建设的好处时，也可以用以前的业务流程与系统上了之后的业务流程进行对比。根据分析，将愿景中的新的业务流程图背后需要系统的功能点撰写清楚。</p>
+
+<p> </p>
+
+<p><strong>第四部分：如何绘制业务流程图？</strong></p>
+
+<p>首先绘制业务流程图本身有没有流程？一定是有的。在软件工程学里听说一句话叫：万物皆对象。那么在流程学里，万事皆流程。吃饭难道没流程吗？就吃饭的动作而言，就有流程：拿筷子——夹菜——入口——咀嚼——吞咽。</p>
+
+<p>有不少同学在这一部份很快想会问一个问题：Heidi，请介绍画流程图的工具吧？</p>
+
+<p>我个人是工具派，从不否认人工欲善其事，必先利其器的道理。好的工具本身就是一名好的老师，除了技能，也能够教会我们一些理论与理念，这些理念也是“器”中很重要的一部分。其次才是具体的工具应用技能。所以我并不建议直接跳转到工具应用。对于初学者而言，笔与纸永远是最好的入门工具，因为你无需和任何一个陌生的软件较劲。</p>
+
+<p>那么，绘制业务流程图有没有可遵循的流程呢？我建议可以从下面4步着手。</p>
+
+<p><strong>1. 调研</strong></p>
+
+<p>如何快速了解业务运作真相？有没有调研的技巧放送？
+ <em>**</em></p>
+
+<p><strong>2. 梳理与呈现</strong></p>
+
+<p>能否快速将调研得到的文字和问题，快速转化为业务流程图？</p>
+
+<p>业务流程图的标准图示是什么？</p>
+
+<p>怎么评价一个业务流程图的好与坏？</p>
+
+<p><strong>3. 评审与确认</strong>——能否真正让业务流程图反映现实中的业务？</p>
+
+<p><strong>4. 归档维护</strong>——流程不断变更，业务流程图如何快速响应？</p>
+
+<p>这些将会在下篇《业务流程图的绘制流程分享(二)》详解。</p>
+
+<p> </p>
+
+<p><strong>第五部分：绘制工具？</strong></p>
+
+<p>如果不搞工具研讨会的话，这部分比较简单.</p>
+
+<p><strong>Windows:</strong> 线下工具大家常用的就是下面三个：</p>
+
+<p>小的流程图用用PPT就够了，完了就导出图片或截图。交互设计师们因为常用axure绘制线框图，所以也不必为了流程图去学习新的工具，完全可以用axure的flow控件完成简单的业务流程图的制作。而PD们则常用微软的visio。</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams15.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>此外，特别推荐一个软件：<a href="http://www.smartdraw.com/">SmartDraw</a>。</p>
+
+<p>我最近的流程图都是用SmartDraw绘制的，你可以下载一个免费版本体验下。这个工具不仅仅是为了流程图而设计的，几乎上包罗万象：线框图，流程图，E-R图，UML
+,韦恩图，甚至甘特图，脑图……没有像很多人推荐就是因为他太庞大了，尤其是里面的模版。大家体验下：</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams16.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>Mac电脑:</p>
+
+<p>自然要推荐<a href="http://www.omnigroup.com/products/omnigraffle/features/">omniGraffle</a>.
+绘制出来的任何图表不知为何总会觉得很美……</p>
+
+<p>当然，这个软件是可以去www.macx.cn下载免费版的……</p>
+
+<p>但是不管windows还是mac，除了线下的工具，还有更多线上的选择：</p>
+
+<p>不过貌似我们对线上工具普遍来说都不太放心，是对服务器，网速，还有对GFW不放心吧。</p>
+
+<p>1.<a href="https://cacoo.com/">https://cacoo.com/</a></p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams17.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>这个是界面做得最好看的一个工具。我用它来绘制过概念图（Concept
+map）。如下图即是用以上的工具画的。</p>
+
+<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams18.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>​2. http://creately.com/</p>
+
+<p> <a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams19.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p>​3. www.lucidchart.com</p>
+
+<p><a href="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" title="业务流程图的绘制流程分享"><img src="/assets/files/2012-06/Drawing-process-to-share-business-process-diagrams20.jpg" alt="业务流程图的绘制流程分享" title="业务流程图的绘制流程分享" /></a></p>
+
+<p> </p>
+
+<p>转载请注明来处，关注我请点击：<a href="http://weibo.com/heidixie">http://weibo.com/heidixie</a></p>
+
+<p> </p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

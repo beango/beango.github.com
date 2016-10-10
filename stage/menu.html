@@ -1,14 +1,1241 @@
----
-layout: blog_layout
----
+<!DOCTYPE html>
+<html lang="zh-CN">
 
-{% for post in site.posts %}
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>HuangDing</title>
+  <meta name="description" content="Huang Ding">
+
+  <link rel="canonical" href="127.0.0.1/menu">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      
     <section class="smenu">
-        {{ post.date  | date: "%Y/%m/%d" }}
+        2016/10/10
         &nbsp;&nbsp;
-        <a href="{{post.url}}">
+        <a href="/archives/2016/10/10/Linux-configuration-Lighttpd-Python-webPy-applications.html">
             <span class="glyphicon glyphicon-hand-right">  </span>
-            &nbsp;&nbsp; {{post.title}} &nbsp;&nbsp; 
+            &nbsp;&nbsp; Linux配置Lighttpd+Python+web.py应用 &nbsp;&nbsp; 
         </a>
     </section>
-{% endfor %}
+
+    <section class="smenu">
+        2015/06/15
+        &nbsp;&nbsp;
+        <a href="/archives/2015/06/15/12-nginx-performance-tuning.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 为最佳性能调优 Nginx &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2015/06/10
+        &nbsp;&nbsp;
+        <a href="/archives/2015/06/10/guide-start-learning-shell-scripting-scratch.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Shell脚本编程初体验 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2014/08/05
+        &nbsp;&nbsp;
+        <a href="/archives/2014/08/05/python-realtime.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; python realtime &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2014/06/18
+        &nbsp;&nbsp;
+        <a href="/archives/2014/06/18/oracle-and-sqlserver.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Oracle与SQLServer语法区别 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2014/01/13
+        &nbsp;&nbsp;
+        <a href="/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 十步完全理解SQL &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/12/06
+        &nbsp;&nbsp;
+        <a href="/archives/2013/12/06/writing-better-jquery-code.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 编写更好的jQuery代码的建议 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/11/26
+        &nbsp;&nbsp;
+        <a href="/archives/2013/11/26/javascript-the-core.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; JavaScript核心 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/11/25
+        &nbsp;&nbsp;
+        <a href="/archives/2013/11/25/understanding-threads-in-python.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 理解 Python 中的线程 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/11/22
+        &nbsp;&nbsp;
+        <a href="/archives/2013/11/22/nginx-setup.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Nginx 战斗准备 —— 优化指南 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/11/12
+        &nbsp;&nbsp;
+        <a href="/archives/2013/11/12/five-great-NET-framework-4-5-features.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; .NET Framework 4.5 五个很棒的特性 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/10/25
+        &nbsp;&nbsp;
+        <a href="/archives/2013/10/25/absolute-centering-in-CSS.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 如何只用CSS做到完全居中 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/10/11
+        &nbsp;&nbsp;
+        <a href="/archives/2013/10/11/why-registers-are-fast-and-ram-is-slow.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 为什么寄存器比内存快？ &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/10/08
+        &nbsp;&nbsp;
+        <a href="/archives/2013/10/08/recycling-memory-buffers-in-go.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 复用Go的内存buffer &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/09/25
+        &nbsp;&nbsp;
+        <a href="/archives/2013/09/25/python-encodings-and-unicode.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python编码和Unicode &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/09/21
+        &nbsp;&nbsp;
+        <a href="/archives/2013/09/21/first-few-milliseconds-of-https.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; HTTPS连接的前几毫秒发生了什么 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/09/11
+        &nbsp;&nbsp;
+        <a href="/archives/2013/09/11/python-performance-analysis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python程序的性能分析指南 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/09/04
+        &nbsp;&nbsp;
+        <a href="/archives/2013/09/04/JavaScript-performance-optimization-load-execute.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; JavaScript的性能优化：加载和执行 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/24
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/24/python-list-implementation.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python中list 的实现 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/16
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/16/unique-index-optimization-practice.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 唯一性索引优化实践 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/08
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/08/nginx-performance-tuning-for-ssl.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Nginx SSL性能调优 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/08
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/08/java-lo-logbuffer.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Java 日志缓存机制的实现 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/02
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/02/twelve-go-best-practices.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Go 语言 12 条最佳实践 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/08/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/08/01/reliable-file-updates-with-python.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 使用 Python 进行稳定可靠的文件操作 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/23
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/23/distributed-algorithms-in-nosql-databases.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; NoSQL数据库的分布式算法 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/20
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/20/golang-memory-model.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Go语言内存模型 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/18
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/18/mgo.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; mgo操作 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/01/nodejs-and-socketio-tutorial.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; NodeJS 和 Socket.io 中文入门教程 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/01/mongoose-tutorial.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Mongoose 基本功能使用 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/07/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/07/01/javascript-common-traps-and-special-usage.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Javascript 常见陷阱及特殊用法 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/06/26
+        &nbsp;&nbsp;
+        <a href="/archives/2013/06/26/csharp-NAT-file.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; C#读写局域网文件 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/06/22
+        &nbsp;&nbsp;
+        <a href="/archives/2013/06/22/create-advanced-web-applications-with-object-oriented-techniques.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 使用面向对象技术创建高级Web应用程序 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/06/20
+        &nbsp;&nbsp;
+        <a href="/archives/2013/06/20/speed-your-web-site-varnish.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 使用 Varnish 加速你的 Web 网站 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/06/14
+        &nbsp;&nbsp;
+        <a href="/archives/2013/06/14/understanding-expressjs.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; (译)深入理解Express.js &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/06/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/06/01/reducing-memory-consumption-by-20x.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 优化技巧分享：把内存消耗降低至原来的1/20 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/05/31
+        &nbsp;&nbsp;
+        <a href="/archives/2013/05/31/javascript-module-pattern-in-depth.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 深入研究JavaScript的Module模式 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/05/30
+        &nbsp;&nbsp;
+        <a href="/archives/2013/05/30/j-lo-springunitest.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 使用 Spring 进行单元测试 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/05/30
+        &nbsp;&nbsp;
+        <a href="/archives/2013/05/30/a-visual-explanation-of-sql-joins.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; SQL联合语句的视觉解释 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/05/16
+        &nbsp;&nbsp;
+        <a href="/archives/2013/05/16/c-sharp-performance-optimization.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; C#性能优化实践 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/27
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/27/j-lo-codeoptimize.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Java 代码优化过程的实例介绍 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/25
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/25/python-functional-programming-part3.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python中函数式编程，第三部分 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/23
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/23/several-reminder-in-nginx-fastcgi-cache-session-cache-limiter.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Nginx模块fastcgi_cache的几个注意点 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/22
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/22/a-comprehensive-understanding-of-object-oriented-javascript.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 全面理解面向对象的 JavaScript &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/20
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/20/http-benchmark-rules.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; HTTP负载测试 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/16
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/16/linux-netcat-command.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Linux Netcat命令：网络工具中的瑞士军刀 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/11
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/11/python-functional-programming-part2.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python中函数式编程，第二部分 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/04/09
+        &nbsp;&nbsp;
+        <a href="/archives/2013/04/09/dotnet.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; dotnet拾遗 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/26
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/26/javascript-language-features.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 浅谈JavaScript的语言特性 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/25
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/25/speeding-up-your-python-code.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 加速你的Python代码 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/22
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/22/scalable-web-architecture-and-distributed-systems.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 可扩展Web架构与分布式系统 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/21
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/21/what-every-programmer-should-know-about-virtual-memory-part3.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 每个程序员都应该了解的“虚拟内存”知识 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/20
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/20/what-every-programmer-should-know-about-cpu-cache-part2.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 每个程序员都应该了解的CPU高速缓存 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/16
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/16/os-cn-spring-cache.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 注释驱动的 Spring cache 缓存介绍 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/08
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/08/efficient-css.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 翻译-高效的CSS &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/04
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/04/python-functional-programming-part1.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Python中函数式编程，第一部分 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/03/01
+        &nbsp;&nbsp;
+        <a href="/archives/2013/03/01/what-every-programmer-should-know-about-memory-part1.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 每个程序员都应该了解的内存知识 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/28
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/28/howto-strong-developer.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 如何成为强大的程序员？ &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/27
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/27/state-of-nosql.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; NoSQL的现状 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/27
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/27/scalability-system-architecture-lessons.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 可伸缩系统的架构经验 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/21
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/21/the-reality-of-developers-life.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 程序猿的真实生活(GIF) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/21
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/21/j-lo-javasecurity.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Java 安全模型介绍 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/02/18
+        &nbsp;&nbsp;
+        <a href="/archives/2013/02/18/booting.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 计算机是如何启动的？ &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/01/22
+        &nbsp;&nbsp;
+        <a href="/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Redis监控技巧 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/01/12
+        &nbsp;&nbsp;
+        <a href="/archives/2013/01/12/bson-and-data-interchange.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; BSON特性探讨及基于其特性的MongoDB优化 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/01/11
+        &nbsp;&nbsp;
+        <a href="/archives/2013/01/11/writing-fast-memory-efficient-javascript.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 编写高效的JavaScript程序 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/01/09
+        &nbsp;&nbsp;
+        <a href="/archives/2013/01/09/interesting-solution-http-status-code.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 趣解HTTP状态码 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2013/01/05
+        &nbsp;&nbsp;
+        <a href="/archives/2013/01/05/mongodb-secuirty-anaylze.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Mongodb安全性初探 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/25
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/25/dot-net-gc-2.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; .Net垃圾回收机制原理（二） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/24
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/24/python-crawl-pages.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; python爬虫 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/19
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/19/thickbox-use.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; thickbox使用 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/15
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/15/http-protocol-proxy.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; HTTP协议之代理 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/13
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/13/dot-net-gc-1.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; .Net垃圾回收机制原理（一） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/10
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/10/sql-collection.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; SQL － 基础(不断补充) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/09
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/09/mongodb-sharding-analysis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB Sharding 机制分析 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/04
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/04/cache-algorithm.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 缓存、缓存算法和缓存框架简介 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/12/03
+        &nbsp;&nbsp;
+        <a href="/archives/2012/12/03/mongodb-cluster.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB 集群 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/11/23
+        &nbsp;&nbsp;
+        <a href="/archives/2012/11/23/pymongo-python-mongodb.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB的Python接口PyMongo &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/11/20
+        &nbsp;&nbsp;
+        <a href="/archives/2012/11/20/nginx-performance-optimization.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; nginx性能优化 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/11/05
+        &nbsp;&nbsp;
+        <a href="/archives/2012/11/05/linux-command.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Linux常用命令 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/10/09
+        &nbsp;&nbsp;
+        <a href="/archives/2012/10/09/rabbitmq-install.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; RabbitMQ安装及使用 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/10/05
+        &nbsp;&nbsp;
+        <a href="/archives/2012/10/05/commong-nginx-configuration-options.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 常见的nginx的配置选项 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/09/21
+        &nbsp;&nbsp;
+        <a href="/archives/2012/09/21/nginx-load-balancing.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 解析 Nginx 负载均衡 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/09/16
+        &nbsp;&nbsp;
+        <a href="/archives/2012/09/16/csharp-office.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; C#读取Excel &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/09/10
+        &nbsp;&nbsp;
+        <a href="/archives/2012/09/10/centos-php-nginx-mysql.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/09/08
+        &nbsp;&nbsp;
+        <a href="/archives/2012/09/08/js-method-collection.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; js方法收集 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/08/21
+        &nbsp;&nbsp;
+        <a href="/archives/2012/08/21/rabbitmq-cluster.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; rabbitmq集群-1 介绍 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/08/12
+        &nbsp;&nbsp;
+        <a href="/archives/2012/08/12/why-recommend-nodejs.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 我为什么向后端工程师推荐Node.js &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/08/11
+        &nbsp;&nbsp;
+        <a href="/archives/2012/08/11/cache-reconstruction-can-not-be-ignored.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 不可忽略的缓存重建 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/07/25
+        &nbsp;&nbsp;
+        <a href="/archives/2012/07/25/jekyll-introduction.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 利用Jekyll搭建个人博客 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/07/15
+        &nbsp;&nbsp;
+        <a href="/archives/2012/07/15/internet-protocol-suite-part-ii.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 互联网协议入门（二） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/07/12
+        &nbsp;&nbsp;
+        <a href="/archives/2012/07/12/internet-protocol-suite-part-i.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 互联网协议入门（一） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/29
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/29/windows-nginx-start-restart-shutdown.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Windows下nginx的启动，重启，关闭 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/26
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/26/how-to-draw-business-process-diagrams-2.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 如何绘制业务流程图(二) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/25
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/25/confirmed-he-who-sits-the-most-dies-the-soonest.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 坐得越久 死得越快 还是站着编程吧 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/17
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/17/redis-persistence-demystified.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 解密Redis持久化 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/11
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/11/what-is-a-metaclass-in-python.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 深刻理解Python中的元类(metaclass) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/11
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/11/css-collection.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; CSS收集 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/07
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/07/jquery-selector.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; jQuery选择器大全 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/06/03
+        &nbsp;&nbsp;
+        <a href="/archives/2012/06/03/how-to-draw-business-process-diagrams-1.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 如何绘制业务流程图(一) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/05/31
+        &nbsp;&nbsp;
+        <a href="/archives/2012/05/31/misunderstanding-using-cache-2.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 使用缓存的9大误区（下） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/05/19
+        &nbsp;&nbsp;
+        <a href="/archives/2012/05/19/mongodb-indexing-in-practice.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB索引实战技巧 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/05/06
+        &nbsp;&nbsp;
+        <a href="/archives/2012/05/06/javascript-memory-leaks.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Javascript内存泄露 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/04/20
+        &nbsp;&nbsp;
+        <a href="/archives/2012/04/20/how-iis-process-asp-net-request.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; IIS是如何处理ASP.NET请求的 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/04/19
+        &nbsp;&nbsp;
+        <a href="/archives/2012/04/19/json-jsonp-jquery.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Json Jsonp Jquery &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/04/15
+        &nbsp;&nbsp;
+        <a href="/archives/2012/04/15/misunderstanding-using-cache.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Misunderstanding Using Cache &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/29
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/29/mongodb-best-practices.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB最佳实践 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/23
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/23/a-bad-picture-is-worth-a-thousand-long-discussions.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 一张破图胜过长篇大论（译文：关于Windows 8的新编程体系） &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/12
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/12/tokyotyrant-tools-tcrmgr-usage.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; TokyoTyrant的管理工具tcrmgr使用 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/12
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/12/is-memcached-a-dinosaur-in-comparison-to-redis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Memcached真的过时了吗？ &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/04
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/04/my-tech-blogging-like-a-hacker.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 像黑客一样写自己的技术博客 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/03/04
+        &nbsp;&nbsp;
+        <a href="/archives/2012/03/04/hello-world.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Hello world! &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/02/20
+        &nbsp;&nbsp;
+        <a href="/archives/2012/02/20/java-heap-space-memory-size-jvm.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Java堆内存的10个要点 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/02/13
+        &nbsp;&nbsp;
+        <a href="/archives/2012/02/13/java-serializable.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 理解Java对象序列化 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/02/09
+        &nbsp;&nbsp;
+        <a href="/archives/2012/02/09/How-browsers-work-Behind-the-scenes-of-modern-web-browsers.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 前端必读：浏览器内部工作原理 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/02/01
+        &nbsp;&nbsp;
+        <a href="/archives/2012/02/01/fully-understanding-the-this-keyword.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 完全理解关键字this &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/01/09
+        &nbsp;&nbsp;
+        <a href="/archives/2012/01/09/tools.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 常用工具 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2012/01/09
+        &nbsp;&nbsp;
+        <a href="/archives/2012/01/09/preg.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 正则大全 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/12/19
+        &nbsp;&nbsp;
+        <a href="/archives/2011/12/19/redis-install.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; CentOS6.3下Redis安装 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/12/03
+        &nbsp;&nbsp;
+        <a href="/archives/2011/12/03/tokyotyrant-memcached-keyvalue-system.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 利用Tokyo Tyrant构建兼容Memcached协议、支持故障转移、高并发的分布式key-value持久存储系统 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/11/20
+        &nbsp;&nbsp;
+        <a href="/archives/2011/11/20/exploring-redis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Redis系统性介绍 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/10/26
+        &nbsp;&nbsp;
+        <a href="/archives/2011/10/26/mongodb-running-state-performance-monitoring-analysis.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB运行状态、性能监控，分析 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/10/15
+        &nbsp;&nbsp;
+        <a href="/archives/2011/10/15/mongodb-architecture.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB构架图分享 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/10/09
+        &nbsp;&nbsp;
+        <a href="/archives/2011/10/09/markdown-doc.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; Markdown语法说明 (简体中文版) &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/09/11
+        &nbsp;&nbsp;
+        <a href="/archives/2011/09/11/memcached-parameters-chinese-explain.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; memcached参数中文解释 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/09/08
+        &nbsp;&nbsp;
+        <a href="/archives/2011/09/08/nginx-upstream.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; nginx upstream 的几种分配方式 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/08/11
+        &nbsp;&nbsp;
+        <a href="/archives/2011/08/11/jquery-best-practices.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; jQuery最佳实践 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/06/15
+        &nbsp;&nbsp;
+        <a href="/archives/2011/06/15/mongodb-install.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; MongoDB安装及使用 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/06/11
+        &nbsp;&nbsp;
+        <a href="/archives/2011/06/11/train-your-temperament.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 一点一滴培养你的气质 &nbsp;&nbsp; 
+        </a>
+    </section>
+
+    <section class="smenu">
+        2011/02/25
+        &nbsp;&nbsp;
+        <a href="/archives/2011/02/25/what-really-happens-when-you-navigate-to-a-url.html">
+            <span class="glyphicon glyphicon-hand-right">  </span>
+            &nbsp;&nbsp; 当你输入一个网址的时候，实际会发生什么? &nbsp;&nbsp; 
+        </a>
+    </section>
+
+
+    </main>
+
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

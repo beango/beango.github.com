@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nginx模块fastcgi_cache的几个注意点</title>
+  <meta name="description" content="　　在web项目中，大家都已经非常熟悉其架构流程了。都说Cache是万金油，哪里不舒服抹哪里。这些流程中，几乎每个环节都会进行cache。从浏览器到webserver，到cgi程序，到DB数据库，会进行浏览器cache，数据cache，SQL查询的cache等等。对于fastcgi这里的cache，很少被使用。去...">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/04/23/several-reminder-in-nginx-fastcgi-cache-session-cache-limiter.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Nginx模块fastcgi_cache的几个注意点</h1>
+                <p class="article-time">
+                    发表于 <span>2013-04-23</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://www.cnxct.com/several-reminder-in-nginx-fastcgi_cache-and-php-session_cache_limiter/' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>　　在web项目中，大家都已经非常熟悉其架构流程了。都说Cache是万金油，哪里不舒服抹哪里。这些流程中，几乎每个环节都会进行cache。从<a href="http://blog.jobbole.com/12749/" title="浏览器">浏览器</a>到webserver，到cgi程序，到DB数据库，会进行浏览器cache，数据cache，SQL查询的cache等等。对于fastcgi这里的cache，很少被使用。去年年底，我对nginx的<a href="http://wiki.nginx.org/HttpFastcgiModule" title="Fastcgi_cache的WIKI">fastcgi_cache</a>进行摸索使用。在我的测试过程中，发现一些wiki以及网络上没被提到的注意点，这里分享一下。</p>
+
+<p><a href="/assets/files/2013-04browser-nginx-php-db.png" title="Nginx模块fastcgi_cache的几个注意点"><img src="/assets/files/2013-04/browser-nginx-php-db-300x168.png" alt="从浏览器到数据库的流程图" /></a></p>
+
+<p>　　从浏览器到数据库的流程图</p>
+
+<p>　　这里是我的NGinx配置信息</p>
+
+<blockquote>
+  <p>#增加调试信息<br />
+  add_header X-Cache-CFC “$upstream_cache_status - $upstream_response_time”;<br />
+  fastcgi_temp_path /dev/shm/nginx_tmp;</p>
+
+  <p>#cache设置<br />
+  fastcgi_cache_path   /dev/shm/nginx_cache  levels=1:2 keys_zone=cfcache:10m inactive=50m;<br />
+  fastcgi_cache_key “$request_method://$host$request_uri”;<br />
+  fastcgi_cache_methods GET HEAD;<br />
+  fastcgi_cache   cfcache;<br />
+  fastcgi_cache_valid   any 1d;<br />
+  fastcgi_cache_min_uses  1;<br />
+  fastcgi_cache_use_stale error  timeout invalid_header http_500;<br />
+  fastcgi_ignore_client_abort on;</p>
+</blockquote>
+
+<p>　　配置这些参数时，注意每个参数的作用域，像fastcgi_cache_path参数，只能在http配置项里配置，而fastcgi_cache_min_uses这个参数，可以在http、server、location三个配置项里配置。这样更灵活的会每个域名、每个匹配的location进行选择性cache了。具体的参数作用域，参考<a href="http://wiki.nginx.org/HttpFastcgiModule" title="Nginx HttpFastcgiModule模块wiki">FASTCGI模块的官方WIKI</a>。我为了调试方便，添加了一个『X-Cache-CFC』的http响应头，<a href="http://wiki.nginx.org/HttpUpstreamModule" title="Nginx HttpUpstreamModule模块的WIKI">$upstream_cache_status </a>变量表示此请求响应来自cache的状态，分别为：</p>
+
+<ul>
+  <li>MISS 未命中</li>
+  <li>EXPIRED – expired, request was passed to backend Cache已过期</li>
+  <li>UPDATING – expired, stale response was used due to proxy/fastcgi_cache_use_stale updating Cache已过期，(被其他nginx子进程)更新中</li>
+  <li>STALE – expired, stale response was used due to proxy/fastcgi_cache_use_stale Cache已过期，响应数据不合法，被污染</li>
+  <li>HIT 命中cache</li>
+</ul>
+
+<p><a href="/assets/files/2013-04/fastcgi_cache_miss_session_start.png" title="Nginx模块fastcgi_cache的几个注意点"><img src="/assets/files/2013-04/fastcgi_cache_miss_session_start-300x128.png" alt="FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中" /></a></p>
+
+<p>FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中</p>
+
+<p>　　程序代码是Discuz!论坛，随便开启测试了几下，发现/dev/shm/nginx_cache/下没有任何目录建立，也没有文件创建。调试的http header响应头里的X-Cache-CFC 结果一直是MISS。从服务器进程上来看，Nginx cache manager process 跟Nginx cache loader process 进程也正常运行：</p>
+
+<blockquote>
+  <p>root      3100     1  0 14:52 ?        00:00:00 nginx: master process /usr/sbin/nginx<br />
+  www-data  3101  3100  0 14:52 ?        00:00:00 nginx: worker process<br />
+  www-data  3102  3100  0 14:52 ?        00:00:00 nginx: cache manager process<br />
+  www-data  3103  3100  0 14:52 ?        00:00:00 nginx: cache loader process</p>
+</blockquote>
+
+<p>　　不知道为何会这样，为何没有cache成功，我以为我配置参数有问题，只好阅读WIKI。发现fastcgi_ignore_headers参数下解释有这么一段</p>
+
+<blockquote>
+  <p>fastcgi_ignore_headers<br />
+  Syntax: fastcgi_ignore_headers field …<br />
+  Default:<br />
+  Context: http<br />
+  server<br />
+  location<br />
+  Reference: fastcgi_ignore_headers</p>
+
+  <p>This directive forbids processing of the named headers from the<br />
+  FastCGI-server reply. It is possible to specify headers like<br />
+  “X-Accel-Redirect”, “X-Accel-Expires”, “Expires” or “Cache-Control”.</p>
+</blockquote>
+
+<p>　　也就是说这个参数的值，将会被忽略掉，同样被忽略掉的响应头比如”X-Accel-Redirect”,“X-Accel-Expires”, “Expires” or “Cache-Control”，而nginx配置中并没有fastcgi_ignore_headers参数的设定，那么问题会不会出现在FASTCGI响应结果里包含了类似”X-Accel-Redirect”,“X-Accel-Expires”, “Expires” or “Cache-Control”这几个响应头呢？用strace抓包，看了下nginx与fpm进程通讯的数据</p>
+
+<blockquote>
+  <p>####为了确保准确抓到处理该http请求的进程，我把nginx 、fpm都只开启了一个进程处理。<br />
+  //strace -ff -tt -s 1000 -o xxx.log -p PHPFPM-PID<br />
+  14:52:07.837334 write(3, “\1\6\0\1\0\343\5\0X-Powered-By: PHP/5.3.10-1ubuntu3.5\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nContent-type: text/html\r\n\r\nHello cfc4n1362034327\0\0\0\0\0\1\3\0\1\0\10\0\0\0\0\0\0\0\0\0\0”, 256) = 256</p>
+</blockquote>
+
+<blockquote>
+  <p>//strace -ff -tt -s 1000 -o xxx.log -p Nginx-PID<br />
+  15:05:13.265663 recvfrom(12, “\1\6\0\1\0\343\5\0X-Powered-By: PHP/5.3.10-1ubuntu3.5\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\r\nPragma: no-cache\r\nContent-type: text/html\r\n\r\nHello cfc4n1362035113\0\0\0\0\0\1\3\0\1\0\10\0\0\0\0\0\0\0\0\0\0”, 4023, 0, NULL, NULL) = 256</p>
+</blockquote>
+
+<p>　　从抓取的数据包里可以看到，fpm确实返回了包含“Expires”、“Cache-Control”头的http响应头信息。那么疑问来了：</p>
+
+<ul>
+  <li>nginx的fastcgi_cache没缓存这条http响应，是因为响应头里包含“Expires”、“Cache-Control”的原因吗？</li>
+  <li>程序里并没有输出“Expires”、“Cache-Control” http header的代码，这是谁输出的呢？</li>
+  <li>既然是fpm响应的时候，就已经有了，那么是php的core模块，还是其他拓展模块输出的？</li>
+  <li>“Expires:”时间为何是“<strong>Thu, 19 Nov 1981 08:52:00 GMT</strong>”?</li>
+</ul>
+
+<p>　　疑问比较多，一个一个查起，先从Nginx的fastcgi_cache没缓存这条http响应查起。我根据测试环境nginx版本1.1.9(ubuntu 12.04默认的)，到nginx官方下了对应版本的源码，搜索了fastcgi参数使用的地方，在httpngx_http_upstream.c找到了。虽然不能很流程的读懂nginx的代码，但粗略的了解，根据了解的情况加以猜测，再动手测试实验，也得出了结论，确定了nginx的fastcgi_cache的规则。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//ngx_http_upstream.c
+//line 3136  当fastcgi响应包含set-cookie时，不缓存
+static ngx_int_t
+ngx_http_upstream_process_set_cookie(ngx_http_request_t *r, ngx_table_elt_t *h,
+    ngx_uint_t offset)
+{
+#if (NGX_HTTP_CACHE)
+    ngx_http_upstream_t  *u;
+ 
+    u = r-&gt;upstream;
+ 
+    if (!(u-&gt;conf-&gt;ignore_headers &amp; NGX_HTTP_UPSTREAM_IGN_SET_COOKIE)) {
+        u-&gt;cacheable = 0;
+    }
+#endif
+ 
+    return NGX_OK;
+}
+ 
+//line 3242 当响应头包含Expires时，如果过期时间大于当前服务器时间，则nginx_cache会缓存该响应，否则，则不缓存
+static ngx_int_t
+ngx_http_upstream_process_expires(ngx_http_request_t *r, ngx_table_elt_t *h,
+    ngx_uint_t offset)
+{
+    ngx_http_upstream_t  *u;
+ 
+    u = r-&gt;upstream;
+    u-&gt;headers_in.expires = h;
+ 
+#if (NGX_HTTP_CACHE)
+    {
+    time_t  expires;
+ 
+    if (u-&gt;conf-&gt;ignore_headers &amp; NGX_HTTP_UPSTREAM_IGN_EXPIRES) {
+        return NGX_OK;
+    }
+ 
+    if (r-&gt;cache == NULL) {
+        return NGX_OK;
+    }
+ 
+    if (r-&gt;cache-&gt;valid_sec != 0) {
+        return NGX_OK;
+    }
+ 
+    expires = ngx_http_parse_time(h-&gt;value.data, h-&gt;value.len);
+ 
+    if (expires == NGX_ERROR || expires &lt; ngx_time()) {         u-&gt;cacheable = 0;
+        return NGX_OK;
+    }
+ 
+    r-&gt;cache-&gt;valid_sec = expires;
+    }
+#endif
+ 
+    return NGX_OK;
+}
+ 
+//line 3199  当响应头包含Cache-Control时，#####如果####这里有如果啊。。。
+//【注意】如果Cache-Control参数值为no-cache、no-store、private中任意一个时，则不缓存...不缓存...
+//【注意】如果Cache-Control参数值为max-age时，会被缓存，且nginx设置的cache的过期时间，就是系统当前时间 + mag-age的值
+    if (ngx_strlcasestrn(p, last, (u_char *) "no-cache", 8 - 1) != NULL
+        || ngx_strlcasestrn(p, last, (u_char *) "no-store", 8 - 1) != NULL
+        || ngx_strlcasestrn(p, last, (u_char *) "private", 7 - 1) != NULL)
+    {
+        u-&gt;cacheable = 0;
+        return NGX_OK;
+    }
+ 
+    p = ngx_strlcasestrn(p, last, (u_char *) "max-age=", 8 - 1);
+ 
+    if (p == NULL) {
+        return NGX_OK;
+    }
+    ...
+    r-&gt;cache-&gt;valid_sec = ngx_time() + n;
+</code></pre>
+</div>
+
+<p>　　也就是说，fastcgi响应http请求的结果中，响应头包括Expires、Cache-Control、Set-Cookie三个，都会可能不被cache，但不只有这些，别忘了nginx配置中fastcgi_ignore_headers参数设定的部分。以及ngxin的<a href="http://wiki.nginx.org/X-accel" title="X-Accel-Redirect、X-Accel-Expires等nginx自定义的响应头">X-ACCEL</a> X-Accel-Redirect、X-Accel-Expires、X-Accel-Charset、X-Accel-Buffering等nginx自定义的响应头。由于这几个不常用，我也没深入研究。通过对nginx的ngx_http_upstream模块代码模糊理解，加猜测，以及写了脚本测试验证，可以得到结论是正确的。即Nginx fastcgi_cache在缓存后端fastcgi响应时，当响应里包含“set-cookie”时，不缓存;当响应头包含Expires时，如果过期时间大于当前服务器时间，则nginx_cache会缓存该响应，否则，则不缓存;当响应头包含Cache-Control时，如果Cache-Control参数值为no-cache、no-store、private中任意一个时，则不缓存，如果Cache-Control参数值为max-age时，会被缓存，且nginx设置的cache的过期时间，就是系统当前时间 + mag-age的值。</p>
+
+<p><a href="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_expired.png" title="Nginx模块fastcgi_cache的几个注意点"><img src="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_expired-300x110.png" alt="nginx fastcgi_cache响应expired" /></a></p>
+
+<p>nginx fastcgi_cache 响应expired</p>
+
+<p><a href="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_hit.png" title="Nginx模块fastcgi_cache的几个注意点"><img src="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_hit-300x127.png" alt="nginx fastcgi_cache hit命中" /></a></p>
+
+<p>nginx fastcgi_cache hit命中</p>
+
+<p><a href="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_miss.png" title="Nginx模块fastcgi_cache的几个注意点"><img src="http://www.cnxct.com/wp-content/uploads/2013/02/fastcgi_cache_miss-300x141.png" alt="FASTCGI_CACHE $upstream_cache_status结果为miss，一次也没命中。" /></a></p>
+
+<p>FASTCGI_CACHE $upstream_cache_status 结果为miss，一次也没命中。</p>
+
+<blockquote>
+  <p>//逐个测试，测试时，注释其他的<br />
+  header(“Expires: “.gmdate(“D, d M Y H:i:s”, time()+10000).’ GMT’);<br />
+  header(“Expires: “.gmdate(“D, d M Y H:i:s”, time()-99999).’ GMT’);<br />
+  header(“X-Accel-Expires:30”);<br />
+  header(“Cache-Control: no-cache”);<br />
+  header(“Cache-Control: no-store”);<br />
+  header(“Cache-Control: private”);<br />
+  header(“Cache-Control: max-age=10”);<br />
+  setcookie(‘cfc4n’,”testaaaa”);<br />
+  echo ‘Hello cfc4n’,time();</p>
+</blockquote>
+
+<p>　　到了这里，疑问1解决了。那么疑问2、3呢？程序里并没有输出“Expires”、“Cache-Control” http header的代码，这是谁输出的呢？既然是fpm响应的时候，就已经有了，那么是php的core模块，还是其他拓展模块输出的？我精简了代码，只输出一个“hello world”，发现也确实被缓存了。显然，php脚本程序中并没输出http header的“Expires”、“Cache-Control”，多次测试，最终定位到session_start函数，翻阅源码找到了这些代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//ext/session/session.c  line:1190 左右
+// ...
+CACHE_LIMITER_FUNC(private) /* { { { */
+{
+    ADD_HEADER("Expires: Thu, 19 Nov 1981 08:52:00 GMT");
+    CACHE_LIMITER(private_no_expire)(TSRMLS_C);
+}
+/* } } } */
+//再到这里3 或者上面几个 ##默认是nocache
+CACHE_LIMITER_FUNC(nocache) /* { { { */
+{
+    ADD_HEADER("Expires: Thu, 19 Nov 1981 08:52:00 GMT");
+ 
+    /* For HTTP/1.1 conforming clients and the rest (MSIE 5) */
+    ADD_HEADER("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+ 
+    /* For HTTP/1.0 conforming clients */
+    ADD_HEADER("Pragma: no-cache");
+}
+/* } } } */
+//这里2
+static php_session_cache_limiter_t php_session_cache_limiters[] = {
+    CACHE_LIMITER_ENTRY(public)
+    CACHE_LIMITER_ENTRY(private)
+    CACHE_LIMITER_ENTRY(private_no_expire)
+    CACHE_LIMITER_ENTRY(nocache)
+    {0}
+};
+ 
+static int php_session_cache_limiter(TSRMLS_D) /* { { { */
+{
+    php_session_cache_limiter_t *lim;
+ 
+    if (PS(cache_limiter)[0] == '\0') return 0;
+ 
+    if (SG(headers_sent)) {
+        const char *output_start_filename = php_output_get_start_filename(TSRMLS_C);
+        int output_start_lineno = php_output_get_start_lineno(TSRMLS_C);
+ 
+        if (output_start_filename) {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "Cannot send session cache limiter - headers already sent (output started at %s:%d)", output_start_filename, output_start_lineno);
+        } else {
+            php_error_docref(NULL TSRMLS_CC, E_WARNING, "Cannot send session cache limiter - headers already sent");
+        }
+        return -2;
+    }
+ 
+    for (lim = php_session_cache_limiters; lim-&gt;name; lim++) {
+        if (!strcasecmp(lim-&gt;name, PS(cache_limiter))) {
+            lim-&gt;func(TSRMLS_C);   //这里1
+            return 0;
+        }
+    }
+ 
+    return -1;
+}
+// ...
+</code></pre>
+</div>
+
+<p>　　到了这里，知道原因了，是程序调用session_start时，php的session拓展自己输出的。session.cache_limit参数来决定输出包含哪种Expires的header，默认是nocache，修改php.ini的session.cache_limit参数为“none”即可让session模块不再输出这些http响应头。或在调用session_start之前，使用session_cache_limiter函数来指定下该参数值。那为什么要在使用session时，发Expires、Cache-Control的http response header呢？我猜测了下，需要session时，基本上是用户跟服务器有交互，那么，既然有交互，就意味着用户的每次交互结果也可能不一样，就不能cache这个请求的结果，给返回给这个用户。同时，每个用户的交互结果都是不一样的，nginx也就不能把包含特殊Cache-Control的个人响应cache给其他人提供了。</p>
+
+<p>　　还有一个无聊的问题<strong>“Expires:时间为何是Thu, 19 Nov 1981 08:52:00 GMT”</strong>？我翻阅了session.c这段代码的添加时间，版本，作者信息，在php官方版本库中找到了<a href="http://svn.php.net/viewvc/php/php-src/trunk/ext/session/session.c?view=log&amp;log_pagestart=400">这次提交的信息</a>：</p>
+
+<blockquote>
+  <p>Revision 17092 – (view) (download) (as text) (annotate) – [select for diffs]<br />
+  Modified Sun Dec 12 14:16:55 1999 UTC (13 years, 2 months ago) by sas<br />
+  File length: 28327 byte(s)<br />
+  Diff to previous 16964<br />
+  Add cache_limiter and cache_expire options. Rename extern_referer_check<br />
+  to referer_check.</p>
+</blockquote>
+
+<p>　　对比<a href="http://svn.php.net/viewvc/php/php-src/trunk/ext/session/session.c?r1=16964&amp;r2=17092" title="session.c增加session.cache_limiter参数">session.c两个版本</a>的变更，果然是这块代码。作者是sas，也就是<a href="http://schumann.cx/">Sascha Schumann</a>， <a href="http://php.net/credits.php" title="php credits">http://php.net/credits.php</a>里可以看到他的大名。关于这个expires过期时间的问题，有人在stackoverflow也提问过，<a href="http://stackoverflow.com/questions/8194481/why-is-expires-1981" title="Why is “Expires” 1981?">Why is “Expires” 1981?</a>，别人说那天是他生日。这是真的么？如果那天是他生日的话，而他增加session.cache_limiter时是1999年，他才17岁，17岁呀。我17岁时在干嘛？还不知道电脑长啥样，正在玩『超级玛丽』呢。</p>
+
+<p>　　好奇的不是我一个人，还有个帖子是<a href="http://bytes.com/topic/php/answers/540207-epoch-date-expires-thu-19-nov-1981-08-52-00-a" title="epoch date -- Expires: Thu, 19 Nov 1981 08:52:00">epoch date — Expires: Thu, 19 Nov 1981 08:52:00</a>也问了。另外两个地址虽然没问，也有人提到那天是他生日了。<a href="http://boinc.berkeley.edu/dev/forum_thread.php?id=2514">http://boinc.berkeley.edu/dev/forum_thread.php?id=2514</a>、<a href="https://github.com/codeguy/Slim/issues/157">https://github.com/codeguy/Slim/issues/157</a>，这些帖子都提到说原帖是http://www.phpbuilder.com/lists/php3-list/199911/3159.php，我无法访问，被跳转到首页了。用http://web.archive.org找到了<a href="http://web.archive.org/web/20120315000650/http://www.phpbuilder.com/lists/php3-list/199911/3159.php">历史快照</a>，发现上下文关系不大，也不能证明是他生日。
+　　我更是好奇的发了两封邮件到他的不同邮箱里问他，不过，目前他还没回复。或许他没收到、没看到，或许懒得回了。N年后，<strong>“Expires:时间为何是Thu,19 Nov 1981 08:52:00 GMT”</strong>这个日期，会不会又成了一段奇闻佳话了呢？</p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

@@ -1,130 +1,195 @@
----
-layout: author_layout
----
-<div class="container">
+
+<!DOCTYPE html>
+<html>
+
+  <link rel="stylesheet" href="/assets/css/icard_resume.css">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>HuangDing</title>
+  <meta name="description" content="Huang Ding">
+
+  <link rel="canonical" href="127.0.0.1/about">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+  <body>
+
+    <div class="header">
+    <div class="container">
+        <div class="row-center">
+            <div class="col-md-7">
+                <a href="index.html"><img src="/assets/img/avatar.png" title="Avatar" alt="My Avatar"></a>
+                <h4>黃丁</h4>
+                <p>软件工程師</p>
+                <p class="muted">中國, 廣州</p>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-5">
+                <h4>&nbsp;</h4>
+                <p><i class="fa fa-github fa-fw"></i><a href="https://github.com/beango" target="_blank">  <font color="#5F9EA0">beango</font> </a></p>
+                <p><i class="fa fa-envelope-o fa-fw"></i> 6588617@gmail.com </p>
+            </div>
+            <!-- <div class="col-sm-4 visible-md-block visible-lg-block">
+                <a href="#" class="btn btn-dark"><i class="icon-file icon-white"></i> Download.pdf </a>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="container">
     <div class="row-center">
         <div class="col-md-7">
-            {% if site.data.author.workHistory %}
+            
                 <h3 class="title with-icon"><span class="glyphicon glyphicon-plane cat-title"></span>Work History</h3>
                 <ul class="timeline">
-                    {% for work in site.data.author.workHistory %}
+                    
                         <li class="timeline-inverted">
-                            {% if work.started %}
-                                <div class="timeline-badge info">{{ work.started }}</div>
-                            {% endif %}
+                            
+                                <div class="timeline-badge info">2012</div>
+                            
                             <div class="timeline-panel grid-block">
                                 <div class="timeline-heading">
-                                    {% if work.company %}
-                                        <h4 class="timeline-title">{{ work.company }} </h4>
-                                    {% endif %}
+                                    
+                                        <h4 class="timeline-title">千朋財富 </h4>
+                                    
                                     <p>
                                         <small class="text-muted">
-                                            {% if work.title %}
-                                                {{ work.title }}
-                                            {% endif %}
+                                            
+                                                研發
+                                            
                                         </small>
                                     </p>
                                     <p>
                                         <small class="text-muted">
-                                            {% if work.duration %}
-                                                <i class="fa fa-calendar"></i> {{ work.duration }} |
-                                            {% endif %}
-                                            {% if work.location %}
-                                                <i class="fa fa-map-marker"></i>  {{ work.location }}
-                                            {% endif %}
+                                            
+                                                <i class="fa fa-calendar"></i> (2012.6 - now) |
+                                            
+                                            
+                                                <i class="fa fa-map-marker"></i>  中国, 廣州
+                                            
                                         </small>
                                     </p>
                                 </div>
                                 <div class="timeline-body">
-                                    {% if work.description %}
-                                        <p>{{ work.description }}</p>
-                                    {% endif %}
+                                    
+                                        <p>CRM開發；理財、期貨、現貨。</p>
+                                    
                                 </div>
                             </div>
                         </li>
-                    {% endfor %}
+                    
                 </ul>
-            {% endif %}
-            {% if site.data.author.educationHistory %}
+            
+            
                 <h3 class="title with-icon"><span class="fa fa-book cat-title"></span>Education History</h3>
                 <ul class="timeline">
-                    {% for education in site.data.author.educationHistory %}
+                    
                         <li class="timeline-inverted">
-                            {% if education.started %}
-                                <div class="timeline-badge info">{{ education.started }}</div>
-                            {% endif %}
+                            
+                                <div class="timeline-badge info">2001</div>
+                            
                             <div class="timeline-panel grid-block">
                                 <div class="timeline-heading">
-                                    {% if education.organization %}
-                                        <h4 class="timeline-title">{{ education.organization }}</h4>
-                                    {% endif %}
+                                    
+                                        <h4 class="timeline-title">東華理工大學</h4>
+                                    
                                     <p>
                                         <small class="text-muted">
-                                            {% if education.degree %}
-                                                {{ education.degree }}
-                                            {% endif %}
-                                            {% if education.major %}
-                                                , {{ education.major }}
-                                            {% endif %}
+                                            
+                                                学士
+                                            
+                                            
+                                                , 信息管理與信息系統
+                                            
                                         </small>
                                     </p>
-                                    {% if education.duration %}
+                                    
                                         <p>
-                                            <small class="text-muted"><i class="fa fa-calendar"></i> {{ education.duration }}
+                                            <small class="text-muted"><i class="fa fa-calendar"></i> (2001.9 - 2005.7)
                                             </small>
                                         </p>
-                                    {% endif %}
+                                    
                                 </div>
                                 <div class="timeline-body">
-                                    {% if education.description %}
-                                        <p>{{ education.description }}</p>
-                                    {% endif %}
+                                    
+                                        <p>自学 C/C++, Java, Linux, 培训并参加过 ACM 比赛</p>
+                                    
                                 </div>
                             </div>
                         </li>
-                    {% endfor %}
+                    
                 </ul>
-            {% endif %}
+            
         </div>
         <div class="col-md-5">
-            {% if site.data.author.programmingSkills %}
+            
                 <h3 class="title with-icon"><span class="fa fa-code cat-title"></span> Programming Skills</h3>
                 <div class="grid-block">
                     <ul class="list-unstyled list-skills">
-                        {% for programmingSkill in site.data.author.programmingSkills %}
+                        
                             <li>
-                                {% if programmingSkill.name %}
-                                    <span class="caption-skill">{{ programmingSkill.name }}</span>
-                                {% endif %}
-                                {% if programmingSkill.percentage %}
+                                
+                                    <span class="caption-skill">DotNet/C#</span>
+                                
+                                
                                     <div class="progress">
-                                        <div class="progress-bar" style="width: {{ programmingSkill.percentage }}">
-                                            <span>{{ programmingSkill.percentage }} </span>
+                                        <div class="progress-bar" style="width: 90%">
+                                            <span>90% </span>
                                         </div>
                                     </div>
-                                {% endif %}
+                                
                             </li>
-                        {% endfor %}
+                        
                     </ul>
                 </div>
-            {% endif %}
-            {% if site.data.author.languages %}
+            
+            
                 <div class="deviter"></div>
                 <h3 class="title with-icon"><span class="fa fa-globe cat-title"></span> Language Skills</h3>
                 <div class="grid-block">
                     <ul class="list-unstyled list-strip">
-                        {% for language in site.data.author.languages %}
-                            {% if language.name %}
-                                {% if language.proficiency %}
+                        
+                            
+                                
                                     <li>
-                                        <i class="fa fa-check"></i> <span class="badge badge-green badge-right-float">{{ language.proficiency }}</span>{{ language.name }}
+                                        <i class="fa fa-check"></i> <span class="badge badge-green badge-right-float">Native</span>中文
                                     </li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
+                                
+                            
+                        
+                            
+                                
+                                    <li>
+                                        <i class="fa fa-check"></i> <span class="badge badge-green badge-right-float">Limit</span>English
+                                    </li>
+                                
+                            
+                        
                     </ul>
                 </div>
-            {% endif %}
+            
             <div class="deviter"></div>
             <h3 class="title with-icon"><span class="fa fa-location-arrow cat-title"></span> Location</h3>
             <div class="grid-block">
@@ -133,3 +198,22 @@ layout: author_layout
         </div>
     </div>
 </div>
+
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

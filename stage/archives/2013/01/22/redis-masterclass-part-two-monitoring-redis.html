@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Redis监控技巧</title>
+  <meta name="description" content="本文来自 Bugsnag 的联合创始人 Simon Maynard 的系列文章，作者根据几年来对Redis的使用经历，对 Redis监控方法进行了系统性的总结，干货很多，值得一看。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/01/22/redis-masterclass-part-two-monitoring-redis.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Redis监控技巧</h1>
+                <p class="article-time">
+                    发表于 <span>2013-01-22</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://blog.nosqlfan.com/html/4166.html' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>本文来自 <a href="https://bugsnag.com/">Bugsnag</a> 的联合创始人 <a href="https://twitter.com/snmaynard/">Simon Maynard</a> 的系列文章，作者根据几年来对
+<a href="http://blog.nosqlfan.com/tags/redis" title="查看 Redis 的全部文章">Redis</a>的使用经历，对 Redis<a href="http://blog.nosqlfan.com/tags/%e7%9b%91%e6%8e%a7" title="查看 监控 的全部文章">监控</a>方法进行了系统性的总结，干货很多，值得一看。</p>
+
+<p>原文链接：<a href="http://snmaynard.com/2013/01/22/redis-masterclass-part-two-monitoring-redis/">Redis Masterclass – Part 2, Monitoring</a></p>
+
+<p>Redis 监控最直接的方法当然就是使用系统提供的 info
+命令来做了，你只需要执行下面一条命令，就能获得 Redis 系统的状态报告。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>redis-cli info
+</code></pre>
+</div>
+
+<h2 id="section">内存使用</h2>
+
+<p>如果 Redis 使用的内存超出了可用的物理内存大小，那么 Redis 很可能系统会被
+<a href="http://linux-mm.org/OOM_Killer">OOM Killer</a> 杀掉。针对这一点，你可以通过
+info 命令对 <em>used_memory</em> 和 <em>used_memory_peak</em>
+进行监控，为使用内存量设定阈值，并设定相应的报警机制。当然，报警只是手段，重要的是你得预先计划好，当内存使用量过大后，你应该做些什么，是清除一些没用的冷数据，还是把
+Redis 迁移到更强大的机器上去。</p>
+
+<h2 id="section-1">持久化</h2>
+
+<p>如果因为你的机器或 Redis 本身的问题导致 Redis
+崩溃了，那么你唯一的救命稻草可能就是 dump 出来的 rdb文件了，所以，对 Redis
+dump 文件进行监控也是很重要的。你可以通过对 <em>rdb_last_save_time</em>
+进行监控，了解你最近一次 dump 数据操作的时间，还可以通过对
+<em>rdb_changes_since_last_save</em>
+进行监控来知道如果这时候出现故障，你会丢失多少数据。</p>
+
+<h2 id="section-2">主从复制</h2>
+
+<p>如果你设置了主从复制模式，那么你最好对复制的情况是否正常做一些监控，主要是对
+info 输出中的 <em>master_link_status</em> 进行监控，如果这个值是
+up，那么说明同步正常，如果是
+down，那么你就要注意一下输出的其它一些诊断信息了。比如下面这些：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>role:slave
+master_host:192.168.1.128
+master_port:6379
+master_link_status:down
+master_last_io_seconds_ago:-1
+master_sync_in_progress:0
+master_link_down_since_seconds:1356900595
+</code></pre>
+</div>
+
+<h2 id="fork-">Fork 性能</h2>
+
+<p>当 Redis 持久化数据到磁盘上时，它会进行一次 fork 操作，通过 fork 对内存的
+copy on write 机制最廉价的实现内存镜像。但是虽然内存是 copy on write
+的，但是虚拟内存表是在 fork 的瞬间就需要分配，所以 fork
+会造成主线程短时间的卡顿（停止所有读写操作），这个卡顿时间和当前 Redis
+的内存使用量有关。通常 GB 量级的 Redis 进行 fork
+操作的时间在毫秒级。你可以通过对 info 输出的 <em>latest_fork_usec</em>
+进行监控来了解最近一次 fork 操作导致了多少时间的卡顿。</p>
+
+<h2 id="section-3">配置一致</h2>
+
+<p>Redis 支持使用 <a href="http://redis.io/commands/config-set">CONFIG SET</a>操作来实现运行实的配置修改，这很方便，但同时也会导致一个问题。就是通过这个命令动态修改的配置，是不会同步到你的配置文件中去的。所以当你因为某些原因重启Redis 时，你使用 CONFIG SET做的配置修改就会丢失掉，所以我们最好保证在每次使用 CONFIG SET修改配置时，也把配置文件一起相应地改掉。为了防止人为的失误，所以我们最好对配置进行监控，使用<a href="http://redis.io/commands/config-get">CONFIG GET</a>命令来获取当前运行时的配置，并与 redis.conf中的配置值进行对比，如果发现两边对不上，就启动报警。</p>
+
+<h2 id="section-4">慢日志</h2>
+
+<p>Redis 提供了 <a href="http://redis.io/commands/slowlog">SLOWLOG</a>指令来获取最近的慢日志，Redis的慢日志是直接存在内存中的，所以它的慢日志开销并不大，在实际应用中，我们通过crontab 任务执行 SLOWLOG 命令来获取慢日志，然后将慢日志存到文件中，并用<a href="http://kibana.org/">Kibana</a> 生成实时的性能图表来实现性能监控。</p>
+
+<p>值得一提的是，Redis 的慢日志记录的时间，仅仅包括 Redis自身对一条命令的执行时间，不包括 IO 的时间，比如接收客户端数据和发送客户端数据这些时间。另外，Redis的慢日志和其它数据库的慢日志有一点不同，其它数据库偶尔出现 100ms的慢日志可能都比较正常，因为一般数据库都是多线程并发执行，某个线程执行某个命令的性能可能并不能代表整体性能，但是对Redis来说，它是单线程的，一旦出现慢日志，可能就需要马上得到重视，最好去查一下具体是什么原因了。</p>
+
+<h2 id="section-5">监控服务</h2>
+
+<p><strong>-Sentinel</strong></p>
+
+<p><a href="http://redis.io/topics/sentinel">Sentinel</a> 是 Redis 自带的工具，它可以对Redis主从复制进行监控，并实现主挂掉之后的自动故障转移。在转移的过程中，它还可以被配置去执行一个用户自定义的脚本，在脚本中我们就能够实现报警通知等功能。</p>
+
+<p><strong>-Redis Live</strong></p>
+
+<p><a href="http://www.nkrode.com/article/real-time-dashboard-for-redis">Redis Live</a>
+是一个更通用的 Redis 监控方案，它的原理是定时在 Redis 上执行<a href="http://redis.io/commands/monitor">MONITOR</a> 命令，来获取当前 Redis 当前正在执行的命令，并通过统计分析，生成web页面的可视化分析报表。</p>
+
+<p><strong>-Redis Faina</strong></p>
+
+<p><a href="http://instagram-engineering.tumblr.com/post/23132009381/redis-faina-a-query-analysis-tool-for-redis">Redis Faina</a>
+是由著名的图片分享应用 instagram 开发的 Redis 监控服务，其原理和 Redis Live 类似，都是对通过<a href="http://blog.nosqlfan.com/tags/monitor" title="查看 MONITOR 的全部文章">MONITOR</a>来做的。</p>
+
+<h2 id="section-6">数据分布</h2>
+
+<p>弄清 Redis 中数据存储分布是一件很难的是，比如你想知道哪类型的 key
+值占用内存最多。下面是一些工具，可以帮助你对 Redis 的数据集进行分析。</p>
+
+<p><strong>-Redis-sampler</strong></p>
+
+<p><a href="https://github.com/antirez/redis-sampler">Redis-sampler</a> 是 Redis作者开发的工具，它通过采样的方法，能够让你了解到当前 Redis 中的数据的大致类型，数据及分布状况。</p>
+
+<p><strong>-Redis-audit</strong></p>
+
+<p><a href="https://github.com/snmaynard/redis-audit">Redis-audit</a>
+是一个脚本，通过它，我们可以知道每一类 key
+对内存的使用量。它可以提供的数据有：某一类 key
+值的访问频率如何，有多少值设置了过期时间，某一类 key
+值使用内存的大小，这很方便让我们能排查哪些 key 不常用或者压根不用。</p>
+
+<p><strong>-Redis-rdb-tools</strong></p>
+
+<p><a href="https://github.com/sripathikrishnan/redis-rdb-tools">Redis-rdb-tools</a>
+跟 Redis-audit 功能类似，不同的是它是通过对 rdb
+文件进行分析来取得统计数据的。</p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

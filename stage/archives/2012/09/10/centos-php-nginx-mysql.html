@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</title>
+  <meta name="description" content="操作环境  操作系统:Win7旗舰版  虚拟主机:Oracle VM VirtualBox  虚拟系统:Centos 6.3  操作用户:Root  实现目的:搭建LNMP环境.">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/09/10/centos-php-nginx-mysql.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Centos搭建PHP5.3.8+Nginx1.0.9+Mysql5.5.17</h1>
+                <p class="article-time">
+                    发表于 <span>2012-09-10</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					
+                </p>
+            </header>
+            <h3 id="section">操作环境</h3>
+<ul>
+  <li>操作系统:Win7旗舰版</li>
+  <li>虚拟主机:Oracle VM VirtualBox</li>
+  <li>虚拟系统:Centos 6.3</li>
+  <li>操作用户:Root</li>
+  <li>实现目的:搭建LNMP环境.</li>
+</ul>
+
+<h3 id="section-1">安装依赖库和开发环境</h3>
+
+<li>依赖库和开发工具</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers  
+</code></pre>
+</div>
+
+<li>Nginx</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install pcre-devel  zlib-devel
+</code></pre>
+</div>
+
+<li>Php</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install gd-devel libjpeg-devel libpng-devel freetype-devel libxml2-devel curl-devel freetype-devel  
+</code></pre>
+</div>
+
+<li>Mysql</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install bison gcc gcc-c++ autoconf automake zlib\* libxml\* ncurses-devel libtool-ltdl-devel\* mysql-devel  
+</code></pre>
+</div>
+
+<h3 id="section-2">下载软件包</h3>
+<li>创建目录</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir /web  
+cd /web 
+</code></pre>
+</div>
+
+<li>PHP5.3.7</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://cn.php.net/distributions/php-5.3.8.tar.bz2
+</code></pre>
+</div>
+
+<li>PHP库文件</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://ncu.dl.sourceforge.net/project/mcrypt/MCrypt/2.6.8/mcrypt-2.6.8.tar.gz  
+wget http://ncu.dl.sourceforge.net/project/mhash/mhash/0.9.9.9/mhash-0.9.9.9.tar.gz  
+wget http://ncu.dl.sourceforge.net/project/mcrypt/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz  
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+</code></pre>
+</div>
+
+<li>Nginx1.0.9</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://www.nginx.org/download/nginx-1.0.9.tar.gz
+</code></pre>
+</div>
+
+<li>Nginx(pcre)</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.13.tar.gz
+</code></pre>
+</div>
+
+<li>Mysql5.5.17</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.17.tar.gz/from/http://mysql.ntu.edu.tw/
+</code></pre>
+</div>
+
+<li>Mysql(cmake1)</li>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>wget http://www.cmake.org/files/v2.8/cmake-2.8.6.tar.gz
+</code></pre>
+</div>
+
+<h3 id="mysql">安装Mysql</h3>
+
+<ul>
+  <li>安装cmake</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">cmake</span><span class="o">-</span><span class="mf">2.8.6</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span>  
+<span class="nv">cd</span> <span class="nv">cmake</span><span class="o">-</span><span class="mf">2.8.6</span><span class="o">/</span>  
+<span class="o">./</span><span class="nv">configure</span>  
+<span class="nv">gmake</span> <span class="o">&amp;&amp;</span> <span class="nv">gmake</span> <span class="nv">install</span>  <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>添加mysql用户</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="sr">/usr/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">groupadd</span> <span class="nv">mysql</span>  
+<span class="sr">/usr/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">useradd</span> <span class="o">-</span><span class="nv">g</span> <span class="nv">mysql</span> <span class="nv">mysql</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="nv">p</span> <span class="sr">/data/m</span><span class="nv">ysql</span>  
+<span class="nb">chown</span> <span class="o">-</span><span class="nv">R</span> <span class="nv">mysql:mysql</span> <span class="sr">/data/m</span><span class="nv">ysql</span>  </code></pre></figure>
+
+</div>
+
+<ul>
+  <li>安装Mysql</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">mysql</span><span class="o">-</span><span class="mf">5.5.27</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span>  
+<span class="nv">cd</span> <span class="nv">mysql</span><span class="o">-</span><span class="mf">5.5.27</span>  
+<span class="c1"># 便于粘贴运行 START  </span>
+<span class="nv">shell</span> <span class="o">&gt;</span> <span class="nv">sudo</span> <span class="nv">cmake</span> <span class="o">.</span> <span class="o">-</span><span class="nv">DCMAKE_INSTALL_PREFIX</span><span class="o">=</span><span class="sr">/opt/m</span><span class="nv">ysql</span> <span class="o">-</span><span class="nv">DMYSQL_DATADIR</span><span class="o">=</span><span class="sr">/opt/m</span><span class="nv">ysql</span><span class="o">/</span><span class="nv">data</span> <span class="o">-</span><span class="nv">DMYSQL_USER</span><span class="o">=</span><span class="nv">mysql</span> <span class="o">-</span><span class="nv">DDEFAULT_CHARSET</span><span class="o">=</span><span class="nv">utf8</span> <span class="o">-</span><span class="nv">DDEFAULT_COLLATION</span><span class="o">=</span><span class="nv">utf8_general_ci</span> <span class="o">-</span><span class="nv">DWITH_EXTRA_CHARSETS</span><span class="o">=</span><span class="nv">all</span> <span class="o">-</span><span class="nv">DWITH_READLINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="nv">DWITH_SSL</span><span class="o">=</span><span class="nb">system</span> <span class="o">-</span><span class="nv">DWITH_EMBEDDED_SERVER</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="nv">DWITH_ZLIB</span><span class="o">=</span><span class="nb">system</span> <span class="o">-</span><span class="nv">DWITH_LIBWRAP</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="nv">DWITH_INNOBASE_STORAFE_ENGINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="nv">DENABLE_LOCAL_INFILE</span><span class="o">=</span><span class="mi">1</span>  
+<span class="c1"># 便于粘贴运行 END  </span>
+<span class="nv">cmake</span> <span class="o">.</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DCMAKE_INSTALL_PREFIX</span><span class="o">=</span><span class="sr">/opt/m</span><span class="nv">ysql</span> <span class="o">\</span> <span class="c1">#指定安装目录  </span>
+<span class="o">-</span><span class="nv">DMYSQL_DATADIR</span><span class="o">=</span><span class="sr">/opt/m</span><span class="nv">ysql</span><span class="o">/</span><span class="nv">data</span> <span class="o">\</span> <span class="c1">#指定data目录  </span>
+<span class="o">-</span><span class="nv">DMYSQL_USER</span><span class="o">=</span><span class="nv">mysql</span> <span class="c1">#指定运行mysqld的用户，默认就是mysql，所以此配置可忽略，但记得添加mysql用户  </span>
+<span class="o">-</span><span class="nv">DDEFAULT_CHARSET</span><span class="o">=</span><span class="nv">utf8</span> <span class="o">\</span> <span class="c1">#指定默认字符集  </span>
+<span class="o">-</span><span class="nv">DDEFAULT_COLLATION</span><span class="o">=</span><span class="nv">utf8_general_ci</span> <span class="o">\</span> <span class="c1">#指定默认连接校对字符集  </span>
+<span class="o">-</span><span class="nv">DWITH_EXTRA_CHARSETS</span><span class="o">=</span><span class="nv">all</span> <span class="o">\</span> <span class="c1">#安装所有字符集  </span>
+<span class="o">-</span><span class="nv">DWITH_READLINE</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DWITH_SSL</span><span class="o">=</span><span class="nb">system</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DWITH_EMBEDDED_SERVER</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DWITH_ZLIB</span><span class="o">=</span><span class="nb">system</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DWITH_LIBWRAP</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span>  
+<span class="o">-</span><span class="nv">DWITH_INNOBASE_STORAFE_ENGINE</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#开启INNODB引擎，MyISAM MERGE MEMORY CSV是默认安装的  </span>
+<span class="o">-</span><span class="nv">DENABLE_LOCAL_INFILE</span><span class="o">=</span><span class="mi">1</span> <span class="o">\</span> <span class="c1">#开启 LOAD DATA INFILE，就是从文件导入数据库  </span>
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>设置Mysql</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="c1">#在support-files目录中有五个配置信息文件：  </span>
+<span class="c1">#my-small.cnf (内存&lt;=64M)  </span>
+<span class="c1">#my-medium.cnf (内存 128M)  </span>
+<span class="c1">#my-large.cnf (内存 512M)  </span>
+<span class="c1">#my-huge.cnf (内存 1G-2G)  </span>
+<span class="c1">#my-innodb-heavy-4G.cnf (内存 4GB)  </span>
+<span class="nv">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="nv">mysql</span>  
+<span class="nv">cp</span> <span class="o">.</span><span class="sr">/support-files/m</span><span class="nv">y</span><span class="o">-</span><span class="nv">medium</span><span class="o">.</span><span class="nv">cnf</span> <span class="sr">/etc/m</span><span class="nv">y</span><span class="o">.</span><span class="nv">cnf</span>  
+<span class="nv">vi</span> <span class="sr">/etc/m</span><span class="nv">y</span><span class="o">.</span><span class="nv">cnf</span>  
+<span class="c1">#在 [mysqld] 段增加  </span>
+<span class="nv">datadir</span> <span class="o">=</span> <span class="sr">/data/m</span><span class="nv">ysql</span>  
+<span class="nb">wait</span><span class="o">-</span><span class="nv">timeout</span> <span class="o">=</span> <span class="mi">30</span>  
+<span class="nv">max_connections</span> <span class="o">=</span> <span class="mi">512</span>  
+<span class="nv">default</span><span class="o">-</span><span class="nv">storage</span><span class="o">-</span><span class="nv">engine</span> <span class="o">=</span> <span class="nv">MyISAM</span>  
+<span class="c1">#在 [mysqld] 段修改  </span>
+<span class="nv">max_allowed_packet</span> <span class="o">=</span> <span class="mi">16</span><span class="nv">M</span> </code></pre></figure>
+
+</div>
+
+<ul>
+  <li>生成授权表</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="nv">mysql</span>  
+<span class="o">.</span><span class="sr">/scripts/m</span><span class="nv">ysql_install_db</span> <span class="o">--</span><span class="nv">user</span><span class="o">=</span><span class="nv">mysql</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>更改密码</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">mysqladmin</span> <span class="o">-</span><span class="nv">u</span> <span class="nv">root</span> <span class="nv">password</span> <span class="mi">123456</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>开启mysql</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">mysqld_safe</span> <span class="o">&amp;</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>测试连接mysql</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">mysql</span> <span class="o">-</span><span class="nv">u</span> <span class="nv">root</span> <span class="o">-</span><span class="nv">p</span> <span class="mi">123456</span>  
+<span class="nv">show</span> <span class="nv">databases</span><span class="p">;</span>  
+<span class="nb">exit</span><span class="p">;</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>设置开机启动</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">vi</span> <span class="sr">/etc/</span><span class="nv">rc</span><span class="o">.</span><span class="nv">d</span><span class="o">/</span><span class="nv">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">mysqld_safe</span> <span class="o">&amp;</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>允许远程访问</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nv">mysql</span><span class="p">;</span>
+<span class="nv">update</span> <span class="nv">user</span> <span class="nv">set</span> <span class="nv">host</span> <span class="o">=</span> <span class="s">'%'</span> <span class="nv">where</span> <span class="nv">user</span> <span class="o">=</span> <span class="s">'用户名'</span><span class="p">;</span> <span class="err">（如果写成</span> <span class="nv">host</span><span class="o">=</span><span class="nv">localhost</span> <span class="err">那此用户就不具有远程访问权限）</span>
+<span class="nv">FLUSH</span> <span class="nv">PRIVILEGES</span><span class="p">;</span></code></pre></figure>
+
+</div>
+
+<h3 id="php">安装PHP</h3>
+
+<ul>
+  <li>1</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">libiconv</span><span class="o">-</span><span class="mf">1.14</span><span class="o">/</span>  
+<span class="o">.</span><span class="sr">/configure --prefix=/</span><span class="nv">usr</span><span class="o">/</span><span class="nb">local</span>  
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>2</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">libmcrypt</span><span class="o">-</span><span class="mf">2.5.8</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">libmcrypt</span><span class="o">-</span><span class="mf">2.5.8</span><span class="o">/</span>  
+<span class="o">./</span><span class="nv">configure</span> <span class="o">&amp;&amp;</span>  <span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span>  
+<span class="sr">/sbin/</span><span class="nv">ldconfig</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">libltdl</span><span class="sr">/ &amp;&amp; ./co</span><span class="nv">nfigure</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">ltdl</span><span class="o">-</span><span class="nv">install</span>  
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>3</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">mhash</span><span class="o">-</span><span class="mf">0.9.9.9</span><span class="sr">/ &amp;&amp; ./co</span><span class="nv">nfigure</span>  
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>4</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">la</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">la</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span><span class="mf">.4</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span><span class="mf">.4</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span><span class="mf">.4.4.8</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmcrypt</span><span class="o">.</span><span class="nv">so</span><span class="mf">.4.4.8</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">a</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">a</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">la</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">la</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span><span class="mf">.2</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span><span class="mf">.2</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/lib/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span><span class="mf">.2.0.1</span> <span class="sr">/usr/</span><span class="nv">lib</span><span class="o">/</span><span class="nv">libmhash</span><span class="o">.</span><span class="nv">so</span><span class="mf">.2.0.1</span>  
+<span class="nv">ln</span> <span class="o">-</span><span class="nv">s</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/bin/</span><span class="nv">libmcrypt</span><span class="o">-</span><span class="nv">config</span> <span class="sr">/usr/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">libmcrypt</span><span class="o">-</span><span class="nv">config</span>  </code></pre></figure>
+
+</div>
+
+<ul>
+  <li>5</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">mcrypt</span><span class="o">-</span><span class="mf">2.6.8</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">mcrypt</span><span class="o">-</span><span class="mf">2.6.8</span><span class="o">/</span>  
+<span class="sr">/sbin/</span><span class="nv">ldconfig</span>  
+<span class="o">./</span><span class="nv">configure</span>  
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>6</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">xjvf</span> <span class="nv">php</span><span class="o">-</span><span class="mf">5.3.8</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">bz2</span>  
+<span class="nv">cd</span> <span class="nv">php</span><span class="o">-</span><span class="mf">5.3.8</span>
+
+<span class="o">.</span><span class="sr">/configure --prefix=/</span><span class="nv">usr</span><span class="sr">/local/</span><span class="nv">php</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">config</span><span class="o">-</span><span class="nv">file</span><span class="o">-</span><span class="nv">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="nv">etc</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">iconv</span><span class="o">-</span><span class="nv">dir</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">freetype</span><span class="o">-</span><span class="nv">dir</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">mysql</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="nv">mysql</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">mysqli</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/mysql/</span><span class="nv">bin</span><span class="o">/</span><span class="nv">mysql_config</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">jpeg</span><span class="o">-</span><span class="nv">dir</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">png</span><span class="o">-</span><span class="nv">dir</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">zlib</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">mhash</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">sockets</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">ftp</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">libxml</span><span class="o">-</span><span class="nv">dir</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">xml</span> <span class="o">--</span><span class="nv">disable</span><span class="o">-</span><span class="nv">rpath</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">safe</span><span class="o">-</span><span class="nv">mode</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">bcmath</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">shmop</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">sysvsem</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">inline</span><span class="o">-</span><span class="nv">optimization</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">curl</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">curlwrappers</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">mbregex</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">mbstring</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">mcrypt</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">gd</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">gd</span><span class="o">-</span><span class="nv">native</span><span class="o">-</span><span class="nv">ttf</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">openssl</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">mhash</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">pcntl</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">sockets</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">ldap</span> <span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">ldap</span><span class="o">-</span><span class="nv">sasl</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">fpm</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">xmlrpc</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">zip</span> <span class="o">--</span><span class="nv">enable</span><span class="o">-</span><span class="nv">soap</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">without</span><span class="o">-</span><span class="nv">pear</span> <span class="o">\</span>  
+
+<span class="nv">make</span> <span class="nv">ZEND_EXTRA_LIBS</span><span class="o">=</span><span class="s">'-liconv'</span>  
+
+<span class="c1">#注意这里容易出现 make: *** [ext/phar/phar.php] 错误 127  </span>
+
+<span class="c1">#出现mysql client解决方法  </span>
+<span class="c1">#ln -s /usr/local/mysql/lib/libmysqlclient.so /usr/lib/  </span>
+<span class="c1">#ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18  </span>
+
+<span class="c1">#或者chmod: 无法访问 “ext/phar/phar.phar”: 没有那个文件或目录  </span>
+<span class="c1">#make: [ext/phar/phar.phar] 错误 1 (忽略)  </span>
+<span class="c1">#解决方法在编译的时候加--without-pear参数  </span>
+
+<span class="c1">#如果还不行,make的时候不添加 ZEND_EXTRA_LIBS='-liconv' 参数  </span>
+
+<span class="nv">make</span> <span class="nv">install</span>  
+
+<span class="c1">#选择PHP.ini配置文件  </span>
+<span class="nv">cp</span> <span class="nv">php</span><span class="o">.</span><span class="nv">ini</span><span class="o">-</span><span class="nv">production</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">php</span><span class="o">.</span><span class="nv">ini</span>  </code></pre></figure>
+
+</div>
+
+<ul>
+  <li>更改PHP-FPM</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="c1">#添加WWW用户  </span>
+<span class="sr">/usr/s</span><span class="nv">bin</span><span class="sr">/groupadd www &amp;&amp; /</span><span class="nv">usr</span><span class="sr">/sbin/</span><span class="nv">useradd</span> <span class="o">-</span><span class="nv">g</span> <span class="nv">www</span> <span class="nv">www</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="nv">p</span> <span class="sr">/var/</span><span class="nb">log</span><span class="sr">/nginx &amp;&amp; chmod +w /</span><span class="nv">var</span><span class="sr">/log/</span><span class="nv">nginx</span> <span class="o">&amp;&amp;</span><span class="nb">chown</span> <span class="o">-</span><span class="nv">R</span> <span class="nv">www:www</span> <span class="sr">/var/</span><span class="nb">log</span><span class="o">/</span><span class="nv">nginx</span>  
+<span class="nb">mkdir</span> <span class="o">-</span><span class="nv">p</span> <span class="sr">/data/</span><span class="nv">www</span> <span class="o">&amp;&amp;</span> <span class="nb">chmod</span> <span class="o">+</span><span class="nv">w</span> <span class="sr">/data/</span><span class="nv">www</span> <span class="o">&amp;&amp;</span> <span class="nb">chown</span> <span class="o">-</span><span class="nv">R</span> <span class="nv">www:www</span> <span class="sr">/data/</span><span class="nv">www</span>  
+
+<span class="nv">cp</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="nv">etc</span><span class="sr">/php-fpm.conf.default /</span><span class="nv">usr</span><span class="sr">/local/</span><span class="nv">php</span><span class="sr">/etc/</span><span class="nv">php</span><span class="o">-</span><span class="nv">fpm</span><span class="o">.</span><span class="nv">conf</span>  
+<span class="nv">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">php</span><span class="o">-</span><span class="nv">fpm</span><span class="o">.</span><span class="nv">conf</span>  
+
+<span class="c1">#去掉/更改配置文件中的;  </span>
+<span class="nv">pm</span><span class="o">.</span><span class="nv">max_children</span> <span class="o">=</span> <span class="mi">64</span>   
+<span class="nv">pm</span><span class="o">.</span><span class="nv">start_servers</span> <span class="o">=</span> <span class="mi">20</span>  
+<span class="nv">pm</span><span class="o">.</span><span class="nv">min_spare_servers</span> <span class="o">=</span> <span class="mi">5</span>  
+<span class="nv">pm</span><span class="o">.</span><span class="nv">max_spare_servers</span> <span class="o">=</span> <span class="mi">35</span>  
+<span class="nv">pm</span><span class="o">.</span><span class="nv">max_requests</span> <span class="o">=</span> <span class="mi">1024</span>  
+<span class="nv">user</span> <span class="o">=</span> <span class="nv">www</span>  
+<span class="nv">group</span> <span class="o">=</span> <span class="nv">www</span>   
+
+<span class="c1">#检查语法是否正确  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">php</span><span class="o">-</span><span class="nv">fpm</span> <span class="o">-</span><span class="nv">t</span>  
+<span class="c1">#出现NOTICE: configuration file /usr/local/php/etc/php-fpm.conf test is successful 测试成功  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">php</span><span class="o">-</span><span class="nv">fpm</span> <span class="o">&amp;</span>  
+<span class="c1">#设置开机启动  </span>
+<span class="nv">vi</span> <span class="sr">/etc/</span><span class="nv">rc</span><span class="o">.</span><span class="nv">d</span><span class="o">/</span><span class="nv">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#在行末加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/php/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">php</span><span class="o">-</span><span class="nv">fpm</span> <span class="o">&amp;</span>  
+
+<span class="c1">#返回安装包目录   </span>
+<span class="nv">cd</span> <span class="o">/</span><span class="nv">web</span> </code></pre></figure>
+
+</div>
+
+<h3 id="nginx">安装Nginx</h3>
+
+<ul>
+  <li>安装pcre库</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">pcre</span><span class="o">-</span><span class="mf">8.13</span><span class="sr">/ &amp;&amp; ./co</span><span class="nv">nfigure</span>  
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span></code></pre></figure>
+
+</div>
+
+<ul>
+  <li>安装Nginx</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">tar</span> <span class="o">-</span><span class="nv">zxvf</span> <span class="nv">nginx</span><span class="o">-</span><span class="mf">1.0.9</span><span class="o">.</span><span class="nv">tar</span><span class="o">.</span><span class="nv">gz</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="nv">nginx</span><span class="o">-</span><span class="mf">1.0.9</span> <span class="o">&amp;&amp;</span>  
+<span class="o">./</span><span class="nv">configure</span> <span class="o">--</span><span class="nv">user</span><span class="o">=</span><span class="nv">www</span> <span class="o">--</span><span class="nv">group</span><span class="o">=</span><span class="nv">www</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">prefix</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="o">/</span><span class="nv">nginx</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">sbin</span><span class="o">-</span><span class="nv">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">nginx</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">conf</span><span class="o">-</span><span class="nv">path</span><span class="o">=</span><span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/co</span><span class="nv">nf</span><span class="o">/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">conf</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">http_stub_status_module</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">http_ssl_module</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">with</span><span class="o">-</span><span class="nv">pcre</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">lock</span><span class="o">-</span><span class="nv">path</span><span class="o">=</span><span class="sr">/var/</span><span class="nv">run</span><span class="o">/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">lock</span> <span class="o">\</span>  
+<span class="o">--</span><span class="nv">pid</span><span class="o">-</span><span class="nv">path</span><span class="o">=</span><span class="sr">/var/</span><span class="nv">run</span><span class="o">/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">pid</span>  
+
+<span class="nv">make</span> <span class="o">&amp;&amp;</span> <span class="nv">make</span> <span class="nv">install</span> <span class="o">&amp;&amp;</span> <span class="nv">cd</span> <span class="o">../</span>  </code></pre></figure>
+
+</div>
+
+<ul>
+  <li>更改配置</li>
+</ul>
+
+<p><a href="#" onclick="javascript:toggle(this);">+ 点击展开</a></p>
+<div style="display:none;">
+
+<figure class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/co</span><span class="nv">nf</span><span class="o">/</span><span class="nv">nginx</span><span class="o">.</span><span class="nv">conf</span>      
+
+<span class="c1">#修改一些参数,别直接替换文件,这只是一部分     </span>
+<span class="nv">user</span> <span class="nv">www</span>  
+
+<span class="nv">events</span> <span class="p">{</span>  
+        <span class="k">use</span> <span class="nv">epoll</span><span class="p">;</span>  
+        <span class="nv">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+<span class="nv">location</span> <span class="o">~</span> <span class="o">\.</span><span class="nv">php$</span> <span class="p">{</span>  
+        <span class="nv">root</span>           <span class="nv">html</span><span class="p">;</span>  
+        <span class="nv">fastcgi_pass</span>   <span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">9000</span><span class="p">;</span>  
+        <span class="nv">fastcgi_index</span>  <span class="nb">index</span><span class="o">.</span><span class="nv">php</span><span class="p">;</span>  
+        <span class="nv">fastcgi_param</span>  <span class="nv">SCRIPT_FILENAME</span>  <span class="nv">$document_root$fastcgi_script_name</span><span class="p">;</span>  
+        <span class="nv">include</span>        <span class="nv">fastcgi_params</span><span class="p">;</span>  
+<span class="p">}</span>  
+
+<span class="c1">#注意这里  </span>
+<span class="c1">#$document_root$fastcgi_script_name;  </span>
+<span class="c1">#检测配置文件  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">nginx</span> <span class="o">-</span><span class="nv">t</span>  
+
+<span class="c1">#提示表示成功  </span>
+<span class="c1">#nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok  </span>
+<span class="c1">#nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful  </span>
+
+<span class="c1">#开启Nginx  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">nginx</span> <span class="o">&amp;</span>  
+<span class="c1">#平滑重启Nginx  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">nginx</span> <span class="o">-</span><span class="nv">s</span> <span class="nv">reload</span>  
+
+<span class="c1">#添加开机启动  </span>
+<span class="nv">vi</span> <span class="sr">/etc/</span><span class="nv">rc</span><span class="o">.</span><span class="nv">d</span><span class="o">/</span><span class="nv">rc</span><span class="o">.</span><span class="nb">local</span>  
+<span class="c1">#最后移行加入  </span>
+<span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/s</span><span class="nv">bin</span><span class="o">/</span><span class="nv">nginx</span>  
+
+<span class="c1">#测试  </span>
+<span class="nv">cd</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/</span><span class="nv">html</span><span class="o">/</span>  
+<span class="nv">touch</span> <span class="nb">index</span><span class="o">.</span><span class="nv">php</span>  
+<span class="nv">vi</span> <span class="sr">/usr/</span><span class="nb">local</span><span class="sr">/nginx/</span><span class="nv">html</span><span class="o">/</span><span class="nb">index</span><span class="o">.</span><span class="nv">php</span>  
+<span class="o">&lt;</span><span class="p">?</span><span class="nv">php</span>  
+<span class="nv">phpinfo</span><span class="p">();</span>  
+<span class="p">?</span><span class="o">&gt;</span>   </code></pre></figure>
+
+</div>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

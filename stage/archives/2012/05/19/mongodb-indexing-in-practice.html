@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MongoDB索引实战技巧</title>
+  <meta name="description" content="本文内容源自Kyle Banker 的MongoDBIn Action一书。主要描述了MongoDB索引相关的一些基础知识和使用技巧。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/05/19/mongodb-indexing-in-practice.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">MongoDB索引实战技巧</h1>
+                <p class="article-time">
+                    发表于 <span>2012-05-19</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://blog.nosqlfan.com/html/3656.html' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>本文内容源自<a href="http://www.manning.com/banker/">Kyle Banker</a> 的<a href="http://blog.nosqlfan.com/tags/mongodb" title="查看 MongoDB 的全部文章">MongoDB</a>
+In Action一书。主要描述了MongoDB<a href="http://blog.nosqlfan.com/tags/%e7%b4%a2%e5%bc%95" title="查看 索引 的全部文章">索引</a>相关的一些基础知识和使用技巧。</p>
+
+<h2 id="section">索引类型</h2>
+<p>虽然MongoDB的索引在存储结构上都是一样的，但是根据不同的应用层需求，还是分成了唯一索引（unique）、稀疏索引（sparse）、多值索引（multikey）等几种类型。</p>
+
+<p><strong>唯一索引</strong></p>
+
+<p>唯一索引在创建时加上unique:true 的选项即可，创建命令如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.users.ensureIndex({username: 1}, {unique: true})
+</code></pre>
+</div>
+
+<p>上面的唯一索引创建后，如果insert一条username已经存在的数据，则会报如下的错误：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>E11000 duplicate key error index: gardening.users.$username_1 dup key: { : "kbanker" }
+</code></pre>
+</div>
+
+<p>如果你在一个已有数据的collection上创建唯一索引，若唯一索引对应的字段原来就有重复的数据项，那么创建会失败，我们需要加上一个dropDups的选项来强制将重复的项删除掉，命令如下例：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.users.ensureIndex({username: 1}, {unique: true, dropDups: true})
+</code></pre>
+</div>
+
+<p><strong>松散索引</strong></p>
+
+<p>如果你的数据中一些行中没有某个字段或字段值为null，那么如果在这个字段上建立普通索引，那么无此字段或值null的行也会参与到索引结构中，占用相应的空间。如果我们不希望这些值为空的行参与到我们的索引中，这时候可以采用松散索引，松散索引只会让指定字段不为空的行参与到索引创建中来。创建一个松散索引可以用下面的命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.reviews.ensureIndex({user_id: 1}, {sparse: true})
+</code></pre>
+</div>
+
+<p><strong>多值索引</strong></p>
+
+<p>MongoDB可以对一个array类型创建索引，比如像下面的结构，MongoDB可以在tags字段上创建索引：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w"> </span><span class="err">name:</span><span class="w"> </span><span class="nt">"Wheelbarrow"</span><span class="err">,</span><span class="w">
+</span><span class="err">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"tools"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gardening"</span><span class="p">,</span><span class="w"> </span><span class="s2">"soil"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>在生成索引时，会为tags中的三个值分别生成三个索引元素，索引中tools，gardening，soil三个值都会指向这同一行数据。相当于分裂成了三个独立的索引项。</p>
+
+<h2 id="section-1">索引管理</h2>
+
+<p><strong>索引的创建和删除</strong></p>
+
+<p>创建和删除索引的方法有很多种，下面两个是比较原始的方法，通过对system.indexes这个collection进行相应的写操作来完成索引的创建：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>spec = {ns: "green.users", key: {‘addresses.zip’: 1}, name: ‘zip’}
+db.system.indexes.insert(spec, true)
+</code></pre>
+</div>
+
+<p>上面命令往system.indexes中写入一条记录来创建索引，这条记录包含了要在上面创建索引的collection的名字空间，索引的信息，以及索引的名称。</p>
+
+<p>创建完成后，我们可以通过下面命令找到我们创建的索引：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.system.indexes.find()
+{ "_id" : ObjectId("4d2205c4051f853d46447e95"), "ns" : "green.users",
+"key" : { "addresses.zip" : 1 }, "name" : "zip", "v" : 0 }
+</code></pre>
+</div>
+
+<p>要删除一个已创建的索引，我们可以使用下面的命令来实现：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>use green
+db.runCommand({deleteIndexes: "users", index: "zip"})
+</code></pre>
+</div>
+
+<p><strong>创建索引命令</strong></p>
+
+<p>实际上创建索引还有更方便的命令，那就是ensure<a href="http://blog.nosqlfan.com/tags/index" title="查看 Index 的全部文章">Index</a>，比如我们创建一个open和close两个字段的联合索引，就可以用下面的命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.values.ensureIndex({open: 1, close: 1})
+</code></pre>
+</div>
+
+<p>这个命令会触发索引创建的两个过程，一个是将相应的字段排序，因为索引是按B+树来组织的，要构建树，将数据进行排序后能够提高插入B+树的效率（第二个过程的效率），在日志中，你能看到和下面类似的输出：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Tue Jan 4 09:58:17 [conn1] building new index on { open: 1.0, close: 1.0 } for stocks.values
+1000000/4308303 23%
+2000000/4308303 46%
+3000000/4308303 69%
+4000000/4308303 92%
+Tue Jan 4 09:59:13 [conn1] external sort used : 5 files in 55 secs
+</code></pre>
+</div>
+
+<p>第二个过程是将排序好的数据插入到索引结构中，构成可用的索引：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1200300/4308303 27%
+2227900/4308303 51%
+2837100/4308303 65%
+3278100/4308303 76%
+3783300/4308303 87%
+4075500/4308303 94%
+Tue Jan 4 10:00:16 [conn1] done building bottom layer, going to commit
+Tue Jan 4 10:00:16 [conn1] done for 4308303 records 118.942secs
+Tue Jan 4 10:00:16 [conn1] insert stocks.system.indexes 118942ms
+</code></pre>
+</div>
+
+<p>除了日志中的输出外，你还可以通过在终端执行currentOp命令来获取当前操作线程的相关信息，如下例：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; db.currentOp()
+{
+    "inprog" : [
+        {
+            "opid" : 58,
+            "active" : true,
+            "lockType" : "write",
+            "waitingForLock" : false,
+            "secs_running" : 55,
+            "op" : "insert",
+            "ns" : "stocks.system.indexes",
+            "query" : {
+            },
+            "client" : "127.0.0.1:53421",
+            "desc" : "conn",
+            "msg" : "index: (1/3) external sort 3999999/4308303 92%"
+        }
+    ]
+}
+</code></pre>
+</div>
+
+<p>最后一部分就是一个索引构建过程，目前正在执行排序过程，执行到92%。</p>
+
+<p><strong>在后台创建索引</strong></p>
+
+<p>创建索引会对数据库添加写锁，如果数据集比如大，会将线上读写数据库的操作挂起，以等待索引创建结束。这影响了数据库的正常服务，我们可以通过在创建索引时加background:true
+的选项，让创建工作在后台执行，这时候创建索引还是需要加写锁，但是这个写锁不会直接独占到索引创建完成，而是会暂停为其它读写操作让路，不至于造成严重的性能影响。具体方法：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>db.values.ensureIndex({open: 1, close: 1}, {background: true})
+</code></pre>
+</div>
+
+<p><strong>离线创建索引</strong></p>
+
+<p>无论如何，索引的创建都会给数据库造成一定的压力，从而影响线上服务。如果希望创建索引的过程完全不影响线上服务，我们可以通过将replica
+sets中的节点先从集群中剥离，在这个节点上添加相应的索引，等索引添加完毕后再将其添加到replica
+sets中。这只需要保证一个条件，就是创建索引的时间不能长于oplog能够保存日志的时间，否则创建完后节点再上线发现再也无法追上primary了，这时会进行resync操作。</p>
+
+<p><strong>索引备份</strong></p>
+
+<p>我们知道，无论是使用mongodump还是mongoexport命令，都只是对数据进行备份，无法备份索引。我们在恢复的时候，还是需要等待漫长的索引创建过程。所以，如果你希望备份的时候带上索引，那么最好采用备份数据文件的方式。</p>
+
+<p><strong>索引压缩</strong></p>
+
+<p>索引在使用一段时间后，经历增删改等操作，会变得比较松散，从而战用不必要的空间，我们可以通过reindex命令，重新组织索引，让索引的空间占用变得更小。</p>
+
+<p>来源：<a href="http://www.cloudcomputingdevelopment.net/mongodb-indexing-in-practice/">www.cloudcomputingdevelopment.net</a></p>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

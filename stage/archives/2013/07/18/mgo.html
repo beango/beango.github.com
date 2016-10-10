@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>mgo操作</title>
+  <meta name="description" content="package main">
+
+  <link rel="canonical" href="127.0.0.1/archives/2013/07/18/mgo.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      <div class="highlighter-rouge"><pre class="highlight"><code>package main
+
+import (
+  "fmt"
+  "labix.org/v2/mgo"
+  "labix.org/v2/mgo/bson"
+  "time"
+)
+
+type Person struct {
+  ID        bson.ObjectId `bson:"_id,omitempty"`
+  Name      string
+  Phone     string
+  Timestamp time.Time
+}
+
+var (
+  IsDrop = true
+)
+
+func main() {
+  session, err := mgo.Dial("127.0.0.1")
+  if err != nil {
+    panic(err)
+  }
+
+  defer session.Close()
+
+  session.SetMode(mgo.Monotonic, true)
+
+  // Drop Database
+  if IsDrop {
+    err = session.DB("test").DropDatabase()
+    if err != nil {
+      panic(err)
+    }
+  }
+
+  // Collection People
+  c := session.DB("test").C("people")
+
+  // Index
+  index := mgo.Index{
+    Key:        []string{"name", "phone"},
+    Unique:     true,
+    DropDups:   true,
+    Background: true,
+    Sparse:     true,
+  }
+
+  err = c.EnsureIndex(index)
+  if err != nil {
+    panic(err)
+  }
+
+  // Insert Datas
+  err = c.Insert(&amp;Person{Name: "Ale", Phone: "+55 53 1234 4321", Timestamp: time.Now()},
+    &amp;Person{Name: "Cla", Phone: "+66 33 1234 5678", Timestamp: time.Now()})
+
+  if err != nil {
+    panic(err)
+  }
+
+  // Query One
+  result := Person{}
+  err = c.Find(bson.M{"name": "Ale"}).Select(bson.M{"phone": 0}).One(&amp;result)
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Phone", result)
+
+  // Query All
+  var results []Person
+  err = c.Find(bson.M{"name": "Ale"}).Sort("-timestamp").All(&amp;results)
+
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Results All: ", results)
+
+  // Update
+  colQuerier := bson.M{"name": "Ale"}
+  change := bson.M{"$set": bson.M{"phone": "+86 99 8888 7777", "timestamp": time.Now()}}
+  err = c.Update(colQuerier, change)
+  if err != nil {
+    panic(err)
+  }
+
+  // Query All
+  err = c.Find(bson.M{"name": "Ale"}).Sort("-timestamp").All(&amp;results)
+
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println("Results All: ", results)
+
+}
+</code></pre>
+</div>
+
+    </main>
+
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

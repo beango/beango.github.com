@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Linux配置Lighttpd+Python+web.py应用</title>
+  <meta name="description" content="用web.py写了一个app，由于官方网站推荐Lighttpd+fastcgi模式部署，于是实践一把，在DebianSqueeze Linux上成功安装了Lighttpd和基于web.py的应用。">
+
+  <link rel="canonical" href="127.0.0.1/archives/2016/10/10/Linux-configuration-Lighttpd-Python-webPy-applications.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+    <body>
+        <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+        <main class="blogmain">
+            <header>
+                <h1 class="article-title">Linux配置Lighttpd+Python+web.py应用</h1>
+                <p class="article-time">
+                    发表于 <span>2016-10-10</span>
+                </p>
+                <p class="article-hint">
+                    如果你对本文有任何的建议或者疑问, 可以在
+                    <a href="https://github.com/beango/beango.github.com/issues" target="_blank">这里给我提 Issues</a>, 谢谢! :)
+					<a href='http://www.liaoxuefeng.com/article/0013738925109653a9f5fe0a82c4984ba8e8174b456d0ce000' target="_blank">查看原文</a>
+                </p>
+            </header>
+            <p>用web.py写了一个app，由于官方网站推荐Lighttpd+fastcgi模式部署，于是实践一把，在Debian
+Squeeze Linux上成功安装了Lighttpd和基于web.py的应用。</p>
+
+<p>服务器是Debian Sequeeze
+Linux，首先安装Lighttpd和Python，Python默认版本是2.6：</p>
+
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># apt-get install lighttpd python</span>
+</code></pre>
+</div>
+
+<p>然后安装app使用的必要的Python包：</p>
+
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># apt-get install python-setuptools python-flup python-webpy python-mysqldb python-simplejson python-imaging</span>
+</code></pre>
+</div>
+
+<p>下一步是配置Lighttpd，由于web.py应用的入口是app.py，所以Lighttpd需要把请求通过fastcgi传给app.py，lighttpd.conf配置如下：</p>
+
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="nv">server</span><span class="o">.</span><span class="nv">modules</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="s">"mod_access"</span><span class="p">,</span>
+  <span class="s">"mod_accesslog"</span><span class="p">,</span><span class="s">"mod_alias"</span><span class="p">,</span>
+  <span class="s">"mod_compress"</span><span class="p">,</span><span class="s">"mod_fastcgi"</span><span class="p">,</span><span class="s">"mod_rewrite"</span><span class="p">,)</span>
+
+<span class="nv">server</span><span class="o">.</span><span class="nv">document</span><span class="o">-</span><span class="nv">root</span>        <span class="o">=</span> <span class="s">"/path/to/app/dir"</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">upload</span><span class="o">-</span><span class="nv">dirs</span>          <span class="o">=</span> <span class="p">(</span> <span class="s">"/var/cache/lighttpd/uploads"</span> <span class="p">)</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">errorlog</span>             <span class="o">=</span> <span class="s">"/var/log/lighttpd/error.log"</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">pid</span><span class="o">-</span><span class="nv">file</span>             <span class="o">=</span> <span class="s">"/var/run/lighttpd.pid"</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">username</span>             <span class="o">=</span> <span class="s">"www-data"</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">groupname</span>            <span class="o">=</span> <span class="s">"www-data"</span>
+
+<span class="nb">index</span><span class="o">-</span><span class="nv">file</span><span class="o">.</span><span class="nv">names</span>            <span class="o">=</span> <span class="p">(</span> <span class="s">"index.php"</span><span class="p">,</span> <span class="s">"index.html"</span><span class="p">,</span>
+                                <span class="s">"index.htm"</span><span class="p">,</span> <span class="s">"default.htm"</span><span class="p">,</span>
+                               <span class="s">" index.lighttpd.html"</span> <span class="p">)</span>
+
+<span class="nv">url</span><span class="o">.</span><span class="nv">access</span><span class="o">-</span><span class="nv">deny</span>             <span class="o">=</span> <span class="p">(</span> <span class="s">"~"</span><span class="p">,</span> <span class="s">".inc"</span> <span class="p">)</span>
+
+<span class="nv">static</span><span class="o">-</span><span class="nv">file</span><span class="o">.</span><span class="nv">exclude</span><span class="o">-</span><span class="nv">extensions</span> <span class="o">=</span> <span class="p">(</span><span class="s">".py"</span><span class="p">,</span> <span class="s">".php"</span><span class="p">,</span> <span class="s">".pl"</span><span class="p">,</span> <span class="s">".fcgi"</span> <span class="p">)</span>
+
+<span class="nv">dir</span><span class="o">-</span><span class="nv">listing</span><span class="o">.</span><span class="nv">encoding</span>        <span class="o">=</span> <span class="s">"utf-8"</span>
+<span class="nv">server</span><span class="o">.</span><span class="nv">dir</span><span class="o">-</span><span class="nv">listing</span>          <span class="o">=</span> <span class="s">"disable"</span>
+<span class="nv">accesslog</span><span class="o">.</span><span class="nv">filename</span>          <span class="o">=</span> <span class="s">"/var/log/lighttpd/access.log"</span>
+<span class="nv">compress</span><span class="o">.</span><span class="nv">cache</span><span class="o">-</span><span class="nv">dir</span>          <span class="o">=</span> <span class="s">"/var/cache/lighttpd/compress/"</span>
+<span class="nv">compress</span><span class="o">.</span><span class="nv">filetype</span>           <span class="o">=</span> <span class="p">(</span> <span class="s">"text/css"</span><span class="p">,</span> <span class="s">"text/html"</span> <span class="p">)</span>
+<span class="nv">fastcgi</span><span class="o">.</span><span class="nv">server</span> <span class="o">=</span> <span class="p">(</span> <span class="s">"/app.py"</span> <span class="o">=&gt;</span><span class="p">((</span> <span class="s">"socket"</span> <span class="o">=&gt;</span><span class="s">"/tmp/fastcgi.socket"</span><span class="p">,</span>
+     <span class="s">"bin-path"</span> <span class="o">=&gt;</span><span class="s">"/path/to/app/dir/app.py"</span><span class="p">,</span>
+     <span class="s">"max-procs"</span> <span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span>
+     <span class="s">"check-local"</span> <span class="o">=&gt;</span><span class="s">"disable"</span>
+  <span class="p">))</span>
+<span class="p">)</span>
+
+<span class="nv">url</span><span class="o">.</span><span class="nv">rewrite</span><span class="o">-</span><span class="nv">once</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="s">"^/$"</span> <span class="o">=&gt;</span><span class="s">"/index.html"</span><span class="p">,</span>
+  <span class="s">"^/favicon.ico$"</span> <span class="o">=&gt;</span><span class="s">"/favicon.ico"</span><span class="p">,</span>
+  <span class="s">"^/(.*)$"</span> <span class="o">=&gt;</span><span class="s">"/app.py/$1"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nv">include_shell</span> <span class="s">"/usr/share/lighttpd/create-mime.assign.pl"</span>
+</code></pre>
+</div>
+
+<p>主要的改动是红色部分，包括：</p>
+
+<ul>
+  <li>配置fastcgi，指向app.py；</li>
+  <li>配置rewrite，将\^/(.*)$指向/app.py/$1；</li>
+  <li>添加了access log，默认居然没有！</li>
+</ul>
+
+<p>你需要把/path/to/app/dir改为webpy app的所在目录。</p>
+
+<p>最后一步是设置web.py应用的权限，必须确保app.py具有<strong>可执行</strong>权限。由于fastcgi进程以www-data用户身份运行，最佳配置是将目录owner改为www-data，这样pyc文件才能正确生成：</p>
+
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># chown -R www-data:www-data my-webpy-app</span>
+<span class="c1"># chmod a+x my-webpy-app/app.py</span>
+</code></pre>
+</div>
+
+            <footer class="article-footer">
+    <div class="authorimage">
+        <img src="/assets/img/avatar.png" alt="My Avatar" class="img-circle">
+    </div>
+    <section class="author">
+        <h4><a href="/about.html">黃丁</a></h4>
+        <a href="mailto:6588617@gmail.com">6588617@gmail.com</a>
+    </section>
+</footer>
+
+        </main>
+        <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>

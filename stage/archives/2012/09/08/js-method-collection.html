@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>js方法收集</title>
+  <meta name="description" content="一、取URL中的参数">
+
+  <link rel="canonical" href="127.0.0.1/archives/2012/09/08/js-method-collection.html">
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/assets/css/icard_resume.css"> -->
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/blog.css" >
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <!-- <link rel="stylesheet" href="/assets/css/prettify.css" /> --> <!-- 设置代码主题，此文件为默认主题，你可以换成其他主题-->
+  <!-- <script src="/assets/css/prettify.js" type="text/javascript"></script> -->
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="assets/js/html5shiv.min.js"></script>
+  <script src="assets/js/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
+  <body>
+
+    <header class="bloghead">
+    <dev class="authorheader">
+        <a href="/">
+            <img alt="My Avatar" src="/assets/img/avatar.png"/>
+        </a>
+        <dev class="blogtitle">
+            <h1><a href="/">HuangDing</a></h1>
+            <h5> 自己选的路，跪着也走下去! </h5>
+        </dev>
+    </dev>
+
+    <nav class="menu" role="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li>|</li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li>|</li>
+            <li><a href="/collection.html">Collection</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="https://github.com/beango">Github</a></li>
+            <li>|</li>
+            <li><a target="_blank" href="/about.html">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="blogmain">
+      <h5 id="url">一、取URL中的参数</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function getParameterByName(name) {
+    var match = RegExp('[?&amp;]' + name + '=([^&amp;]*)')
+                    .exec(window.location.search);
+    return match &amp;&amp; decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+</code></pre>
+</div>
+
+<h5 id="url-1">二、设置URL中的参数</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function setUrlParam(oldurl, paramname, pvalue) {
+    var reg = new RegExp("(\\?|&amp;)" + paramname + "=([^&amp;]*)(&amp;|$)", "gi");
+    var pst = oldurl.match(reg);
+    if ((pst == undefined) || pst == null) {
+        return oldurl + ((oldurl.indexOf("?") == -1 ? "?" : "&amp;") + paramname + "=" + pvalue);
+    }
+    var t = pst[0];
+    var retxt = t.substring(0, t.indexOf("=") + 1) + pvalue;
+    if (t.charAt(t.length - 1) == "&amp;")
+        retxt += "&amp;";
+    return oldurl.replace(reg, retxt);
+}
+</code></pre>
+</div>
+
+<h5 id="javascripturl">三、用JavaScript对URL进行编码</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var myUrl = "http://example.com/index.html?param=1&amp;anotherParam=2";
+var myOtherUrl = "http://example.com/index.html?url=" + encodeURIComponent(myUrl);
+</code></pre>
+</div>
+
+<h5 id="javascript-delete-vs-splice">四、JavaScript删除数组中的项 delete vs splice</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var myArray=["a","b","c"];
+delete myArray[0];
+for(var i=0,j=myArray.length;i&lt;j;i++){
+    console.log(myArray[i]);
+    /*
+    undefined
+    b
+    c
+    */
+}
+
+var myArray2=["a","b","c"];
+myArray2.splice(0,1);
+for(var i=0,j=myArray2.length;i&lt;j;i++){
+    console.log(myArray2[i]);
+    /*
+    b
+    c
+    */
+}
+</code></pre>
+</div>
+
+<h5 id="jqueryradio">五、jquery取radio</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$('input[name="testradio"]:checked').val();  
+
+$('input[@name="testradio"][checked]');  
+
+$('input[name="testradio"]').filter(':checked');  
+
+//遍历name为testradio的所有radio  
+$('input[name="testradio"]').each(function(){  
+  alert(this.value);  
+});
+
+//取第二个radio的值  
+$('input[name="testradio"]:eq(1)').val()  
+
+//设置radio  
+$('input:radio[name=sex]:nth(0)').attr('checked',true);  
+$('input:radio[name=sex][value="1"]').attr('checked',true);  
+$('input:radio[name=sex]:nth(0)')[0].checked = true;
+</code></pre>
+</div>
+
+<h5 id="jqueryajax">六、设置jquery.ajax编码</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$.ajax({
+    type: "POST",
+    url: "Handler/Handler.ashx",
+    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+    data: { 
+        action: "TodoItemAdd",
+        receiveUserID: $("#tdreceiveuser").find("select").val()
+    },
+    success: function (res) {
+        alert(res);
+    }
+});
+</code></pre>
+</div>
+
+<h5 id="section">七、实时监听输入框值变化</h5>
+
+<p>　　这两个事件在 IE9 中都有个小BUG，那就是通过右键菜单菜单中的剪切和删除命令删除内容的时候不会触发，而 IE 其他版本都是正常的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$('textarea').bind('input propertychange', function() {
+    $('.msg').html($(this).val().length + ' characters');
+});
+</code></pre>
+</div>
+
+    </main>
+
+    <div class="footer-copyright">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-12">
+                Copyright &copy; 2016 黃丁 - All rights reserved.
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+
+  </body>
+
+</html>

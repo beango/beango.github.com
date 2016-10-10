@@ -1,0 +1,3841 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title></title>
+	<link href="http://127.0.0.1/atom.xml" rel="self" />
+	<link href="http://127.0.0.1/" />
+	<updated>2016-07-27T05:09:35+00:00</updated>
+	<id>http://127.0.0.1/</id>
+	<author>
+		<name></name>
+		<email></email>
+	</author>
+	
+	<entry>
+		<title>为最佳性能调优 Nginx</title>
+		<link href="http://127.0.0.1/archives/2015/06/15/12-nginx-performance-tuning.html" />
+		<updated>2015-06-15T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2015/06/15/12-nginx-performance-tuning.html</id>
+		<content type="html"><![CDATA[<p>英文出处：<a href="http://dak1n1.com/blog/12-nginx-performance-tuning">dak1n1.com</a>。欢迎加入<a href="http://group.jobbole.com/category/feedback/trans-team/">翻译小组</a>。</p>
+
+<p>这篇文章是《<a href="http://dak1n1.com/blog/13-load-balancing-lvs">打造3百万次请求/秒的高性能服务器集群</a>》 系列的第2部分，在这个部分中你可以使用任何一种WEB服务器，不过我决定使用 Nginx，因其轻量级、高可靠及高性能的优点。</p>
+
+<p>通常来说，一个优化良好的 Nginx Linux 服务器可以达到 500,000 – 600,000 次/秒 的请求处理性能，然而我的 Nginx 服务器可以稳定地达到 904,000 次/秒的处理性能，并且我以此高负载测试超过 12 小时，服务器工作稳定。</p>
+
+<p>这里需要特别说明的是，本文中所有列出来的配置都是在我的测试环境验证的，而你需要根据你服务器的情况进行配置：</p>
+
+<p>从<a href="http://dak1n1.com/blog/12-nginx-performance-tuning/blog/3-getting-more-from-yum-with-rpmforge-and-epel-repos">EPEL</a> 源安装 Nginx：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install nginx
+</code></pre>
+</div>
+
+<p>备份配置文件，然后根据你的需要进行配置：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
+vim /etc/nginx/nginx.conf
+</code></pre>
+</div>
+
+<p></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># This number should be, at maximum, the number of CPU cores on your system.
+# (since nginx doesn't benefit from more than one worker per CPU.)
+# 这里的数值不能超过 CPU 的总核数，因为在单个核上部署超过 1 个 Nginx 服务进程并不起到提高性能的作用。
+worker_processes 24;
+ 
+# Number of file descriptors used for Nginx. This is set in the OS with 'ulimit -n 200000'
+# or using /etc/security/limits.conf
+# Nginx 最大可用文件描述符数量，同时需要配置操作系统的 "ulimit -n 200000"，或者在 /etc/security/limits.conf 中配置。 
+worker_rlimit_nofile 200000;
+ 
+# only log critical errors
+# 只记录 critical 级别的错误日志
+error_log /var/log/nginx/error.log crit
+ 
+# Determines how many clients will be served by each worker process.
+# (Max clients = worker_connections * worker_processes)
+# "Max clients" is also limited by the number of socket connections available on the system (~64k)
+# 配置单个 Nginx 单个进程可服务的客户端数量，（最大值客户端数 = 单进程连接数 * 进程数 ）
+# 最大客户端数同时也受操作系统 socket 连接数的影响（最大 64K ）
+worker_connections 4000;
+ 
+# essential for linux, optmized to serve many clients with each thread
+# Linux 关键配置，允许单个线程处理多个客户端请求。
+use epoll;
+ 
+# Accept as many connections as possible, after nginx gets notification about a new connection.
+# May flood worker_connections, if that option is set too low.
+# 允许尽可能地处理更多的连接数，如果 worker_connections 配置太低，会产生大量的无效连接请求。
+multi_accept on;
+ 
+# Caches information about open FDs, freqently accessed files.
+# Changing this setting, in my environment, brought performance up from 560k req/sec, to 904k req/sec.
+# I recommend using some varient of these options, though not the specific values listed below.
+# 缓存高频操作文件的FDs（文件描述符/文件句柄）
+# 在我的设备环境中，通过修改以下配置，性能从 560k 请求/秒 提升到 904k 请求/秒。
+# 我建议你对以下配置尝试不同的组合，而不是直接使用这几个数据。
+open_file_cache max=200000 inactive=20s;
+open_file_cache_valid 30s;
+open_file_cache_min_uses 2;
+open_file_cache_errors on;
+ 
+# Buffer log writes to speed up IO, or disable them altogether
+# 将日志写入高速 IO 存储设备，或者直接关闭日志。
+# access_log /var/log/nginx/access.log main buffer=16k;
+access_log off;
+ 
+# Sendfile copies data between one FD and other from within the kernel.
+# More efficient than read() + write(), since the requires transferring data to and from the user space.
+# 开启 sendfile 选项，使用内核的 FD 文件传输功能，这个比在用户态用 read() + write() 的方式更加高效。
+sendfile on;
+ 
+# Tcp_nopush causes nginx to attempt to send its HTTP response head in one packet,
+# instead of using partial frames. This is useful for prepending headers before calling sendfile,
+# or for throughput optimization.
+# 打开 tcp_nopush 选项，Nginux 允许将 HTTP 应答首部与数据内容在同一个报文中发出。
+# 这个选项使服务器在 sendfile 时可以提前准备 HTTP 首部，能够达到优化吞吐的效果。
+tcp_nopush on;
+ 
+# don't buffer data-sends (disable Nagle algorithm). Good for sending frequent small bursts of data in real time.
+# 不要缓存 data-sends （关闭 Nagle 算法），这个能够提高高频发送小数据报文的实时性。
+tcp_nodelay on;
+ 
+# Timeout for keep-alive connections. Server will close connections after this time.
+# 配置连接 keep-alive 超时时间，服务器将在超时之后关闭相应的连接。
+keepalive_timeout 30;
+ 
+# Number of requests a client can make over the keep-alive connection. This is set high for testing.
+# 单个客户端在 keep-alive 连接上可以发送的请求数量，在测试环境中，需要配置个比较大的值。
+keepalive_requests 100000;
+ 
+# allow the server to close the connection after a client stops responding. Frees up socket-associated memory.
+# 允许服务器在客户端停止发送应答之后关闭连接，以便释放连接相应的 socket 内存开销。
+reset_timedout_connection on;
+ 
+# send the client a "request timed out" if the body is not loaded by this time. Default 60.
+# 配置客户端数据请求超时时间，默认是 60 秒。
+client_body_timeout 10;
+ 
+# If the client stops reading data, free up the stale client connection after this much time. Default 60.
+# 客户端数据读超时配置，客户端停止读取数据，超时时间后断开相应连接，默认是 60 秒。
+send_timeout 2;
+ 
+# Compression. Reduces the amount of data that needs to be transferred over the network
+# 压缩参数配置，减少在网络上所传输的数据量。
+gzip on;
+gzip_min_length 10240;
+gzip_proxied expired no-cache no-store private auth;
+gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
+gzip_disable "MSIE [1-6].";
+</code></pre>
+</div>
+
+<p>启动 Nginx 并配置起机自动加载。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>service nginx start
+chkconfig nginx on
+</code></pre>
+</div>
+
+<p>配置 Tsung 并启动测试，测试差不多 10 分钟左右就能测试到服务器的峰值能力，具体的时间与你的 Tsung 配置相关。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@loadnode1 ~] vim ~/.tsung/tsung.xml
+    &lt;server host="YOURWEBSERVER" port="80" type="tcp"&gt;;
+tsung start
+</code></pre>
+</div>
+
+<p>你觉得测试结果已经够了的情况下，通过 ctrl+c 退出，之后使用我们之前配置的别名命令 treport 查看测试报告。</p>
+
+<h4 id="web-tcp-">WEB 服务器调优，第二部分：TCP 协议栈调优</h4>
+
+<p>这个部分不只是对 Ngiinx 适用，还可以在任何 WEB 服务器上使用。通过对内核 TCP 配置的优化可以提高服务器网络带宽。</p>
+
+<p>以下配置在我的 10-Gbase-T 服务器上工作得非常完美，服务器从默认配置下的 8Gbps 带宽提升到 9.3Gbps。</p>
+
+<p>当然，你的服务器上的结论可能不尽相同。</p>
+
+<p>下面的配置项，我建议每次只修订其中一项，之后用网络性能测试工具 netperf、iperf 或是用我类似的测试脚本<a href="https://github.com/dak1n1/cluster-netbench/blob/master/netbench.pl">cluster-netbench.pl</a>对服务器进行多次测试。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>yum -y install netperf iperf
+</code></pre>
+</div>
+
+<p></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>vim /etc/sysctl.conf
+</code></pre>
+</div>
+
+<p></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># Increase system IP port limits to allow for more connections
+# 调高系统的 IP 以及端口数据限制，从可以接受更多的连接
+net.ipv4.ip_local_port_range = 2000 65000
+ 
+net.ipv4.tcp_window_scaling = 1
+ 
+# number of packets to keep in backlog before the kernel starts dropping them
+# 设置协议栈可以缓存的报文数阀值，超过阀值的报文将被内核丢弃
+net.ipv4.tcp_max_syn_backlog = 3240000
+ 
+# increase socket listen backlog
+# 调高 socket 侦听数阀值
+net.core.somaxconn = 3240000
+net.ipv4.tcp_max_tw_buckets = 1440000
+ 
+# Increase TCP buffer sizes
+# 调大 TCP 存储大小
+net.core.rmem_default = 8388608
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.ipv4.tcp_congestion_control = cubic
+</code></pre>
+</div>
+
+<p>每次修订配置之后都需要执行以下命令使之生效.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sysctl -p /etc/sysctl.conf
+</code></pre>
+</div>
+
+<p>别忘了在配置修订之后务必要进行网络 benchmark 测试，这样可以观测到具体是哪个配置修订的优化效果最明显。通过这种有效测试方法可以为你节省大量时间。</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>Shell脚本编程初体验</title>
+		<link href="http://127.0.0.1/archives/2015/06/10/guide-start-learning-shell-scripting-scratch.html" />
+		<updated>2015-06-10T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2015/06/10/guide-start-learning-shell-scripting-scratch.html</id>
+		<content type="html"><![CDATA[<p>原文出处： <a href="http://linoxide.com/linux-shell-script/guide-start-learning-shell-scripting-scratch/">Petras Liumparas</a>   译文出处：<a href="https://linux.cn/article-5591-1.html">GOLinux</a>   欢迎分享原创到<a href="http://top.jobbole.com/?utm_source=jobboleblog-article">伯乐头条</a></p>
+
+<p><img src="/assets/files/2015-06/5e4d414cgw1esy2aafka3j20dw0afdgj.jpg" alt="" title="5e4d414cgw1esy2aafka3j20dw0afdgj" /></p>
+
+<p>通常，当人们提到“shell脚本语言”时，浮现在他们脑海中是bash，ksh，sh或者其它相类似的linux/unix脚本语言。脚本语言是与计算机交流的另外一种途径。使用图形化窗口界面（不管是windows还是linux都无所谓）用户可以移动鼠标并点击各种对象，比如按钮、列表、选框等等。但这种方式在每次用户想要计算机/服务器完成相同任务时（比如说批量转换照片，或者下载新的电影、mp3等）却是十分不方便。要想让所有这些事情变得简单并且自动化，我们可以使用shell脚本。</p>
+
+<p>某些编程语言，像pascal、foxpro、C、java之类，在执行前需要先进行编译。它们需要合适的编译器来让我们的代码完成某个任务。</p>
+
+<p>而其它一些编程语言，像php、javascript、visualbasic之类，则不需要编译器，因此它们需要解释器，而我们不需要编译代码就可以运行程序。</p>
+
+<p>shell脚本也像解释器一样，但它通常用于调用外部已编译的程序。然后，它会捕获输出结果、退出代码并根据情况进行处理。</p>
+
+<p>Linux世界中最为流行的shell脚本语言之一，就是bash。而我认为（这是我自己的看法）原因在于，默认情况下bash shell可以让用户便捷地通过历史命令（先前执行过的）导航，与之相反的是，ksh则要求对.profile进行一些调整，或者记住一些“魔术”组合键来查阅历史并修正命令。</p>
+
+<p>好了，我想这些介绍已经足够了，剩下来哪个环境最适合你，就留给你自己去判断吧。从现在开始，我将只讲bash及其脚本。在下面的例子中，我将使用CentOS 6.6和bash-4.1.2。请确保你有相同版本，或者更高版本。</p>
+
+<p><strong>Shell脚本流</strong></p>
+
+<p>shell脚本语言就跟和几个人聊天类似。你只需把所有命令想象成能帮你做事的那些人，只要你用正确的方式来请求他们去做。比如说，你想要写文档。首先，你需要纸。然后，你需要把内容说给某个人听，让他帮你写。最后，你想要把它存放到某个地方。或者说，你想要造一所房子，因而你需要请合适的人来清空场地。在他们说“事情干完了”，那么另外一些工程师就可以帮你来砌墙。最后，当这些工程师们也告诉你“事情干完了”的时候，你就可以叫油漆工来给房子粉饰了。如果你让油漆工在墙砌好前就来粉饰，会发生什么呢？我想，他们会开始发牢骚了。几乎所有这些像人一样的命令都会说话，如果它们完成了工作而没有发生什么问题，那么它们就会告诉“标准输出”。如果它们不能做你叫它们做的事——它们会告诉“标准错误”。这样，最后，所有的命令都通过“标准输入”来听你的话。</p>
+
+<p>快速实例——当你打开linux终端并写一些文本时——你正通过“标准输入”和bash说话。那么，让我们来问问bash shell who am i（我是谁？）吧。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# who am i                                     &lt;--- 你通过标准输入对 bash shell 说
+root  pts/0  2015-04-22 20:17 (192.168.1.123)  &lt;--- bash shell通过标准输出回答你
+</code></pre>
+</div>
+
+<p>现在，让我们说一些bash听不懂的问题：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# blablabla           &lt;--- 哈，你又在和标准输入说话了
+-bash: blablabla: command not found     &lt;--- bash通过标准错误在发牢骚了
+</code></pre>
+</div>
+
+<p>“:”之前的第一个单词通常是向你发牢骚的命令。实际上，这些流中的每一个都有它们自己的索引号（LCTT 译注：文件句柄号）：</p>
+
+<ul>
+  <li>标准输入（stdin） – 0</li>
+  <li>标准输出（stdout） – 1</li>
+  <li>标准错误（stderr） – 2</li>
+</ul>
+
+<p>如果你真的想要知道哪个输出命令说了些什么——你需要将那次发言重定向到（在命令后使用大于号“&gt;”和流索引）文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# blablabla 1&gt; output.txt
+-bash: blablabla: command not found
+</code></pre>
+</div>
+
+<p>在本例中，我们试着重定向流1（<strong>stdout</strong>）到名为output.txt的文件。让我们来看对该文件内容所做的事情吧，使用cat命令可以做这事：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat output.txt
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>看起来似乎是空的。好吧，现在让我们来重定向流2（<strong>stderr</strong>）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# blablabla 2&gt; error.txt
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>好吧，我们看到牢骚话没了。让我们检查一下那个文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat error.txt
+-bash: blablabla: command not found
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>果然如此！我们看到，所有牢骚话都被记录到errors.txt文件里头去了。</p>
+
+<p>有时候，命令会同时产生<strong>stdout </strong>和 <strong>stderr</strong>。要重定向它们到不同的文件，我们可以使用以下语句：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>command 1&gt;out.txt 2&gt;err.txt
+</code></pre>
+</div>
+
+<p>要缩短一点语句，我们可以忽略“1”，因为默认情况下stdout会被重定向：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>command &gt;out.txt 2&gt;err.txt
+</code></pre>
+</div>
+
+<p>好吧，让我们试试做些“坏事”。让我们用rm命令把file1和folder1给删了吧：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# rm -vf folder1 file1 &gt; out.txt 2&gt;err.txt
+</code></pre>
+</div>
+
+<p>现在来检查以下输出文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat out.txt
+removed `file1'
+[root@localhost ~]
+# cat err.txt
+rm: cannot remove `folder1': Is a directory
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>正如我们所看到的，不同的流被分离到了不同的文件。有时候，这也不是很方便，因为我们想要查看出现错误时，在某些操作前面或后面所连续发生的事情。要实现这一目的，我们可以重定向两个流到同一个文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>command &gt;&gt;out_err.txt 2&gt;&gt;out_err.txt
+</code></pre>
+</div>
+
+<p>注意：请注意，我使用“&gt;&gt;”替代了“&gt;”。它允许我们附加到文件，而不是覆盖文件。</p>
+
+<p>我们也可以重定向一个流到另一个：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>command &gt;out_err.txt 2&gt;&amp;1
+</code></pre>
+</div>
+
+<p>让我来解释一下吧。所有命令的标准输出将被重定向到out_err.txt，错误输出将被重定向到流1（上面已经解释过了），而该流会被重定向到同一个文件。让我们看这个实例：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# rm -fv folder2 file2 &gt;out_err.txt 2&gt;&amp;1
+[root@localhost ~]
+# cat out_err.txt
+rm: cannot remove `folder2': Is a directory
+removed `file2'
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>看着这些组合的输出，我们可以将其说明为：首先，rm命令试着将folder2删除，而它不会成功，因为linux要求-r键来允许rm命令删除文件夹，而第二个file2会被删除。通过为rm提供-v（详情）键，我们让rm命令告诉我们每个被删除的文件或文件夹。</p>
+
+<p>这些就是你需要知道的，关于重定向的几乎所有内容了。我是说几乎，因为还有一个更为重要的重定向工具，它称之为“管道”。通过使用|（管道）符号，我们通常重定向stdout流。</p>
+
+<p>比如说，我们有这样一个文本文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat text_file.txt
+This line does not contain H e l l o word
+This lilne contains Hello
+This also containd Hello
+This one no due to HELLO all capital
+Hello bash world!
+</code></pre>
+</div>
+
+<p>而我们需要找到其中某些带有“Hello”的行，Linux中有个grep命令可以完成该工作：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# grep Hello text_file.txt
+This lilne contains Hello
+This also containd Hello
+Hello bash world!
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>当我们有个文件，想要在里头搜索的时候，这用起来很不错。当如果我们需要在另一个命令的输出中查找某些东西，这又该怎么办呢？是的，当然，我们可以重定向输出到文件，然后再在文件里头查找：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# fdisk -l&gt;fdisk.out
+[root@localhost ~]
+# grep "Disk /dev" fdisk.out
+Disk /dev/sda: 8589 MB, 8589934592 bytes
+Disk /dev/mapper/VolGroup-lv_root: 7205 MB, 7205814272 bytes
+Disk /dev/mapper/VolGroup-lv_swap: 855 MB, 855638016 bytes
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>如果你打算grep一些双引号引起来带有空格的内容呢！</p>
+
+<p>注意：fdisk命令显示关于Linux操作系统磁盘驱动器的信息。</p>
+
+<p>就像我们看到的，这种方式很不方便，因为我们不一会儿就把临时文件空间给搞乱了。要完成该任务，我们可以使用管道。它们允许我们重定向一个命令的stdout到另一个命令的stdin流：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# fdisk -l | grep "Disk /dev"
+Disk /dev/sda: 8589 MB, 8589934592 bytes
+Disk /dev/mapper/VolGroup-lv_root: 7205 MB, 7205814272 bytes
+Disk /dev/mapper/VolGroup-lv_swap: 855 MB, 855638016 bytes
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>如你所见，我们不需要任何临时文件就获得了相同的结果。我们把fdisk stdout重定向到了grep stdin。</p>
+
+<p>注意 ： 管道重定向总是从左至右的。</p>
+
+<p>还有几个其它重定向，但是我们将把它们放在后面讲。</p>
+
+<p><strong>在shell中显示自定义信息</strong></p>
+
+<p>正如我们所知道的，通常，与shell的交流以及shell内的交流是以对话的方式进行的。因此，让我们创建一些真正的脚本吧，这些脚本也会和我们讲话。这会让你学到一些简单的命令，并对脚本的概念有一个更好的理解。</p>
+
+<p>假设我们是某个公司的总服务台经理，我们想要创建某个shell脚本来注册呼叫信息：电话号码、用户名以及问题的简要描述。我们打算把这些信息存储到普通文本文件data.txt中，以便今后统计。脚本它自己就是以对话的方式工作，这会让总服务台的工作人员的小日子过得轻松点。那么，首先我们需要显示提问。对于显示信息，我们可以用echo和printf命令。这两个都是用来显示信息的，但是printf更为强大，因为我们可以通过它很好地格式化输出，我们可以让它右对齐、左对齐或者为信息留出专门的空间。让我们从一个简单的例子开始吧。要创建文件，请使用你惯用的文本编辑器（kate，nano，vi，……），然后创建名为note.sh的文件，里面写入这些命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>echo "Phone number ?"
+</code></pre>
+</div>
+
+<p><strong>如何运行/执行脚本？</strong></p>
+
+<p>在保存文件后，我们可以使用bash命令来运行，把我们的文件作为它的参数：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# bash note.sh
+Phone number ?
+</code></pre>
+</div>
+
+<p>实际上，这样来执行脚本是很不方便的。如果不使用bash命令作为前缀来执行，会更舒服一些。要让脚本可执行，我们可以使用chmod命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ls -la note.sh
+-rw-r--r--. 1 root root 22 Apr 23 20:52 note.sh
+[root@localhost ~]
+# chmod +x note.sh
+[root@localhost ~]
+# ls -la note.sh
+-rwxr-xr-x. 1 root root 22 Apr 23 20:52 note.sh
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>注意 ：ls命令显示了当前文件夹内的文件。通过添加-la键，它会显示更多文件信息。</p>
+
+<p>如我们所见，在chmod命令执行前，脚本只有读（r）和写（w）权限。在执行chmod +x后，它就获得了执行（x）权限。（关于权限的更多细节，我会在下一篇文章中讲述。）现在，我们只需这么来运行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number ?
+</code></pre>
+</div>
+
+<p>在脚本名前，我添加了 ./ 组合。.(点）在unix世界中意味着当前位置（当前文件夹），/（斜线）是文件夹分隔符。（在Windows系统中，我们使用反斜线\表示同样功能）所以，这整个组合的意思是说：“从当前文件夹执行note.sh脚本”。我想，如果我用完整路径来运行这个脚本的话，你会更加清楚一些：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# /root/note.sh
+Phone number ?
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>它也能工作。</p>
+
+<p>如果所有linux用户都有相同的默认shell，那就万事OK。如果我们只是执行该脚本，默认的用户shell就会用于解析脚本内容并运行命令。不同的shell的语法、内部命令等等有着一丁点不同，所以，为了保证我们的脚本会使用bash，我们应该添加#!/bin/bash到文件首行。这样，默认的用户shell将调用/bin/bash，而只有在那时候，脚本中的命令才会被执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat note.sh
+#!/bin/bash
+echo "Phone number ?"
+</code></pre>
+</div>
+
+<p>直到现在，我们才100%确信bash会用来解析我们的脚本内容。让我们继续。</p>
+
+<p> </p>
+
+<p><strong>读取输入</strong></p>
+
+<p>在显示信息后，脚本会等待用户回答。有个read命令用来接收用户的回答：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"Phone number ?"</span>
+<span class="nb">read </span>phone
+</code></pre>
+</div>
+
+<p>在执行后，脚本会等待用户输入，直到用户按[ENTER]键结束输入：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number ?
+12345 &lt;--- 这儿是我输入的内容
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>你输入的所有东西都会被存储到变量phone中，要显示变量的值，我们同样可以使用echo命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat note.sh
+#!/bin/bash
+echo "Phone number ?"
+read phone
+echo "You have entered $phone as a phone number"
+[root@localhost ~]
+# ./note.sh
+Phone number ?
+123456
+You have entered 123456 as a phone number
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>在bash shell中，一般我们使用$（美元）符号来表明这是一个变量，除了读入到变量和其它为数不多的时候才不用这个$（将在今后说明）。</p>
+
+<p>好了，现在我们准备添加剩下的问题了：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"Phone number?"</span>
+<span class="nb">read </span>phone
+<span class="nb">echo</span> <span class="s2">"Name?"</span>
+<span class="nb">read </span>name
+<span class="nb">echo</span> <span class="s2">"Issue?"</span>
+<span class="nb">read </span>issue
+<span class="o">[</span>root@localhost ~]
+<span class="c"># ./note.sh</span>
+Phone number?
+123
+Name?
+Jim
+Issue?
+script is not working.
+<span class="o">[</span>root@localhost ~]
+<span class="c">#</span>
+</code></pre>
+</div>
+
+<p><strong>使用流重定向</strong></p>
+
+<p>太完美了！剩下来就是重定向所有东西到文件data.txt了。作为字段分隔符，我们将使用/（斜线）符号。</p>
+
+<p>注意 ：你可以选择任何你认为是最好的分隔符，但是确保文件内容不会包含这些符号在内，否则它会导致在文本行中产生额外字段。</p>
+
+<p>别忘了使用“&gt;&gt;”来代替“&gt;”，因为我们想要将输出内容附加到文件末！</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# tail -2 note.sh
+read issue
+echo "$phone/$name/$issue"&gt;&gt;data.txt
+[root@localhost ~]
+# ./note.sh
+Phone number?
+987
+Name?
+Jimmy
+Issue?
+Keybord issue.
+[root@localhost ~]
+# cat data.txt
+987/Jimmy/Keybord issue.
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>注意 ： tail命令显示了文件的最后的n行。</p>
+
+<p>搞定。让我们再来运行一次看看：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number?
+556
+Name?
+Janine
+Issue?
+Mouse was broken.
+[root@localhost ~]
+# cat data.txt
+987/Jimmy/Keybord issue.
+556/Janine/Mouse was broken.
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>我们的文件在增长，让我们在每行前面加个日期吧，这对于今后摆弄这些统计数据时会很有用。要实现这功能，我们可以使用date命令，并指定某种格式，因为我不喜欢默认格式：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# date
+Thu Apr 23 21:33:14 EEST 2015 &lt;---- date命令的默认输出
+[root@localhost ~]
+# date "+%Y.%m.%d %H:%M:%S"
+2015.04.23 21:33:18 &lt;---- 格式化后的输出
+</code></pre>
+</div>
+
+<p>有几种方式可以读取命令的输出到变量，在这种简单的情况下，我们将使用`（是反引号，不是单引号，和波浪号~在同一个键位）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat note.sh
+#!/bin/bash
+now=`date "+%Y.%m.%d %H:%M:%S"`
+echo "Phone number?"
+read phone
+echo "Name?"
+read name
+echo "Issue?"
+read issue
+echo "$now/$phone/$name/$issue"&gt;&gt;data.txt
+[root@localhost ~]
+# ./note.sh
+Phone number?
+123
+Name?
+Jim
+Issue?
+Script hanging.
+[root@localhost ~]
+# cat data.txt
+2015.04.23 21:38:56/123/Jim/Script hanging.
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>嗯……我们的脚本看起来有点丑啊，让我们来美化一下。如果你要手动读取read命令，你会发现read命令也可以显示一些信息。要实现该功能，我们应该使用-p键加上信息：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat note.sh
+#!/bin/bash
+now=`date "+%Y.%m.%d %H:%M:%S"`
+read -p "Phone number: " phone
+read -p "Name: " name
+read -p "Issue: " issue
+echo "$now/$phone/$name/$issue"&gt;&gt;data.txt
+</code></pre>
+</div>
+
+<p>你可以直接从控制台查找到各个命令的大量有趣的信息，只需输入：man read, man echo, man date, man ……</p>
+
+<p>同意吗？它看上去是舒服多了！</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number: 321
+Name: Susane
+Issue: Mouse was stolen
+[root@localhost ~]
+# cat data.txt
+2015.04.23 21:38:56/123/Jim/Script hanging.
+2015.04.23 21:43:50/321/Susane/Mouse was stolen
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>光标在消息的后面（不是在新的一行中），这有点意思。（LCTT 译注：如果用 echo 命令输出显示的话，可以用 -n 参数来避免换行。）</p>
+
+<p> </p>
+
+<p><strong>循环</strong></p>
+
+<p>是时候来改进我们的脚本了。如果用户一整天都在接电话，如果每次都要去运行，这岂不是很麻烦？让我们让这些活动都永无止境地循环去吧：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat note.sh
+#!/bin/bash
+while true
+do
+read -p "Phone number: " phone
+now=`date "+%Y.%m.%d %H:%M:%S"`
+read -p "Name: " name
+read -p "Issue: " issue
+echo "$now/$phone/$name/$issue"&gt;&gt;data.txt
+done
+</code></pre>
+</div>
+
+<p>我已经交换了read phone和now=date行的位置。这是因为我想要在输入电话号码后再获得时间。如果我把它放在循环的首行，那么循环一次后，变量 now 就会在数据存储到文件中后马上获得时间。而这并不好，因为下一次呼叫可能在20分钟后，甚至更晚。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number: 123
+Name: Jim
+Issue: Script still not works.
+Phone number: 777
+Name: Daniel
+Issue: I broke my monitor
+Phone number: ^C
+[root@localhost ~]
+# cat data.txt
+2015.04.23 21:38:56/123/Jim/Script hanging.
+2015.04.23 21:43:50/321/Susane/Mouse was stolen
+2015.04.23 21:47:55/123/Jim/Script still not works.
+2015.04.23 21:48:16/777/Daniel/I broke my monitor
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>注意： 要从无限循环中退出，你可以按[Ctrl]+[C]键。Shell会显示\^表示 CTRL 键。</p>
+
+<p> </p>
+
+<p><strong>使用管道重定向</strong></p>
+
+<p>让我们添加更多功能到我们的“弗兰肯斯坦（Frankenstein）”，我想要脚本在每次呼叫后显示某个统计数据。比如说，我想要查看各个号码呼叫了我几次。对于这个，我们应该cat文件data.txt：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat data.txt
+2015.04.23 21:38:56/123/Jim/Script hanging.
+2015.04.23 21:43:50/321/Susane/Mouse was stolen
+2015.04.23 21:47:55/123/Jim/Script still not works.
+2015.04.23 21:48:16/777/Daniel/I broke my monitor
+2015.04.23 22:02:14/123/Jimmy/New script also not working!!!
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>现在，所有输出我们都可以重定向到cut命令，让cut来把每行切成一块一块（我们使用分隔符“/”），然后打印第二个字段：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat data.txt | cut -d"/" -f2
+123
+321
+123
+777
+123
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>现在，我们可以把这个输出重定向打另外一个命令sort：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat data.txt | cut -d"/" -f2|sort
+123
+123
+123
+321
+777
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>然后只留下唯一的行。要统计唯一条目，只需添加-c键到uniq命令：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# cat data.txt | cut -d"/" -f2 | sort | uniq -c
+3 123
+1 321
+1 777
+[root@localhost ~]
+#
+</code></pre>
+</div>
+
+<p>只要把这个添加到我们的循环的最后：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="k">while </span><span class="nb">true
+</span><span class="k">do
+</span><span class="nb">read</span> -p <span class="s2">"Phone number: "</span> phone
+<span class="nv">now</span><span class="o">=</span><span class="sb">`</span>date <span class="s2">"+%Y.%m.%d %H:%M:%S"</span><span class="sb">`</span>
+<span class="nb">read</span> -p <span class="s2">"Name: "</span> name
+<span class="nb">read</span> -p <span class="s2">"Issue: "</span> issue
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$now</span><span class="s2">/</span><span class="nv">$phone</span><span class="s2">/</span><span class="nv">$name</span><span class="s2">/</span><span class="nv">$issue</span><span class="s2">"</span>&gt;&gt;data.txt
+<span class="nb">echo</span> <span class="s2">"===== We got calls from ====="</span>
+cat data.txt | cut -d<span class="s2">"/"</span> -f2 | sort | uniq -c
+<span class="nb">echo</span> <span class="s2">"--------------------------------"</span>
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<p>运行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[root@localhost ~]
+# ./note.sh
+Phone number: 454
+Name: Malini
+Issue: Windows license expired.
+===== We got calls from =====
+3 123
+1 321
+1 454
+1 777
+--------------------------------
+Phone number: ^C
+</code></pre>
+</div>
+
+<p>当前场景贯穿了几个熟知的步骤：</p>
+
+<ul>
+  <li>显示消息</li>
+  <li>获取用户输入</li>
+  <li>存储值到文件</li>
+  <li>处理存储的数据</li>
+</ul>
+
+<p>但是，如果用户有点责任心，他有时候需要输入数据，有时候需要统计，或者可能要在存储的数据中查找一些东西呢？对于这些事情，我们需要使用switches/cases，并知道怎样来很好地格式化输出。这对于在shell中“画”表格的时候很有用。</p>
+
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>python realtime</title>
+		<link href="http://127.0.0.1/archives/2014/08/05/python-realtime.html" />
+		<updated>2014-08-05T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2014/08/05/python-realtime.html</id>
+		<content type="html"><![CDATA[<h2 id="section">声明</h2>
+
+<p>本文是基于一篇英文文章翻译过来的。</p>
+
+<p>原文链接：<a href="http://mrjoes.github.io/2013/06/21/python-realtime.html">http://mrjoes.github.io/2013/06/21/python-realtime.html</a></p>
+
+<p>原作者： Serge Koval</p>
+
+<p>License：Creative Commons attribution-noncommercial-sharealike License</p>
+
+<h2 id="section-1">简介</h2>
+
+<p>最近我参与了 <a href="http://www.kickstarter.com/projects/1223051718/practical-flask-book-project">Flask book</a>的一次聚会,涉及到些realtime相关的问题-它是如何工作的，如何整合实时部分与传统的WSGI应用，如何组织应用程序代码等。</p>
+
+<p>我们使用Google Hangouts，原本打算将我们的Hangouts视频录下来，但失败了。所以，我决定还是写一篇详尽的博客文章，其中包括一些基础知识，以及简短的介绍用Python异步编程等。</p>
+
+<h2 id="section-2">一点理论知识</h2>
+
+<p>让我们尝试解决服务器”推送”的问题。web都是拉取数据 - 浏览器发出请求到服务器，服务器会产生并发送回响应。但是，如果有需要将数据主动从服务器推送到浏览器该怎么办呢？</p>
+
+<p>解决方法很简单：浏览器发出AJAX请求到服务器，并要求更新。虽然看起来这个是常用浏览器和服务器之间推送办法，但有一个问题:</p>
+
+<p>如果服务器没有什么要发送，它会保持连接打开，直到为客户提供一些数据。客户端收到响应后，它会发出另一个请求，以获得更多的数据。</p>
+
+<p>这种技术被称为长轮询（long-polling）。</p>
+
+<p>显然，这方法不不太高效。在大多数情况下，噪信比是非常高的（无用数据比有用数据-因为这样一来更多的时间是花在处理HTTP请求（比如解析和验证报头）而不是实际数据发送到客户端。</p>
+
+<p>但是，不幸的是，它是目前将数据推送到客户端最适合的方式。</p>
+
+<p>基于HTTP/1.1情况好转了一点。TCP连接可以使用<a href="http://en.wikipedia.org/wiki/HTTP_persistent_connection">Keep-Alive</a>头，默认情况下，连接在请求发起后将保持打开状态。此功能使长轮询延迟得到了降低，这样就没有必要为每个轮询请求重新打开TCP连接。</p>
+
+<p>HTTP/1.1还引入了<a href="http://wikipedia.org/wiki/Chunked_transfer_encoding">块传输协议</a> 。它允许将响应分解为成更小的数据块，并将它们立即发送到客户端，而不是一直等到完成HTTP请求。</p>
+
+<p>不幸的是，有些不兼容这个功能的代理服务器还是试图在转发之前缓存整个响应，所以客户端将不会收到任何数据，直到代理认为HTTP请求已经完成。虽然看起来web还是能”正常”工作 - 因为客户端最终还是会得到来自服务器的响应，但它打破了为实时而设计的块传输协议的整体思路。</p>
+
+<p>Opera在2006年9月，为它的浏览器实现了实验性的<a href="http://en.wikipedia.org/wiki/Server-sent_events">服务事件发送</a> 功能。虽然SSE和块传输协议很相似，但还是是不同的协议，而且有更好的客户端API。</p>
+
+<p>2009年4月23日，SSE得到WHATWG批准，得到几乎所有的现代的桌面浏览器（Internet Explorer的除外）的支持。 在这个链接你可以<a href="http://caniuse.com/#feat=eventsource">看到兼容性图表</a> 。</p>
+
+<p>还有其他的技术，比如<a href="http://cometdaily.com/2007/11/05/the-forever-frame-technique/">forever-iframe</a>。 这是两种可以为Internet Explorer版本低于8做跨域推送的技术之一（另一个是<a href="http://en.wikipedia.org/wiki/JSONP">jsonp</a> -polling），以及<a href="http://cometdaily.com/2007/10/25/http-streaming-and-internet-explorer/">HTMLFILE</a>
+等</p>
+
+<p>总之，所有这些基于HTTP的折中方案都可以叫做[Comet](http://en.wikipedia.org/wiki/Comet_(programming) 。</p>
+
+<p>让我们来看看这些方法的利弊：</p>
+
+<ul>
+  <li>长轮询（Long-polling）是昂贵的，但兼容性很好。</li>
+  <li>块传输协议效率更高，但有可能不是所有客户端都能正常工作，并且如果没有某种形式的探测你都无法发现这个问题的存在。</li>
+  <li>SSE也不错，但不是所有的浏览器都支持。比较好的是有办法在建立连接前就知道它是否支持。</li>
+</ul>
+
+<p>但是，所有这些方法都有一个问题：他们都只提供一种方式将数据从服务器推送到客户端，而不是在建立双向通信，客户端每次想发送一些数据的时候，将不得不使用AJAX请求到服务器。这样会增加延迟，并在服务器也会产生额外的负载。</p>
+
+<h2 id="websockets">邂逅WebSockets</h2>
+
+<p>虽然WebSockets的不是什么新技术，但经历了几个不兼容的迭代后该规范终于通过了，RFC编号：<a href="http://tools.ietf.org/html/rfc6455">RFC-6455</a>。</p>
+
+<p>简而言之，基于WebSocket的服务器和客户端之间建立的是基于TCP的双向连接。连接的建立建立使用兼容HTTP的握手协议（加上额外的WebSocket相关的头），并具有额外的协议层次划分，所以它也不仅仅是一个从浏览器中打开原始的TCP连接。</p>
+
+<p>WebSocket协议最大的问题是浏览器支持，防火墙，代理服务器和防病毒应用的支持。</p>
+
+<p>这个链接有浏览器的 <a href="http://caniuse.com/#feat=websockets">兼容性图表</a> 。</p>
+
+<p>企业防火墙和代理服务器通常因各种原因阻止WebSocket连接。</p>
+
+<p>有些代理服务器不能处理WebSocket在端口80上连接 - 他们认为这是一般的HTTP请求，并尝试缓存它。有HTTP扫描组件的杀毒软件也不允许WebSocket连接。</p>
+
+<p>无论如何，WebSocket的来建立客户端和服务器端之间的双向通信是最好的方式，但不能单一的用来解决推送问题。</p>
+
+<h2 id="section-3">用例</h2>
+
+<p>鉴于以上情况，如果您的应用程序大多是从服务器推送数据，基于HTTP的传输会工作得很好。</p>
+
+<p>但是，如果浏览器支持WebSocket的传输并且WebSocket的连接是可以建立的，它将是更好的选择。</p>
+
+<p>总而言之，最好的办法是：尝试打开的WebSocket连接，如果失败 - 尝试回退到基于HTTP传输。 当然也有可以”升级”连接 - 首先使用长轮询（long-polling），然后尝试建立WebSocket的连接。如果成功，就切换到WebSocket的连接。虽然这种做法可能会降低初始连接的时间，需要注意服务器端实现，以避免但在两者连接之间切换时发生任何的跳变情况（race conditions）。</p>
+
+<h2 id="polyfill">Polyfill库</h2>
+
+<p>幸运的是，你没有必要自己实现这一切。为所有已知的浏览器提供变通方案，搞定代理和防火墙的奇怪问题，尤其是从头开始搞这些事情，是非常困难的。已经有人投入人多年的工作使他们的解决方案尽可能稳定。</p>
+
+<p>有一些 <a href="http://en.wikipedia.org/wiki/Polyfill">polyfill</a> 库，像<a href="https://github.com/sockjs">SockJS库</a> ，<a href="http://socket.io/">Socket.IO库</a>, <a href="http://faye.jcoglan.com/">Faye</a>和其他一些框架，实现了基于各种不同的传输实现上的类WebSocket的 API。</p>
+
+<p>虽然他们所提供的服务器和客户端API不尽相同，但他们有着共同的理念：在给定的情况下用最好的传输方案，并且提供一致的服务器端API。</p>
+
+<p>例如，如果浏览器支持WebSocket协议，polyfill将尝试建立WebSocket连接。如果失败了，他们将下降回到下一个最好的传输协议。<a href="https://github.com/LearnBoost/engine.io/">Engine.IO</a> 使用稍微不同的方法 - 他先建立长轮询连接（long-polling），并尝试在后台升级到WebSocket。</p>
+
+<p>在任何情况下 - 这些库将尝试建立双向连接到服务器上使用最可靠的传输。</p>
+
+<p>不幸的是，在使用Socket.IO 0.8.x的时候有较差的体验。我一般在我自己的项目中使用<a href="https://github.com/mrjoes/sockjs-tornado">sockjs-tornado</a>，即使我自己写了 TornadIO2](https://github.com/mrjoes/tornadio2) 。Socket.IO早期的server实现是基于 <a href="http://tornadoweb.org/">Tornado</a> 的。</p>
+
+<h2 id="section-4">服务器端</h2>
+
+<p>让我们回到Python。</p>
+
+<p>不幸的是，基于<a href="http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface">WSGI</a>服务器不能被用于创建实时应用，因为WSGI协议是同步的。WSGI服务器一次只能处理一个请求。</p>
+
+<p>让我们再次回顾长轮询（long-polling）传输：</p>
+
+<ul>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>无可用数据，服务器保持连接打开并等待数据发送</li>
+  <li>因为服务器无法处理任何其他请求，一切都被阻塞</li>
+</ul>
+
+<p>用伪代码，它会看起来像这样：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
+    data = get_more_data(request)
+    return send_response(data)
+</code></pre>
+</div>
+
+<p>如果get_more_data阻塞了，那整个服务器就会被阻塞，不能处理请求了。</p>
+
+<p>当然，可以每个请求创建线程，但这非常低效。</p>
+
+<p>虽然有一些变通办法，如 <a href="http://lucumr.pocoo.org/2012/8/5/stateless-and-proud/">Armin Ronacher</a>所描述的方法，以及一些相关的变种将在稍后讨论，异步执行模式更适合这个任务。</p>
+
+<p>在异步执行模式中，服务器处理依然在一个线程中顺序处理请求，但当处理程序无事可做的时候，可以将控制转移到另一个请求处理程序。</p>
+
+<p>在这种情况下，长轮询（long-polling）传输将看起来像这样：</p>
+
+<ul>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>没有可用数据，服务器保持打开TCP连接，并同时做别的东西</li>
+  <li>当有数据要发送时，服务器发送数据然后关闭连接</li>
+</ul>
+
+<h2 id="greenlets">Greenlets</h2>
+
+<p>在Python中有两种方法编写异步代码：</p>
+
+<ul>
+  <li>使用 <a href="http://en.wikipedia.org/wiki/Coroutine">corutines</a>（也称为greenlets）</li>
+  <li>使用[回调](http://en.wikipedia.org/wiki/Callback_(computer_programming)</li>
+</ul>
+
+<p>简而言之，greenlets让你写出能在执行过程中暂停的功能，然后还可以继续执行。</p>
+
+<p>Greenlet的实现是从 <a href="http://www.stackless.com/">Stackless Python</a>向后移植到CPython就。 虽然有greenlet模块的CPython看起来和Stackless Python是相同的 - 但他确实不是。 Stackless Python有两种上下文切换模式：软切换，硬切换。软切换涉及到Python应用程序堆栈的切换（就是指针互换，快速并且容易）和硬切换需要堆栈分片（慢而且容易出错）。Greenlet 基本上就是移植Stackless的硬切换模式。</p>
+
+<p>让我们再次看看长轮询（long-polling）的例子，这次基于greenlets：</p>
+
+<ul>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>服务器启动新的greenlet用来处理长轮询逻辑</li>
+  <li>没有数据要发送，greenlet开始休眠，暂停当前正在执行的功能</li>
+  <li>当有数据要发生的时候，greenlet唤醒，发送数据然后关闭连接</li>
+</ul>
+
+<p>用伪代码，它看起来和同步版本完全一样：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
+    # 如果这里没有数据, greenlet 就会休眠
+    # 然后切换到其他greenlet执行
+    data = get_more_data(request)
+    return make_response(data)
+</code></pre>
+</div>
+
+<p>为什么greenlets很重要？</p>
+
+<p>因为它们允许以同步的方式编写异步代码。他们允许异步的使用现有的同步库。greenlet的实现隐藏了上下文切换的问题。</p>
+
+<p><a href="http://www.gevent.org/">GEVENT</a> 是可以用greenlets实现的很好的例子。这个框架补充了Python标准库，引入了异步IO（输入输出），在没有明显的上下文切换下使得所有代码异步。</p>
+
+<p>另一方面，greenlet的 CPython实现也是相当可怕的。</p>
+
+<p>每个协程都有自己的堆栈。CPython使用非托管堆栈的Python应用，当Python程序运行时堆栈看起来像烤宽面条 - 解释器数据，本地模块的数据，Python应用程序的数据，一切以随机顺序分层混合在一起。在这种情况下，想要预留堆栈并且想无痛的做协同程序之间的上下文切换是相当困难的，因为很难预测在栈上保存的到底什么。</p>
+
+<p>Greenlet试图通过把一部分栈数据复制到堆，然后复制回来的方法克服这一限制。虽然大多数情况下它是可以工作的，但任何未经测试的第三方库与原生扩展，都有可能会产生奇怪的错误，如栈或堆破坏。</p>
+
+<p>基于greenlets的代码实现方式也不太像线程。因为他更容易造成死锁，代码实现中调用者其实并不希望调用的函数去暂停greenlet，但是这个函数却把greenlet暂停了，调用者将没有机会释放锁。</p>
+
+<h2 id="section-5">回调</h2>
+
+<p>做上下文切换的另一种方法是使用回调。以长轮询（long-polling）为例：</p>
+
+<ul>
+  <li>客户端打开HTTP连接到服务器，以获得更多的数据</li>
+  <li>服务器发现有没有数据发送</li>
+  <li>服务器等待数据，并传入当有数据的时候应该被调用的callback函数</li>
+  <li>服务器发送响应的回调函数，并关闭连接</li>
+</ul>
+
+<p>在伪代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>def handle_request(request):
+    get_more_data(request, callback=on_data)
+
+def on_data(request):
+    send_response(request, make_response(data))
+</code></pre>
+</div>
+
+<p>正如你看到的，工作流是相似的，但代码结构有所不同。</p>
+
+<p>不幸的是，回调不是很直观，而且调试基于回调的大型应用程序简直就是个噩梦。此外，这种方式很难让现有的”阻塞”类库与异步应用一起使用，除非做一些重写或使用某种形式的线程池。例如， <a href="http://motor.readthedocs.org/en/stable/">Motor</a>，为Tornado用混合方式实现的异步MongoDB的驱动程序-它用greenlets封装了IO，但提供了与Tornado兼容的异步API。</p>
+
+<h2 id="futures">Futures</h2>
+
+<p>有不同的方法来完善使用回调的情况：</p>
+
+<ul>
+  <li>使用futures</li>
+  <li>使用generators</li>
+</ul>
+
+<p>什么是Futures？首先，Futures是一个函数的返回值，它是一个对象，它有以下几个属性：</p>
+
+<ul>
+  <li>函数执行的状态（idling, running，停止等）</li>
+  <li>返回值（如果函数尚未执行，可能是空的）</li>
+  <li>各种方法：cancel（），以防止执行，add_done_callback方法,当绑定函数执行完毕时注册回调函数等。</li>
+</ul>
+
+<p>您可以看看这篇优秀的<a href="http://blog.jcoglan.com/2013/03/30/callbacks-are-imperative-promises-are-functional-nodes-biggest-missed-opportunity/">博客文章</a>，其中比较了promises和回调，以及为什么对于写更好的异步代码来说promises优于纯写回调。</p>
+
+<h2 id="generators">Generators</h2>
+
+<p>Python生成器也可让写异步程序的程序员更快乐一点。我们还是看长轮询的例子，但这次我们基于生成器（请注意，从Python 3.3开始会允许从生成器返回值）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
+def handle_request(request):
+    data = yield get_more_data(request)
+    return make_response(data)
+</code></pre>
+</div>
+
+<p>正如你可以看到，生成器允许编写的异步代码有点像同步方式。查看 <a href="http://www.python.org/dev/peps/pep-0342/">PEP 342</a> 获取的更多信息。</p>
+
+<p>生成器最大的问题：程序员在还没有调用这个函数之前必须要知道他是否是异步函数。</p>
+
+<p>看下面的例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>@coroutine
+def get_mode_data(request):
+    data = yield make_db_query(request.user_id)
+    return data
+
+def process_request(request):
+    data = get_more_data(request)
+    return data
+</code></pre>
+</div>
+
+<p>这行代码不会得到预期的效果，在python调用生成器函数返回的生成器器对象不包含执行的内容。在这种情况下，process_request也应该变为为异步用coroutine装饰器封装并且应该从get_more_data产生。另一种方法 - 使用框架功能运行异步函数（如通过回调或Future回调）的能力。</p>
+
+<p>另一个问题 - 如果有必要使现有的函数异步，它的所有的调用者都应更新。</p>
+
+<h2 id="section-6">总结</h2>
+
+<p>Greenlets使一切变得”容易”，但其代价是你可能遇到问题，并要允许隐式上下文切换。</p>
+
+<p>使用回调的代码非常的乱。Futures使得情况有所改善。生成器使代码更易于阅读。</p>
+
+<p>使用Python编写异步应用程序,似乎”官方”推荐的方式是使用回调/Futures/生成器，而不是greenlets。请参阅<a href="http://www.python.org/dev/peps/pep-3156/">PEP 3156</a> 。</p>
+
+<p>当然，没有什么会阻止您使用greenlet框架。有选择是件好事。</p>
+
+<p>我更喜欢明确的上下文切换，因为在花了几个晚上生产环境中使用gdb搞清楚奇怪的解释器崩溃问题后，我对greenlets变得比较谨慎了。</p>
+
+<h2 id="section-7">异步框架</h2>
+
+<p>在大多数的情况下，完全没有必要写自己的异步网络层，应该更好地利用现有的框架。在这里我就不一一列举所有的Python异步框架，我只说工作中使用的一个，所以不会对其他框架有所冒犯。</p>
+
+<p>1,GEVENT不错，使编写异步程序变得容易，但就像上面说的，我不太适应greenlets。</p>
+
+<p>2,Twisted是最古老的异步框架，即使是现在也有积极维护，。我个人的感受相当复杂：复杂，非PEP8，不容易学习。</p>
+
+<p>3,Tornado是的我最终选择的框架。有几个原因：</p>
+
+<ul>
+  <li>快</li>
+  <li>可预测的</li>
+  <li>更符合Python的风格</li>
+  <li>相对较小</li>
+  <li>开发活跃</li>
+  <li>源代码很容易阅读和理解</li>
+</ul>
+
+<p>Tornado没有Twisted大，并且没有一些同步调用库的异步移植（主要是DB方面），但附带了Twisted reactor，所以它是可以在Tornado的基础上使用为Twisted编写的模块。</p>
+
+<p>我会基于Tornado来解释后面所有的例子，但我敢肯定，类似的抽象同样可以用于其他框架。</p>
+
+<h2 id="tornado">Tornado</h2>
+
+<p>Tornado的结构是非常简单的。有一个主循环（称为IOLoop）。IOLoop检查socket，文件描述符等的IO事件（借助 epoll， kqueue或select），并管理基于时间的回调函数。当有IO事件发生，Tornado调用注册的回调函数。</p>
+
+<p>例如，如果绑定在某个socket上的的连接进来，Tornado将触发相应的回调函数，这将创建HTTP请求处理程序类，然后从socket读取头部信息。</p>
+
+<p>Tornado不仅只是epoll的一个封装 - 它包含自己的模板和认证系统，异步Web客户端等。</p>
+
+<p>如果你不熟悉Tornado，看看这个相对较短的<a href="http://www.tornadoweb.org/en/stable/overview.html">框架概述</a> 。</p>
+
+<p>Tornado自带的WebSocket协议的实现，我也在这个基础上写了<a href="https://github.com/mrjoes/sockjs-tornado">sockjs</a> 和<a href="https://github.com/mrjoes/tornadio2">socket.io</a> 库。</p>
+
+<p>就像这篇文章开始的时候提到的，SockJS是WebSocket的polyfill库，在客户端是WebSocket对象，在服务器端用socketjs-tornado提供类似的api。</p>
+
+<p>SockJS负责选择客户端和服务器之间最佳的可用的传输方式，并建立逻辑连接。</p>
+
+<p>这里是基于sockjs-tornado的简单聊天例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class ChatConnection(sockjs.tornado.SockJSConnection):
+    participants = set()
+
+    def on_open(self, info):
+        self.broadcast(self.participants, "Someone joined.")
+        self.participants.add(self)
+
+    def on_message(self, message):
+        self.broadcast(self.participants, message)
+
+    def on_close(self):
+        self.participants.remove(self)
+        self.broadcast(self.participants, "Someone left.")
+</code></pre>
+</div>
+
+<p>为了举例，聊天不会有任何的内部协议或认证 - 它只是广播消息发送给所有的参与者。</p>
+
+<p>没错，就这么就可以了。如果客户端不支持WebSocket的传输，这不要紧，SockJS会回退去使用长轮询传输 - 开发人员只编写一次代码，sockjs-tornado负责抽象协议的差异。</p>
+
+<p>逻辑是非常简单的：</p>
+
+<ul>
+  <li>对于每个传入SockJS连接，sockjs-tornado将创建新的连接类的实例，并调用on_open</li>
+  <li>在on_open中，处理程序将所广播有人有聊天者加入，并把聊天者的self加入参与者集合。</li>
+  <li>如果从客户端接收到一些消息，ON_MESSAGE将被调用并且消息将被广播给所有参与者</li>
+  <li>如果客户端断开连接，on_close将其从参与者集合中删除，并广播给剩下的所有参与者他离开了。</li>
+</ul>
+
+<p>客户端的完整的例子可以在<a href="https://github.com/mrjoes/sockjs-tornado/blob/master/examples/chat/chat.py">这里找到</a>
+。</p>
+
+<h2 id="section-8">管理状态</h2>
+
+<p>服务器端的session是状态的一个例子。如果服务器需要某种先行数据才能处理请求，那服务器是状态相关的。</p>
+
+<p>状态增加了复杂性 - 它消耗内存，它使伸缩更加困难。例如，如果没有共享的session状态，客户只能和集群中的一台服务器”说话”。共享会话状态 - 在为每一个请求从存储中获取状态的时候，每一次数据交换会有额外的IO开销。</p>
+
+<p>不幸的是，无状态的Comet服务器是不可能实现。为了保持逻辑连接，需要一些会话状态来确保数据在客户端之间数据不会丢失。</p>
+
+<p>根据任务，可以将有状态的网络层（Comet）和无状态的业务层（实际应用）分离开来。在这种情况下，业务层完全不需要异步 - 接收到的任务，对其进行处理，并发送回响应。因为worker是无状态的，就可以并行地启动大量的workers来增加应用程序整体的吞吐量的。</p>
+
+<p>下面看他是如何工作的，架构图：</p>
+
+<p><img src="/assets/files/2014-08/frontend-worker.png" alt="" /></p>
+
+<p>在这个例子中，使用Redis做同步传输，但是这会有单点故障，从可靠性角度来看不是太好。此外，Redis的队列被用来向workers推送请求，并接收他们的响应。</p>
+
+<p>由于网络层是有状态的，运行在应用程序前面负载均衡程序为了满足实时连接将使用粘性sessions（客户端应该每次去到相同的服务器）。</p>
+
+<h2 id="wsgi">与WSGI应用集成</h2>
+
+<p>显然，使用新的异步框架重写现有的Web站点是不太可行的。但是可以让他们共存。</p>
+
+<p>有两种方法来整合实时部分：</p>
+
+<ul>
+  <li>在同一进程</li>
+  <li>不在同一进程</li>
+</ul>
+
+<p>如果使用GEVENT，它是可以使WSGI应用与实时部分共存于相同的进程。如果使用tornado和其他基于回调的框架，尽管实时部分有可能运行在相同的进程中单独的线程，但是不被推荐这样做，这有性能方面的问题（由于GIL ）。</p>
+
+<p>另外，我更喜欢独立进程的方法，其中单独设置进程/服务负责实时部分。他们可能共存在一个项目/代码库，但他们总是同时但是单独进程运行的。</p>
+
+<p>让我们假设你有一个社交网络，并希望实时推动状态更新。</p>
+
+<p>最直接的方式来完成这个事情将是：建立单独的服务器来处理实时连接和监听从主站应用发来通知。</p>
+
+<p>通知的实现可以通过实时服务提供的定制的REST API（适用于小型部署），通过Redis的发布/订阅功能（很有可能你的项目已经使用Redis的东西了），以及在ZeroMQ的帮助下，使用AMQP的消息总线（如RabbitMQ ）等。</p>
+
+<p>在这篇文章中我们将分析简单的推送broker架构。</p>
+
+<h2 id="section-9">组织你的代码</h2>
+
+<p>我会用Flask作为一个例子，但同样可以应用到任何其他的框架（Django，Pyramid等）。</p>
+
+<p>我更喜欢一个代码仓库包含Flask应用和基于Tornado的实时部分。在这种情况下，可以在这两个项目之间复用一些代码。</p>
+
+<p>对于Flask，我使用普通的Python库：SQLAlchem??y，redis-PY等，对应Tornado，我必须使用异步的替代库或者使用线程池来执行长时间运行的同步函数，以防止阻塞ioloop。</p>
+
+<p>我manage.py有两个命令：启动Web应用程序和启动基于tornado的实时部分。</p>
+
+<p>让我们看看一些用例。</p>
+
+<h2 id="broker">推送broker</h2>
+
+<p>Broker接受从Flask应用发来的消息，并将其转发到已连接的客户端。有很多现成可以使用的broker服务（ PubNub ，Pusher及一些其他的或自托管解决方案，如Hookbox ），但由于某种原因你可能要搭建自己的。</p>
+
+<p>这最简单的推送broker：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class BrokerConnection(sockjs.tornado.SockJSConnection):
+    participants = set()
+
+    def on_open(self, info):
+        self.participants.add(self)
+
+    def on_message(self, message):
+        pass
+
+    def on_close(self):
+        self.participants.remove(self)
+
+    @classmethod
+    def pubsub(cls, data):
+        msg_type, msg_chan, msg = data
+        if msg_type == 'message':
+            for c in cls.clients:
+                c.send(msg)
+
+if __name__ == '__main__':
+    # .. initialize tornado
+    # .. connect to redis
+    # .. subscribe to key
+    rclient.subscribe(v.key, BrokerConnection.pubsub)
+</code></pre>
+</div>
+
+<p>完整的 <a href="https://gist.github.com/mrjoes/3284402">例子在这里</a> 。</p>
+
+<p>broker是无状态的 - 他们真的不存储任何特定于应用程序的状态，这样你就可根据不断增加的负载启动你需要数量的broker，只要负载正确配置好了。</p>
+
+<p><img src="/assets/files/2014-08/push-servers.png" alt="" /></p>
+
+<h2 id="section-10">游戏</h2>
+
+<p>让我们为一个”典型”的纸牌游戏做个架构草案。</p>
+
+<p>假设，有一桌子，一组玩家在玩同一个游戏。桌子可能包含可见牌和桌面的信息。 每个玩家有其内部状态 - 手上牌的列表，以及一些身份验证数据。</p>
+
+<p>此外，对于游戏，客户端应该比较智能点，因为有可能需要有基于原始连接的自定义协议的。为了简单起见，我们将使用定制的基于JSON协议。</p>
+
+<p>让我们弄清楚我们需要什么样的消息：</p>
+
+<ul>
+  <li>验证</li>
+  <li>错误处理</li>
+  <li>房间列表</li>
+  <li>加入的房间</li>
+  <li>摸牌</li>
+  <li>出牌</li>
+  <li>离开房间</li>
+</ul>
+
+<p>认证消息是从客户端发送到服务器的第一条消息。例如，它可以像：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth"</span><span class="p">,</span><span class="w"> </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[encrypted-token-in-base64]"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>有效载荷是加密过的令牌，由Flask应用所产生。有一种方法来生成令牌：获得当前用户ID，用时间戳和一些使用共享密钥加密对称算法（如3DES或AES）随机添加一些东西。Tornado可以解密令牌，提取出用户ID，然后从数据库进行查询得到任何有关用户的必要的信息。</p>
+
+<p>房间列表可以类似表示为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room_list"</span><span class="p">,</span><span class="w"> </span><span class="nt">"rooms"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room1"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"room2"</span><span class="p">}]}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>依此类推。</p>
+
+<p>在服务器端，每个SockJS连接被封装在类的实例中，它是可以使用self存储任玩家相关数据。</p>
+
+<p>Connection类看起来像这个样子（部分）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class GameConnection(SockJSConnection):
+    def on_open(self, info):
+        self.authenticated = False
+
+    def on_message(self, data):
+        msg = json.loads(data)
+        msg_type = msg['msg']
+
+        if not self.authenticated and msg_type != 'auth':
+            self.send_error('authentication required')
+            return
+
+        if msg_type == 'auth':
+            self.handle_auth(msg)
+            return
+        elif msg_type == 'join_room':
+            # ... other handlers
+            pass
+
+    def handle_auth(self, msg):
+        user_id = decrypt_token(msg['token'])
+        if user_id is None:
+            self.send_error('invalid token')
+            return
+        self.authenticated = True
+        self.send_room_list()
+
+    def send_error(self, text):
+        self.send(json.dumps({'msg': 'error', 'text': text}))
+</code></pre>
+</div>
+
+<p>房间可以存储在一个字典里，其中key是房间ID，value是房间对象。</p>
+
+<p>通过在客户端上实现不同的的消息处理程序和适当的业务逻辑，我们就可以让游戏工作，这作为一个练习留给读者。</p>
+
+<p>游戏是有状态的 - 服务器必须跟踪在比赛中发生了什么。这也意味着它是有点难以伸缩。</p>
+
+<p>在上面的例子中，一台服务器处理所有连接的玩家的所有游戏。但是，如果我们希望有两台服务器并且让玩家分布于它们之间呢？由于他们不知道对方的状态，连接到第一台服务器的玩家将不能和第二台服务器上的玩家游戏。</p>
+
+<p>根据游戏规则的复杂性，它是可以使用全连接的拓扑结构 - 每一个服务器连接到每一个其他的服务器：</p>
+
+<p><img src="/assets/files/2014-08/game-interconnect.png" alt="" /></p>
+
+<p>在这种情况下，游戏状态应该需要信息以确定玩家身份，管理他的游戏状态，并且把游戏相关的信息发送到相应的服务器，这样状态就可以转发给实际客户端。</p>
+
+<p>虽然这种方法有用，但异步应用程序是单线程的，更好的方式是将游戏逻辑和相关状态分离成单独的服务器应用程序，把实时部分作为游戏服务器和客户端之间的智能适配器。</p>
+
+<p>因此，它可以是这样的：</p>
+
+<p><img src="/assets/files/2014-08/realtime-game-servers.png" alt="" /></p>
+
+<p>客户端连接到一个实时服务器，通过验证，获取正在运行的游戏列表（通过游戏服务器和实时服务器之间的一些共享状态）。当客户端选择特定的游戏玩时，它会发送请求到实时服务器，然后在和真正部署该游戏服务器通信。虽然这看起来和完全互连解决方案非常相似，但是在同一柜的服务器不需要与对方直接交互，这提供了有效的隔离状态。
+伸缩也很简单 - 增加更多的的实时服务器或游戏服务器，由他们的状态是孤立的就易于管理。</p>
+
+<p>另外，对于这个任务，我会使用ZeroMQ（AMQP总线）而不是Redis的，因为Redis会成为单点故障。</p>
+
+<p>游戏服务器不会暴露在Internet中，他们只可以通过实时服务器访问。</p>
+
+<p>我已经说过了，分布式应用程序的伸缩性就看 ** 状态管理是否高效 ** 。</p>
+
+<h2 id="section-11">部署</h2>
+
+<p>把Flask和Tornado放到负载均衡的后面（如haproxy）或反向代理服务器（即nginx是个不错的想法，但要使用最新有WebSocket协议的支持的版本）。</p>
+
+<p>有三种部署选项：</p>
+
+<p>1, 把Web和实时部分都运行在相同的主机和端口，并使用基于URL路由分发</p>
+
+<ul>
+  <li>
+    <p>优点</p>
+
+    <p>所有的事情看起来是一致的<br />
+无需担心跨域脚本问题<br />
+一般可以工作在有防火墙限制的环境</p>
+  </li>
+  <li>
+    <p>缺点</p>
+
+    <p>一些透明HTTP代理服务器不兼容</p>
+  </li>
+</ul>
+
+<p>2, 在相同主机的不同端口，Web在端口80上，实时部分在其他端口</p>
+
+<ul>
+  <li>
+    <p>优点</p>
+
+    <p>和透明代理更加兼容</p>
+  </li>
+  <li>
+    <p>缺点</p>
+
+    <p>跨域脚本问题（不是每个浏览器都支持CORS ）<br />
+很有可能被防火墙阻止</p>
+  </li>
+</ul>
+
+<p>3, Web运行在主要域（site.com）和实时部分运行在子域（subdomain.site.com）</p>
+
+<ul>
+  <li>
+    <p>优点</p>
+
+    <p>可以将实时部分从主站点分离出来（无需使用相同的负载均衡）</p>
+  </li>
+  <li>
+    <p>缺点</p>
+
+    <p>跨域脚本问题<br />
+会碰到行为古怪的透明代理</p>
+  </li>
+</ul>
+
+<h2 id="section-12">现实生活中的经验</h2>
+
+<p>我看到过一些使用sockjs-tornado的成功案例：<a href="http://blog.playbuildy.com/">PlayBuildy</a> <a href="http://blog.pythonanywhere.com/27/">PythonAnywhere</a> 和其他的。</p>
+
+<p>但不幸的是，我自己没有在大型项目中使用过。</p>
+
+<p>不过，我有相当有趣的sockjs-node(为nodejs做的SockJS的服务器实现)经验。我实现了一个比较大的广播电台的实时部分。在同一时间平均有3500左右连接的客户端。</p>
+
+<p>大多数连接是短时的，服务器就仅仅是一个简单的broker：管理有层次的频道订阅（例如广播站事件推送或广播员的新闻推送）和频道日志。客户订阅频道，应该可以获得所有为子频道推送的更新。客户也可以申请频道日志 - 按日期排序的最新N个频道和其子频道的消息。这就是一部分在服务器上的逻辑。</p>
+
+<p>总体而言，nodejs的表现是很不错的 - 在一台物理服务器上的3个服务器进程就能够毫无压力处理所有这些客户端的链接，而且还有很多的提升空间。</p>
+
+<p>但就我看来，nodejs和其库有太多的问题了。</p>
+
+<p>部署到生产环境后，服务器开始没有明显原因的内存泄漏。所有的工具表明，堆大小是恒定的，但服务器进程的RSS不断增长，直到进程被操作系统杀掉。作为一个快速的解决方案，nodejs服务器必须每天晚上重新启动。这个问题问题和这个这个比较相似，但这个SSL没有关系，因为没有使用SSL。</p>
+
+<p>如果没有明显的原因的崩溃而且没有产生coredump，那么升级到较新的nodejs版本有帮助。</p>
+
+<p>如果V8垃圾收集器开始在某些情况下死锁了而且是一天一次的频率发生。那么升级到较新的nodejs版本会有帮助，它是发生在V8中的死锁，我在Chrominu的bug跟踪服务里面发现了完全相同的堆栈信息。</p>
+
+<p>新的nodejs版本解决了垃圾收集的问题，应用又可以工作。</p>
+
+<p>此外，基于回调的编程风格使得代码不是我希望中的那么干净和可读。</p>
+
+<p>概括起来 - 尽管nodejs能工作，我有一种强烈的感觉是它没有Python那样成熟。在以后这样的项目中我宁愿使用Python，因为我可以肯定，如果出现错误，它发生了是因为我出了错，而且问题可以追溯到，这样就相对容易。</p>
+
+<p>性能方面，使用WebSocket传输，CPython和nodejs 是差不多的而PYPY比两者都快得多。对于长轮询，PYPY环境的Tornado在使用适当的异步库的情况下，约1.5-2倍慢于nodejs，因此，考虑目前的WebSocket兼容状态，我会说他们是可比的。</p>
+
+<p>我没有理由放弃的Python而用nodejs来做实时部分。</p>
+
+<p>更新（2013年7月2日）： <a href="http://www.techempower.com/">TechEmpower</a>发布了他们的<a href="http://www.techempower.com/benchmarks/#section=data-r6&amp;hw=ec2&amp;test=json">第6轮</a>的框架基准测试，新版本的Tornado更快了，或与node.js有的一比。</p>
+
+<h2 id="section-13">备注：</h2>
+
+<p>虽然有人可能会争辩说，要编写出可伸缩的服务器，Python并不是最好的语言。当然， Erlang的已经有内建的工具来写高效和可扩展的应用程序（而且也有<a href="https://github.com/sockjs/sockjs-erlang">sockjs-erlang</a> ），但是要找到erlang的开发人员是比较困难的。Clojure和Scala也是不错的选项，但Java是完全不同的世界，有自己的类库，方法论和约定。找到不错的Clojure开发者仍然比找到好的Python开发者很难很多。<a href="http://golang.org/">Go</a> 也不错，但他是相当年轻的语言接受程度还不高。</p>
+
+<p>如果你已经有了Python的经验，你可以继续使用Python达到不错的结果。在大多数情况下，软件开发就是开发成本和性能之间的一个权衡。我认为Python所处的位置还比较有利，特别是借助于<a href="http://www.pypy.org/">PYPY</a> 。</p>
+
+<p>无论如何，如果你有任何意见，问题或更新 - 随时与我联系。</p>
+
+<p>P.S. 图表是在 <a href="http://draw.io/">draw.io</a> 上完成的-我不得不提一下这个优秀且免费的服务。</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>Oracle与SQLServer语法区别</title>
+		<link href="http://127.0.0.1/archives/2014/06/18/oracle-and-sqlserver.html" />
+		<updated>2014-06-18T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2014/06/18/oracle-and-sqlserver.html</id>
+		<content type="html"><![CDATA[<ul>
+  <li>
+    <p>Oracle:nvl SqlServer:isnull</p>
+  </li>
+  <li>
+    <p>insert，update，delete等用分号隔开的sql语句，必须前加begin，后加commit;end;并且去掉中间所有的\r\n。<br />
+select时，一个sql语句中不能包含多个select语句</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code> /// &lt;summary&gt;  
+ /// 将在SqlServer中，用分号隔开的多句sql语句，改为在Oracle中执行的Sql  
+ /// 前面加begin，后面加end，去掉所有的\r\n  
+ /// &lt;/summary&gt;  
+ /// &lt;param name="_sqlserverSql"&gt;&lt;/param&gt;  
+ /// &lt;returns&gt;&lt;/returns&gt;  
+ public static string ConvertMultipleSqlFromSqlserverToOracle(string _sqlserverSql) {  
+     if (Global.CacheServerConfiger.IsOracle) {  
+         _sqlserverSql = _sqlserverSql.Trim();  
+         if (!_sqlserverSql.EndsWith(";")) {  
+             _sqlserverSql += ";";  
+         }  
+         _sqlserverSql = _sqlserverSql.Replace("\r\n", " ").Replace("\n", " ");  
+         _sqlserverSql = "begin " + _sqlserverSql + " commit;end;";  
+     }  
+     return _sqlserverSql;  
+ }
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>当数据类型为nvarchar2时，最好前面加N，例如</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>  insert into a(nvarchar2field) values(N'中文')
+</code></pre>
+    </div>
+
+    <p>查询时where子句也如此，例如where name = N’张三’</p>
+  </li>
+  <li>
+    <p>sql语句中的+，改为||</p>
+  </li>
+  <li>
+    <p>Oracle中做除法时，需要进行以下操作，否则c#中会算术溢出</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>round(count(*)/(cast(3 as float)), 28) 
+</code></pre>
+    </div>
+
+    <p>cast(3 as float)是为了和sqlserver保持一致，28是最大精度，不能大于28</p>
+  </li>
+  <li>
+    <p>日期在SqlServer中可以按照字符串操作，但在Oracle中不行</p>
+
+    <p>Oracle中插入时也必须做如下转换</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>Oracle:to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS')    
+</code></pre>
+    </div>
+
+    <p>SqlServer插入或者where子句中都可以直接使用字符串，但where子句中使用字符串，会加快查询速度</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>SqlServer:convert(datetime,''2010-12-21 12:02:30') 
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>想要保存一个时间的毫秒数，Oracle中的字段类型必须为timestamp，不能为date，因为date只保存时间值到秒。</p>
+
+    <p>Oracle中插入时也必须做如下转换</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>to_timestamp('2010-12-21 12:02:30.230940','YYYY-MM-DD HH24:MI:SS.FF')  
+</code></pre>
+    </div>
+
+    <p>SqlServer插入或者where子句中都可以直接使用字符串，但where子句中使用字符串，会加快查询速度</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>SqlServer:Convert(datetime,'2010-12-21 12:02:30.230940') 
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>sql中日期想减得到秒的方法</p>
+
+    <p>Oracle：</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>CAST((sysdate- to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'))*24*60*60  as float)    
+</code></pre>
+    </div>
+
+    <p>SqlServer:</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>CONVERT(float, datediff(second, to_date('2010-12-21 12:02:30','YYYY-MM-DD HH24:MI:SS'), getdate()))
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Oracle中字段不允许存入’‘，即空字符串，只有null值，所以where子句中判断空值方法为：</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>    Oracle：字段名 is null  
+    SqlServer：(字段名 is null or 字段名 = '')    
+</code></pre>
+    </div>
+
+    <p>判断不为空值的方法</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>Oracle：字段名 is not null  
+SqlServer：(字段名 is not null and 字段名 != '')
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Oracle中Top N的写法：</p>
+
+    <p>注意：Order by要写在子查询里，rownum是从1开始的</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>select * from 
+(
+    select * from c_itcomp order by d_controladderss
+) where rownum&lt;100    
+</code></pre>
+    </div>
+
+    <p>排序后从第4条记录取至第9条记录</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>select * from (    
+    select rownum as num, t.* from   
+    (
+        select a.* from a order by b   
+    ) t 
+) where num&gt; 3 and num&lt; 10 
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Oracle中，给表定义别名的时候不能加as  例如：select * from 表名 as 别名！！！！<br />
+注意，这是错误的，正确的应该是  select * from 表名  别名</p>
+  </li>
+  <li>
+    <p>Oracle中，字段的别名不能加单引号<br />
+例如：select 字段名 as ‘别名’ from dual！！！！<br />
+注意，这是错误的，正确的应该是 select 字段名 as 别名 from dual</p>
+  </li>
+  <li>
+    <p>Oracle中没有select sysdate as nowDate的写法，正确的应该是加个虚表dual</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>select sysdate as nowDate from dual
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>Oracle中，字段名都是大写的，即使select语句中是小写，得到的结果也是大写。因此，select到DataTable中后，binding到wpf时如果大小写不同，会绑定失败。在DataTable中分组和排序，也会失败。因此，尽量将DataTable中的字段名 称改为大写。</p>
+  </li>
+  <li>
+    <p>Oracle中的Integer类型，在C#中是Decimal，因此，在C#中从DataTable取值进行类型转换时： 若要转成Int类型，需使用Convert.ToInt32，而不能使用(int)，否则会报错  若要转成Bool类型，需使用Convert.ToBoolean，而不能使用(bool)，否则会报错</p>
+  </li>
+</ul>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>十步完全理解SQL</title>
+		<link href="http://127.0.0.1/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html" />
+		<updated>2014-01-13T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2014/01/13/10-easy-steps-to-a-complete-understanding-of-sql.html</id>
+		<content type="html"><![CDATA[<p>很多程序员视 SQL 为洪水猛兽。SQL 是一种为数不多的声明性语言，它的运行方式完全不同于我们所熟知的命令行语言、面向对象的程序语言、甚至是函数语言（尽管有些人认为 SQL 语言也是一种函数式语言）。</p>
+
+<p>我们每天都在写 SQL 并且应用在开源软件 jOOQ 中。于是我想把 SQL 之美介绍给那些仍然对它头疼不已的朋友，所以本文是为了以下读者而特地编写的：</p>
+
+<p>1、 在工作中会用到 SQL 但是对它并不完全了解的人。</p>
+
+<p>2、 能够熟练使用 SQL 但是并不了解其语法逻辑的人。</p>
+
+<p>3、 想要教别人 SQL 的人。</p>
+
+<p><img src="/assets/files/2014-01/e59983b9f25fc171558066e3071150d6.jpg" alt="sql logo" /></p>
+
+<p>本文着重介绍 SELECT 句式，其他的 DML （Data Manipulation Language 数据操纵语言命令）将会在别的文章中进行介绍。</p>
+
+<h1 id="sql">10个简单步骤，完全理解SQL</h1>
+
+<h2 id="sql-">1、 SQL 是一种声明式语言</h2>
+
+<p>首先要把这个概念记在脑中：“声明”。 SQL 语言是为计算机声明了一个你想从原始数据中获得什么样的结果的一个范例，而不是告诉计算机如何能够得到结果。这是不是很棒？</p>
+
+<p>（译者注：简单地说，SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的内容来从数据库中挑选出符合声明的数据，而不是像传统编程思维去指示计算机如何操作。）</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT first_name, last_name FROM employees WHERE salary &gt; 100000
+</code></pre>
+</div>
+
+<p>上面的例子很容易理解，我们不关心这些雇员记录从哪里来，我们所需要的只是那些高薪者的数据（译者注：salary&gt;100000 ）。</p>
+
+<p><strong>我们从哪儿学习到这些？</strong></p>
+
+<p>如果 SQL 语言这么简单，那么是什么让人们“闻 SQL 色变”？主要的原因是：我们潜意识中的是按照命令式编程的思维方式思考问题的。就好像这样：“电脑，先执行这一步，再执行那一步，但是在那之前先检查一下是否满足条件 A 和条件 B ”。例如，用变量传参、使用循环语句、迭代、调用函数等等，都是这种命令式编程的思维惯式。</p>
+
+<h2 id="sql--1">2、 SQL 的语法并不按照语法顺序执行</h2>
+
+<p>SQL 语句有一个让大部分人都感到困惑的特性，就是：SQL
+语句的执行顺序跟其语句的语法顺序并不一致。SQL 语句的语法顺序是：</p>
+
+<ul>
+  <li>SELECT[DISTINCT]</li>
+  <li>FROM</li>
+  <li>WHERE</li>
+  <li>GROUP BY</li>
+  <li>HAVING</li>
+  <li>UNION</li>
+  <li>ORDER BY</li>
+</ul>
+
+<p>为了方便理解，上面并没有把所有的 SQL 语法结构都列出来，但是已经足以说明
+SQL 语句的语法顺序和其执行顺序完全不一样，就以上述语句为例，其执行顺序为：</p>
+
+<ul>
+  <li>FROM</li>
+  <li>WHERE</li>
+  <li>GROUP BY</li>
+  <li>HAVING</li>
+  <li>SELECT</li>
+  <li>DISTINCT</li>
+  <li>UNION</li>
+  <li>ORDER BY</li>
+</ul>
+
+<p>关于 SQL 语句的执行顺序，有三个值得我们注意的地方：</p>
+
+<p>1、 FROM 才是 SQL 语句执行的第一步，并非 SELECT 。数据库在执行 SQL 语句的第一步是将数据从硬盘加载到数据缓冲区中，以便对这些数据进行操作。（译者注：原文为“The first thing that happens is loading data from the disk into memory, in order to operate on such data.”，但是并非如此，以 Oracle 等常用数据库为例，数据是从硬盘中抽取到数据缓冲区中进行操作。）</p>
+
+<p>2、 SELECT 是在大部分语句执行了之后才执行的，严格的说是在 FROM 和 GROUP BY 之后执行的。理解这一点是非常重要的，这就是你不能在 WHERE 中使用在 SELECT 中设定别名的字段作为判断条件的原因。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT A.x + A.y AS z
+FROM A
+WHERE z = 10 -- z 在此处不可用，因为SELECT是最后执行的语句！
+</code></pre>
+</div>
+
+<p>如果你想重用别名z，你有两个选择。要么就重新写一遍 z 所代表的表达式：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>SELECT A.x + A.y AS z
+FROM A
+WHERE (A.x + A.y) = 10
+</code></pre>
+</div>
+
+<p>…或者求助于衍生表、通用数据表达式或者视图，以避免别名重用。请看下文中的例子。</p>
+
+<p>3、 无论在语法上还是在执行顺序上， UNION 总是排在在 ORDER BY 之前。很多人认为每个 UNION 段都能使用 ORDER BY 排序，但是根据 SQL 语言标准和各个数据库 SQL 的执行差异来看，这并不是真的。尽管某些数据库允许 SQL 语句对子查询（subqueries）或者派生表（derived tables）进行排序，但是这并不说明这个排序在 UNION 操作过后仍保持排序后的顺序。</p>
+
+<p>注意：并非所有的数据库对 SQL 语句使用相同的解析方式。如 MySQL、PostgreSQL和 SQLite 中就不会按照上面第二点中所说的方式执行。</p>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>既然并不是所有的数据库都按照上述方式执行 SQL 预计，那我们的收获是什么？我们的收获是永远要记得： SQL 语句的语法顺序和其执行顺序并不一致，这样我们就能避免一般性的错误。如果你能记住 SQL 语句语法顺序和执行顺序的差异，你就能很容易的理解一些很常见的 SQL 问题。</p>
+
+<p>当然，如果一种语言被设计成语法顺序直接反应其语句的执行顺序，那么这种语言对程序员是十分友好的，这种编程语言层面的设计理念已经被微软应用到了 LINQ 语言中。</p>
+
+<h2 id="sql-table-references">3、 SQL 语言的核心是对表的引用（table references）</h2>
+
+<p>由于 SQL 语句语法顺序和执行顺序的不同，很多同学会认为SELECT 中的字段信息是 SQL 语句的核心。其实真正的核心在于对表的引用。</p>
+
+<p>根据 SQL 标准，FROM 语句被定义为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;from clause&gt; ::= FROM &lt;table reference&gt; [ { &lt;comma&gt; &lt;table reference&gt; }... ]
+</code></pre>
+</div>
+
+<p>FROM 语句的“输出”是一张联合表，来自于所有引用的表在某一维度上的联合。我们们慢慢来分析：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
+</code></pre>
+</div>
+
+<p>上面这句 FROM 语句的输出是一张联合表，联合了表 a 和表 b 。如果 a 表有三个字段， b 表有 5 个字段，那么这个“输出表”就有 8 （ =5+3）个字段。</p>
+
+<p>这个联合表里的数据是 a*b，即 a 和 b 的笛卡尔积。换句话说，也就是 a 表中的每一条数据都要跟 b 表中的每一条数据配对。如果 a 表有3 条数据， b 表有 5 条数据，那么联合表就会有 15 （ =5*3）条数据。</p>
+
+<p>FROM 输出的结果被 WHERE 语句筛选后要经过 GROUP BY 语句处理，从而形成新的输出结果。我们后面还会再讨论这方面问题。</p>
+
+<p>如果我们从集合论（关系代数）的角度来看，一张数据库的表就是一组数据元的关系，而每个 SQL 语句会改变一种或数种关系，从而产生出新的数据元的关系（即产生新的表）。</p>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>思考问题的时候从表的角度来思考问题提，这样很容易理解数据如何在 SQL 语句的“流水线”上进行了什么样的变动。</p>
+
+<h2 id="sql--2">4、 灵活引用表能使 SQL 语句变得更强大</h2>
+
+<p>灵活引用表能使 SQL 语句变得更强大。一个简单的例子就是 JOIN 的使用。严格的说 JOIN 语句并非是 SELECT 中的一部分，而是一种特殊的表引用语句。 SQL 语言标准中表的连接定义如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;table reference&gt; ::=
+    &lt;table name&gt;
+  | &lt;derived table&gt;
+  | &lt;joined table&gt;
+</code></pre>
+</div>
+
+<p>就拿之前的例子来说：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
+</code></pre>
+</div>
+
+<p>a 可能输如下表的连接：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a1 JOIN a2 ON a1.id = a2.id
+</code></pre>
+</div>
+
+<p>将它放到之前的例子中就变成了：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a1 JOIN a2 ON a1.id = a2.id, b
+</code></pre>
+</div>
+
+<p>尽管将一个连接表用逗号跟另一张表联合在一起并不是常用作法，但是你的确可以这么做。结果就是，最终输出的表就有了 a1+a2+b 个字段了。</p>
+
+<p>（译者注：原文这里用词为 degree ，译为维度。如果把一张表视图化，我们可以想象每一张表都是由横纵两个维度组成的，横向维度即我们所说的字段或者列，英文为columns；纵向维度即代表了每条数据，英文为 record ，根据上下文，作者这里所指的应该是字段数。）</p>
+
+<p>在 SQL 语句中派生表的应用甚至比表连接更加强大，下面我们就要讲到表连接。</p>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>思考问题时，要从表引用的角度出发，这样就很容易理解数据是怎样被 SQL 语句处理的，并且能够帮助你理解那些复杂的表引用是做什么的。</p>
+
+<p>更重要的是，要理解 JOIN 是构建连接表的关键词，并不是 SELECT 语句的一部分。有一些数据库允许在 INSERT 、 UPDATE 、 DELETE 中使用 JOIN 。</p>
+
+<h2 id="sql--3">5、 SQL 语句中推荐使用表连接</h2>
+
+<p>我们先看看刚刚这句话：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
+</code></pre>
+</div>
+
+<p>高级 SQL 程序员也许学会给你忠告：尽量不要使用逗号来代替 JOIN 进行表的连接，这样会提高你的 SQL 语句的可读性，并且可以避免一些错误。</p>
+
+<p>利用逗号来简化 SQL 语句有时候会造成思维上的混乱，想一下下面的语句：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b, c, d, e, f, g, h
+WHERE a.a1 = b.bx
+AND a.a2 = c.c1
+AND d.d1 = b.bc
+-- etc...
+</code></pre>
+</div>
+
+<p>我们不难看出使用 JOIN 语句的好处在于：</p>
+
+<ul>
+  <li>
+    <p>安全。 JOIN 和要连接的表离得非常近，这样就能避免错误。</p>
+  </li>
+  <li>
+    <p>更多连接的方式，JOIN 语句能去区分出来外连接和内连接等。</p>
+  </li>
+</ul>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>记着要尽量使用 JOIN 进行表的连接，永远不要在 FROM 后面使用逗号连接表。</p>
+
+<h2 id="sql--4">6、 SQL 语句中不同的连接操作</h2>
+
+<p>SQL 语句中，表连接的方式从根本上分为五种：</p>
+
+<ul>
+  <li>EQUI JOIN</li>
+  <li>SEMI JOIN</li>
+  <li>ANTI JOIN</li>
+  <li>CROSS JOIN</li>
+  <li>DIVISION</li>
+</ul>
+
+<p><strong>EQUI JOIN</strong></p>
+
+<p>这是一种最普通的 JOIN 操作，它包含两种连接方式：</p>
+
+<ul>
+  <li>INNER JOIN（或者是 JOIN ）</li>
+  <li>OUTER JOIN（包括： LEFT 、 RIGHT、 FULL OUTER JOIN）</li>
+</ul>
+
+<p>用例子最容易说明其中区别：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- This table reference contains authors and their books.
+-- There is one record for each book and its author.
+-- authors without books are NOT included
+author JOIN book ON author.id = book.author_id
+ 
+-- This table reference contains authors and their books
+-- There is one record for each book and its author.
+-- ... OR there is an "empty" record for authors without books
+-- ("empty" meaning that all book columns are NULL)
+author LEFT OUTER JOIN book ON author.id = book.author_id
+</code></pre>
+</div>
+
+<p><strong>SEMI JOIN</strong></p>
+
+<p>这种连接关系在 SQL 中有两种表现方式：使用 IN，或者使用 EXISTS。“ SEMI ”在拉丁文中是“半”的意思。这种连接方式是只连接目标表的一部分。这是什么意思呢？再想一下上面关于作者和书名的连接。我们想象一下这样的情况：我们不需要作者 / 书名这样的组合，只是需要那些在书名表中的书的作者信息。那我们就能这么写：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Using IN
+FROM author
+WHERE author.id IN (SELECT book.author_id FROM book)
+ 
+-- Using EXISTS
+FROM author
+WHERE EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
+</code></pre>
+</div>
+
+<p>尽管没有严格的规定说明你何时应该使用 IN ，何时应该使用 EXISTS ，但是这些事情你还是应该知道的：</p>
+
+<ul>
+  <li>
+    <p>IN比 EXISTS 的可读性更好</p>
+  </li>
+  <li>
+    <p>EXISTS 比IN 的表达性更好（更适合复杂的语句）</p>
+  </li>
+  <li>
+    <p>二者之间性能没有差异（但对于某些数据库来说性能差异会非常大）</p>
+  </li>
+</ul>
+
+<p>因为使用 INNER JOIN 也能得到书名表中书所对应的作者信息，所以很多初学者机会认为可以通过 DISTINCT 进行去重，然后将 SEMI JOIN 语句写成这样：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Find only those authors who also have books
+SELECT DISTINCT first_name, last_name
+FROM author
+JOIN book ON author.id = book.author_id
+</code></pre>
+</div>
+
+<p>这是一种很糟糕的写法，原因如下：</p>
+
+<ul>
+  <li>
+    <p>SQL 语句性能低下：因为去重操作（ DISTINCT ）需要数据库重复从硬盘中读取数据到内存中。（译者注： DISTINCT 的确是一种很耗费资源的操作，但是每种数据库对于 DISTINCT 的操作方式可能不同）。</p>
+  </li>
+  <li>
+    <p>这么写并非完全正确：尽管也许现在这么写不会出现问题，但是随着 SQL 语句变得越来越复杂，你想要去重得到正确的结果就变得十分困难。</p>
+  </li>
+</ul>
+
+<p>更多的关于滥用 DISTINCT 的危害可以参考这篇博文</p>
+
+<p>（<a href="http://blog.jooq.org/2013/07/30/10-common-mistakes-java-developers-make-when-writing-sql/">http://blog.jooq.org/2013/07/30/10-common-mistakes-java-developers-make-when-writing-sql/</a>）。</p>
+
+<p><strong>ANTI JOIN</strong></p>
+
+<p>这种连接的关系跟 SEMI JOIN 刚好相反。在 IN 或者 EXISTS 前加一个 NOT 关键字就能使用这种连接。举个例子来说，我们列出书名表里没有书的作者：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Using IN
+FROM author
+WHERE author.id NOT IN (SELECT book.author_id FROM book)
+ 
+-- Using EXISTS
+FROM author
+WHERE NOT EXISTS (SELECT 1 FROM book WHERE book.author_id = author.id)
+</code></pre>
+</div>
+
+<p>关于性能、可读性、表达性等特性也完全可以参考 SEMI JOIN。</p>
+
+<p>这篇博文介绍了在使用 NOT IN 时遇到 NULL 应该怎么办，因为有一点背离本篇主题，就不详细介绍，有兴趣的同学可以读一下</p>
+
+<p>（<a href="http://blog.jooq.org/2012/01/27/sql-incompatibilities-not-in-and-null-values/">http://blog.jooq.org/2012/01/27/sql-incompatibilities-not-in-and-null-values/</a>）。</p>
+
+<p><strong>CROSS JOIN</strong></p>
+
+<p>这个连接过程就是两个连接的表的乘积：即将第一张表的每一条数据分别对应第二张表的每条数据。我们之前见过，这就是逗号在 FROM 语句中的用法。在实际的应用中，很少有地方能用到 CROSS JOIN，但是一旦用上了，你就可以用这样的 SQL语句表达：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Combine every author with every book
+author CROSS JOIN book
+</code></pre>
+</div>
+
+<p><strong>DIVISION</strong></p>
+
+<p>DIVISION 的确是一个怪胎。简而言之，如果 JOIN 是一个乘法运算，那么 DIVISION 就是 JOIN 的逆过程。DIVISION 的关系很难用 SQL 表达出来，介于这是一个新手指南，解释 DIVISION 已经超出了我们的目的。但是有兴趣的同学还是可以来看看这三篇文章</p>
+
+<p>（<a href="http://blog.jooq.org/2012/03/30/advanced-sql-relational-division-in-jooq/">http://blog.jooq.org/2012/03/30/advanced-sql-relational-division-in-jooq/</a>）</p>
+
+<p>（<a href="#Division">http://en.wikipedia.org/wiki/Relational_algebra#Division</a>）</p>
+
+<p>（<a href="%20https://www.simple-talk.com/sql/t-sql-programming/divided-we-stand-the-sql-of-relational-division/">https://www.simple-talk.com/sql/t-sql-programming/divided-we-stand-the-sql-of-relational-division/</a>）。</p>
+
+<h3 id="sqlhttpblogjobbolecom40443">推荐阅读 →_→ 《<a href="http://blog.jobbole.com/40443/">画图解释SQL联合语句</a>》</h3>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>学到了很多！让我们在脑海中再回想一下。 SQL 是对表的引用， JOIN 则是一种引用表的复杂方式。但是 SQL 语言的表达方式和实际我们所需要的逻辑关系之间是有区别的，并非所有的逻辑关系都能找到对应的 JOIN 操作，所以这就要我们在平时多积累和学习关系逻辑，这样你就能在以后编写 SQL 语句中选择适当的 JOIN 操作了。</p>
+
+<h2 id="sql--5">7、 SQL 中如同变量的派生表</h2>
+
+<p>在这之前，我们学习到过 SQL 是一种声明性的语言，并且 SQL 语句中不能包含变量。但是你能写出类似于变量的语句，这些就叫做派生表：</p>
+
+<p>说白了，所谓的派生表就是在括号之中的子查询：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- A derived table
+FROM (SELECT * FROM author)
+</code></pre>
+</div>
+
+<p>需要注意的是有些时候我们可以给派生表定义一个相关名（即我们所说的别名）。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- A derived table with an alias
+FROM (SELECT * FROM author) a
+</code></pre>
+</div>
+
+<p>派生表可以有效的避免由于 SQL 逻辑而产生的问题。举例来说：如果你想重用一个用 SELECT 和 WHERE 语句查询出的结果，这样写就可以（以 Oracle 为例）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-- Get authors' first and last names, and their age in days
+SELECT first_name, last_name, age
+FROM (
+  SELECT first_name, last_name, current_date - date_of_birth age
+  FROM author
+)
+-- If the age is greater than 10000 days
+WHERE age &gt; 10000
+</code></pre>
+</div>
+
+<p>需要我们注意的是：在有些数据库，以及 SQL ： 1990 标准中，派生表被归为下一级——通用表语句（ common table experssion）。这就允许你在一个 SELECT 语句中对派生表多次重用。上面的例子就（几乎）等价于下面的语句：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>WITH a AS (
+  SELECT first_name, last_name, current_date - date_of_birth age
+  FROM author
+)
+SELECT *
+FROM a
+WHERE age &gt; 10000
+</code></pre>
+</div>
+
+<p>当然了，你也可以给“ a ”创建一个单独的视图，这样你就可以在更广泛的范围内重用这个派生表了。更多信息可以阅读下面的文章</p>
+
+<p>（<a href="http://en.wikipedia.org/wiki/View_(SQL)">http://en.wikipedia.org/wiki/View_%28SQL%29</a>）。</p>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>我们反复强调，大体上来说 SQL 语句就是对表的引用，而并非对字段的引用。要好好利用这一点，不要害怕使用派生表或者其他更复杂的语句。</p>
+
+<h2 id="sql--group-by-">8、 SQL 语句中 GROUP BY 是对表的引用进行的操作</h2>
+
+<p>让我们再回想一下之前的 FROM 语句：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>FROM a, b
+</code></pre>
+</div>
+
+<p>现在，我们将 GROUP BY 应用到上面的语句中：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GROUP BY A.x, A.y, B.z
+</code></pre>
+</div>
+
+<p>上面语句的结果就是产生出了一个包含三个字段的新的表的引用。我们来仔细理解一下这句话：当你应用 GROUP BY 的时候， SELECT 后没有使用聚合函数的列，都要出现在 GROUP BY 后面。（译者注：原文大意为“当你是用 GROUP BY 的时候，你能够对其进行下一级逻辑操作的列会减少，包括在 SELECT 中的列”）。</p>
+
+<ul>
+  <li>
+    <p>需要注意的是：其他字段能够使用聚合函数：</p>
+
+    <p>SELECT A.x, A.y, SUM(A.z)
+FROM A
+GROUP BY A.x, A.y</p>
+  </li>
+  <li>
+    <p>还有一点值得留意的是： MySQL 并不坚持这个标准，这的确是令人很困惑的地方。（译者注：这并不是说 MySQL 没有 GROUP BY 的功能）但是不要被 MySQL 所迷惑。 GROUP BY 改变了对表引用的方式。你可以像这样既在 SELECT 中引用某一字段，也在 GROUP BY 中对其进行分组。</p>
+  </li>
+</ul>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>GROUP BY，再次强调一次，是在表的引用上进行了操作，将其转换为一种新的引用方式。</p>
+
+<h2 id="sql--select-">9、 SQL 语句中的 SELECT 实质上是对关系的映射</h2>
+
+<p>我个人比较喜欢“映射”这个词，尤其是把它用在关系代数上。（译者注：原文用词为 projection ，该词有两层含义，第一种含义是预测、规划、设计，第二种意思是投射、映射，经过反复推敲，我觉得这里用映射能够更直观的表达出 SELECT 的作用）。一旦你建立起来了表的引用，经过修改、变形，你能够一步一步的将其映射到另一个模型中。 SELECT 语句就像一个“投影仪”，我们可以将其理解成一个将源表中的数据按照一定的逻辑转换成目标表数据的函数。</p>
+
+<p>通过 SELECT语句，你能对每一个字段进行操作，通过复杂的表达式生成所需要的数据。</p>
+
+<p>SELECT 语句有很多特殊的规则，至少你应该熟悉以下几条：</p>
+
+<ol>
+  <li>你仅能够使用那些能通过表引用而得来的字段；</li>
+  <li>如果你有 GROUP BY 语句，你只能够使用 GROUP BY 语句后面的字段或者聚合函数；</li>
+  <li>当你的语句中没有 GROUP BY 的时候，可以使用开窗函数代替聚合函数；</li>
+  <li>当你的语句中没有 GROUP BY 的时候，你不能同时使用聚合函数和其它函数；</li>
+  <li>有一些方法可以将普通函数封装在聚合函数中；</li>
+  <li>……</li>
+</ol>
+
+<p>一些更复杂的规则多到足够写出另一篇文章了。比如：为何你不能在一个没有 GROUP BY 的 SELECT 语句中同时使用普通函数和聚合函数？（上面的第 4 条）</p>
+
+<p>原因如下：</p>
+
+<ol>
+  <li>凭直觉，这种做法从逻辑上就讲不通。</li>
+  <li>如果直觉不能够说服你，那么语法肯定能。 SQL : 1999 标准引入了 GROUPING SETS，SQL： 2003 标准引入了 group sets : GROUP BY()。无论什么时候，只要你的语句中出现了聚合函数，而且并没有明确的 GROUP BY 语句，这时一个不明确的、空的 GROUPING SET 就会被应用到这段 SQL 中。因此，原始的逻辑顺序的规则就被打破了，映射（即 SELECT ）关系首先会影响到逻辑关系，其次就是语法关系。（译者注：这段话原文就比较艰涩，可以简单理解如下：在既有聚合函数又有普通函数的 SQL 语句中，如果没有 GROUP BY 进行分组，SQL 语句默认视整张表为一个分组，当聚合函数对某一字段进行聚合统计的时候，引用的表中的每一条 record 就失去了意义，全部的数据都聚合为一个统计值，你此时对每一条 record 使用其它函数是没有意义的）。</li>
+</ol>
+
+<p>糊涂了？是的，我也是。我们再回过头来看点浅显的东西吧。</p>
+
+<p><strong>我们学到了什么？</strong></p>
+
+<p>SELECT 语句可能是 SQL 语句中最难的部分了，尽管他看上去很简单。其他语句的作用其实就是对表的不同形式的引用。而 SELECT 语句则把这些引用整合在了一起，通过逻辑规则将源表映射到目标表，而且这个过程是可逆的，我们可以清楚的知道目标表的数据是怎么来的。</p>
+
+<p>想要学习好 SQL 语言，就要在使用 SELECT 语句之前弄懂其他的语句，虽然 SELECT 是语法结构中的第一个关键词，但它应该是我们最后一个掌握的。</p>
+
+<h2 id="sql--distinct--union--order-by--offset">10、 SQL 语句中的几个简单的关键词： DISTINCT ， UNION ， ORDER BY 和 OFFSET</h2>
+
+<p>在学习完复杂的 SELECT 豫剧之后，我们再来看点简单的东西：</p>
+
+<ul>
+  <li>
+    <p>集合运算（ DISTINCT 和 UNION ）</p>
+  </li>
+  <li>
+    <p>排序运算（ ORDER BY，OFFSET…FETCH）</p>
+  </li>
+</ul>
+
+<p><strong>集合运算（ set operation）：</strong></p>
+
+<p>集合运算主要操作在于集合上，事实上指的就是对表的一种操作。从概念上来说，他们很好理解：</p>
+
+<ul>
+  <li>
+    <p>DISTINCT 在映射之后对数据进行去重</p>
+  </li>
+  <li>
+    <p>UNION 将两个子查询拼接起来并去重</p>
+  </li>
+  <li>
+    <p>UNION ALL 将两个子查询拼接起来但不去重</p>
+  </li>
+  <li>
+    <p>EXCEPT 将第二个字查询中的结果从第一个子查询中去掉</p>
+  </li>
+  <li>
+    <p>INTERSECT 保留两个子查询中都有的结果并去重</p>
+  </li>
+</ul>
+
+<p><strong>排序运算（ ordering operation）：</strong></p>
+
+<p>排序运算跟逻辑关系无关。这是一个 SQL 特有的功能。排序运算不仅在 SQL 语句的最后，而且在 SQL 语句运行的过程中也是最后执行的。使用 ORDER BY 和 OFFSET…FETCH 是保证数据能够按照顺序排列的最有效的方式。其他所有的排序方式都有一定随机性，尽管它们得到的排序结果是可重现的。</p>
+
+<p>OFFSET…SET是一个没有统一确定语法的语句，不同的数据库有不同的表达方式，如 MySQL 和 PostgreSQL 的 LIMIT…OFFSET、SQL Server 和 Sybase 的 TOP…START AT 等。具体关于 OFFSET..FETCH 的不同语法可以参考这篇文章</p>
+
+<p>（<a href="http://www.jooq.org/doc/3.1/manual/sql-building/sql-statements/select-statement/limit-clause/">http://www.jooq.org/doc/3.1/manual/sql-building/sql-statements/select-statement/limit-clause/</a>）。</p>
+
+<p><strong>让我们在工作中尽情的使用 SQL！</strong></p>
+
+<p>正如其他语言一样，想要学好 SQL 语言就要大量的练习。上面的 10 个简单的步骤能够帮助你对你每天所写的 SQL
+语句有更好的理解。另一方面来讲，从平时常见的错误中也能积累到很多经验。下面的两篇文章就是介绍一些 JAVA 和其他开发者所犯的一些常见的 SQL 错误：</p>
+
+<ul>
+  <li><a href="http://blog.jooq.org/2013/07/30/10-common-mistakes-java-developers-make-when-writing-sql/">10 Common Mistakes Java Developers Make when Writing
+SQL</a></li>
+  <li><a href="http://blog.jooq.org/2013/08/12/10-more-common-mistakes-java-developers-make-when-writing-sql/">10 More Common Mistakes Java Developers Make when Writing
+SQL</a></li>
+</ul>
+
+<p>原文链接： <a href="http://tech.pro/tutorial/1555/10-easy-steps-to-a-complete-understanding-of-sql">Lukas Eder</a>   翻译：<a href="http://blog.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/author/ripenc/">水果泡腾片</a>译文链接：<a href="http://blog.jobbole.com/55086/">http://blog.jobbole.com/55086/</a></p>
+
+<p>[ <strong>转载必须在正文中标注并保留原文链接、译文链接和译者等信息。</strong>]</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>编写更好的jQuery代码的建议</title>
+		<link href="http://127.0.0.1/archives/2013/12/06/writing-better-jquery-code.html" />
+		<updated>2013-12-06T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2013/12/06/writing-better-jquery-code.html</id>
+		<content type="html"><![CDATA[<p><strong>本文由 <a href="http://blog.jobbole.com">伯乐在线</a> - <a href="http://blog.jobbole.com/author/yanhaijing/">yanhaijing</a> 翻译自 <a href="http://flippinawesome.org/2013/11/25/writing-better-jquery-code/">Mathew Carella</a>。欢迎加入<a href="http://www.jobbole.com/groups/6/">技术翻译小组</a>。转载请参见文章末尾处的要求。</strong></p>
+
+<p>讨论jQuery和javascript性能的文章并不罕见。然而，本文我计划总结一些速度方面的技巧和我本人的一些建议，来提升你的jQuery和javascript代码。好的代码会带来速度的提升。快速渲染和响应意味着更好的用户体验。</p>
+
+<p>首先，在脑子里牢牢记住jQuery就是javascript。这意味着我们应该采取相同的编码惯例,风格指南和最佳实践。</p>
+
+<p>首先，如果你是一个javascript新手，我建议您阅读《<a href="http://net.tutsplus.com/tutorials/JavaScript-ajax/24-JavaScript-best-practices-for-beginners/">JavaScript初学者的最佳实践</a>》，这是一篇高质量的javascript教程，接触jQuery之前最好先阅读。</p>
+
+<p>当你准备使用jQuery，我强烈建议你遵循下面这些指南：</p>
+
+<p> </p>
+
+<h2 id="section">缓存变量</h2>
+
+<p>DOM遍历是昂贵的，所以尽量将会重用的元素缓存。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+h = $('#element').height();
+$('#element').css('height',h-20);
+ 
+// 建议
+ 
+$element = $('#element');
+h = $element.height();
+$element.css('height',h-20);
+</code></pre>
+</div>
+
+<h2 id="section-1">避免全局变量</h2>
+
+<p>jQuery与javascript一样，一般来说,最好确保你的变量在函数作用域内。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$element = $('#element');
+h = $element.height();
+$element.css('height',h-20);
+ 
+// 建议
+ 
+var $element = $('#element');
+var h = $element.height();
+$element.css('height',h-20);
+</code></pre>
+</div>
+
+<h2 id="section-2">使用匈牙利命名法</h2>
+
+<p>在变量前加$前缀，便于识别出jQuery对象。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+var first = $('#first');
+var second = $('#second');
+var value = $first.val();
+ 
+// 建议 - 在jQuery对象前加$前缀
+ 
+var $first = $('#first');
+var $second = $('#second'),
+var value = $first.val();
+</code></pre>
+</div>
+
+<h2 id="var--var-">使用 Var 链（单 Var 模式）</h2>
+
+<p>将多条var语句合并为一条语句，我建议将未赋值的变量放到后面。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var
+  $first = $('#first'),
+  $second = $('#second'),
+  value = $first.val(),
+  k = 3,
+  cookiestring = 'SOMECOOKIESPLEASE',
+  i,
+  j,
+  myArray = {};
+</code></pre>
+</div>
+
+<h2 id="on">请使用’On’</h2>
+
+<p>在新版jQuery中，更短的 on(“click”) 用来取代类似 click() 这样的函数。在之前的版本中 on() 就是 bind()。自从jQuery 1.7版本后，on()?附加事件处理程序的首选方法。然而，出于一致性考虑，你可以简单的全部使用on()方法。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$first.click(function(){
+    $first.css('border','1px solid red');
+    $first.css('color','blue');
+});
+ 
+$first.hover(function(){
+    $first.css('border','1px solid red');
+})
+ 
+// 建议
+$first.on('click',function(){
+    $first.css('border','1px solid red');
+    $first.css('color','blue');
+})
+ 
+$first.on('hover',function(){
+    $first.css('border','1px solid red');
+})
+</code></pre>
+</div>
+
+<h2 id="javascript">精简javascript</h2>
+
+<p>一般来说,最好尽可能合并函数。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$first.click(function(){
+    $first.css('border','1px solid red');
+    $first.css('color','blue');
+});
+ 
+// 建议
+ 
+$first.on('click',function(){
+    $first.css({
+        'border':'1px solid red',
+        'color':'blue'
+    });
+});
+</code></pre>
+</div>
+
+<h2 id="section-3">链式操作</h2>
+
+<p>jQuery实现方法的链式操作是非常容易的。下面利用这一点。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$second.html(value);
+$second.on('click',function(){
+    alert('hello everybody');
+});
+$second.fadeIn('slow');
+$second.animate({height:'120px'},500);
+ 
+// 建议
+ 
+$second.html(value);
+$second.on('click',function(){
+    alert('hello everybody');
+}).fadeIn('slow').animate({height:'120px'},500);
+</code></pre>
+</div>
+
+<h2 id="section-4">维持代码的可读性</h2>
+
+<p>伴随着精简代码和使用链式的同时，可能带来代码的难以阅读。添加缩紧和换行能起到很好的效果。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$second.html(value);
+$second.on('click',function(){
+    alert('hello everybody');
+}).fadeIn('slow').animate({height:'120px'},500);
+ 
+// 建议
+ 
+$second.html(value);
+$second
+    .on('click',function(){ alert('hello everybody');})
+    .fadeIn('slow')
+    .animate({height:'120px'},500);
+</code></pre>
+</div>
+
+<h2 id="section-5">选择短路求值</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>短路求值是一个从左到右求值的表达式，用 &amp;&amp;（逻辑与）或</td>
+      <td> </td>
+      <td>（逻辑或）操作符。</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+function initVar($myVar) {
+    if(!$myVar) {
+        $myVar = $('#selector');
+    }
+}
+ 
+// 建议
+ 
+function initVar($myVar) {
+    $myVar = $myVar || $('#selector');
+}
+</code></pre>
+</div>
+
+<h2 id="section-6">选择捷径</h2>
+
+<p>精简代码的其中一种方式是利用编码捷径。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+if(collection.length &gt; 0){..}
+ 
+// 建议
+ 
+if(collection.length){..}
+</code></pre>
+</div>
+
+<h2 id="section-7">繁重的操作中分离元素</h2>
+
+<p>如果你打算对DOM元素做大量操作（连续设置多个属性或css样式），建议首先分离元素然后在添加。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+var
+    $container = $("#container"),
+    $containerLi = $("#container li"),
+    $element = null;
+ 
+$element = $containerLi.first(); 
+//... 许多复杂的操作
+ 
+// better
+ 
+var
+    $container = $("#container"),
+    $containerLi = $container.find("li"),
+    $element = null;
+ 
+$element = $containerLi.first().detach(); 
+//... 许多复杂的操作
+ 
+$container.append($element);
+</code></pre>
+</div>
+
+<h2 id="section-8">熟记技巧</h2>
+
+<p>你可能对使用jQuery中的方法缺少经验，一定要查看的文档，可能会有一个更好或更快的方法来使用它。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$('#id').data(key,value);
+ 
+// 建议 (高效)
+ 
+$.data('#id',key,value);
+</code></pre>
+</div>
+
+<h2 id="section-9">使用子查询缓存的父元素</h2>
+
+<p>正如前面所提到的，DOM遍历是一项昂贵的操作。典型做法是缓存父元素并在选择子元素时重用这些缓存元素。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+var
+    $container = $('#container'),
+    $containerLi = $('#container li'),
+    $containerLiSpan = $('#container li span');
+ 
+// 建议 (高效)
+ 
+var
+    $container = $('#container '),
+    $containerLi = $container.find('li'),
+    $containerLiSpan= $containerLi.find('span');
+</code></pre>
+</div>
+
+<h2 id="section-10">避免通用选择符</h2>
+
+<p>将通用选择符放到后代选择符中，性能非常糟糕。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$('.container &gt; *'); 
+ 
+// 建议
+ 
+$('.container').children();
+</code></pre>
+</div>
+
+<h2 id="section-11">避免隐式通用选择符</h2>
+
+<p>通用选择符有时是隐式的，不容易发现。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$('.someclass :radio'); 
+ 
+// 建议
+ 
+$('.someclass input:radio');
+</code></pre>
+</div>
+
+<h2 id="section-12">优化选择符</h2>
+
+<p>例如，Id选择符应该是唯一的，所以没有必要添加额外的选择符。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$('div#myid'); 
+$('div#footer a.myLink');
+ 
+// 建议
+$('#myid');
+$('#footer .myLink');
+</code></pre>
+</div>
+
+<h2 id="id">避免多个ID选择符</h2>
+
+<p>在此强调，ID选择符应该是唯一的，不需要添加额外的选择符，更不需要多个后代ID选择符。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕
+ 
+$('#outer #inner'); 
+ 
+// 建议
+ 
+$('#inner');
+</code></pre>
+</div>
+
+<h2 id="section-13">坚持最新版本</h2>
+
+<p>新版本通常更好：更轻量级，更高效。显然，你需要考虑你要支持的代码的兼容性。例如，2.0版本不支持ie 6/7/8。</p>
+
+<p> </p>
+
+<h2 id="section-14">摒弃弃用方法</h2>
+
+<p>关注每个新版本的废弃方法是非常重要的并尽量避免使用这些方法。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// 糟糕 - live 已经废弃
+ 
+$('#stuff').live('click', function() {
+  console.log('hooray');
+});
+ 
+// 建议
+$('#stuff').on('click', function() {
+  console.log('hooray');
+});
+// 注：此处可能不当，应为live能实现实时绑定，delegate或许更合适
+</code></pre>
+</div>
+
+<h2 id="cdn">利用CDN</h2>
+
+<p>谷歌的CND能保证选择离用户最近的缓存并迅速响应。（使用谷歌CND请自行搜索地址，此处地址以不能使用，推荐jquery官网提供的<a href="http://code.jquery.com/jquery-1.10.2.min.js">CDN</a>）。</p>
+
+<h2 id="jqueryjavascript">必要时组合jQuery和javascript原生代码</h2>
+
+<p>如上所述，jQuery就是javascript，这意味着用jQuery能做的事情，同样可以用原生代码来做。原生代码（或?<a href="http://vanilla-js.com/">vanilla</a>）的可读性和可维护性可能不如jQuery，而且代码更长。但也意味着更高效（通常更接近底层代码可读性越差，性能越高，例如：汇编，当然需要更强大的人才可以）。牢记没有任何框架能比原生代码更小，更轻，更高效（注：测试链接已失效，可上网搜索测试代码）。</p>
+
+<p>鉴于vanilla 和 jQuery之间的性能差异，我强烈建议吸收两人的精华，使用（可能的话）和<a href="http://www.leebrimelow.com/native-methods-jQuery/">jQuery等价的原生代码</a>。</p>
+
+<p> </p>
+
+<h2 id="section-15">最后忠告</h2>
+
+<p>最后，我记录这篇文章的目的是提高jQuery的性能和其他一些好的建议。如果你想深入的研究对这个话题你会发现很多乐趣。记住，jQuery并非不可或缺，仅是一种选择。思考为什么要使用它。DOM操作？ajax？模版？css动画？还是选择符引擎？或许javascript微型框架或jQuery的定制版是更好的选择。</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>JavaScript核心</title>
+		<link href="http://127.0.0.1/archives/2013/11/26/javascript-the-core.html" />
+		<updated>2013-11-26T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2013/11/26/javascript-the-core.html</id>
+		<content type="html"><![CDATA[<p>原文出处： <a href="http://dmitrysoshnikov.com/ecmascript/javascript-the-core/">Dmitry Soshnikov</a>  译文出处：<a href="http://weizhifeng.net/javascript-the-core.html">JeremyWei</a></p>
+
+<p>这篇文章是「深入ECMA-262-3」系列的一个概览和摘要。每个部分都包含了对应章节的链接，所以你可以阅读它们以便对其有更深的理解。</p>
+
+<p>面向读者：经验丰富的程序员，专家。</p>
+
+<p>我们以思考对象的概念做为开始，这是ECMAScript的基础。</p>
+
+<h3 id="section"><strong>对象</strong></h3>
+
+<p>ECMAScript做为一个高度抽象的面向对象语言，是通过<em>对象</em>来交互的。即使ECMAScript里边也有<em>基本类型</em>，但是，当需要的时候，它们也会被转换成对象。</p>
+
+<blockquote>
+  <p>一个对象就是一个属性集合，并拥有一个独立的prototype（原型）对象。这个prototype可以是一个对象或者null。</p>
+</blockquote>
+
+<p>让我们看一个关于对象的基本例子。一个对象的prototype是以内部的[[Prototype]]属性来引用的。但是，在示意图里边我们将会使用<code class="highlighter-rouge">__&lt;internal-property&gt;__</code>下划线标记来替代两个括号，对于prototype对象来说是：<code class="highlighter-rouge">__proto__</code>。</p>
+
+<p>对于以下代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var foo = {
+  x: 10,
+  y: 20
+};
+</code></pre>
+</div>
+
+<p>我们拥有一个这样的结构，两个明显的自身属性和一个隐含的<code class="highlighter-rouge">__proto__</code>属性，这个属性是对<code class="highlighter-rouge">foo</code>原型对象的引用：</p>
+
+<p><a href="/assets/files/2013-11/basic-object.png" title="JavaScript核心"><img src="/assets/files/2013-11/basic-object.png" alt="basic-object" /></a></p>
+
+<p>这些prototype有什么用？让我们以<em>原型链</em>（prototype chain）的概念来回答这个问题。</p>
+
+<h3 id="section-1"><strong>原型链</strong></h3>
+
+<p>原型对象也是简单的对象并且可以拥有它们自己的原型。如果一个原型对象的原型是一个非null的引用，那么以此类推，这就叫作<em>原型链</em>。</p>
+
+<blockquote>
+  <p>原型链是一个用来实现继承和共享属性的有限对象链。</p>
+</blockquote>
+
+<p>考虑这么一个情况，我们拥有两个对象，它们之间只有一小部分不同，其他部分都相同。显然，对于一个设计良好的系统，我们将会<em>重用</em>相似的功能/代码，而不是在每个单独的对象中重复它。在基于类的系统中，这个代码<em>重用</em>风格叫作<em>类继承</em>－你把相似的功能放入类<code class="highlighter-rouge">A</code>中，然后类 <code class="highlighter-rouge">B</code>和类 <code class="highlighter-rouge">C</code>继承类 <code class="highlighter-rouge">A</code>，并且拥有它们自己的一些小的额外变动。</p>
+
+<p>ECMAScript中没有类的概念。但是，代码重用的风格并没有太多不同（尽管从某些方面来说比基于类（class-based）的方式要更加灵活）并且通过<em>原型链</em>来实现。这种继承方式叫作<em>委托继承</em>(delegation based inheritance)（或者，更贴近ECMAScript一些，叫作<em>原型继承</em>(prototype based inheritance)）。</p>
+
+<p>跟例子中的类<code class="highlighter-rouge">A</code>，<code class="highlighter-rouge">B</code>，<code class="highlighter-rouge">C</code>相似，在ECMAScript中你创建对象：<code class="highlighter-rouge">a</code>，<code class="highlighter-rouge">b</code>，<code class="highlighter-rouge">c</code>。于是，对象<code class="highlighter-rouge">a</code>中存储对象<code class="highlighter-rouge">b</code>和<code class="highlighter-rouge">c</code>中通用的部分。然后<code class="highlighter-rouge">b</code>和<code class="highlighter-rouge">c</code>只存储它们自身的额外属性或者方法。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var a = {
+  x: 10,
+  calculate: function (z) {
+    return this.x + this.y + z
+  }
+};
+ 
+var b = {
+  y: 20,
+  __proto__: a
+};
+ 
+var c = {
+  y: 30,
+  __proto__: a
+};
+ 
+// call the inherited method
+b.calculate(30); // 60
+c.calculate(40); // 80
+</code></pre>
+</div>
+
+<p>足够简单，是不是？我们看到<code class="highlighter-rouge">b</code>和<code class="highlighter-rouge">c</code>访问到了在对象<code class="highlighter-rouge">a</code>中定义的<code class="highlighter-rouge">calculate</code>方法。这是通过原型链实现的。</p>
+
+<p>规则很简单：如果一个属性或者一个方法在对象<em>自身</em>中无法找到（也就是对象自身没有一个那样的属性），然后它会尝试在原型链中寻找这个属性/方法。如果这个属性在原型中没有查找到，那么将会查找这个原型的原型，以此类推，遍历整个原型链（当然这在类继承中也是一样的，当解析一个继承的<em>方法</em>的时候－我们遍历<em>class链</em>（class chain）。第一个被查找到的同名属性/方法会被使用。因此，一个被查找到的属性叫作<em>继承</em>属性。如果在遍历了整个原型链之后还是没有查找到这个属性的话，返回<code class="highlighter-rouge">undefined</code>值。</p>
+
+<p>注意，继承方法中所使用的<code class="highlighter-rouge">this</code>的值被设置为<em>原始</em>对象，而并不是在其中查找到这个方法的（原型）对象。也就是，在上面的例子中<code class="highlighter-rouge">this.y</code>取的是<code class="highlighter-rouge">b</code>和<code class="highlighter-rouge">c</code>中的值，而不是<code class="highlighter-rouge">a</code>中的值。但是，<code class="highlighter-rouge">this.x</code>是取的是<code class="highlighter-rouge">a</code>中的值，并且又一次通过<em>原型链</em>机制完成。</p>
+
+<p>如果没有明确为一个对象指定原型，那么它将会使用<code class="highlighter-rouge">__proto__</code>的默认值－<code class="highlighter-rouge">Object.prototype</code>。<code class="highlighter-rouge">Object.prototype</code>对象自身也有一个<code class="highlighter-rouge">__proto__</code>属性，这是原型链的<em>终点</em>并且值为<code class="highlighter-rouge">null</code>。</p>
+
+<p>下一张图展示了对象<code class="highlighter-rouge">a</code>，<code class="highlighter-rouge">b</code>，<code class="highlighter-rouge">c</code>之间的继承层级：</p>
+
+<p><a href="/assets/files/2013-11/prototype-chain.png" title="JavaScript核心"><img src="/assets/files/2013-11/prototype-chain.png" alt="prototype-chain" /></a></p>
+
+<p>注意： ES5标准化了一个实现原型继承的可选方法，即使用<code class="highlighter-rouge">Object.create</code>函数：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var b = Object.create(a, {y: {value: 20}});
+var c = Object.create(a, {y: {value: 30}});
+</code></pre>
+</div>
+
+<p>你可以在对应的章节获取到更多关于ES5新API的信息。ES6标准化了 <code class="highlighter-rouge">__proto__</code>属性，并且可以在对象初始化的时候使用它。</p>
+
+<p>通常情况下需要对象拥有<em>相同或者相似的状态结构</em>（也就是相同的属性集合），赋以不同的<em>状态值</em>。在这个情况下我们可能需要使用<em>构造函数</em>(constructor function)，其以<em>指定的模式</em>来创造对象。</p>
+
+<p><strong>构造函数</strong></p>
+
+<p>除了以指定模式创建对象之外，<em>构造函数</em>也做了另一个有用的事情－它<em>自动地为新创建的对象设置一个原型对象</em>。这个原型对象存储在<code class="highlighter-rouge">ConstructorFunction.prototype</code>属性中。</p>
+
+<p>换句话说，我们可以使用构造函数来重写上一个拥有对象<code class="highlighter-rouge">b</code>和对象<code class="highlighter-rouge">c</code>的例子。因此，对象<code class="highlighter-rouge">a</code>（一个原型对象）的角色由<code class="highlighter-rouge">Foo.prototype</code>来扮演：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// a constructor function
+function Foo(y) {
+  // which may create objects
+  // by specified pattern: they have after
+  // creation own "y" property
+  this.y = y;
+}
+ 
+// also "Foo.prototype" stores reference
+// to the prototype of newly created objects,
+// so we may use it to define shared/inherited
+// properties or methods, so the same as in
+// previous example we have:
+ 
+// inherited property "x"
+Foo.prototype.x = 10;
+ 
+// and inherited method "calculate"
+Foo.prototype.calculate = function (z) {
+  return this.x + this.y + z;
+};
+ 
+// now create our "b" and "c"
+// objects using "pattern" Foo
+var b = new Foo(20);
+var c = new Foo(30);
+ 
+// call the inherited method
+b.calculate(30); // 60
+c.calculate(40); // 80
+ 
+// let's show that we reference
+// properties we expect
+ 
+console.log(
+ 
+  b.__proto__ === Foo.prototype, // true
+  c.__proto__ === Foo.prototype, // true
+ 
+  // also "Foo.prototype" automatically creates
+  // a special property "constructor", which is a
+  // reference to the constructor function itself;
+  // instances "b" and "c" may found it via
+  // delegation and use to check their constructor
+ 
+  b.constructor === Foo, // true
+  c.constructor === Foo, // true
+  Foo.prototype.constructor === Foo // true
+ 
+  b.calculate === b.__proto__.calculate, // true
+  b.__proto__.calculate === Foo.prototype.calculate // true
+);
+</code></pre>
+</div>
+
+<p>这个代码可以表示为如下关系：</p>
+
+<p><a href="/assets/files/2013-11/constructor-proto-chain.png" title="JavaScript核心"><img src="/assets/files/2013-11/constructor-proto-chain.png" alt="constructor-proto-chain" /></a></p>
+
+<p>这张图又一次说明了每个对象都有一个原型。构造函数<code class="highlighter-rouge">Foo</code>也有自己的<code class="highlighter-rouge">__proto__</code>，值为<code class="highlighter-rouge">Function.prototype</code>，<code class="highlighter-rouge">Function.prototype</code>也通过其<code class="highlighter-rouge">__proto__</code>属性关联到<code class="highlighter-rouge">Object.prototype</code>。因此，重申一下，<code class="highlighter-rouge">Foo.prototype</code>就是<code class="highlighter-rouge">Foo</code>的一个明确的属性，指向对象<code class="highlighter-rouge">b</code>和对象<code class="highlighter-rouge">c</code>的原型。</p>
+
+<p>正式来说，如果思考一下<em>分类</em>的概念（并且我们已经对<code class="highlighter-rouge">Foo</code>进行了<em>分类</em>），那么构造函数和原型对象合在一起可以叫作「类」。实际上，举个例子，Python的<em>第一级</em>（first-class）动态类（dynamic classes）显然是以同样的<code class="highlighter-rouge">属性/方法</code>处理方案来实现的。从这个角度来说，Python中的类就是ECMAScript使用的委托继承的一个语法糖。</p>
+
+<p>注意: 在ES6中「类」的概念被标准化了，并且实际上以一种构建在构造函数上面的语法糖来实现，就像上面描述的一样。从这个角度来看原型链成为了类继承的一种具体实现方式：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// ES6
+class Foo {
+  constructor(name) {
+    this._name = name;
+  }
+ 
+  getName() {
+    return this._name;
+  }
+}
+ 
+class Bar extends Foo {
+  getName() {
+    return super.getName() + ' Doe';
+  }
+}
+ 
+var bar = new Bar('John');
+console.log(bar.getName()); // John Doe
+</code></pre>
+</div>
+
+<p>有关这个主题的完整、详细的解释可以在ES3系列的第七章找到。分为两个部分：7.1 面向对象.基本理论，在那里你将会找到对各种面向对象范例、风格的描述以及它们和ECMAScript之间的对比，然后在7.2 面向对象.ECMAScript实现，是对ECMAScript中面向对象的介绍。</p>
+
+<p>现在，在我们知道了对象的基础之后，让我们看看<em>运行时程序的执行</em>（runtime program execution）在ECMAScript中是如何实现的。这叫作<em>执行上下文栈</em>（execution context stack），其中的每个元素也可以抽象成为一个对象。是的，ECMAScript几乎在任何地方都和对象的概念打交道;)</p>
+
+<h3 id="section-2"><strong>执行上下文堆栈</strong></h3>
+
+<p>这里有三种类型的ECMAScript代码：<em>全局</em>代码、<em>函数</em>代码和<em>eval</em>代码。每个代码是在其<em>执行上下文</em>（execution context）中被求值的。这里只有一个全局上下文，可能有多个函数执行上下文以及<em>eval</em>执行上下文。对一个函数的每次调用，会进入到函数执行上下文中，并对函数代码类型进行求值。每次对<code class="highlighter-rouge">eval</code>函数进行调用，会进入<em>eval</em>执行上下文并对其代码进行求值。</p>
+
+<p>注意，一个函数可能会创建无数的上下文，因为对函数的每次调用（即使这个函数递归的调用自己）都会生成一个具有新状态的上下文：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function foo(bar) {}
+ 
+// call the same function,
+// generate three different
+// contexts in each call, with
+// different context state (e.g. value
+// of the "bar" argument)
+ 
+foo(10);
+foo(20);
+foo(30);
+</code></pre>
+</div>
+
+<p>一个执行上下文可能会触发另一个上下文，比如，一个函数调用另一个函数（或者在全局上下文中调用一个全局函数），等等。从逻辑上来说，这是以栈的形式实现的，它叫作<em>执行上下文栈</em>。</p>
+
+<p>一个触发其他上下文的上下文叫作<em>caller</em>。被触发的上下文叫作<em>callee</em>。callee在同一时间可能是一些其他callee的caller（比如，一个在全局上下文中被调用的函数，之后调用了一些内部函数）。</p>
+
+<p>当一个caller触发（调用）了一个callee，这个caller会暂缓自身的执行，然后把控制权传递给callee。这个callee被push到栈中，并成为一个<em>运行中</em>（活动的）执行上下文。在callee的上下文结束后，它会把控制权返回给caller，然后caller的上下文继续执行（它可能触发其他上下文）直到它结束，以此类推。callee可能简单的<em>返回</em>或者由于<em>异常</em>而退出。一个抛出的但是没有被捕获的异常可能退出（从栈中pop）一个或者多个上下文。</p>
+
+<p>换句话说，所有ECMAScript<em>程序的运行时</em>可以用<em>执行上下文（EC）栈</em>来表示，<em>栈顶</em>是当前<em>活跃</em>(active)上下文：</p>
+
+<p><a href="/assets/files/2013-11/ec-stack.png" title="JavaScript核心"><img src="/assets/files/2013-11/ec-stack.png" alt="ec-stack" /></a></p>
+
+<p>当程序开始的时候它会进入<em>全局执行上下文</em>，此上下文位于<em>栈底</em>并且是栈中的<em>第一个</em>元素。然后全局代码进行一些初始化，创建需要的对象和函数。在全局上下文的执行过程中，它的代码可能触发其他（已经创建完成的）函数，这些函数将会进入它们自己的执行上下文，向栈中push新的元素，以此类推。当初始化完成之后，运行时系统（runtime system）就会等待一些<em>事件</em>（比如，用户鼠标点击），这些事件将会触发一些函数，从而进入新的执行上下文中。</p>
+
+<p>在下个图中，拥有一些函数上下文<code class="highlighter-rouge">EC1</code>和全局上下文<code class="highlighter-rouge">Global EC</code>，当<code class="highlighter-rouge">EC1</code>进入和退出全局上下文的时候下面的栈将会发生变化：</p>
+
+<p><a href="/assets/files/2013-11/ec-stack-changes1.png" title="JavaScript核心"><img src="/assets/files/2013-11/ec-stack-changes1.png" alt="ec-stack-changes1" /></a></p>
+
+<p>这就是ECMAScript的运行时系统如何真正地管理代码执行的。</p>
+
+<p>更多有关ECMAScript中执行上下文的信息可以在对应的第一章 执行上下文中获取。</p>
+
+<p>像我们所说的，栈中的每个执行上下文都可以用一个对象来表示。让我们来看看它的结构以及一个上下文到底需要什么<em>状态</em>（什么属性）来执行它的代码。</p>
+
+<h3 id="section-3"><strong>执行上下文</strong></h3>
+
+<p>一个执行上下文可以抽象的表示为一个简单的对象。每一个执行上下文拥有一些属性（可以叫作<em>上下文状态</em>）用来跟踪和它相关的代码的执行过程。在下图中展示了一个上下文的结构：</p>
+
+<p><a href="/assets/files/2013-11/execution-context2.png" title="JavaScript核心"><img src="/assets/files/2013-11/execution-context2.png" alt="execution-context2" /></a></p>
+
+<p>除了这三个必需的属性（一个<em>变量对象</em>（variable objec），一个<em><code class="highlighter-rouge">this</code></em>值以及一个<em>作用域链</em>（scope chain））之外，执行上下文可以拥有任何附加的状态，这取决于实现。</p>
+
+<p>让我们详细看看上下文中的这些重要的属性。</p>
+
+<h3 id="section-4"><strong>变量对象</strong></h3>
+
+<blockquote>
+  <p>变量对象是与执行上下文相关的数据作用域。它是一个与上下文相关的特殊对象，其中存储了在上下文中定义的变量和函数声明。</p>
+</blockquote>
+
+<p>注意，<em>函数表达式</em>（与<em>函数声明</em>相对）<em>不包含</em>在变量对象之中。</p>
+
+<p>变量对象是一个抽象概念。对于不同的上下文类型，在物理上，是使用不同的对象。比如，在全局上下文中变量对象就是<em>全局对象本身</em>（这就是为什么我们可以通过全局对象的属性名来关联全局变量）。</p>
+
+<p>让我们在全局执行上下文中考虑下面这个例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var foo = 10;
+ 
+function bar() {} // function declaration, FD
+(function baz() {}); // function expression, FE
+ 
+console.log(
+  this.foo == foo, // true
+  window.bar == bar // true
+);
+ 
+console.log(baz); // ReferenceError, "baz" is not defined
+</code></pre>
+</div>
+
+<p>之后，全局上下文的变量对象（variable objec，简称VO）将会拥有如下属性：</p>
+
+<p><a href="/assets/files/2013-11/variable-object3.png" title="JavaScript核心"><img src="/assets/files/2013-11/variable-object3.png" alt="variable-object3" /></a></p>
+
+<p>再看一遍，函数<code class="highlighter-rouge">baz</code>是一个<em>函数表达式</em>，没有被包含在变量对象之中。这就是为什么当我们想要在函数自身之外访问它的时候会出现<code class="highlighter-rouge">ReferenceError</code>。</p>
+
+<p>注意，与其他语言（比如C/C++）相比，在ECMAScript中<em>只有函数</em>可以创建一个新的作用域。在函数作用域中所定义的变量和内部函数在函数外边是不能直接访问到的，而且并不会污染全局变量对象。</p>
+
+<p>使用<code class="highlighter-rouge">eval</code>我们也会进入一个新的（eval类型）执行上下文。无论如何，<code class="highlighter-rouge">eval</code>使用全局的变量对象或者使用caller（比如<code class="highlighter-rouge">eval</code>被调用时所在的函数）的变量对象。</p>
+
+<p>那么函数和它的变量对象是怎么样的？在函数上下文中，变量对象是以<em>活动对象</em>（activation object）来表示的。</p>
+
+<h3 id="section-5"><strong>活动对象</strong></h3>
+
+<p>当一个函数被caller所<em>触发</em>（被调用），一个特殊的对象，叫作<em>活动对象</em>（activation object）将会被创建。这个对象中包含<em>形参</em>和那个特殊的<code class="highlighter-rouge">arguments</code>对象（是对形参的一个映射，但是值是通过索引来获取）。<em>活动对象</em>之后会做为函数上下文的<em>变量对象</em>来使用。</p>
+
+<p>换句话说，函数的变量对象也是一个同样简单的变量对象，但是除了变量和函数声明之外，它还存储了形参和<code class="highlighter-rouge">arguments</code>对象，并叫作<em>活动对象</em>。</p>
+
+<p>考虑如下例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function foo(x, y) {
+  var z = 30;
+  function bar() {} // FD
+  (function baz() {}); // FE
+}
+ 
+foo(10, 20);
+</code></pre>
+</div>
+
+<p>我们看下函数<code class="highlighter-rouge">foo</code>的上下文中的活动对象（activation object，简称AO）：</p>
+
+<p><a href="/assets/files/2013-11/activation-object4.png" title="JavaScript核心"><img src="/assets/files/2013-11/activation-object4.png" alt="activation-object4" /></a></p>
+
+<p>并且<em>函数表达式</em><code class="highlighter-rouge">baz</code>还是没有被包含在变量/活动对象中。</p>
+
+<p>关于这个主题所有细节方面（像变量和函数声明的<em>提升问题</em>（hoisting））的完整描述可以在同名的章节第二章 变量对象中找到。</p>
+
+<p>注意，在ES5中<em>变量对象</em>和<em>活动对象</em>被并入了<em>词法环境</em>模型（lexical environments model），详细的描述可以在对应的章节找到。</p>
+
+<p>然后我们向下一个部分前进。众所周知，在ECMAScript中我们可以使用<em>内部函数</em>，然后在这些内部函数我们可以引用<em>父</em>函数的变量或者<em>全局</em>上下文中的变量。当我们把变量对象命名为上下文的<em>作用域对象</em>，与上面讨论的原型链相似，这里有一个叫作<em>作用域链</em>的东西。</p>
+
+<h3 id="section-6"><strong>作用域链</strong></h3>
+
+<blockquote>
+  <p>作用域链是一个对象列表，上下文代码中出现的标识符在这个列表中进行查找。</p>
+</blockquote>
+
+<p>这个规则还是与原型链同样简单以及相似：如果一个变量在函数自身的作用域（在自身的变量/活动对象）中没有找到，那么将会查找它父函数（外层函数）的变量对象，以此类推。</p>
+
+<p>就上下文而言，标识符指的是：变量<em>名称</em>，函数声明，形参，等等。当一个函数在其代码中引用一个不是局部变量（或者局部函数或者一个形参）的标识符，那么这个标识符就叫<em>作自由变量</em>。<em>搜索这些自由变量</em>(free variables)正好就要用到<em>作用域链</em>。</p>
+
+<p>在通常情况下，<em>作用域链</em>是一个包含所有<em>父（函数）变量对象__加上</em>（在作用域链头部的）函数<em>自身变量/活动对象</em>的一个列表。但是，这个作用域链也可以包含任何其他对象，比如，在上下文执行过程中动态加入到作用域链中的对象－像<em>with对象</em>或者特殊的<em>catch从句</em>（catch-clauses）对象。</p>
+
+<p>当<em>解析</em>（查找）一个标识符的时候，会从作用域链中的活动对象开始查找，然后（如果这个标识符在函数自身的活动对象中没有被查找到）向作用域链的上一层查找－重复这个过程，就和原型链一样。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var x = 10;
+ 
+(function foo() {
+  var y = 20;
+  (function bar() {
+    var z = 30;
+    // "x" and "y" are "free variables"
+    // and are found in the next (after
+    // bar's activation object) object
+    // of the bar's scope chain
+    console.log(x + y + z);
+  })();
+})();
+</code></pre>
+</div>
+
+<p>我们可以假设通过隐式的<code class="highlighter-rouge">__parent__</code>属性来和作用域链对象进行关联，这个属性指向作用域链中的下一个对象。这个方案可能在<a href="http://dmitrysoshnikov.com/ecmascript/chapter-2-variable-object/#feature-of-implementations-property-__parent">真实的Rhino代码</a>中经过了测试，并且这个技术很明确得被用于ES5的词法环境中（在那里被叫作<code class="highlighter-rouge">outer</code>连接）。作用域链的另一个表现方式可以是一个简单的数组。利用<code class="highlighter-rouge">_parent_</code>概念，我们可以用下面的图来表现上面的例子（并且父变量对象存储在函数的<code class="highlighter-rouge">[[Scope]]</code>属性中）：</p>
+
+<p><a href="/assets/files/2013-11/scope-chain5.png" title="JavaScript核心"><img src="/assets/files/2013-11/scope-chain5.png" alt="scope-chain5" /></a></p>
+
+<p>在代码执行过程中，作用域链可以通过使用<code class="highlighter-rouge">with</code>语句和<code class="highlighter-rouge">catch</code>从句对象来增强。并且由于这些对象是简单的对象，它们可以拥有原型（和原型链）。这个事实导致作用域链查找变为<em>两个维度</em>：（1）首先是作用域链连接，然后（2）在每个作用域链连接上－深入作用域链连接的原型链（如果此连接拥有原型）。</p>
+
+<p>对于这个例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Object.prototype.x = 10;
+ 
+var w = 20;
+var y = 30;
+ 
+// in SpiderMonkey global object
+// i.e. variable object of the global
+// context inherits from "Object.prototype",
+// so we may refer "not defined global
+// variable x", which is found in
+// the prototype chain
+ 
+console.log(x); // 10
+ 
+(function foo() {
+ 
+  // "foo" local variables
+  var w = 40;
+  var x = 100;
+ 
+  // "x" is found in the
+  // "Object.prototype", because
+  // {z: 50} inherits from it
+ 
+  with ({z: 50}) {
+    console.log(w, x, y , z); // 40, 10, 30, 50
+  }
+ 
+  // after "with" object is removed
+  // from the scope chain, "x" is
+  // again found in the AO of "foo" context;
+  // variable "w" is also local
+  console.log(x, w); // 100, 40
+ 
+  // and that's how we may refer
+  // shadowed global "w" variable in
+  // the browser host environment
+  console.log(window.w); // 20
+ 
+})();
+</code></pre>
+</div>
+
+<p>我们可以给出如下的结构（确切的说，在我们查找<code class="highlighter-rouge">__parent__</code>连接之前，首先查找<code class="highlighter-rouge">__proto__</code>链）：</p>
+
+<p><a href="/assets/files/2013-11/scope-chain-with6.png" title="JavaScript核心"><img src="/assets/files/2013-11/scope-chain-with6.png" alt="scope-chain-with6" /></a></p>
+
+<p>注意，不是在所有的实现中全局对象都是继承自<code class="highlighter-rouge">Object.prototype</code>。上图中描述的行为（从全局上下文中引用「未定义」的变量<code class="highlighter-rouge">x</code>）可以在诸如SpiderMonkey引擎中进行测试。</p>
+
+<p>由于所有父变量对象都存在，所以在内部函数中获取父函数中的数据没有什么特别－我们就是遍历作用域链去解析（搜寻）需要的变量。就像我们上边提及的，在一个上下文结束之后，它所有的状态和它自身都会被<em>销毁</em>。在同一时间父函数可能会<em>返回</em>一个<em>内部函数</em>。而且，这个返回的函数之后可能在另一个上下文中被调用。如果自由变量的上下文已经「消失」了，那么这样的调用将会发生什么？通常来说，有一个概念可以帮助我们解决这个问题，叫作<em>（词法）闭包</em>，其在ECMAScript中就是和<em>作用域链</em>的概念紧密相关的。</p>
+
+<h3 id="section-7"><strong>闭包</strong></h3>
+
+<p>在ECMAScript中，函数是<em>第一级</em>（first-class）对象。这个术语意味着函数可以做为参数传递给其他函数（在那种情况下，这些参数叫作「函数类型参数」（funargs，是”functional arguments”的简称））。接收「函数类型参数」的函数叫作<em>高阶函数</em>或者，贴近数学一些，叫作高阶<em>操作符</em>。同样函数也可以从其他函数中返回。返回其他函数的函数叫作<em>以函数为值</em>（function valued）的函数（或者叫作拥有<em>函数类值</em>的函数（functions with functional value））。</p>
+
+<p>这有两个在概念上与「函数类型参数（funargs）」和「函数类型值（functional　values）」相关的问题。并且这两个子问题在<em>“Funarg problem”</em>（或者叫作”functional argument”问题）中很普遍。为了解决<em>整个”funarg problem”</em>，<em>闭包</em>（closure）的概念被创造了出来。我们详细的描述一下这两个子问题（我们将会看到这两个问题在ECMAScript中都是使用图中所提到的函数的<code class="highlighter-rouge">[[Scope]]</code>属性来解决的）。</p>
+
+<p>「funarg问题」的第一个子问题是<em>「向上funarg问题」</em>（upward funarg problem）。它会在当一个函数从另一个函数向上返回（到外层）并且使用上面所提到的<em>自由变量</em>的时候出现。为了在<em>即使父函数上下文结束</em>的情况下也能访问其中的变量，内部函数在<em>被创建的时候</em>会在它的<code class="highlighter-rouge">[[Scope]]</code>属性中保存父函数的<em>作用域链</em>。所以当函数被<em>调用</em>的时候，它上下文的作用域链会被格式化成活动对象与<code class="highlighter-rouge">[[Scope]]</code>属性的和（实际上就是我们刚刚在上图中所看到的）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Scope chain = Activation object + [[Scope]]
+</code></pre>
+</div>
+
+<p>再次注意这个关键点－确切的说在<em>创建时刻</em>－函数会保存<em>父函数的</em>作用域链，因为确切的说这个<em>保存下来的作用域链</em>将会在未来的函数调用时用来查找变量。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function foo() {
+  var x = 10;
+  return function bar() {
+    console.log(x);
+  };
+}
+ 
+// "foo" returns also a function
+// and this returned function uses
+// free variable "x"
+ 
+var returnedFunction = foo();
+ 
+// global variable "x"
+var x = 20;
+ 
+// execution of the returned function
+ 
+returnedFunction(); // 10, but not 20
+</code></pre>
+</div>
+
+<p>这个类型的作用域叫作<em>静态（或者词法）作用域</em>。我们看到变量<code class="highlighter-rouge">x</code>在返回的<code class="highlighter-rouge">bar</code>函数的<code class="highlighter-rouge">[[Scope]]</code>属性中被找到。通常来说，也存在<em>动态作用域</em>，那么上面例子中的变量<code class="highlighter-rouge">x</code>将会被解析成<code class="highlighter-rouge">20</code>，而不是<code class="highlighter-rouge">10</code>。但是，动态作用域在ECMAScript中没有被使用。</p>
+
+<p>「funarg问题」的第二个部分是<em>「向下funarg问题」</em>。这种情况下可能会存在一个父上下文，但是在解析标识符的时候可能会模糊不清。问题是：标识符该使用<em>哪个作用域</em>的值－以静态的方式存储在函数创建时刻的还是在执行过程中以动态方式生成的（比如<em>caller</em>的作用域）？为了避免这种模棱两可的情况并形成闭包，<em>静态作用域</em>被采用：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// global "x"
+var x = 10;
+ 
+// global function
+function foo() {
+  console.log(x);
+}
+ 
+(function (funArg) {
+ 
+  // local "x"
+  var x = 20;
+ 
+  // there is no ambiguity,
+  // because we use global "x",
+  // which was statically saved in
+  // [[Scope]] of the "foo" function,
+  // but not the "x" of the caller's scope,
+  // which activates the "funArg"
+ 
+  funArg(); // 10, but not 20
+ 
+})(foo); // pass "down" foo as a "funarg"
+</code></pre>
+</div>
+
+<p>我们可以断定<em>静态作用域</em>是一门语言拥有<em>闭包的必需条件</em>。但是，一些语言可能会同时提供动态和静态作用域，允许程序员做选择－什么应该包含（closure）在内和什么不应包含在内。由于在ECMAScript中只使用了静态作用域（比如我们对于<code class="highlighter-rouge">funarg问题</code>的两个子问题都有解决方案），所以结论是：<em>ECMAScript完全支持闭包</em>，技术上是通过函数的<code class="highlighter-rouge">[[Scope]]</code>属性实现的。现在我们可以给闭包下一个准确的定义：</p>
+
+<blockquote>
+  <p>闭包是一个代码块（在ECMAScript是一个函数）和以静态方式/词法方式进行存储的所有父作用域的一个集合体。所以，通过这些存储的作用域，函数可以很容易的找到自由变量。</p>
+</blockquote>
+
+<p>注意，由于<em>每个</em>（标准的）函数都在创建的时候保存了<code class="highlighter-rouge">[[Scope]]</code>，所以理论上来讲，ECMAScript中的<em>所有函数</em>都是<em>闭包</em>。</p>
+
+<p>另一个需要注意的重要事情是，多个函数可能拥有<em>相同的父作用域</em>（这是很常见的情况，比如当我们拥有两个内部/全局函数的时候）。在这种情况下，<code class="highlighter-rouge">[[Scope]]</code>属性中存储的变量是在拥有相同父作用域链的<em>所有函数之间共享</em>的。一个闭包对变量进行的修改会<em>体现</em>在另一个闭包对这些变量的读取上：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>function baz() {
+  var x = 1;
+  return {
+    foo: function foo() { return ++x; },
+    bar: function bar() { return --x; }
+  };
+}
+ 
+var closures = baz();
+ 
+console.log(
+  closures.foo(), // 2
+  closures.bar()  // 1
+);
+</code></pre>
+</div>
+
+<p>以上代码可以通过下图进行说明：</p>
+
+<p><a href="/assets/files/2013-11/shared-scope7.png" title="JavaScript核心"><img src="/assets/files/2013-11/shared-scope7.png" alt="shared-scope7" /></a></p>
+
+<p>确切来说这个特性在循环中创建多个函数的时候会使人非常困惑。在创建的函数中使用循环计数器的时候，一些程序员经常会得到非预期的结果，所有函数中的计数器都是<em>同样</em>的值。现在是到了该揭开谜底的时候了－因为所有这些函数拥有同一个<code class="highlighter-rouge">[[Scope]]</code>，这个属性中的循环计数器的值是最后一次所赋的值。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var data = [];
+ 
+for (var k = 0; k &lt; 3; k++) {
+  data[k] = function () {
+    alert(k);
+  };
+}
+ 
+data[0](); // 3, but not 0
+data[1](); // 3, but not 1
+data[2](); // 3, but not 2
+</code></pre>
+</div>
+
+<p>这里有几种技术可以解决这个问题。其中一种是在作用域链中提供一个额外的对象－比如，使用额外函数：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var data = [];
+ 
+for (var k = 0; k &lt; 3; k++) {
+  data[k] = (function (x) {
+    return function () {
+      alert(x);
+    };
+  })(k); // pass "k" value
+}
+ 
+// now it is correct
+data[0](); // 0
+data[1](); // 1
+data[2](); // 2
+</code></pre>
+</div>
+
+<p>对闭包理论和它们的实际应用感兴趣的同学可以在第六章 闭包中找到额外的信息。如果想获取更多关于作用域链的信息，可以看一下同名的第四章 作用域链。</p>
+
+<p>然后我们移动到下个部分，考虑一下执行上下文的最后一个属性。这就是关于<code class="highlighter-rouge">this</code>值的概念。</p>
+
+<h3 id="this"><strong>This</strong></h3>
+
+<blockquote>
+  <p>this是一个与执行上下文相关的特殊对象。因此，它可以叫作上下文对象（也就是用来指明执行上下文是在哪个上下文中被触发的对象）。</p>
+</blockquote>
+
+<p><em>任何对象</em>都可以做为上下文中的<code class="highlighter-rouge">this</code>的值。我想再一次澄清，在一些对ECMAScript执行上下文和部分<code class="highlighter-rouge">this</code>的描述中的所产生误解。<code class="highlighter-rouge">this</code>经常被<em>错误的</em>描述成是变量对象的一个属性。这类错误存在于比如像这本书中（即使如此，这本书的相关章节还是十分不错的）。再重复一次：</p>
+
+<blockquote>
+  <p>this是执行上下文的一个属性，而不是变量对象的一个属性。</p>
+</blockquote>
+
+<p>这个特性非常重要，因为<em>与变量相反</em>，<em><code class="highlighter-rouge">this</code>从不会参与到标识符解析过程</em>。换句话说，在代码中当访问<code class="highlighter-rouge">this</code>的时候，它的值是<em>直接</em>从执行上下文中获取的，并<em>不需要任何作用域链查找</em>。<code class="highlighter-rouge">this</code>的值只在<em>进入上下文</em>的时候进行<em>一次</em>确定。</p>
+
+<p>顺便说一下，与ECMAScript相反，比如，Python的方法都会拥有一个被当作简单变量的<code class="highlighter-rouge">self</code>参数，这个变量的值在各个方法中是相同的的并且在执行过程中可以被更改成其他值。在ECMAScript中，给<code class="highlighter-rouge">this</code>赋一个新值是<em>不可能的</em>，因为，再重复一遍，它不是一个变量并且不存在于变量对象中。</p>
+
+<p>在全局上下文中，<code class="highlighter-rouge">this</code>就等于<em>全局对象本身</em>（这意味着，这里的<code class="highlighter-rouge">this</code>等于<em>变量对象</em>）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var x = 10;
+ 
+console.log(
+  x, // 10
+  this.x, // 10
+  window.x // 10
+);
+</code></pre>
+</div>
+
+<p>在函数上下文的情况下，对<em>函数的每次调用</em>，其中的<code class="highlighter-rouge">this</code>值可能是<em>不同的</em>。这个<code class="highlighter-rouge">this</code>值是通过<em>函数调用表达式</em>（也就是函数被调用的方式）的形式由<em>caller</em>所提供的。举个例子，下面的函数<code class="highlighter-rouge">foo</code>是一个<em>callee</em>，在全局上下文中被调用，此上下文为caller。让我们通过例子看一下，对于一个代码相同的函数，<code class="highlighter-rouge">this</code>值是如何在不同的调用中（函数触发的不同方式），由caller给出<em>不同的</em>结果的：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>// the code of the "foo" function
+// never changes, but the "this" value
+// differs in every activation
+ 
+function foo() {
+  alert(this);
+}
+ 
+// caller activates "foo" (callee) and
+// provides "this" for the callee
+ 
+foo(); // global object
+foo.prototype.constructor(); // foo.prototype
+ 
+var bar = {
+  baz: foo
+};
+ 
+bar.baz(); // bar
+ 
+(bar.baz)(); // also bar
+(bar.baz = bar.baz)(); // but here is global object
+(bar.baz, bar.baz)(); // also global object
+(false || bar.baz)(); // also global object
+ 
+var otherFoo = bar.baz;
+otherFoo(); // again global object
+</code></pre>
+</div>
+
+<p>为了深入理解<code class="highlighter-rouge">this</code>为什么（并且更本质一些－<em>如何</em>）在每个函数调用中可能会发生变化，你可以阅读第三章 This。在那里，上面所提到的情况都会有详细的讨论。</p>
+
+<h3 id="section-8"><strong>总结</strong></h3>
+
+<p>通过本文我们完成了对概要的综述。尽管，它看起来并不像是「概要」;)。对所有这些主题进行完全的解释需要一本完整的书。我们只是没有涉及到两个大的主题：<em>函数</em>（和不同函数之间的区别，比如，<em>函数声明</em>和<em>函数表达式</em>）和ECMAScript中所使用的<em>求值策略</em>(evaluation strategy )。这两个主题是可以ES3系列的在对应章节找到：第五章 函数和第八章 求值策略。</p>
+
+<p>如果你有留言，问题或者补充，我将会很乐意地在评论中讨论它们。</p>
+
+<p>祝学习ECMAScript好运！</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>理解 Python 中的线程</title>
+		<link href="http://127.0.0.1/archives/2013/11/25/understanding-threads-in-python.html" />
+		<updated>2013-11-25T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2013/11/25/understanding-threads-in-python.html</id>
+		<content type="html"><![CDATA[<p><em>郑重声明版权属于 http://agiliq.com/blog/2013/09/understanding-threads-in-python/</em></p>
+
+<p>我们将会看到一些在Python中使用线程的实例和如何避免线程之间的竞争。</p>
+
+<p>你应当将下边的例子运行多次，以便可以注意到线程是不可预测的和线程每次运行出的不同结果。</p>
+
+<p>声明：从这里开始忘掉你听到过的关于GIL的东西，因为GIL不会影响到我想要展示的东西。</p>
+
+<h4 id="section">示例1:</h4>
+<p>我们将要请求五个不同的url：</p>
+
+<h5 id="section-1">单线程</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import time
+import urllib2
+
+def get_responses():
+    urls = [
+        'http://www.google.com',
+        'http://www.amazon.com',
+        'http://www.ebay.com',
+        'http://www.alibaba.com',
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    for url in urls:
+        print url
+        resp = urllib2.urlopen(url)
+        print resp.getcode()
+    print "Elapsed time: %s" % (time.time()-start)
+
+get_responses()
+</code></pre>
+</div>
+
+<p>输出是：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://www.google.com 200
+http://www.amazon.com 200
+http://www.ebay.com 200
+http://www.alibaba.com 200
+http://www.reddit.com 200
+Elapsed time: 3.0814409256
+</code></pre>
+</div>
+
+<p>解释：<br />
+*   url顺序的被请求<br />
+*   除非cpu从一个url获得了回应，否则不会去请求下一个url<br />
+*   网络请求会花费较长的时间，所以cpu在等待网络请求的返回时间内一直处于闲置状态。</p>
+
+<h5 id="section-2">多线程</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import urllib2
+import time
+from threading import Thread
+
+class GetUrlThread(Thread):
+    def __init__(self, url):
+        self.url = url 
+        super(GetUrlThread, self).__init__()
+
+    def run(self):
+        resp = urllib2.urlopen(self.url)
+        print self.url, resp.getcode()
+
+def get_responses():
+    urls = [
+        'http://www.google.com', 
+        'http://www.amazon.com', 
+        'http://www.ebay.com', 
+        'http://www.alibaba.com', 
+        'http://www.reddit.com'
+    ]
+    start = time.time()
+    threads = []
+    for url in urls:
+        t = GetUrlThread(url)
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "Elapsed time: %s" % (time.time()-start)
+
+get_responses()
+</code></pre>
+</div>
+
+<p>输出:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://www.reddit.com 200
+http://www.google.com 200
+http://www.amazon.com 200
+http://www.alibaba.com 200
+http://www.ebay.com 200
+Elapsed time: 0.689890861511
+</code></pre>
+</div>
+
+<p>解释：
+*   意识到了程序在执行时间上的提升
+*   我们写了一个多线程程序来减少cpu的等待时间，当我们在等待一个线程内的网络请求返回时，这时cpu可以切换到其他线程去进行其他线程内的网络请求。
+*   我们期望一个线程处理一个url，所以实例化线程类的时候我们传了一个url。
+*   线程运行意味着执行类里的<code class="highlighter-rouge">run()</code>方法。
+*   无论如何我们想每个线程必须执行<code class="highlighter-rouge">run()</code>。
+*   为每个url创建一个线程并且调用<code class="highlighter-rouge">start()</code>方法，这告诉了cpu可以执行线程中的<code class="highlighter-rouge">run()</code>方法了。
+*   我们希望所有的线程执行完毕的时候再计算花费的时间，所以调用了<code class="highlighter-rouge">join()</code>方法。
+*   <code class="highlighter-rouge">join()</code>可以通知主线程等待这个线程结束后，才可以执行下一条指令。
+*   每个线程我们都调用了<code class="highlighter-rouge">join()</code>方法，所以我们是在所有线程执行完毕后计算的运行时间。</p>
+
+<p>关于线程：<br />
+*   cpu可能不会在调用<code class="highlighter-rouge">start()</code>后马上执行<code class="highlighter-rouge">run()</code>方法。
+*   你不能确定<code class="highlighter-rouge">run()</code>在不同线程建间的执行顺序。
+*   对于单独的一个线程，可以保证<code class="highlighter-rouge">run()</code>方法里的语句是按照顺序执行的。
+*   这就是因为线程内的url会首先被请求，然后打印出返回的结果。</p>
+
+<h4 id="section-3">实例2</h4>
+
+<p>我们将会用一个程序演示一下多线程间的资源竞争，并修复这个问题。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread
+
+
+#define a global variable
+some_var = 0 
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        read_value = some_var
+        print "some_var in %s is %d" % (self.name, read_value)
+        some_var = read_value + 1 
+        print "some_var in %s after increment is %d" % (self.name, some_var)
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "After 50 modifications, some_var should have become 50"
+    print "After 50 modifications, some_var is %d" % (some_var,)
+
+use_increment_thread()
+</code></pre>
+</div>
+
+<p>多次运行这个程序，你会看到多种不同的结果。</p>
+
+<p>解释：
+*   有一个全局变量，所有的线程都想修改它。
+*   所有的线程应该在这个全局变量上加 1 。
+*   有50个线程，最后这个数值应该变成50，但是它却没有。</p>
+
+<p>为什么没有达到50？<br />
+*   在<code class="highlighter-rouge">some_var</code>是<code class="highlighter-rouge">15</code>的时候，线程<code class="highlighter-rouge">t1</code>读取了<code class="highlighter-rouge">some_var</code>，这个时刻cpu将控制权给了另一个线程<code class="highlighter-rouge">t2</code>。
+*   <code class="highlighter-rouge">t2</code>线程读到的<code class="highlighter-rouge">some_var</code>也是<code class="highlighter-rouge">15</code>
+*   <code class="highlighter-rouge">t1</code>和<code class="highlighter-rouge">t2</code>都把<code class="highlighter-rouge">some_var</code>加到<code class="highlighter-rouge">16</code>
+*   当时我们期望的是<code class="highlighter-rouge">t1</code> <code class="highlighter-rouge">t2</code>两个线程使<code class="highlighter-rouge">some_var + 2</code>变成<code class="highlighter-rouge">17</code>
+*   在这里就有了资源竞争。
+*   相同的情况也可能发生在其它的线程间，所以出现了最后的结果小于<code class="highlighter-rouge">50</code>的情况。</p>
+
+<p>解决资源竞争</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Lock, Thread
+lock = Lock()
+some_var = 0 
+
+
+class IncrementThread(Thread):
+    def run(self):
+        #we want to read a global variable
+        #and then increment it
+        global some_var
+        lock.acquire()
+        read_value = some_var
+        print "some_var in %s is %d" % (self.name, read_value)
+        some_var = read_value + 1 
+        print "some_var in %s after increment is %d" % (self.name, some_var)
+        lock.release()
+
+def use_increment_thread():
+    threads = []
+    for i in range(50):
+        t = IncrementThread()
+        threads.append(t)
+        t.start()
+    for t in threads:
+        t.join()
+    print "After 50 modifications, some_var should have become 50"
+    print "After 50 modifications, some_var is %d" % (some_var,)
+
+use_increment_thread()
+</code></pre>
+</div>
+
+<p>再次运行这个程序，达到了我们预期的结果。</p>
+
+<p>解释：<br />
+*   Lock 用来防止竞争条件
+*   如果在执行一些操作之前，线程<code class="highlighter-rouge">t1</code>获得了锁。其他的线程在<code class="highlighter-rouge">t1</code>释放Lock之前，不会执行相同的操作
+*   我们想要确定的是一旦线程<code class="highlighter-rouge">t1</code>已经读取了<code class="highlighter-rouge">some_var</code>，直到<code class="highlighter-rouge">t1</code>完成了修改<code class="highlighter-rouge">some_var</code>，其他的线程才可以读取<code class="highlighter-rouge">some_var</code>
+*   这样读取和修改<code class="highlighter-rouge">some_var</code>成了逻辑上的原子操作。</p>
+
+<h4 id="section-4">实例3</h4>
+<p>让我们用一个例子来证明一个线程不能影响其他线程内的变量（非全局变量）。</p>
+
+<p>time.sleep()可以使一个线程挂起，强制线程切换发生。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread
+import time
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        print self.entries
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+</code></pre>
+</div>
+
+<p>运行几次后发现并没有打印出争取的结果。当一个线程正在打印的时候，cpu切换到了另一个线程，所以产生了不正确的结果。我们需要确保<code class="highlighter-rouge">print self.entries</code>是个逻辑上的原子操作，以防打印时被其他线程打断。</p>
+
+<p>我们使用了Lock()，来看下边的例子。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>from threading import Thread, Lock
+import time
+
+lock = Lock()
+
+class CreateListThread(Thread):
+    def run(self):
+        self.entries = []
+        for i in range(10):
+            time.sleep(1)
+            self.entries.append(i)
+        lock.acquire()
+        print self.entries
+        lock.release()
+
+def use_create_list_thread():
+    for i in range(3):
+        t = CreateListThread()
+        t.start()
+
+use_create_list_thread()
+</code></pre>
+</div>
+
+<p>这次我们看到了正确的结果。证明了一个线程不可以修改其他线程内部的变量（非全局变量）</p>
+
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>Nginx 战斗准备 —— 优化指南</title>
+		<link href="http://127.0.0.1/archives/2013/11/22/nginx-setup.html" />
+		<updated>2013-11-22T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2013/11/22/nginx-setup.html</id>
+		<content type="html"><![CDATA[<p>原文出处：<a href="http://blog.zachorr.com/nginx-setup/">zachorr</a> 译文出处：<a href="http://www.oschina.net/translate/nginx-setup?print">oschina -Garfielt, yale8848, tnjin</a></p>
+
+<p>大多数的Nginx安装指南告诉你如下基础知识——通过apt-get安装，修改这里或那里的几行配置，好了，你已经有了一个Web服务器了！而且，在大多数情况下，一个常规安装的nginx对你的网站来说已经能很好地工作了。然而，如果你真的想挤压出nginx的性能，你必须更深入一些。在本指南中，我将解释Nginx的那些设置可以微调，以优化处理大量客户端时的性能。需要注意一点，这不是一个全面的微调指南。这是一个简单的预览——那些可以通过微调来提高性能设置的概述。你的情况可能不同。</p>
+
+<h2 id="section">基本的 (优化过的)配置</h2>
+
+<p>我们将修改的唯一文件是<strong>nginx.conf</strong>，其中包含Nginx不同模块的所有设置。你应该能够在服务器的<strong>/etc/nginx</strong>目录中找到nginx.conf。首先，我们将谈论一些全局设置，然后按文件中的模块挨个来，谈一下哪些设置能够让你在大量客户端访问时拥有良好的性能，为什么它们会提高性能。本文的结尾有一个完整的配置文件。</p>
+
+<h2 id="section-1">高层的配置</h2>
+
+<p>nginx.conf文件中，Nginx中有少数的几个高级配置在模块部分之上。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>user www-data;
+pid /var/run/nginx.pid;
+worker_processes auto;
+worker_rlimit_nofile 100000;
+</code></pre>
+</div>
+
+<p><strong>user</strong>和<strong>pid</strong>应该按默认设置 – 我们不会更改这些内容，因为更改与否没有什么不同。</p>
+
+<p><strong>worker_processes </strong>定义了nginx对外提供web服务时的worder进程数。最优值取决于许多因素，包括（但不限于）CPU核的数量、存储数据的硬盘数量及负载模式。不能确定的时候，将其设置为可用的CPU内核数将是一个好的开始（设置为“auto”将尝试自动检测它）。</p>
+
+<p><strong>worker_rlimit_nofile </strong>更改worker进程的最大打开文件数限制。如果没设置的话，这个值为操作系统的限制。设置后你的操作系统和Nginx可以处理比“ulimit -a”更多的文件，所以把这个值设高，这样nginx就不会有“too many open files”问题了。</p>
+
+<h2 id="events">Events模块</h2>
+
+<p>events模块中包含nginx中所有处理连接的设置。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>events {
+  worker_connections 2048;
+  multi_accept on;
+  use epoll;
+}
+</code></pre>
+</div>
+
+<p><strong>worker_connections</strong>设置可由一个worker进程同时打开的最大连接数。如果设置了上面提到的worker_rlimit_nofile，我们可以将这个值设得很高。</p>
+
+<p>记住，最大客户数也由系统的可用socket连接数限制（~64K），所以设置不切实际的高没什么好处。</p>
+
+<p><strong>multi_accept </strong>告诉nginx收到一个新连接通知后接受尽可能多的连接。</p>
+
+<p><strong>use</strong> 设置用于复用客户端线程的轮询方法。如果你使用Linux 2.6+，你应该使用epoll。如果你使用*BSD，你应该使用kqueue。想知道更多有关事件轮询？看下维基百科吧（注意，想了解一切的话可能需要neckbeard和操作系统的课程基础）</p>
+
+<p>（值得注意的是如果你不知道Nginx该使用哪种轮询方法的话，它会选择一个最适合你操作系统的）</p>
+
+<h2 id="http-">HTTP 模块</h2>
+
+<p>HTTP模块控制着nginx http处理的所有核心特性。因为这里只有很少的配置，所以我们只节选配置的一小部分。所有这些设置都应该在http模块中，甚至你不会特别的注意到这段设置。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http {
+  server_tokens off;
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  ...
+}
+</code></pre>
+</div>
+
+<p><strong>server_tokens </strong>并不会让nginx执行的速度更快，但它可以关闭在错误页面中的nginx版本数字，这样对于安全性是有好处的。</p>
+
+<p><strong>sendfile</strong>可以让sendfile()发挥作用。sendfile()可以在磁盘和TCP socket之间互相拷贝数据(或任意两个文件描述符)。Pre-sendfile是传送数据之前在用户空间申请数据缓冲区。之后用read()将数据从文件拷贝到这个缓冲区，write()将缓冲区数据写入网络。sendfile()是立即将数据从磁盘读到OS缓存。因为这种拷贝是在内核完成的，sendfile()要比组合read()和write()以及打开关闭丢弃缓冲更加有效(更多有关于sendfile)</p>
+
+<p><strong>tcp_nopush</strong> 告诉nginx在一个数据包里发送所有头文件，而不一个接一个的发送</p>
+
+<p><strong>tcp_nodelay</strong> 告诉nginx不要缓存数据，而是一段一段的发送–当需要及时发送数据时，就应该给应用设置这个属性，这样发送一小块数据信息时就不能立即得到返回值。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>access_log off;
+error_log /var/log/nginx/error.log crit;
+</code></pre>
+</div>
+
+<p><strong>access_log</strong>设置nginx是否将存储访问日志。关闭这个选项可以让读取磁盘IO操作更快(aka,YOLO)</p>
+
+<p><strong>error_log </strong>告诉nginx只能记录严重的错误</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>keepalive_timeout 10;
+client_header_timeout 10;
+client_body_timeout 10;
+reset_timedout_connection on;
+send_timeout 10;
+</code></pre>
+</div>
+
+<p><strong>keepalive_timeout</strong> 给客户端分配keep-alive链接超时时间。服务器将在这个超时时间过后关闭链接。我们将它设置低些可以让ngnix持续工作的时间更长。</p>
+
+<p><strong>client_header_timeout</strong> 和<strong>client_body_timeout</strong> 设置请求头和请求体(各自)的超时时间。我们也可以把这个设置低些。</p>
+
+<p>reset_timeout_connection告诉nginx关闭不响应的客户端连接。这将会释放那个客户端所占有的内存空间。</p>
+
+<p>send_timeout指定客户端的响应超时时间。这个设置不会用于整个转发器，而是在两次客户端读取操作之间。如果在这段时间内，客户端没有读取任何数据，nginx就会关闭连接。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>limit_conn_zone $binary_remote_addr zone=addr:5m;
+limit_conn addr 100;
+</code></pre>
+</div>
+
+<p>limit_conn_zone设置用于保存各种key（比如当前连接数）的共享内存的参数。5m就是5兆字节，这个值应该被设置的足够大以存储（32K*5）32byte状态或者（16K*5）64byte状态。limit_conn为给定的key设置最大连接数。这里key是addr，我们设置的值是100，也就是说我们允许每一个IP地址最多同时打开有100个连接。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>include /etc/nginx/mime.types;
+default_type text/html;
+charset UTF-8;
+</code></pre>
+</div>
+
+<p>include只是一个在当前文件中包含另一个文件内容的指令。这里我们使用它来加载稍后会用到的一系列的MIME类型。</p>
+
+<p>default_type设置文件使用的默认的MIME-type。</p>
+
+<p>charset设置我们的头文件中的默认的字符集</p>
+
+<p>以下两点对于性能的提升在伟大的WebMasters StackExchange中有解释。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>gzip on;
+gzip_disable "msie6";
+# gzip_static on;
+gzip_proxied any;
+gzip_min_length 1000;
+gzip_comp_level 4;
+gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+</code></pre>
+</div>
+
+<p>gzip是告诉nginx采用gzip压缩的形式发送数据。这将会减少我们发送的数据量。</p>
+
+<p>gzip_disable为指定的客户端禁用gzip功能。我们设置成IE6或者更低版本以使我们的方案能够广泛兼容。</p>
+
+<p>gzip_static告诉nginx在压缩资源之前，先查找是否有预先gzip处理过的资源。这要求你预先压缩你的文件（在这个例子中被注释掉了），从而允许你使用最高压缩比，这样nginx就不用再压缩这些文件了（想要更详尽的gzip_static的信息，请点击这里）。</p>
+
+<p>gzip_proxied允许或者禁止压缩基于请求和响应的响应流。我们设置为any，意味着将会压缩所有的请求。</p>
+
+<p>gzip_min_length设置对数据启用压缩的最少字节数。如果一个请求小于1000字节，我们最好不要压缩它，因为压缩这些小的数据会降低处理此请求的所有进程的速度。</p>
+
+<p>gzip_comp_level设置数据的压缩等级。这个等级可以是1-9之间的任意数值，9是最慢但是压缩比最大的。我们设置为4，这是一个比较折中的设置。</p>
+
+<p>gzip_type设置需要压缩的数据格式。上面例子中已经有一些了，你也可以再添加更多的格式。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># cache informations about file descriptors, frequently accessed files
+# can boost performance, but you need to test those values
+open_file_cache max=100000 inactive=20s;
+open_file_cache_valid 30s;
+open_file_cache_min_uses 2;
+open_file_cache_errors on;
+##
+# Virtual Host Configs
+# aka our settings for specific servers
+##
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/sites-enabled/*;
+</code></pre>
+</div>
+
+<p>open_file_cache打开缓存的同时也指定了缓存最大数目，以及缓存的时间。我们可以设置一个相对高的最大时间，这样我们可以在它们不活动超过20秒后清除掉。</p>
+
+<p><strong>open_file_cache_valid</strong> 在open_file_cache中指定检测正确信息的间隔时间。</p>
+
+<p><strong>open_file_cache_min_uses</strong> 定义了open_file_cache中指令参数不活动时间期间里最小的文件数。</p>
+
+<p><strong>open_file_cache_errors</strong>指定了当搜索一个文件时是否缓存错误信息，也包括再次给配置中添加文件。我们也包括了服务器模块，这些是在不同文件中定义的。如果你的服务器模块不在这些位置，你就得修改这一行来指定正确的位置。</p>
+
+<h2 id="section-2">一个完整的配置</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>user www-data;
+pid /var/run/nginx.pid;
+worker_processes auto;
+worker_rlimit_nofile 100000;
+events {
+  worker_connections 2048;
+  multi_accept on;
+  use epoll;
+}
+http {
+  server_tokens off;
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  access_log off;
+  error_log /var/log/nginx/error.log crit;
+  keepalive_timeout 10;
+  client_header_timeout 10;
+  client_body_timeout 10;
+  reset_timedout_connection on;
+  send_timeout 10;
+  limit_conn_zone $binary_remote_addr zone=addr:5m;
+  limit_conn addr 100;
+  include /etc/nginx/mime.types;
+  default_type text/html;
+  charset UTF-8;
+  gzip on;
+  gzip_disable "msie6";
+  gzip_proxied any;
+  gzip_min_length 1000;
+  gzip_comp_level 6;
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+  open_file_cache max=100000 inactive=20s;
+  open_file_cache_valid 30s;
+  open_file_cache_min_uses 2;
+  open_file_cache_errors on;
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+}
+</code></pre>
+</div>
+
+<p>编辑完配置后，确认重启nginx使设置生效。</p>
+
+<blockquote>
+  <p>sudo service nginx restart</p>
+</blockquote>
+
+<h2 id="section-3">后记</h2>
+
+<p>就这样！你的Web服务器现在已经就绪，之前困扰你的众多访问者的问题来吧。这并不是加速网站的唯一途径，很快我会写更多介绍其他加速网站方法的文章的。</p>
+]]></content>
+	</entry>
+	
+	<entry>
+		<title>.NET Framework 4.5 五个很棒的特性</title>
+		<link href="http://127.0.0.1/archives/2013/11/12/five-great-NET-framework-4-5-features.html" />
+		<updated>2013-11-12T00:00:00+00:00</updated>
+		<id>http://127.0.0.1/archives/2013/11/12/five-great-NET-framework-4-5-features.html</id>
+		<content type="html"><![CDATA[<h3 id="section">简介</h3>
+
+<p>自.NET 4.5发布已经过了差不多1年了。但是随着最近微软大多数的发布，与.NET开发者交流的问题显示，开发者仅知道一到两个特性，其他的特性仅仅停留在MSDN并以简单的文档形式存在着。</p>
+
+<p>比如说，当你问一个.NET开发者.NET框架内核中有什么新东西的时候，他们中的大多数仅仅会说异步与等待（至少和我交谈的人们仅仅谈到了这些特性）。</p>
+
+<p>另外也很难贯通所有的新特性。因为这些特性可能对于你目前正在开发的工作并不如听上去那么有趣。</p>
+
+<p>所以在这篇文章中我想提及我喜欢的5个在.NET4.5内核中的特性。当然，这可能只是我喜欢的而并不是你的。但是我所做的是当我选择这些特性时我也想着较大的.NET社区，我希望我满足了这种期望。</p>
+
+<p><img src="/assets/files/2013-11/aehtrhthjtyj.jpg" alt="aehtrhthjtyj" /></p>
+
+<p>提示：这篇文章没有讨论在ASP.NET, WCF, WPF, WWF等中的新特性。仅仅讲了关于内核的新特性。</p>
+
+<h3 id="section-1"><strong> 特性1：异步与等待（代码开发者）</strong></h3>
+
+<p>这个特性已经被吹嘘过度并且每个.NET布道者都谈论它。但是这仍然是我喜欢的并且你会知道为什么从这里只有几行。</p>
+
+<p><img src="/assets/files/2013-11/atrhrtjrt2.jpg" alt="atrhrtjrt2" /></p>
+
+<p>异步和等待是标记，它们标记当任务（线程）结束时控制应该恢复到代码的位置。</p>
+
+<p>让我们尝试通过下面的代码来搞清上面声明的含义。如果你明白下面代码的流程：</p>
+
+<ol>
+  <li>Static void main()从开始处调用Method()方法。</li>
+  <li>Method()方法产生一个名为LongTask的任务（线程），线程将等待10秒。</li>
+  <li>同时，在调用了任务之后，控制又回到Method()方法继续执行剩下的代码。换句话说，正如调用时多线程的（Task.Run…）,LongTask仍在运行。例如，等待10秒并且Method()方法剩下的代码也在执行。</li>
+</ol>
+
+<p>现在在相同的情景下，我们想要第3步执行得不一样。我们想要在LongTask()执行完成后，控制应该回到Method方法执行接下来的代码。“异步”和“等待”关键字能够帮助实现上面的功能。</p>
+
+<p><img src="/assets/files/2013-11/agfhgfnhgm3.jpg" alt="agfhgfnhgm3" /></p>
+
+<p>这里有三个关于关键字“异步”和“等待”的重点需要记住：</p>
+
+<ol>
+  <li>异步和等待是一对关键字。你不能独立使用它们。</li>
+  <li>异步应用于方法。这个关键字是一个标志，是说该方法会有一个等待关键字。</li>
+  <li>等待关键字标记了任务恢复执行的位置。所以你总是发现这个关键字与Task关联。</li>
+</ol>
+
+<p>下面是前面讨论的代码的修订版本，这里我们应用了异步与等待。所有其他的步骤仍然如前所述，但是“步骤3”将在“步骤2”完成之后执行。简单来说就是控制在任务完成之后回到Method()方法。</p>
+
+<p><img src="/assets/files/2013-11/arhtrh4.jpg" alt="arhtrh4" /></p>
+
+<p>现在你已经阅读了“异步”与“等待”的内容，让我来提个问题。上面的代码同样也能通过Task.Wait或者Task.ContinueWith实现，那么它们有什么不同？我把这个问题留作给你的家庭作业。</p>
+
+<h3 id="zipzip"><strong>特性2：便利Zip压缩（Zip压缩）</strong></h3>
+
+<p><img src="/assets/files/2013-11/sawfwsfa5.jpg" alt="sawfwsfa5" /></p>
+
+<p>Zip是最为人所接受的文件格式之一。Zip格式以某些内置的名字被几乎所有操作系统支持。</p>
+
+<ul>
+  <li>在Windows操作系统中，它以“压缩文件”的名称实现。</li>
+  <li>在MAC操作系统中，它以“文档实用程序”的名称实现。</li>
+</ul>
+
+<p>现在在.NET中我们对执行Zip压缩没有内置的支持。许多开发者实用第三方组件如“DotnetZip”。在.NET4.5中，Zip属性内置于框架本身，以System.IO.Compression的命名空间内置。</p>
+
+<p>第一步你需要引用两个命名空间：</p>
+
+<ul>
+  <li>System.IO.Compression.FileSystem</li>
+  <li>System.IO.Compression</li>
+</ul>
+
+<p>接下来引用如下两个命名空间：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>using System.IO.Compression;
+</code></pre>
+</div>
+
+<p>如果你想要从文件夹压缩文件你可以调用如下所示的CreateFromDirectory函数。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ZipFile.CreateFromDirectory(@"D:\data",@"D:\data.zip");
+</code></pre>
+</div>
+
+<p>如果你想要解压，你可以调用如下代码所示的ExtractToDirectory函数。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ZipFile.ExtractToDirectory(@"D:\data.zip", @"D:\data\unzip");
+</code></pre>
+</div>
+
+<h3 id="section-2"><strong>特性3：正则表达式超时（超时）</strong></h3>
+
+<p><img src="/assets/files/2013-11/ewfjdnvlgdklgv.jpg" alt="ewfjdnvlgdklgv" /></p>
+
+<p>“正则表达式”一直是做验证首选的方式。如果你是正则表达式的新手，请看正则表达式，我解释了正则表达式是如何执行的。但是正因为正则表达式的典型逻辑解析使得它暴露于DOS攻击下。让我们试着理解刚才我说的。</p>
+
+<p>作为例子请考虑这样的正则表达式-“\^ (\d+)$”。这个正则表达式表明只能有数字。你也可以看正则表达式符号图，它标明了这个正则表达式会如何求值。现在让我们假设要验证“123456X”。这将有6条路径如下图所示。</p>
+
+<p><img src="/assets/files/2013-11/afnhjgfnhgm7.jpg" alt="afnhjgfnhgm7" /></p>
+
+<p>但如果我们再多加一个数字进去，将会有7条路径。换句话说，随着字符长度的增加，正则表达式将会花更多时间执行。也就是说，求值时间与字符长度成线性比例。</p>
+
+<p><img src="/assets/files/2013-11/agnhgm8.jpg" alt="agnhgm8" /></p>
+
+<p>现在让我们把之前定义的正则式从“\^ (\d+)$”变为“\^ (\d+)+$”。如果你看正则表达式符号图它将相当复杂。如果我们现在试着验证“123456X”，将会有32条路径。如果你再增加一个字符，路径数将会增加到64。</p>
+
+<p><img src="/assets/files/2013-11/asdgvdfbfgn9.jpg" alt="asdgvdfbfgn9" /></p>
+
+<p>换句话说，上面的正则表达式中时间开销与字符数目为成倍关系。</p>
+
+<p><img src="/assets/files/2013-11/adsbfdbfghrt10.jpg" alt="adsbfdbfghrt10" /></p>
+
+<p>现在你可能要问的是，这很重要吗？线性上升的求值时间可以被黑客利用来进行DOS（拒绝服务）攻击。他们可以部署一个长而且是足够长的字符串来使你的应用永远挂起。</p>
+
+<p>对于这个问题合适的解决方法是在正则表达式执行上设置超时时间。好消息是，在.NET4.5中你可以定义一个超时属性如下代码所示。所以如果你收到任何怀有恶意的字符串，应用不会永远在循环中执行。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>try
+{
+  var regEx = new Regex(@”^(\d+)+$”, RegexOptions.Singleline, TimeSpan.FromSeconds(2));
+  var match = regEx.Match(“123453109839109283090492309480329489812093809x”);
+}
+catch (RegexMatchTimeoutException ex)
+{
+  Console.WriteLine(“Regex Timeout”);
+}
+</code></pre>
+</div>
+
+<h3 id="section-3"><strong>特性4：优化配置文件（提升启动性能）</strong></h3>
+
+<p><img src="/assets/files/2013-11/asdvdbfrbngrb-11.jpg" alt="asdvdbfrbngrb-11" /></p>
+
+<p>我们都知道.NET代码是半编译的格式。在运行时，JIT（Just-in-Time）编译器执行并且转换这种半编译的IL代码为机器原生代码。对JIT最大的抱怨之一是当.NET应用初次执行的时候，它运行得很慢因为JIT在忙着转换IL代码到机器代码。</p>
+
+<p>为了降低这个启动时间，在.NET4.5中有称为“优化配置文件”的内容。配置文件不过是一个记录了应用在启动运行中需要的方法列表的简单文件。所以当应用开始后，后台的JIT执行并且开始转换这些方法的IL代码为机器/原生语言。</p>
+
+<p>这个后台JIT在多个处理器上编译启动方法从而进一步降低启动时间。另外请注意你需要多核处理器来实现配置文件优化。如果你没有多核处理器那么这个设定会被忽略。</p>
+
+<p><img src="/assets/files/2013-11/afgngkmyjkytjy12.jpg" alt="afgngkmyjkytjy12" /></p>
+
+<p>为了创建“配置文件”这个文件，首先你需要引入System.Runtime命名空间。然后你可以调用静态类ProfileOptimization的SetProfileRoot和StartProfile方法。现在当应用启动后台JIT，它将会读取配置文件并且在后台编译启动方法从而降低启动时间。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>using System.Runtime;
+ 
+// Call the Setprofilerroot and Startprofile method
+ProfileOptimization.SetProfileRoot(@"D:\ProfileFile");
+ 
+ProfileOptimization.StartProfile("ProfileFile");
+</code></pre>
+</div>
+
+<p>重要提示：ASP.NET 4.5和Silverlight 5应用默认支持Profileoptimization。所以上述代码在这些技术中无需编写。</p>
+
+<h3 id="section-4"><strong>特性5：垃圾回收（垃圾后台清理）</strong></h3>
+
+<p><img src="/assets/files/2013-11/afgjrtk5ytjytn13.jpg" alt="afgjrtk5ytjytn13" /></p>
+
+<p>垃圾回收在.NET应用中是一项真正繁重的任务。当是ASP.NET应用的时候，它变得更繁重。ASP.NET应用在服务器运行，许多客户端向服务器发送请求从而产生对象负荷，使得垃圾回收确实努力清理不需要的对象。</p>
+
+<p><img src="/assets/files/2013-11/aedvgdbh4erh14.jpg" alt="aedvgdbh4erh14" /></p>
+
+<p>在.NET4.0中，当垃圾回收运行清理的时候，所有的应用程序线程都暂停了。在上图中你可以看到我们有3个应用程序线程在执行。有两个垃圾回收运行在不同的线程上。一个垃圾回收线程对应一个逻辑处理器。现在应用程序线程运行并执行它们的任务，伴随着这些应用程序线程的执行它们也创建了操作对象。</p>
+
+<p>在某个时间点，后台垃圾回收运行开始清理。当这些垃圾回收开始清理的时候，它们暂停了所有的应用程序线程。这使得服务器/应用程序在那一刻不响应了。</p>
+
+<p><img src="/assets/files/2013-11/afvfbrtherg15.jpg" alt="afvfbrtherg15" /></p>
+
+<p>为了克服上述问题，服务器垃圾回收被引进了。在服务器垃圾回收机制中多创建了一个运行在后台的线程。这个线程在后台运行并持续清理2代对象（关于垃圾回收0,1和2代的视频）从而降低主垃圾回收线程的开销。由于双垃圾回收线程的执行，主应用程序线程很少被暂停，进而增加了应用程序吞吐量。为了使用服务器垃圾回收，我们需要使用gcServer XML标签并且将它置为true。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;configuration&gt;
+   &lt;runtime&gt;
+      &lt;gcServer enabled="true"/&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;
+</code></pre>
+</div>
+
+<h3 id="section-5"><strong>另三个值得探索的特性</strong></h3>
+
+<p><strong>设置默认应用程序域的区域性</strong></p>
+
+<p>在上一个版本的.NET中如果我想设置区域性那么我需要在每个线程中设置。下面的示例程序演示了在线程级别设置区域性的痛苦。当我们有大量多线程应用程序的时候这是真正的痛苦。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CultureInfo cul = new CultureInfo(strCulture);
+Thread.CurrentThread.CurrentCulture = cul;
+Thread.CurrentThread.CurrentUICulture = cul;
+</code></pre>
+</div>
+
+<p>在4.5中我们可以在应用程序域级别设置区域性并且所有在这个应用程序域当中的线程都会继承这个区域性。下面就是如何实现DefaultThreadCurrentCulture的示例代码。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>CultureInfo culture = CultureInfo.CreateSpecificCulture("fr-FR");
+ 
+CultureInfo.DefaultThreadCurrentCulture = culture;
+</code></pre>
+</div>
+
+<p><strong>数组支持超过2GB容量</strong></p>
+
+<p>我不确定在什么样的情景下我们会需要2GB的容器。所以我个人并不清楚我们将在哪用到这个特性。如果我曾需要如此之大的容器我会把它分解成小份。但我确信在框架中启用此功能应该有个很好的理由。</p>
+
+<p><strong>控制台支持Unicode编码</strong></p>
+
+<p>我把这个特性留在讨论范围之外是因为非常少的人用控制台程序工作。我曾见过有人把控制台用于学术目的。总而言之，我们现在也对控制台应用有了Unicode编码支持。</p>
+
+<p><strong>引用</strong></p>
+
+<ul>
+  <li>http://msdn.microsoft.com/en-us/library/ms171868.aspx</li>
+  <li>Mr Sukesh marla的精彩文章ASP.NET 4.5 new features</li>
+</ul>
+
+<p>当你有空的时候，一定来看看我的网站 www.questpond.com关于.NET4.5面试问和答，我已经在这方面有了不少努力。</p>
+
+<p><img src="/assets/files/2013-11/astrhhjync.jpg" alt="astrhhjync" /></p>
+]]></content>
+	</entry>
+	
+</feed>
