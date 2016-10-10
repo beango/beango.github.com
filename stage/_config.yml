@@ -3,7 +3,7 @@ title: HuangDing
 description: Huang Ding
 favicon: /assets/img/avatar.png
 baseurl:
-url: 127.0.0.1 #https://liungkejin.github.io
+url: http://www.uwebs.tk
 rss_url:
 permalink: /archives/:year/:month/:day/:title.html
 assetpath: /assets/files
