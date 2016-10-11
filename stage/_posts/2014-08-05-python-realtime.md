@@ -146,8 +146,8 @@ Greenlets
 
 在Python中有两种方法编写异步代码：
 
--   使用 [corutines](http://en.wikipedia.org/wiki/Coroutine)（也称为greenlets） 
--   使用[回调](http://en.wikipedia.org/wiki/Callback_(computer_programming)
+-   使用 [corutines](http://en.wikipedia.org/wiki/Coroutine) （也称为greenlets） 
+-   使用 [回调](http://en.wikipedia.org/wiki/Callback_(computer_programming "回调")
 
 简而言之，greenlets让你写出能在执行过程中暂停的功能，然后还可以继续执行。
 
