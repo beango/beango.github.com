@@ -4,6 +4,7 @@ category: default
 date: 2014-08-05
 title: "python realtime"
 description: "python realtime"
+img: "/assets/files/2014-08/frontend-worker.png"
 tags: [python]
 redirecturl: http://taokeqin.com/python-realtime.html
 ---
