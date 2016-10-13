@@ -4,6 +4,7 @@ category: default
 date: 2016-10-10
 title: "Linux配置Lighttpd+Python+web.py应用"
 description: "Linux配置Lighttpd+Python+web.py应用"
+img : "/assets/files/2016-10/l.jpg"
 tags: [shell]
 redirecturl: http://www.liaoxuefeng.com/article/0013738925109653a9f5fe0a82c4984ba8e8174b456d0ce000
 ---

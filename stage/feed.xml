@@ -20,6 +20,7 @@
 				{% endif %}
 				<pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
 				<link>{{ site.url }}{{ post.url }}</link>
+				<img>{% if  post.img %}{{ site.url }}{{ post.img }}{% endif %}</img>
 				<guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
 			</item>
 		{% endfor %}
